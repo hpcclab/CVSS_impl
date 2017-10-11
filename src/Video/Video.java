@@ -13,6 +13,7 @@ public class Video {
     public List<GOP> gops = new ArrayList<GOP>();
 
     private int totalSegments = 0;
+    public String name;
 
     public Video(){
 
