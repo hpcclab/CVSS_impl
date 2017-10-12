@@ -1,5 +1,5 @@
 #!/bin/bash
+fullpath=$1
+justname=$2 #might not neccessery
 
-rm ../testdir
-
-mkdir ../testdir
+echo $justname $fullpath

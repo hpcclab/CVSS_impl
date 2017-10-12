@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class Video {
 
-    public List<GOP> gops = new ArrayList<GOP>();
+    public ArrayList<GOP> gops;
 
     private int totalSegments = 0;
     public String name;
 
     public Video(){
-
+        gops= new ArrayList<GOP>();
     }
 
     public int getTotalSegments()

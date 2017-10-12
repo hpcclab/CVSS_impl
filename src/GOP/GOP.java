@@ -1,9 +1,10 @@
 package GOP;
 
+import java.util.Comparator;
 /**
  * Created by pi on 5/21/17.
  */
-public class GOP {
+public class GOP implements Comparable<GOP>{
 
     private String segment;
     private int priority;
@@ -51,7 +52,8 @@ public class GOP {
         this.isTranscoded = isTranscoded;
     }
 
-
-
-
+    @Override
+    public int compareTo(GOP t1) {
+        return this.priority-t1.getPriority();
+    }
 }

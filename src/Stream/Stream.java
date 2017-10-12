@@ -9,7 +9,9 @@ public class Stream {
     public void ScheduleVideoSegments(){
 
     }
-
+    public Stream(){
+          video=new Video();
+    }
     public void GetStatus(){
 
     }
