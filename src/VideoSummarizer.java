@@ -1,4 +1,4 @@
-import Video.Video;
+import Repository.Video;
 
 /**
  * Created by pi on 7/21/17.

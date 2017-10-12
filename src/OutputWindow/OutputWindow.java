@@ -1,6 +1,6 @@
 package OutputWindow;
 
-import Video.Video;
+import Repository.Video;
 
 /**
  * Created by pi on 5/21/17.

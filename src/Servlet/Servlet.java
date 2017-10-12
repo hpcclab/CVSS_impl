@@ -3,7 +3,7 @@ package Servlet;
 /**
  * Created by pi on 7/13/17.
  */
-import GOP.GOP;
+import Repository.RepositoryGOP;
 import TranscodingVM.TranscodingVM;
 
 import javax.servlet.http.*;
@@ -23,8 +23,8 @@ public class Servlet extends HttpServlet{
 
         try {
             TranscodingVM t = new TranscodingVM();
-            GOP gop = new GOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
-            t.AddJob(gop);
+            RepositoryGOP repositoryGop = new RepositoryGOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
+            t.AddJob(repositoryGop);
             t.TranscodeSegment();
         } catch (Exception e) {
         }
@@ -42,8 +42,8 @@ public class Servlet extends HttpServlet{
 
         try {
             TranscodingVM t = new TranscodingVM();
-            GOP gop = new GOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
-            t.AddJob(gop);
+            RepositoryGOP repositoryGop = new RepositoryGOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
+            t.AddJob(repositoryGop);
             t.TranscodeSegment();
         } catch (Exception e) {
         }

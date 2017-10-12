@@ -1,6 +1,6 @@
 package GOPTaskScheduler;
 
-import GOP.GOP;
+import Repository.RepositoryGOP;
 import TranscodingVM.TranscodingVM;
 
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.Queue;
  */
 public class GOPTaskScheduler {
 
-    private Queue<GOP> batchQueue;
+    private Queue<RepositoryGOP> batchQueue;
     private List<TranscodingVM> transcodingVMs = new ArrayList<TranscodingVM>();
 
-    public void ScheduleJob(GOP segment)
+    public void ScheduleJob(RepositoryGOP segment)
     {
 
     }

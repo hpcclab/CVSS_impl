@@ -1,7 +1,8 @@
 package testpackage;
 
+import Scheduler.GOPTaskScheduler;
 import TranscodingVM.*;
-import GOP.*;
+import Repository.*;
 import Stream.*;
 import java.io.*;
 
@@ -12,12 +13,12 @@ public class Test {
 
     public static String test() {
         try {
-            TranscodingVM t = new TranscodingVM();
-            Stream ST=new Stream();
-            //create Stream's Video list
-            File dir=new  File("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/ff_trailer_part1/");
-            File[] files = dir.listFiles();
+            TranscodingVM TC = new TranscodingVM();
 
+
+            //load Video into Repository
+            Video V=new Video();
+            File[] files = new File("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/ff_trailer_part1/").listFiles();
             if(files!=null) {
                 //System.out.println(files.length);
                 for (int i=0;i<files.length;i++) {
@@ -27,21 +28,22 @@ public class Test {
                         String fileName = files[i].getName();
                         //check if extension is not m3u8
                         if (!fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).equalsIgnoreCase("m3u8")) {
-                            GOP gop = new GOP(files[i].getPath());
-                            //gop.setPriority(1);
-                            gop.setPriority((int)(Math.random()*10));
-                            ST.video.addGOP(gop);
+                            RepositoryGOP repositoryGop = new RepositoryGOP(files[i].getPath());
+                            //repositoryGop.setPriority((int)(Math.random()*10));
+                            V.addGOP(repositoryGop);
                         }
                     }
-                    //setting creation or selection
-                    ST.setting = "../bash/testbash.sh";
                 }
             }
-            //read through Stream's video list and assign to TranscodingVM
-            for (GOP X:ST.video.gops){
-                t.AddJob(X);
-            }
 
+            // create Stream from Video
+            Stream ST=new Stream(V); //admission control can work in constructor, or later?
+            ST.setting = "../bash/testbash.sh"; //setting creation or selection?
+
+            //Scheduler
+            GOPTaskScheduler TSC=new GOPTaskScheduler();
+            TSC.add_VM(TC);
+            TSC.addStream(ST);
 
             return "Successful " + System.getProperty("user.dir");
         } catch (Exception e) {

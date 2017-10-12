@@ -1,8 +1,8 @@
 package TranscodingVM;
 
 import java.util.PriorityQueue;
-import java.io.OutputStream;
-import GOP.GOP;
+
+import Repository.RepositoryGOP;
 //import com.amazonaws.services.ec2.model.Instance;
 
 /**
@@ -10,7 +10,7 @@ import GOP.GOP;
  */
 public class TranscodingVM {
 
-    private PriorityQueue<GOP> jobs = new PriorityQueue<GOP>();
+    private PriorityQueue<RepositoryGOP> jobs = new PriorityQueue<RepositoryGOP>();
     //private Instance instance = new Instance();
     private boolean working=false;
 
@@ -19,10 +19,11 @@ public class TranscodingVM {
         working=true;
         int i=0;
         while(!jobs.isEmpty()) {
-            GOP aGOP = jobs.poll();
-            //System.out.println(aGOP.getPath());
-            //String[] command = {"ffmpeg", "-i", aGOP.getPath(), "-s", "320:240", "-c:a", "copy", "/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/output/"+(i++) +".mp4"};//jobs.poll().getPath()
-            String[] command = {"bash", "./bash/testbash.sh", aGOP.getPath(), aGOP.getPath().substring(aGOP.getPath().lastIndexOf("/")+1,aGOP.getPath().length())};
+            RepositoryGOP aRepositoryGOP = jobs.poll();
+            //System.out.println(aRepositoryGOP.getPath());
+            String filename= aRepositoryGOP.getPath().substring(aRepositoryGOP.getPath().lastIndexOf("/")+1, aRepositoryGOP.getPath().length());
+            //String[] command = {"ffmpeg", "-i", aRepositoryGOP.getPath(), "-s", "320:240", "-c:a", "copy", "/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/output/"+(i++) +".mp4"};//jobs.poll().getPath()
+            String[] command = {"bash", "./bash/resize.sh", aRepositoryGOP.getPath(),"320","240","./output/",filename};
             //ideally, we should be able to pull setting out from StreamGOP but now use fixed
 
             try {
@@ -32,16 +33,12 @@ public class TranscodingVM {
 
                 Process p = pb.start();
                 p.waitFor();
-
-                //debug getOutputFrombash and print
-                OutputStream out=p.getOutputStream();
-
                 //
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
 
-            //TODO: what to do after finish each GOP ?
+            //TODO: what to do after finish each RepositoryGOP ?
             //SendSegmentToVideoMerger();
         }
         working=false;
@@ -53,7 +50,7 @@ public class TranscodingVM {
     }
 
     //TODO: make this get work from socket instead of direct call
-    public void AddJob(GOP segment)
+    public void AddJob(RepositoryGOP segment)
     {
 
         jobs.add(segment);

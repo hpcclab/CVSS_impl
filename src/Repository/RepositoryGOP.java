@@ -1,0 +1,52 @@
+package Repository;
+
+/**
+ * Created by pi on 5/21/17.
+ */
+public class RepositoryGOP {
+
+    private String path;
+    public String segment;
+    private Boolean isTranscoded;
+    public String setting;
+
+    public RepositoryGOP(String path){
+        setPath(path);
+        isTranscoded = false;
+        segment = path.substring(path.length()-4);//gets last 4 characters of path before extension, a number between 0000 and 9999
+    }
+    public RepositoryGOP(){
+    }
+    public RepositoryGOP(RepositoryGOP x){
+        this.path=x.getPath();
+        this.segment=x.segment;
+        this.isTranscoded=x.getIsTranscoded();
+        this.setting=x.setting;
+    }
+    public String getPath(){ return path;}
+
+    public void setPath(String path){this.path = path;}
+
+    public String getSegmentNum()
+    {
+        return segment;
+    }
+
+    public void setSegmentNum(String segment)
+    {
+        this.segment = segment;
+    }
+
+
+    public Boolean getIsTranscoded()
+    {
+        return isTranscoded;
+    }
+
+    public void setIsTranscoded(Boolean isTranscoded)
+    {
+        this.isTranscoded = isTranscoded;
+    }
+
+
+}
