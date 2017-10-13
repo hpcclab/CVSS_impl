@@ -22,7 +22,7 @@ public class Stream {
         streamGOPs= new ArrayList<StreamGOP>();
         for(RepositoryGOP x: v.repositoryGOPs){
             StreamGOP xcopy=new StreamGOP(x);
-            xcopy.setPriority((int)(Math.random()*10)); //admission Control may kick in here
+            //xcopy.setPriority((int)(Math.random()*10)); //admission Control may kick in here
             streamGOPs.add(xcopy);
         }
     }

@@ -1,5 +1,6 @@
 package testpackage;
 
+import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler;
 import TranscodingVM.*;
 import Repository.*;
@@ -13,8 +14,11 @@ public class Test {
 
     public static String test() {
         try {
+            //Set things up
+            AdmissionControl AC = new AdmissionControl();
+            GOPTaskScheduler TSC=new GOPTaskScheduler();
             TranscodingVM TC = new TranscodingVM();
-
+            TSC.add_VM(TC);
 
             //load Video into Repository
             Video V=new Video();
@@ -22,8 +26,7 @@ public class Test {
             if(files!=null) {
                 //System.out.println(files.length);
                 for (int i=0;i<files.length;i++) {
-                    System.out.println(i+" "+files[i].getName() +" "+files[i].getPath()); //DEBUG
-
+                    //System.out.println(i+" "+files[i].getName() +" "+files[i].getPath()); //DEBUG
                     if (!files[i].isDirectory()) {
                         String fileName = files[i].getName();
                         //check if extension is not m3u8
@@ -40,9 +43,12 @@ public class Test {
             Stream ST=new Stream(V); //admission control can work in constructor, or later?
             ST.setting = "../bash/testbash.sh"; //setting creation or selection?
 
+            //Admission Control assign Priority of each segments
+            AC.AssignStreamPriority(ST);
+            for(StreamGOP x:ST.streamGOPs){
+                System.out.println(x.getPriority());
+            }
             //Scheduler
-            GOPTaskScheduler TSC=new GOPTaskScheduler();
-            TSC.add_VM(TC);
             TSC.addStream(ST);
 
             return "Successful " + System.getProperty("user.dir");

@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 public class GOPTaskScheduler {
     private ArrayList<TranscodingVM> transcodingVMs=new ArrayList<TranscodingVM>();
     private PriorityQueue<StreamGOP> GOPtoAssign=new PriorityQueue<StreamGOP>();
-
+    private int working=0;
     public GOPTaskScheduler(){
 
     }
@@ -21,10 +21,20 @@ public class GOPTaskScheduler {
     }
 
     public void addStream(Stream ST){
+        GOPtoAssign.addAll(ST.streamGOPs);
+
+        if(working!=1){
+            assignworks();
+        }
+    }
+
+    private void assignworks(){ //will be a thread
         //read through list and assign to TranscodingVM
         //now we only assign task to VM 1
-        for (StreamGOP X:ST.streamGOPs){
+        working=1;
+        for (StreamGOP X:GOPtoAssign) {
             transcodingVMs.get(0).AddJob(X);
         }
+        working=0;
     }
 }
