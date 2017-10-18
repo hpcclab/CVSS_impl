@@ -1,64 +1,78 @@
 package TranscodingVM;
 
-import java.util.PriorityQueue;
-
 import Repository.RepositoryGOP;
+
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 //import com.amazonaws.services.ec2.model.Instance;
 
 /**
  * Created by pi on 5/21/17.
  */
-public class TranscodingVM {
-
-    private PriorityQueue<RepositoryGOP> jobs = new PriorityQueue<RepositoryGOP>();
+//TODO: evaluate and implement jobqueue? activeMQ? rabbitMQ? Apache Qpid? threadpools?
+public class TranscodingVM extends Thread{
+    private int myport;
+    private ServerSocket ss;
+    private Socket s;
+    private TranscodingThread TT;
+    private OutputStream os;
+    private ObjectOutputStream oos;
+    private InputStream is;
+    private ObjectInputStream ois;
     //private Instance instance = new Instance();
-    private boolean working=false;
+    public TranscodingVM(int port){
+        myport=port;
+        TT=new TranscodingThread();
 
-    public void TranscodeSegment()
-    {
-        working=true;
-        int i=0;
-        while(!jobs.isEmpty()) {
-            RepositoryGOP aRepositoryGOP = jobs.poll();
-            //System.out.println(aRepositoryGOP.getPath());
-            String filename= aRepositoryGOP.getPath().substring(aRepositoryGOP.getPath().lastIndexOf("/")+1, aRepositoryGOP.getPath().length());
-            //String[] command = {"ffmpeg", "-i", aRepositoryGOP.getPath(), "-s", "320:240", "-c:a", "copy", "/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/output/"+(i++) +".mp4"};//jobs.poll().getPath()
-            String[] command = {"bash", "./bash/resize.sh", aRepositoryGOP.getPath(),"320","240","./output/",filename};
-            //ideally, we should be able to pull setting out from StreamGOP but now use fixed
-
-            try {
-                ProcessBuilder pb = new ProcessBuilder(command);
-                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-
-                Process p = pb.start();
-                p.waitFor();
-                //
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            //TODO: what to do after finish each RepositoryGOP ?
-            //SendSegmentToVideoMerger();
-        }
-        working=false;
     }
-
+    public void createRecvSocket(){
+        try {
+            ss = new ServerSocket(myport);
+            s = ss.accept();
+            ss.close();
+            os = s.getOutputStream();
+            oos = new ObjectOutputStream(os);
+            is = s.getInputStream();
+            ois = new ObjectInputStream(is);
+        }catch(Exception e){
+            System.out.println("Failed: " + e);
+        }
+    }
     private void SendSegmentToVideoMerger()
     {
 
     }
+    public void run(){
+        createRecvSocket();
 
-    //TODO: make this get work from socket instead of direct call
+        //TODO: have a way to gracefully terminate without causing error and force quit
+        try {
+            while(!s.isClosed()){
+                RepositoryGOP objectX =(RepositoryGOP) ois.readObject();
+                //System.out.println("ObjectX's path"+objectX.getPath());
+                AddJob(objectX);
+            }
+        }catch(Exception e){
+            System.out.println("Failed: " + e);
+        }
+        System.out.println("closed");
+    }
+
     public void AddJob(RepositoryGOP segment)
     {
 
-        jobs.add(segment);
-        //TODO: sort by some criteria, shortest deadline first, highest priority first?
-        if(!working){
+        System.out.println("test");
+        TT.jobs.add(segment);
+        if(!TT.isAlive()){
+            TT.start();
             //System.out.println("test");
-            TranscodeSegment(); //TODO: make this a thread/task, make it asynchronous
         }
     }
+    public void close(){
 
+    }
 }

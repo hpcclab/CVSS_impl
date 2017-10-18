@@ -2,6 +2,7 @@ package Repository;
 
 import Repository.RepositoryGOP;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -9,15 +10,33 @@ import java.util.ArrayList;
  */
 public class Video {
 
-    public ArrayList<RepositoryGOP> repositoryGOPs;
+    public ArrayList<RepositoryGOP> repositoryGOPs= new ArrayList<RepositoryGOP>();;
 
     private int totalSegments = 0;
     public String name;
 
     public Video(){
-        repositoryGOPs = new ArrayList<RepositoryGOP>();
+    }
+    public Video(String path){
+        this(new File(path).listFiles());
     }
 
+    public Video(File[] files){
+        if(files!=null) {
+            //System.out.println(files.length);
+            for (int i=0;i<files.length;i++) {
+                //System.out.println(i+" "+files[i].getName() +" "+files[i].getPath()); //DEBUG
+                if (!files[i].isDirectory()) {
+                    String fileName = files[i].getName();
+                    //check if extension is not m3u8
+                    if (!fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).equalsIgnoreCase("m3u8")) {
+                        RepositoryGOP repositoryGop = new RepositoryGOP(files[i].getPath());
+                        this.addGOP(repositoryGop);
+                    }
+                }
+            }
+        }
+    }
     public int getTotalSegments()
     {
         return totalSegments;

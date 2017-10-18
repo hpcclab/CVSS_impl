@@ -3,7 +3,7 @@ package Repository;
 /**
  * Created by pi on 5/21/17.
  */
-public class RepositoryGOP {
+public class RepositoryGOP implements java.io.Serializable {
 
     private String path;
     public String segment;

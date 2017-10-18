@@ -2,7 +2,7 @@ package Stream;
 import Repository.RepositoryGOP;
 
 
-public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP> {
+public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
     public String setting;
 
     public StreamGOP(){

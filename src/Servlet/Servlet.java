@@ -22,10 +22,9 @@ public class Servlet extends HttpServlet{
         pw.close();
 
         try {
-            TranscodingVM t = new TranscodingVM();
-            RepositoryGOP repositoryGop = new RepositoryGOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
-            t.AddJob(repositoryGop);
-            t.TranscodeSegment();
+            //TranscodingVM t = new TranscodingVM();
+            //RepositoryGOP repositoryGop = new RepositoryGOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
+           // t.AddJob(repositoryGop);
         } catch (Exception e) {
         }
     }
@@ -41,10 +40,9 @@ public class Servlet extends HttpServlet{
         pw.close();
 
         try {
-            TranscodingVM t = new TranscodingVM();
-            RepositoryGOP repositoryGop = new RepositoryGOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
-            t.AddJob(repositoryGop);
-            t.TranscodeSegment();
+            //TranscodingVM t = new TranscodingVM();
+            //RepositoryGOP repositoryGop = new RepositoryGOP("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/bbb_trailer.mp4");
+            //t.AddJob(repositoryGop);
         } catch (Exception e) {
         }
     }
