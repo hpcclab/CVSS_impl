@@ -20,8 +20,11 @@ public class Test {
             AdmissionControl AC = new AdmissionControl();
             GOPTaskScheduler GTS=new GOPTaskScheduler();
             TranscodingVM TC = new TranscodingVM(5690); //new thread waiting at that port
+            TranscodingVM TC2 = new TranscodingVM(5691);
             TC.start();
+            TC2.start();
             GTS.add_VM("localhost",5690); //connect to that machine (localhost) and that port
+            GTS.add_VM("localhost",5691);
             //TSC.add_VM(TC);
 
             //load Videos into Repository
@@ -50,9 +53,9 @@ public class Test {
             scanner.next();
 
             //wind down process
-            //GTS.close();
-            //TC.close();
-
+            GTS.close();
+            TC.close();
+            TC2.close();
             return "Successful " + System.getProperty("user.dir");
         } catch (Exception e) {
             return "Failed: " + e;

@@ -15,6 +15,7 @@ public class VMinterface {
     public InputStream is;
     public ObjectInputStream ois;
     private int status;
+    public int estimatedqueuelength=0;
     public VMinterface(String addr,int port){
         try {
             s = new Socket(addr, port);

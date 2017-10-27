@@ -9,8 +9,9 @@ import java.util.PriorityQueue;
 
 public class GOPTaskScheduler {
     private ArrayList<VMinterface> transcodingVMs=new ArrayList<VMinterface>();
-    private PriorityQueue<StreamGOP> GOPtoAssign=new PriorityQueue<StreamGOP>();
+    private PriorityQueue<StreamGOP> Batchqueue=new PriorityQueue<StreamGOP>();
     private int working=0;
+    private int roundrobinVM=0;
     public GOPTaskScheduler(){
 
     }
@@ -23,19 +24,34 @@ public class GOPTaskScheduler {
     }
 
     public void addStream(Stream ST){
-        GOPtoAssign.addAll(ST.streamGOPs);
+        Batchqueue.addAll(ST.streamGOPs);
 
         if(working!=1){
-            assignworks();
+            //assignwork thread start
+            submitworks();
         }
-    }
 
-    private void assignworks(){ //will be a thread
+    }
+    private int round_robin(){
+        roundrobinVM=(roundrobinVM+1)%transcodingVMs.size();
+        return roundrobinVM;
+    }
+    //will have more ways to assign works later
+    private int assignworks(StreamGOP x){
+        return round_robin();
+    }
+    private void submitworks(){ //will be a thread
         //read through list and assign to TranscodingVM
-        //now we only assign task to VM 1
+        //now we only assign task in round robin
         working=1;
-        for (StreamGOP X:GOPtoAssign) {
-            transcodingVMs.get(0).sendJob(X);
+        for (StreamGOP X:Batchqueue) {
+            //
+            //mapping_policy function
+            //
+            int nextVM=assignworks(X);
+            VMinterface chosenVM =transcodingVMs.get(nextVM);
+            chosenVM.sendJob(X);
+            chosenVM.estimatedqueuelength++;
         }
         working=0;
     }

@@ -13,6 +13,7 @@ import java.net.Socket;
 /**
  * Created by pi on 5/21/17.
  */
+//TODO: best logical upgrade is to use FST instead of just serialization https://github.com/RuedigerMoeller/fast-serialization
 //TODO: evaluate and implement jobqueue? activeMQ? rabbitMQ? Apache Qpid? threadpools?
 public class TranscodingVM extends Thread{
     private int myport;
@@ -25,6 +26,7 @@ public class TranscodingVM extends Thread{
     private ObjectInputStream ois;
     //private Instance instance = new Instance();
     public TranscodingVM(int port){
+
         myport=port;
         TT=new TranscodingThread();
 
