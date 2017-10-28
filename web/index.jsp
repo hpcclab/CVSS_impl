@@ -51,55 +51,61 @@
   </div>
 
   <div id="Options">
-
-
     <div id="Label">More Options</div>
-
     <div id="OptionPanel">
 
-      <select id="Videos" name="Videos" onchange="loadAnotherVideo();">
-        <option value="selectVideo.png" selected disabled>Videos</option>
-        <option value="videos/bbb_trailer.mp4">Big Buck Bunny</option>
-        <option value="videos/ff_trailer_part1.mp4">Fantastic Four Part 1</option>
-        <option value="videos/ff_trailer_part3.mp4">Fantastic Four Part 2</option>
-      </select>
-
-      <select name="Resolution">
-        <option value="resolution" selected disabled>Resolution</option>
-        <option value="320x240">320x240</option>
-        <option value="640x480">640x480</option>
-        <option value="720x540">720x540</option>
-      </select>
-
-      <button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
-
-      <div id="ConversionPanel">
-
-        <select name="Format">
-          <option value="convert" selected disabled>Convert</option>
-          <option value="mp4">.mp4</option>
-          <option value="flv">.flv</option>
-          <option value="ogg">.ogg</option>
-          <option value="webm">.webm</option>
-          <option value="gif">.gif</option>
+      <form action="${pageContext.request.contextPath}/processrequest" method="post">
+        <!--<select id="Videos" name="${name}" >
+          <option value="selectVideo.png" selected disabled>Videos</option>
+          <option value="videos/bbb_trailer.mp4">Big Buck Bunny</option>
+          <option value="videos/ff_trailer_part1.mp4">Fantastic Four Part 1</option>
+          <option value="videos/ff_trailer_part3.mp4">Fantastic Four Part 2</option>
         </select>
 
-        <input type="text" name="start" value="Start Time" size=4 >
-        <input type="text" name="end" value="End Time" size=4 >
+        <select name="${resolution}" >
+          <option value="resolution" selected disabled>Resolution</option>
+          <option value="320x240">320x240</option>
+          <option value="640x480">640x480</option>
+          <option value="720x540">720x540</option>
+        </select>-->
 
-      </div>
+        <input type="text" name="name" id="name" value="${name}">
+        <input type="text" name="resolution" id="resolution" value="${resolution}">
+        <input type="text" name="rHeight" id="rHeight" value="${rHeight}">
+        <input type="text" name="rWidth" value="${rWidth}">
 
-      <button id="SubtitleButton" class="button" title="subtitles" onclick=''>Subtitles</button>
+        <!--<button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
 
-      <select id="PlaybackRate" name="PlaybackRate" onchange="changePlaybackRate();">
-        <option value=1 selected disabled>Playback Rate</option>
-        <option value=.25>.25</option>
-        <option value=.5>.5</option>
-        <option value=1>1</option>
-        <option value=1.5>1.5</option>
-        <option value=2>2</option>
-      </select>
+        <div id="ConversionPanel">
 
+          <select name="Format">
+            <option value="convert" selected disabled>Convert</option>
+            <option value="mp4">.mp4</option>
+            <option value="flv">.flv</option>
+            <option value="ogg">.ogg</option>
+            <option value="webm">.webm</option>
+            <option value="gif">.gif</option>
+          </select>
+
+          <input type="text" name="start" value="Start Time" size=4 >
+          <input type="text" name="end" value="End Time" size=4 >
+
+        </div>
+
+        <button id="SubtitleButton" class="button" title="subtitles" onclick=''>Subtitles</button>
+
+        <select id="PlaybackRate" name="PlaybackRate" onchange="changePlaybackRate();">
+          <option value=1 selected disabled>Playback Rate</option>
+          <option value=.25>.25</option>
+          <option value=.5>.5</option>
+          <option value=1>1</option>
+          <option value=1.5>1.5</option>
+          <option value=2>2</option>
+        </select> -->
+        <input type="submit" name="play" value="Play">
+      </form>
+
+      <!--
       <script type="javascript" src="jquery-3.2.1.js">
           function pst(){
               $.post("http://localhost:8080/servlet", function(data){
@@ -108,7 +114,7 @@
               });
           }
       </script>
-      <button  onclick="pst()">click</button>
+      -->
 
     </div>
 
