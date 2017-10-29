@@ -1,0 +1,28 @@
+<serverConfig>
+    <defaultInputPath>./</defaultInputPath>
+    <defaultOutputPath>./output/</defaultOutputPath>
+    <defaultBatchScript>../bash/testbash.sh</defaultBatchScript>
+
+    <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
+    <lowscalingThreshold>0.1</lowscalingThreshold>
+    <highscalingThreshold>0.5</highscalingThreshold>
+
+    <enableTimeEstimator>true</enableTimeEstimator>
+    <enableCaching>false</enableCaching>
+    <enableVMscaling>true</enableVMscaling>
+    <maxVM>100</maxVM>
+
+    <mapping_mechanism>RR</mapping_mechanism>
+
+    <videoList>./repositoryvideos/ff_trailer_part1/</videoList>
+    <videoList>./repositoryvideos/ff_trailer_part3/</videoList>
+
+    <VM_address>localhost</VM_address>
+    <VM_ports>5060</VM_ports>
+
+    <VM_address>localhost</VM_address>
+    <VM_ports>5061</VM_ports>
+
+</serverConfig>
+
+
