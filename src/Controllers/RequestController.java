@@ -10,22 +10,44 @@ import java.io.IOException;
 /**
  * Created by pi on 10/28/17.
  */
-@WebServlet(name = "RequestController", urlPatterns = "/")
+@WebServlet(name = "RequestController", urlPatterns = "/processrequest")
 public class RequestController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println(request);
         System.out.println(response);
-        RequestResult webrequest = RequestResult.fromRequestParameters(request);
-        webrequest.setAsRequestAttributes(request);
 
-        System.out.println(webrequest.name);
-        System.out.println(webrequest.resolution);
-        System.out.println(webrequest.rHeight);
-        System.out.println(webrequest.rWidth);
+        String name = request.getParameter("videoName");
+        String resolution = request.getParameter("resolution");
 
-        //forwardResponse(url, request, response);
+        System.out.println(name);
+        System.out.print(resolution);
+        //        RequestResult webrequest = RequestResult.fromRequestParameters(request);
+       // webrequest.setAsRequestAttributes(request);
+
+  //      System.out.println(webrequest.name);
+    //    System.out.println(webrequest.resolution);
+      //  System.out.println(webrequest.rHeight);
+        //System.out.println(webrequest.rWidth);
+
+        forwardResponse(request, response);
+    }
+
+    private void forwardResponse(HttpServletRequest request, HttpServletResponse response)
+    {
+        try {
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
+        catch (ServletException e){
+            System.out.print(e);
+            e.printStackTrace();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            System.out.print(e);
+        }
+
     }
 
     private static class RequestResult {

@@ -55,24 +55,27 @@
     <div id="OptionPanel">
 
       <form action="${pageContext.request.contextPath}/processrequest" method="post">
-        <!--<select id="Videos" name="${name}" >
+        <select id="Videos" name="videoName" >
           <option value="selectVideo.png" selected disabled>Videos</option>
-          <option value="videos/bbb_trailer.mp4">Big Buck Bunny</option>
-          <option value="videos/ff_trailer_part1.mp4">Fantastic Four Part 1</option>
-          <option value="videos/ff_trailer_part3.mp4">Fantastic Four Part 2</option>
+          <option value="bbb_trailer">Big Buck Bunny</option>
+          <option value="ff_trailer_part1">Fantastic Four Part 1</option>
+          <option value="ff_trailer_part3">Fantastic Four Part 2</option>
         </select>
 
-        <select name="${resolution}" >
+        <select name="resolution">
           <option value="resolution" selected disabled>Resolution</option>
-          <option value="320x240">320x240</option>
+          <option value="256x144">256x144</option>
+          <option value="352x240">352x240</option>
+          <option value="480x360">480x360</option>
           <option value="640x480">640x480</option>
-          <option value="720x540">720x540</option>
-        </select>-->
+          <option value="1280x720">1280x720</option>
+        </select>
 
+        <!--
         <input type="text" name="name" id="name" value="${name}">
         <input type="text" name="resolution" id="resolution" value="${resolution}">
         <input type="text" name="rHeight" id="rHeight" value="${rHeight}">
-        <input type="text" name="rWidth" value="${rWidth}">
+        <input type="text" name="rWidth" value="${rWidth}">-->
 
         <!--<button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
 
