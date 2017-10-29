@@ -7,8 +7,6 @@ import TranscodingVM.*;
 import Repository.*;
 import Stream.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.Scanner;
 
@@ -32,8 +30,9 @@ public class Test {
             //TSC.add_VM(TC);
 
             //load Videos into Repository
-            Video V1=new Video("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/ff_trailer_part1/");
-            Video V2=new Video("/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/ff_trailer_part3/");
+                //path to be changed
+            Video V1=new Video("./repositoryvideos/ff_trailer_part1/");
+            Video V2=new Video("./repositoryvideos/ff_trailer_part3/");
 
             // Check point, enter any key to continue
             System.out.println("two video loaded, enter any key to continue");
@@ -68,9 +67,7 @@ public class Test {
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
         try  {
-            JAXBContext jaxbContext = JAXBContext.newInstance(ServerSettings.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            ServerSettings x = (ServerSettings) jaxbUnmarshaller.unmarshal(new File("setting"));System.out.println(x.defaultInputPath);
+
 
         } catch (Exception e) {
             return "Failed: " + e;

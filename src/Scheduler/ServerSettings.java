@@ -1,4 +1,5 @@
 package Scheduler;
+
 public class ServerSettings {
     // mainstay settings
     public static String[] supportedCodecs; //not being used right now
@@ -12,17 +13,13 @@ public class ServerSettings {
     public static int highscalingThreshold;
     public static double c_const_for_utilitybased=0.1; //default value=0.1
     public static String mapping_mechanism;// can be either MM,MSD,MMU
+
     // questionalble settings
+    public static String defaultInputPath; //
     public static String defaultOutputPath; //
     public static String defaultBatchScript; //
-    public String defaultInputPath; //
     public static String[] VM_address;
     public static int[] VM_ports;
-
-
-    public void setDefaultInputPath(String defaultInputPath) {
-        this.defaultInputPath = defaultInputPath;
-    }
     //check for each parameters if there is any Invalid
     public static boolean isSettingValid(){
         if(VMscaling){
