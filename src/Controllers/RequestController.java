@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by pi on 10/28/17.
  */
-@WebServlet(name = "RequestController", urlPatterns = "/processrequest")
+@WebServlet(name = "RequestController", urlPatterns = "/")
 public class RequestController extends HttpServlet {
 
     @Override
