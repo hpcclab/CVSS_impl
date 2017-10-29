@@ -16,17 +16,24 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         setting=s;
     }
 
-    private int priority;
+    private double priority;
 
     @Override
     public int compareTo(StreamGOP t1) {
-        return this.priority-t1.getPriority();
+        double diff=this.priority-t1.getPriority();
+        if(diff<0){
+            return -1;
+        }else if(diff>0){
+            return -1;
+        } else{
+            return 0;
+        }
     }
-    public int getPriority()
+    public double getPriority()
     {
         return priority;
     }
-    public void setPriority(int priority)
+    public void setPriority(double priority)
     {
         this.priority = priority;
     }

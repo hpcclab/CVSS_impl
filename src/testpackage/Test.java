@@ -2,9 +2,13 @@ package testpackage;
 
 import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler;
+import Scheduler.ServerSettings;
 import TranscodingVM.*;
 import Repository.*;
 import Stream.*;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.Scanner;
 
@@ -19,12 +23,12 @@ public class Test {
             //Set things up
             AdmissionControl AC = new AdmissionControl();
             GOPTaskScheduler GTS=new GOPTaskScheduler();
-            TranscodingVM TC = new TranscodingVM(5690); //new thread waiting at that port
-            TranscodingVM TC2 = new TranscodingVM(5691);
+            TranscodingVM TC = new TranscodingVM(ServerSettings.VM_ports[0]); //new thread waiting at that port
+            TranscodingVM TC2 = new TranscodingVM(ServerSettings.VM_ports[1]);
             TC.start();
             TC2.start();
-            GTS.add_VM("localhost",5690); //connect to that machine (localhost) and that port
-            GTS.add_VM("localhost",5691);
+            GTS.add_VM(ServerSettings.VM_address[0],ServerSettings.VM_ports[0]); //connect to that machine (localhost) and that port
+            GTS.add_VM(ServerSettings.VM_address[1],ServerSettings.VM_ports[1]);
             //TSC.add_VM(TC);
 
             //load Videos into Repository
@@ -56,12 +60,27 @@ public class Test {
             GTS.close();
             TC.close();
             TC2.close();
-            return "Successful " + System.getProperty("user.dir");
+            return "success";
         } catch (Exception e) {
             return "Failed: " + e;
         }
     }
+    //sandbox testing something strange, not really doing the program code
+    private static String testbug() {
+        try  {
+            JAXBContext jaxbContext = JAXBContext.newInstance(ServerSettings.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            ServerSettings x = (ServerSettings) jaxbUnmarshaller.unmarshal(new File("setting"));System.out.println(x.defaultInputPath);
+
+        } catch (Exception e) {
+            return "Failed: " + e;
+        }
+        return "done";
+    }
     //for test
-    public static void main(String[] args){test();}
+    public static void main(String[] args){
+        //System.out.println(test());
+        System.out.println(testbug());
+    }
 
 }
