@@ -17,12 +17,19 @@ public class Stream {
         streamGOPs= new ArrayList<StreamGOP>();
     }
     public Stream(Video v){
+        this(v,0,v.repositoryGOPs.size());
+    }
+    public Stream(Video v,int startSegment){
+        this(v,startSegment,v.repositoryGOPs.size());
+    }
+
+    public Stream(Video v,int startSegment,int endSegment){
         status=0;
         video =v;
         streamGOPs= new ArrayList<StreamGOP>();
-        for(RepositoryGOP x: v.repositoryGOPs){
-            StreamGOP xcopy=new StreamGOP(x);
-            //xcopy.setPriority((int)(Math.random()*10)); //admission Control may kick in here
+        //for(RepositoryGOP x: v.repositoryGOPs){
+        for(int i=startSegment;i<endSegment;i++){
+            StreamGOP xcopy=new StreamGOP(v.repositoryGOPs.get(i) );
             streamGOPs.add(xcopy);
         }
     }

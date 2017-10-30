@@ -30,10 +30,8 @@ public class Test {
             //Set things up
             VideoRepository VR=new VideoRepository();
             GOPTaskScheduler GTS=new GOPTaskScheduler();
-            TranscodingVM TC = new TranscodingVM(ServerConfig.VM_ports.get(0)); //new thread waiting at that port
-            TranscodingVM TC2 = new TranscodingVM(ServerConfig.VM_ports.get(1));
-            TC.start();
-            TC2.start();
+            VMProvisioner VMP=new VMProvisioner(2); //says we need at least two machines
+
             GTS.add_VM(ServerConfig.VM_address.get(0), ServerConfig.VM_ports.get(0)); //connect to that machine (localhost) and that port
             GTS.add_VM(ServerConfig.VM_address.get(1), ServerConfig.VM_ports.get(1));
             //TSC.add_VM(TC);
@@ -46,7 +44,7 @@ public class Test {
             scanner.next();
 
 
-            // create Stream from Video
+            // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
             Stream ST=new Stream(VR.videos.get(0)); //admission control can work in constructor, or later?
             ST.setting = ServerConfig.defaultBatchScript; //setting creation or selection?
 
@@ -64,8 +62,7 @@ public class Test {
 
             //wind down process
             GTS.close();
-            TC.close();
-            TC2.close();
+            VMP.closeAll();
             return "success";
         } catch (Exception e) {
             return "Failed: " + e;
