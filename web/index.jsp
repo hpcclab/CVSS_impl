@@ -19,7 +19,54 @@
 
   <link rel="stylesheet" href="css/style.css">
   <script src="javascript/videoplayer.js"></script>
+  <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+  <script src="https://unpkg.com/video.js/dist/video.js"></script>
+  <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
 
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+ <!-- <script>
+      $(document).ready(function() {
+          $('#somebutton').click(function() {
+              $.get('/processrequest', function(responseText) {
+                  $('#somediv').text(responseText);
+              });
+          });
+      });
+
+      $("#somebutton").click(function(){
+              $.ajax({
+                      url:'/processrequest',
+                      data:{name:'abc'},
+                      type:'get',
+                      cache:false,
+                      success:function(data){
+                          alert(data);
+                          $('#somediv').text(responseText);
+                      },
+                      error:function(){
+                          alert('error');
+                      }
+                  }
+              );
+          }
+      );
+  </script>
+
+  <script>
+      $.ajaxSetup({ cache: false });
+      $(document).ready(function() {
+          $('#mybutton').click(function(event) {
+              var form = (event.target.form),
+                  url = "/processrequest"
+                      + "?name=" + escape(form.elements.videoName.value())
+                      + "&resolution=" + escape(form.elements.resolution.value());
+
+              $.get(url, function(getData) {
+                  $('#somediv').text(getData);
+              });
+          });
+      });
+  </script>-->
 </head>
 
 <body>
@@ -43,8 +90,19 @@
 
     <div id="VideoPlayer">
 
-      <video id="Video" controls>
+      <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls preload auto>
+        <source
+                src="repositoryvideos/ff_trailer_part1/out.m3u8"
+                type="application/x-mpegURL">
       </video>
+      <script src="video.js"></script>
+      <script src="videojs-contrib-hls.min.js"></script>
+      <script>
+          var player = videojs('example-video');
+          player.play();
+      </script>
+      <!--<video id="Video" controls>
+      </video>-->
 
     </div>
 
@@ -54,7 +112,7 @@
     <div id="Label">More Options</div>
     <div id="OptionPanel">
 
-      <form action="${pageContext.request.contextPath}/processrequest" method="post">
+      <form id="request form" action="${pageContext.request.contextPath}/processrequest" method="post">
         <select id="Videos" name="videoName" >
           <option value="selectVideo.png" selected disabled>Videos</option>
           <option value="bbb_trailer">Big Buck Bunny</option>
@@ -105,8 +163,11 @@
           <option value=1.5>1.5</option>
           <option value=2>2</option>
         </select> -->
-        <input type="submit" name="play" value="Play">
-      </form>
+       <!-- <button id="testing button" onclick="SendMyRequest()">Play</button>
+        <!--<input type="submit" name="play" value="Play">-->
+      <!--</form>-->
+      <button id="mybutton">press here</button>
+      <div id="somediv"> </div>
 
       <!--
       <script type="javascript" src="jquery-3.2.1.js">
@@ -138,5 +199,25 @@
 
 
 </body>
+<script type="text/javascript" src="js/jq.js"></script>
+<script type="text/javascript">
+
+    var form = $('#form1');
+    form.submit(function () {
+
+        $.ajax({
+            type: form.attr('method'),
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (data) {
+                var result=data;
+                $('#result').attr("value",result);
+
+            }
+        });
+
+        return false;
+    });
+</script>
 
 </html>

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by pi on 10/28/17.
@@ -13,8 +14,53 @@ import java.io.IOException;
 @WebServlet(name = "RequestController", urlPatterns = "/processrequest")
 public class RequestController extends HttpServlet {
 
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    /*
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String name = request.getParameter("videoName");
+        String resolution = request.getParameter("resolution");
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(resolution +" "+ name);
+        //String text = "Update successfull"; //message you will recieve
+        //String name = request.getParameter("name");
+        //PrintWriter out = response.getWriter();
+      //  out.println(name + " " + text);
+        // System.out.println(request);
+
+        //  PrintWriter out = response.getWriter();
+        //  out.println(text + " " + name);
+    }
+    */
+
+
+    //@Override
+    private void forwardResponse(HttpServletRequest request, HttpServletResponse response)
+    {
+        try {
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
+        catch (ServletException e){
+            System.out.print(e);
+            e.printStackTrace();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            System.out.print(e);
+        }
+
+    }
+
+   ///*
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println(request);
         System.out.println(response);
 
@@ -33,22 +79,7 @@ public class RequestController extends HttpServlet {
 
         forwardResponse(request, response);
     }
-
-    private void forwardResponse(HttpServletRequest request, HttpServletResponse response)
-    {
-        try {
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
-        }
-        catch (ServletException e){
-            System.out.print(e);
-            e.printStackTrace();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            System.out.print(e);
-        }
-
-    }
+    //*/
 
     private static class RequestResult {
 

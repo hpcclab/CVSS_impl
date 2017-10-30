@@ -11,7 +11,25 @@ import javax.servlet.*;
 import java.io.*;
 
 public class Servlet extends HttpServlet{
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String text = "Update maybe successfull"; //message you will recieve
+        String name = request.getParameter("name");
+        //PrintWriter out = response.getWriter();
+        //out.println(name + " " + text);
+        System.out.println(text + " " + name);
+
+    }
+
+    /*
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
         response.setContentType("text/html");
         PrintWriter pw = response.getWriter();
 
@@ -28,8 +46,9 @@ public class Servlet extends HttpServlet{
         } catch (Exception e) {
         }
     }
+    */
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+   /* public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         response.setContentType("text/html");
         PrintWriter pw = response.getWriter();
 
@@ -45,5 +64,5 @@ public class Servlet extends HttpServlet{
             //t.AddJob(repositoryGop);
         } catch (Exception e) {
         }
-    }
+    }*/
 }
