@@ -10,8 +10,14 @@ public class TranscodingThread extends Thread{
     private void TranscodeSegment()
     {
         int i=0;
+        int exit=0;
         while(!jobs.isEmpty()) {
             RepositoryGOP aRepositoryGOP = jobs.poll();
+            if(aRepositoryGOP.setting.equalsIgnoreCase("shutdown")){
+                exit=1;
+                System.out.println("VM's queue is empty and receiving shutting down command");
+                break;
+            }
             //System.out.println(aRepositoryGOP.getPath());
             String filename= aRepositoryGOP.getPath().substring(aRepositoryGOP.getPath().lastIndexOf("/")+1, aRepositoryGOP.getPath().length());
             //String[] command = {"ffmpeg", "-i", aRepositoryGOP.getPath(), "-s", "320:240", "-c:a", "copy", "/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/output/"+(i++) +".mp4"};//jobs.poll().getPath()
@@ -29,9 +35,9 @@ public class TranscodingThread extends Thread{
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-
-            //TODO: what to do after finish each RepositoryGOP ?
-            //SendSegmentToVideoMerger();
+        }
+        if(exit!=0){
+            //receive exit command, now what?
         }
     }
 

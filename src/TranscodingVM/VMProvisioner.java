@@ -11,37 +11,50 @@ public class VMProvisioner {
     //private String imageId;
     private int minimumMaintain;
     private static int VMcount=0;
-    private int QOSUpperBound;
-    private int QOSLowerBound;
+    //private double highscalingThreshold; //get from ServerConfig
+    //private double lowscalingThreshold;
     private int semaphore;
     private ArrayList<TranscodingVM> instance=new ArrayList<>();
-
     public VMProvisioner(){
         this(0);
     }
     public VMProvisioner(int minimumVMtomaintain){
         minimumMaintain=minimumVMtomaintain;
-        EvaluateClusterSize();
+        EvaluateClusterSize(-1,0);
     }
-
-    public void EvaluateClusterSize(){
+    //this need to be call periodically somehow
+    public void EvaluateClusterSize(double deadlineMissrate,int virtual_queuelength){
+        int diff;
         //check QOS UpperBound, QOS LowerBound, update decision parameters
+        if(deadlineMissrate!=-1){ //-1 set special for just ignore this section
+            if(deadlineMissrate<ServerConfig.lowscalingThreshold){
+                //we need to scale up by n
+                diff= virtual_queuelength/(ServerConfig.remedialVM_constantfactor); // then divided by beta?
+            }else if(deadlineMissrate>ServerConfig.highscalingThreshold){
+                //we might consider scale down
+
+                //select a VM to terminate, as they are not all the same
+                //
+            }
+
+                //no remidial yet
+        }
         // ...
-        int size=minimumMaintain; // tempolary
+        diff=minimumMaintain; // tempolary
 
         // then scaling to size
-        if(size>VMcount){
+        if(diff>0){
             //add more VM
-            AddInstances(size); //now work like, scaleTo(size)
+            AddInstances(diff); //now work like, scaleTo(size)
         }else{
             //reduce VM numbers
-            DeleteInstances(size);
+            DeleteInstances(diff);
         }
     }
     //pull VM data from setting file
-    public int AddInstances(int x){
-        while(x>VMcount) {
-            //
+    public int AddInstances(int diff){
+
+        for(int i=0;i<diff;i++){
             TranscodingVM TC = new TranscodingVM(ServerConfig.VM_ports.get(VMcount));
             TC.start();
             instance.add(TC);
@@ -50,8 +63,16 @@ public class VMProvisioner {
         }
         return VMcount;
     }
-    public int DeleteInstances(int x){
+    public int DeleteInstances(int diff){
+        diff*=-1; //change to positive numbers
+        for(int i=0;i<diff;i++) {
+            TranscodingVM TCtoRemove=instance.remove(instance.size()-1);
+            //need a way to tell GOPTaskScheduler to send shutdown message
 
+            TCtoRemove.close();
+        }
+        ///
+        ///
         return VMcount;
     }
     public void closeAll(){

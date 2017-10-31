@@ -41,6 +41,17 @@ public class VMinterface {
         }
         return true;
     }
+    public boolean sendShutdownmessage(){
+        try {
+            RepositoryGOP poison=new RepositoryGOP();
+            poison.setting="shutdown";
+            oos.writeObject(poison);
+        }catch(Exception e){
+            System.out.println(e);
+            return false;
+        }
+        return true;
+    }
     public void close(){
         try {
             ois.close();

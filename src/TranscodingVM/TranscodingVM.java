@@ -2,10 +2,7 @@ package TranscodingVM;
 
 import Repository.RepositoryGOP;
 
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 //import com.amazonaws.services.ec2.model.Instance;
@@ -57,6 +54,12 @@ public class TranscodingVM extends Thread{
                 RepositoryGOP objectX =(RepositoryGOP) ois.readObject();
                 //System.out.println("ObjectX's path"+objectX.getPath());
                 AddJob(objectX);
+                if(objectX.setting.equalsIgnoreCase("shutdown")){
+                    //receive shutting down message, close down receiving communication
+                    //whatever in the queue will still be processed until queue is empty
+                    close();
+                    break;
+                }
             }
         }catch(Exception e){
             System.out.println("Failed: " + e);
@@ -75,6 +78,10 @@ public class TranscodingVM extends Thread{
         }
     }
     public void close(){
-
+        try {
+            s.close();
+        } catch (Exception e) {
+            System.out.println("Failed: " + e);
+        }
     }
 }
