@@ -11,37 +11,28 @@ import java.io.*;
 /**
  * Created by pi on 10/28/17.
  */
-@WebServlet(name = "RequestController", urlPatterns = "/processrequest")
+//@WebServlet(name = "RequestController", urlPatterns = "/processrequest")
 public class RequestController extends HttpServlet {
 
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
-    }
+        System.out.println("beginning of servlet");
 
-    /*
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String name = request.getParameter("videoName");
+        String name = request.getParameter("videoname");
         String resolution = request.getParameter("resolution");
+
+        if(name.equals("")){
+            name = "Hello User";
+        }
+        name = "repositoryvideos/" + name + "/out.m3u8";
+        System.out.println(name);
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(resolution +" "+ name);
-        //String text = "Update successfull"; //message you will recieve
-        //String name = request.getParameter("name");
-        //PrintWriter out = response.getWriter();
-      //  out.println(name + " " + text);
-        // System.out.println(request);
-
-        //  PrintWriter out = response.getWriter();
-        //  out.println(text + " " + name);
+        response.getWriter().write(name);
+        System.out.println("end of servlet");
     }
-    */
-
-
+/*
     //@Override
     private void forwardResponse(HttpServletRequest request, HttpServletResponse response)
     {
@@ -58,26 +49,10 @@ public class RequestController extends HttpServlet {
         }
 
     }
-
+*/
    ///*
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println(request);
-        System.out.println(response);
 
-        String name = request.getParameter("videoName");
-        String resolution = request.getParameter("resolution");
-
-        System.out.println(name);
-        System.out.print(resolution);
-        //        RequestResult webrequest = RequestResult.fromRequestParameters(request);
-       // webrequest.setAsRequestAttributes(request);
-
-  //      System.out.println(webrequest.name);
-    //    System.out.println(webrequest.resolution);
-      //  System.out.println(webrequest.rHeight);
-        //System.out.println(webrequest.rWidth);
-
-        forwardResponse(request, response);
     }
     //*/
 

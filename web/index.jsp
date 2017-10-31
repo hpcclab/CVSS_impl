@@ -18,55 +18,32 @@
   <meta name="author" content="HPCCLab">
 
   <link rel="stylesheet" href="css/style.css">
-  <script src="javascript/videoplayer.js"></script>
+  <!--<script src="javascript/videoplayer.js"></script>-->
   <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
   <script src="https://unpkg.com/video.js/dist/video.js"></script>
   <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
 
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
- <!-- <script>
-      $(document).ready(function() {
-          $('#somebutton').click(function() {
-              $.get('/processrequest', function(responseText) {
-                  $('#somediv').text(responseText);
-              });
-          });
-      });
-
-      $("#somebutton").click(function(){
-              $.ajax({
-                      url:'/processrequest',
-                      data:{name:'abc'},
-                      type:'get',
-                      cache:false,
-                      success:function(data){
-                          alert(data);
-                          $('#somediv').text(responseText);
-                      },
-                      error:function(){
-                          alert('error');
-                      }
-                  }
-              );
-          }
-      );
-  </script>
-
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
   <script>
-      $.ajaxSetup({ cache: false });
-      $(document).ready(function() {
-          $('#mybutton').click(function(event) {
-              var form = (event.target.form),
-                  url = "/processrequest"
-                      + "?name=" + escape(form.elements.videoName.value())
-                      + "&resolution=" + escape(form.elements.resolution.value());
+      $(document).ready(function(){
+          $('#submit').click(function(event){
+              var videoname=$('#Videos').val();
+              var resolution=$('#resolution').val();
+              $.get('RequestController',{videoname:videoname, resolution:resolution},function(responseText){
+                  //$('#somediv').text(responseText);
+                  var player = videojs('example-video');
+                  var text = responseText;
+                  player.src({
+                      src: text,
+                      type: 'application/x-mpegURL',
+                      withCredentials: true
+                  });
+                  player.play();
 
-              $.get(url, function(getData) {
-                  $('#somediv').text(getData);
               });
           });
       });
-  </script>-->
+  </script>
 </head>
 
 <body>
@@ -90,20 +67,15 @@
 
     <div id="VideoPlayer">
 
-      <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls preload auto>
-        <source
-                src="repositoryvideos/ff_trailer_part1/out.m3u8"
+      <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls="" autoplay="">
+        <source id="videosrc"
+                src="repositoryvideos/ff_trailer_part3/out.m3u8"
                 type="application/x-mpegURL">
       </video>
-      <script src="video.js"></script>
-      <script src="videojs-contrib-hls.min.js"></script>
       <script>
           var player = videojs('example-video');
           player.play();
       </script>
-      <!--<video id="Video" controls>
-      </video>-->
-
     </div>
 
   </div>
@@ -117,10 +89,10 @@
           <option value="selectVideo.png" selected disabled>Videos</option>
           <option value="bbb_trailer">Big Buck Bunny</option>
           <option value="ff_trailer_part1">Fantastic Four Part 1</option>
-          <option value="ff_trailer_part3">Fantastic Four Part 2</option>
+          <option value="ff_trailer_part3">Fantastic Four Part 3</option>
         </select>
 
-        <select name="resolution">
+        <select id="resolution" name="resolution">
           <option value="resolution" selected disabled>Resolution</option>
           <option value="256x144">256x144</option>
           <option value="352x240">352x240</option>
@@ -165,8 +137,8 @@
         </select> -->
        <!-- <button id="testing button" onclick="SendMyRequest()">Play</button>
         <!--<input type="submit" name="play" value="Play">-->
-      <!--</form>-->
-      <button id="mybutton">press here</button>
+        <input id="submit" type="button" value="Play">
+      </form>
       <div id="somediv"> </div>
 
       <!--
