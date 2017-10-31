@@ -101,13 +101,7 @@
           <option value="1280x720">1280x720</option>
         </select>
 
-        <!--
-        <input type="text" name="name" id="name" value="${name}">
-        <input type="text" name="resolution" id="resolution" value="${resolution}">
-        <input type="text" name="rHeight" id="rHeight" value="${rHeight}">
-        <input type="text" name="rWidth" value="${rWidth}">-->
-
-        <!--<button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
+        <button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
 
         <div id="ConversionPanel">
 
@@ -134,24 +128,12 @@
           <option value=1>1</option>
           <option value=1.5>1.5</option>
           <option value=2>2</option>
-        </select> -->
-       <!-- <button id="testing button" onclick="SendMyRequest()">Play</button>
-        <!--<input type="submit" name="play" value="Play">-->
+        </select>
+       <button id="testing button" onclick="SendMyRequest()">Play</button>
+        <input type="submit" name="play" value="Play">
         <input id="submit" type="button" value="Play">
       </form>
       <div id="somediv"> </div>
-
-      <!--
-      <script type="javascript" src="jquery-3.2.1.js">
-          function pst(){
-              $.post("http://localhost:8080/servlet", function(data){
-                  $(".result").html(data);
-                  $.append(data)
-              });
-          }
-      </script>
-      -->
-
     </div>
 
   </div>
