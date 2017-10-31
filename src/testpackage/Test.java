@@ -29,20 +29,16 @@ public class Test {
 
             //Set things up
             VideoRepository VR=new VideoRepository();
-            GOPTaskScheduler GTS=new GOPTaskScheduler();
             VMProvisioner VMP=new VMProvisioner(2); //says we need at least two machines
+            GOPTaskScheduler GTS=new GOPTaskScheduler();
 
-            GTS.add_VM(ServerConfig.VM_address.get(0), ServerConfig.VM_ports.get(0)); //connect to that machine (localhost) and that port
-            GTS.add_VM(ServerConfig.VM_address.get(1), ServerConfig.VM_ports.get(1));
-            //TSC.add_VM(TC);
 
             //load Videos into Repository
             VR.addAllKnownVideos();
 
             // Check point, enter any key to continue
-            System.out.println("two video loaded, enter any key to continue");
+            System.out.println("system start and video loaded, enter any key to continue");
             scanner.next();
-
 
             // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
             Stream ST=new Stream(VR.videos.get(0)); //admission control can work in constructor, or later?

@@ -3,7 +3,7 @@ import Repository.RepositoryGOP;
 
 
 public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
-    public String setting;
+    public String setting="";
 
     public StreamGOP(){
         super();
@@ -20,11 +20,11 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
 
     @Override
     public int compareTo(StreamGOP t1) {
-        double diff=this.priority-t1.getPriority();
+        double diff=t1.getPriority()-this.priority;
         if(diff<0){
             return -1;
         }else if(diff>0){
-            return -1;
+            return 1;
         } else{
             return 0;
         }

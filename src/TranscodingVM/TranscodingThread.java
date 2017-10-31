@@ -1,18 +1,19 @@
 package TranscodingVM;
 
 import Repository.RepositoryGOP;
+import Stream.StreamGOP;
 
 import java.util.PriorityQueue;
 
 public class TranscodingThread extends Thread{
-    public PriorityQueue<RepositoryGOP> jobs = new PriorityQueue<RepositoryGOP>();
+    public PriorityQueue<StreamGOP> jobs = new PriorityQueue<StreamGOP>();
 
     private void TranscodeSegment()
     {
         int i=0;
         int exit=0;
         while(!jobs.isEmpty()) {
-            RepositoryGOP aRepositoryGOP = jobs.poll();
+            StreamGOP aRepositoryGOP = jobs.poll();
             if(aRepositoryGOP.setting.equalsIgnoreCase("shutdown")){
                 exit=1;
                 System.out.println("VM's queue is empty and receiving shutting down command");

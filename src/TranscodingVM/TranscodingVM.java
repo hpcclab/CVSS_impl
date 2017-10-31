@@ -1,6 +1,7 @@
 package TranscodingVM;
 
 import Repository.RepositoryGOP;
+import Stream.StreamGOP;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -51,7 +52,7 @@ public class TranscodingVM extends Thread{
         //TODO: have a way to gracefully terminate without causing error and force quit
         try {
             while(!s.isClosed()){
-                RepositoryGOP objectX =(RepositoryGOP) ois.readObject();
+                StreamGOP objectX =(StreamGOP) ois.readObject();
                 //System.out.println("ObjectX's path"+objectX.getPath());
                 AddJob(objectX);
                 if(objectX.setting.equalsIgnoreCase("shutdown")){
@@ -67,10 +68,8 @@ public class TranscodingVM extends Thread{
         System.out.println("closed");
     }
 
-    public void AddJob(RepositoryGOP segment)
+    public void AddJob(StreamGOP segment)
     {
-
-        System.out.println("test");
         TT.jobs.add(segment);
         if(!TT.isAlive()){
             TT.start();
