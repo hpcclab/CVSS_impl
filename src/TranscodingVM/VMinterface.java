@@ -1,6 +1,7 @@
 package TranscodingVM;
 
 import Repository.RepositoryGOP;
+import Stream.StreamGOP;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -41,10 +42,23 @@ public class VMinterface {
         }
         return true;
     }
+    public int queueSizeUpdate(){
+        try {
+            StreamGOP query = new StreamGOP();
+            query.setting = "query";
+            oos.writeObject(query); //they expect an object, thus we need to send object
+            return (Integer)ois.readObject();
+        }catch(Exception e){
+            System.out.println(e);
+            return -1;
+        }
+        //return 0;
+    }
     public boolean sendShutdownmessage(){
         try {
-            RepositoryGOP poison=new RepositoryGOP();
+            StreamGOP poison=new StreamGOP();
             poison.setting="shutdown";
+            poison.setPriority(0);
             oos.writeObject(poison);
         }catch(Exception e){
             System.out.println(e);

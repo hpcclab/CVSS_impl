@@ -25,11 +25,21 @@ public class VMProvisioner {
         minimumMaintain=minimumVMtomaintain;
         EvaluateClusterSize(-1,0);
     }
+    private static void collectData(){
+        //choice A: direct read (not feasible in real multiple VM run)
+        //choice B: send packet to ask and wait for reply (need ID)
+        for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
+            int x=GOPTaskScheduler.VMinterfaces.get(i).queueSizeUpdate();
+            GOPTaskScheduler.VMinterfaces.get(i).estimatedqueuelength=x;
+            System.out.println("update queue length data to "+x);
+        }
+    }
     //this need to be call periodically somehow
     public static void EvaluateClusterSize(double deadlineMissrate,int virtual_queuelength){
         int diff=0;
         //check QOS UpperBound, QOS LowerBound, update decision parameters
         if(deadlineMissrate!=-1){ //-1 set special for just ignore this section
+            collectData();
             if(deadlineMissrate>ServerConfig.highscalingThreshold){
                 //we need to scale up by n
                 diff= virtual_queuelength/(ServerConfig.remedialVM_constantfactor); // then divided by beta?
@@ -66,7 +76,7 @@ public class VMProvisioner {
             System.out.println("VM " + VMcount + " started");
             // connect interface to GOPTaskScheduler, add small delay before connect
             try {
-                sleep(1);
+                sleep(2);
             }catch(Exception e){
 
             }

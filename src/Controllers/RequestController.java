@@ -23,6 +23,9 @@ public class RequestController extends HttpServlet {
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(userRequest.outputDir());
+        //
+
+        //
     }
 
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

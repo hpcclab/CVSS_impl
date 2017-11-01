@@ -54,12 +54,18 @@ public class TranscodingVM extends Thread{
             while(!s.isClosed()){
                 StreamGOP objectX =(StreamGOP) ois.readObject();
                 //System.out.println("ObjectX's path"+objectX.getPath());
-                AddJob(objectX);
+
                 if(objectX.setting.equalsIgnoreCase("shutdown")){
                     //receive shutting down message, close down receiving communication
                     //whatever in the queue will still be processed until queue is empty
+                    AddJob(objectX); //still add to the queue
                     close();
                     break;
+                }else if (objectX.setting.equalsIgnoreCase("query")){
+                    System.out.println("replying back "+TT.jobs.size());
+                    oos.writeObject(TT.jobs.size());
+                }else{
+                    AddJob(objectX);
                 }
             }
         }catch(Exception e){

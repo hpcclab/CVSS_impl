@@ -11,7 +11,7 @@ import java.util.PriorityQueue;
 public class GOPTaskScheduler {
     private PriorityQueue<StreamGOP> Batchqueue=new PriorityQueue<StreamGOP>();
     private int working=0;
-    private static ArrayList<VMinterface> VMinterfaces =new ArrayList<VMinterface>();
+    public static ArrayList<VMinterface> VMinterfaces =new ArrayList<VMinterface>();
     public GOPTaskScheduler(){
         if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
             //add server list to ShortestQueueFirst list too
