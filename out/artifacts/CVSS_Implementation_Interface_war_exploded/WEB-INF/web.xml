@@ -11,4 +11,7 @@
         <servlet-name>RequestController</servlet-name>
         <url-pattern>/RequestController</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>Controllers.ApplicationListener</listener-class>
+    </listener>
 </web-app>

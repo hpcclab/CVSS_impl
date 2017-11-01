@@ -21,11 +21,12 @@ public class Test {
         try {
             Scanner scanner=new Scanner(System.in);
             //read config file
+
+
             File configfile=new File("config.xml");
             JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
             Unmarshaller um = ctx.createUnmarshaller();
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
 
             //Set things up
             VideoRepository VR=new VideoRepository();
@@ -35,6 +36,8 @@ public class Test {
 
             //load Videos into Repository
             VR.addAllKnownVideos();
+
+
 
             // Check point, enter any key to continue
             System.out.println("system start and video loaded, enter any key to continue");

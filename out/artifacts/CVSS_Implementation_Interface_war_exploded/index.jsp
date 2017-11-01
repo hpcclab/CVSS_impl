@@ -29,18 +29,20 @@
           $('#submit').click(function(event){
               var videoname=$('#Videos').val();
               var resolution=$('#resolution').val();
-              $.get('RequestController',{videoname:videoname, resolution:resolution},function(responseText){
-                  //$('#somediv').text(responseText);
-                  var player = videojs('example-video');
-                  var text = responseText;
-                  player.src({
-                      src: text,
-                      type: 'application/x-mpegURL',
-                      withCredentials: true
-                  });
-                  player.play();
+              if(videoname !== null){
+                $.get('RequestController',{videoname:videoname, resolution:resolution},function(responseText){
+                    //$('#somediv').text(responseText);
+                    var player = videojs('example-video');
+                    var text = responseText;
+                    player.src({
+                        src: text,
+                        type: 'application/x-mpegURL',
+                        withCredentials: true
+                    });
+                    player.play();
 
-              });
+                });
+              }
           });
       });
   </script>
@@ -65,11 +67,11 @@
 
   <div id="Wrapper">
 
-    <div id="VideoPlayer">
+    <div id="VideoPlayer" style="margin: auto">
 
       <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls="" autoplay="">
         <source id="videosrc"
-                src="repositoryvideos/ff_trailer_part3/out.m3u8"
+                src="repositoryvideos/bbb_trailer/out.m3u8"
                 type="application/x-mpegURL">
       </video>
       <script>
@@ -101,7 +103,7 @@
           <option value="1280x720">1280x720</option>
         </select>
 
-        <button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
+        <!--<button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
 
         <div id="ConversionPanel">
 
@@ -119,6 +121,7 @@
 
         </div>
 
+
         <button id="SubtitleButton" class="button" title="subtitles" onclick=''>Subtitles</button>
 
         <select id="PlaybackRate" name="PlaybackRate" onchange="changePlaybackRate();">
@@ -129,8 +132,8 @@
           <option value=1.5>1.5</option>
           <option value=2>2</option>
         </select>
-       <button id="testing button" onclick="SendMyRequest()">Play</button>
-        <input type="submit" name="play" value="Play">
+        -->
+
         <input id="submit" type="button" value="Play">
       </form>
       <div id="somediv"> </div>
@@ -153,25 +156,4 @@
 
 
 </body>
-<script type="text/javascript" src="js/jq.js"></script>
-<script type="text/javascript">
-
-    var form = $('#form1');
-    form.submit(function () {
-
-        $.ajax({
-            type: form.attr('method'),
-            url: form.attr('action'),
-            data: form.serialize(),
-            success: function (data) {
-                var result=data;
-                $('#result').attr("value",result);
-
-            }
-        });
-
-        return false;
-    });
-</script>
-
 </html>

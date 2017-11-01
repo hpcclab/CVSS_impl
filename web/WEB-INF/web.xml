@@ -5,10 +5,13 @@
          version="3.1">
     <servlet>
         <servlet-name>RequestController</servlet-name>
-        <servlet-class>Controllers.RequestController</servlet-class>
+        <servlet-class>Servlets.RequestController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RequestController</servlet-name>
         <url-pattern>/RequestController</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>Servlets.ApplicationListener</listener-class>
+    </listener>
 </web-app>
