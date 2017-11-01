@@ -25,6 +25,7 @@ public class ServerConfig {
     public static boolean enableCaching=false; //if true, use caching system
     public static boolean enableVMscaling=false;
     public static int maxVM; //set max number of VMs
+    public static int maxVMqueuelength=2; //maximum allowable queue length
     public static int remedialVM_constantfactor=10; //default value=10
     public static int lowscalingThreshold; // for VM provisioning algorithms
     public static int highscalingThreshold;
@@ -116,6 +117,10 @@ public class ServerConfig {
     @XmlElement(name = "maxVM")
     public void setMaxVM(int maxVM) {
         ServerConfig.maxVM = maxVM;
+    }
+    @XmlElement(name = "maxVMqueuelength")
+    public void setMaxVMqueuelength(int maxVMqueuelength) {
+        ServerConfig.maxVMqueuelength = maxVMqueuelength;
     }
     @XmlElement(name = "remedialVM_constantfactor")
     public void setRemedialVM_constantfactor(int remedialVM_constantfactor) {

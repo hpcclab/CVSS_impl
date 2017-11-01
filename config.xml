@@ -11,8 +11,9 @@
     <enableCaching>false</enableCaching>
     <enableVMscaling>true</enableVMscaling>
     <maxVM>100</maxVM>
+    <maxVMqueuelength>2</maxVMqueuelength>
 
-    <mapping_mechanism>RR</mapping_mechanism>
+    <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>
 
     <videoList>./repositoryvideos/ff_trailer_part1/</videoList>
     <videoList>./repositoryvideos/ff_trailer_part3/</videoList>
@@ -23,6 +24,21 @@
     <VM_address>localhost</VM_address>
     <VM_ports>5061</VM_ports>
 
+    <VM_address>localhost</VM_address>
+    <VM_ports>5062</VM_ports>
+
+    <VM_address>localhost</VM_address>
+    <VM_ports>5063</VM_ports>
+
+    <VM_address>localhost</VM_address>
+    <VM_ports>5064</VM_ports>
+
+    <VM_address>localhost</VM_address>
+    <VM_ports>5065</VM_ports>
+    <VM_address>localhost</VM_address>
+    <VM_ports>5066</VM_ports>
+    <VM_address>localhost</VM_address>
+    <VM_ports>5067</VM_ports>
 </serverConfig>
 
 
