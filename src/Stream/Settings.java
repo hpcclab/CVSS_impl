@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class Settings {
 
+    public String absPath;
     public boolean resolution = false;
     public boolean bitrate = false;
     public boolean subtitles = false;
@@ -12,12 +13,11 @@ public class Settings {
     public String resWidth = "";
     public String resHeight = "";
 
-    public Settings(HttpServletRequest request){
+    public Settings(HttpServletRequest request) {
         this.videoname = request.getParameter("videoname");
         String resolution = request.getParameter("resolution");
 
-        if(!resolution.equals(""))
-        {
+        if (!resolution.equals("")) {
             this.resolution = true;
             String[] resData = resolution.split("x");
             this.resWidth = resData[0];
@@ -25,8 +25,8 @@ public class Settings {
         }
     }
 
-    public String outputDir(){
-        return "repositoryvideos/" + videoname + "/out.m3u8";
-        //return "output/" + videoname + resWidth + resHeight + "/out.m3u8";
+    public String outputDir() {
+        //return "repositoryvideos/" + videoname + "/out.m3u8";
+        return "output/" + videoname + resWidth + resHeight;
     }
 }

@@ -3,7 +3,8 @@ import Repository.RepositoryGOP;
 
 
 public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
-    public String setting="";
+    public Settings userSetting;
+    public String setting;
 
     public StreamGOP(){
         super();
@@ -11,9 +12,9 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public StreamGOP(RepositoryGOP x){
         super(x);
     }
-    public StreamGOP(RepositoryGOP x, String s){
+    public StreamGOP(RepositoryGOP x, Settings settings){
         super(x);
-        setting=s;
+        this.userSetting=settings;
     }
 
     private double priority;

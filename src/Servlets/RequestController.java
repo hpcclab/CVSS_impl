@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 
 import static Singletons.GTSSingleton.GTS;
@@ -22,23 +23,54 @@ public class RequestController extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String absPath = "/home/pi/Documents/VHPCC/workspace/CVSS_impl";
         Settings userRequest = new Settings(request);
-        //start video processing
+        userRequest.absPath = absPath;
+
+        //check for existing output directory and create one if it does not exist
+        CreateDirectory(userRequest);
+
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(userRequest.outputDir());
+        response.getWriter().write(userRequest.outputDir() + "/out.m3u8");
+        //start video processing
         //
-
+        InitializeStream(userRequest);
         //
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
-    public void InitializeStream(){
+    public void CreateDirectory(Settings userRequest){
+        File dir = new File("web/" + userRequest.outputDir());
+        if (dir.exists()){
+            return;
+        }
+
+        String absPath = "/home/pi/Documents/VHPCC/workspace/CVSS_impl";
+
+        System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
+
+        String[] command = {"bash", absPath + "/bash/createDir.sh", userRequest.outputDir(),userRequest.absPath, userRequest.videoname};
+
+        try {
+            ProcessBuilder pb = new ProcessBuilder(command);
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+
+            pb.start();
+            Process p = pb.start();
+            p.waitFor();
+        } catch (Exception e){
+
+        }
+    }
+
+    public void InitializeStream(Settings userRequest){
         // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
-        Stream ST=new Stream(VR.videos.get(0)); //admission control can work in constructor, or later?
-        ST.setting = ServerConfig.defaultBatchScript; //setting creation or selection?
+        Stream ST=new Stream(VR.videos.get(0),userRequest); //admission control can work in constructor, or later?
 
         //Admission Control assign Priority of each segments
         AdmissionControl.AssignStreamPriority(ST);

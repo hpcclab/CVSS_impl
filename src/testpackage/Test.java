@@ -18,6 +18,7 @@ import java.util.Scanner;
 public class Test {
 
     public static String test() {
+            /*
         try {
             Scanner scanner=new Scanner(System.in);
             //read config file
@@ -66,6 +67,8 @@ public class Test {
         } catch (Exception e) {
             return "Failed: " + e;
         }
+        */
+            return "";
     }
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
