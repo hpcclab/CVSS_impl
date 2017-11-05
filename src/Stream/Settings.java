@@ -26,7 +26,7 @@ public class Settings {
     }
 
     public String outputDir() {
-        //return "repositoryvideos/" + videoname + "/out.m3u8";
-        return "output/" + videoname + resWidth + resHeight;
+        return "repositoryvideos/" + videoname + "/out.m3u8";
+        //return "output/" + videoname + resWidth + resHeight;
     }
 }

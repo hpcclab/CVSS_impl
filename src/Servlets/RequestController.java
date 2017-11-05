@@ -28,14 +28,15 @@ public class RequestController extends HttpServlet {
         userRequest.absPath = absPath;
 
         //check for existing output directory and create one if it does not exist
-        CreateDirectory(userRequest);
+        //CreateDirectory(userRequest);
 
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(userRequest.outputDir() + "/out.m3u8");
+        //response.getWriter().write(userRequest.outputDir() + "/out.m3u8");
+        response.getWriter().write(userRequest.outputDir());
         //start video processing
         //
-        InitializeStream(userRequest);
+        //InitializeStream(userRequest);
         //
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

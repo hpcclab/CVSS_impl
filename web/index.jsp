@@ -102,7 +102,7 @@
           <option value="1280x720">1280x720</option>
         </select>
 
-        <!--<button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
+        <button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
 
         <div id="ConversionPanel">
 
@@ -131,7 +131,7 @@
           <option value=1.5>1.5</option>
           <option value=2>2</option>
         </select>
-        -->
+
 
         <input id="submit" type="button" value="Play">
       </form>
