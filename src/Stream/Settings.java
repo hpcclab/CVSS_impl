@@ -12,7 +12,9 @@ public class Settings {
     public String videoname = "";
     public String resWidth = "";
     public String resHeight = "";
+    public Settings(){
 
+    }
     public Settings(HttpServletRequest request) {
         this.videoname = request.getParameter("videoname");
         String resolution = request.getParameter("resolution");

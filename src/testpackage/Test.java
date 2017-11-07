@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class Test {
 
     public static String test() {
-            /*
+
         try {
             Scanner scanner=new Scanner(System.in);
             //read config file
@@ -43,10 +43,10 @@ public class Test {
             // Check point, enter any key to continue
             System.out.println("system start and video loaded, enter any key to continue");
             scanner.next();
-
+            Settings setting=new Settings();
             // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
-            Stream ST=new Stream(VR.videos.get(0)); //admission control can work in constructor, or later?
-            ST.setting = ServerConfig.defaultBatchScript; //setting creation or selection?
+            Stream ST=new Stream(VR.videos.get(0),setting); //admission control can work in constructor, or later?
+            //ST.setting = ServerConfig.defaultBatchScript; //setting creation or selection?
 
             //Admission Control assign Priority of each segments
             AdmissionControl.AssignStreamPriority(ST);
@@ -67,8 +67,7 @@ public class Test {
         } catch (Exception e) {
             return "Failed: " + e;
         }
-        */
-            return "";
+
     }
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
