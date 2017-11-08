@@ -23,7 +23,6 @@
     <orderEntry type="library" name="Jersey-2.2" level="project" />
     <orderEntry type="library" name="aws-java-sdk-1.11.156-javadoc" level="project" />
     <orderEntry type="library" name="aws-java-sdk-1.11.156-sources" level="project" />
-    <orderEntry type="library" name="aws-java-sdk-1.11.156" level="project" />
     <orderEntry type="library" name="servlet-api" level="project" />
   </component>
 </module>

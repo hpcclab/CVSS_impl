@@ -4,7 +4,7 @@ import Repository.RepositoryGOP;
 
 public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
     public Settings userSetting;
-    public String setting;
+    public String setting="";
 
     public StreamGOP(){
         super();

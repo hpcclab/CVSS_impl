@@ -4,6 +4,10 @@ import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import TranscodingVM.VMinterface;
 
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
@@ -23,6 +27,17 @@ public class VMProvisioner {
     }
     public VMProvisioner(int minimumVMtomaintain){
         minimumMaintain=minimumVMtomaintain;
+        //set up task for evaluate cluster size every ms
+        if(ServerConfig.VMscalingInterval>0){
+            ActionListener taskPerformer = new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    EvaluateClusterSize(0.8, 10); //still need new values for parameters
+                }
+            };
+            new Timer(ServerConfig.VMscalingInterval, taskPerformer).start();
+
+        }
+        //
         EvaluateClusterSize(-1,0);
     }
     private static void collectData(){

@@ -65,7 +65,9 @@ public class GOPTaskScheduler {
                 //do reprovisioner, we need more VM!
                 System.out.println("queue too long");
                 //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
-                VMProvisioner.EvaluateClusterSize(0.8,10);
+                if(ServerConfig.enableVMscalingoutofInterval) {
+                    VMProvisioner.EvaluateClusterSize(0.8, 10);
+                }
                 //re-assign works
                 chosenVM = assignworks(X);
             }

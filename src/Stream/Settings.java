@@ -2,7 +2,7 @@ package Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class Settings {
+public class Settings implements java.io.Serializable{
 
     public String absPath;
     public boolean resolution = false;

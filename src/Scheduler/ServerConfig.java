@@ -17,6 +17,7 @@ public class ServerConfig {
     public static ArrayList<String> VM_address=new ArrayList<>();
     public static ArrayList<Integer> VM_ports=new ArrayList<>();
     public static ArrayList<String> videoList=new ArrayList<>();
+    public static boolean addFakeDelay=false;
 
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
@@ -24,6 +25,8 @@ public class ServerConfig {
     public static boolean enableTimeEstimator=false; //if true, use Time estimator to do scheduling
     public static boolean enableCaching=false; //if true, use caching system
     public static boolean enableVMscaling=false;
+    public static int VMscalingInterval=10000; //millisecond, 0 to disable
+    public static boolean enableVMscalingoutofInterval=false;
     public static int maxVM; //set max number of VMs
     public static int maxVMqueuelength=2; //maximum allowable queue length
     public static int remedialVM_constantfactor=10; //default value=10
@@ -74,6 +77,15 @@ public class ServerConfig {
     public void setDefaultBatchScript(String defaultBatchScript) {
         ServerConfig.defaultBatchScript = defaultBatchScript;
     }
+    @XmlElement(name = "addFakeDelay")
+    public void setAddFakeDelay(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.addFakeDelay = true;
+        }else{
+            ServerConfig.addFakeDelay = false;
+        }
+    }
+
     @XmlElement(name = "VM_address")
     public void setVM_address(String VM_address) {
         ServerConfig.VM_address.add(VM_address);
@@ -107,13 +119,27 @@ public class ServerConfig {
         }
     }
     @XmlElement(name = "enableVMscaling")
-    public void setVMscaling(String check) {
+    public void setEnableVMscaling(String check) {
         if(check.equalsIgnoreCase("True")) {
             ServerConfig.enableVMscaling = true;
         }else{
             ServerConfig.enableVMscaling = false;
         }
     }
+    @XmlElement(name = "VMscalingInterval")
+    public void setVMscalingInterval(int VMscalingInterval) {
+        ServerConfig.VMscalingInterval = VMscalingInterval;
+    }
+
+    @XmlElement(name = "enableVMscalingoutofInterval")
+    public void setEnableVMscalingoutofInterval(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.enableVMscalingoutofInterval = true;
+        }else{
+            ServerConfig.enableVMscalingoutofInterval = false;
+        }
+    }
+
     @XmlElement(name = "maxVM")
     public void setMaxVM(int maxVM) {
         ServerConfig.maxVM = maxVM;
@@ -142,4 +168,5 @@ public class ServerConfig {
     public void setMapping_mechanism(String mapping_mechanism) {
         ServerConfig.mapping_mechanism = mapping_mechanism;
     }
+
 }

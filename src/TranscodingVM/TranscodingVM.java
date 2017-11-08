@@ -39,7 +39,7 @@ public class TranscodingVM extends Thread{
             is = s.getInputStream();
             ois = new ObjectInputStream(is);
         }catch(Exception e){
-            System.out.println("Failed: " + e);
+            System.out.println("createRecvSocket Failed: " + e);
         }
     }
     private void SendSegmentToVideoMerger()
@@ -52,24 +52,28 @@ public class TranscodingVM extends Thread{
         //TODO: have a way to gracefully terminate without causing error and force quit
         try {
             while(!s.isClosed()){
+                System.out.println(-1);
                 StreamGOP objectX =(StreamGOP) ois.readObject();
                 //System.out.println("ObjectX's path"+objectX.getPath());
-
+                System.out.println(0);
                 if(objectX.setting.equalsIgnoreCase("shutdown")){
                     //receive shutting down message, close down receiving communication
                     //whatever in the queue will still be processed until queue is empty
                     AddJob(objectX); //still add to the queue
+                    System.out.println(1);
                     close();
                     break;
                 }else if (objectX.setting.equalsIgnoreCase("query")){
+                    System.out.println(2);
                     System.out.println("replying back "+TT.jobs.size());
                     oos.writeObject(TT.jobs.size());
                 }else{
+                    System.out.println(3);
                     AddJob(objectX);
                 }
             }
         }catch(Exception e){
-            System.out.println("Failed: " + e);
+            System.out.println("run Failed: " + e);
         }
         System.out.println("closed");
     }

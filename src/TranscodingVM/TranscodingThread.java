@@ -1,6 +1,7 @@
 package TranscodingVM;
 
 import Repository.RepositoryGOP;
+import Scheduler.ServerConfig;
 import Stream.StreamGOP;
 
 import java.util.PriorityQueue;
@@ -12,6 +13,11 @@ public class TranscodingThread extends Thread{
     {
         int i=0;
         int exit=0;
+        int delay=0;
+        if(ServerConfig.addFakeDelay){
+            delay=(int)(Math.random()*1000); //0-1000 ms
+
+        }
         while(!jobs.isEmpty()) {
             StreamGOP aRepositoryGOP = jobs.poll();
             if(aRepositoryGOP.setting.equalsIgnoreCase("shutdown")){
@@ -32,6 +38,9 @@ public class TranscodingThread extends Thread{
 
                 Process p = pb.start();
                 p.waitFor();
+                if(delay!=0){
+                    sleep(delay);
+                }
                 //
             } catch (Exception e) {
                 System.out.println(e.getMessage());

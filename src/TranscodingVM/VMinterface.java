@@ -37,7 +37,7 @@ public class VMinterface {
         try {
             oos.writeObject(segment);
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println("sendJob:"+e);
             return false;
         }
         return true;
