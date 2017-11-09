@@ -43,10 +43,8 @@ public class Test {
             // Check point, enter any key to continue
             System.out.println("system start and video loaded, enter any key to continue");
             scanner.next();
-            Settings setting=new Settings();
-            setting.videoname = "ff_trailer_part1";
-            setting.resHeight = "480";
-            setting.resWidth = "640";
+            Settings setting=new Settings("ff_trailer_part1","480","640");
+
             // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
             Stream ST=new Stream(VR.videos.get(0),setting); //admission control can work in constructor, or later?
             //ST.setting = ServerConfig.defaultBatchScript; //setting creation or selection?

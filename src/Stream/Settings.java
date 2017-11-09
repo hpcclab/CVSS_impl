@@ -1,8 +1,10 @@
 package Stream;
 
 import Scheduler.ServerConfig;
+import com.sun.security.ntlm.Server;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 public class Settings implements java.io.Serializable{
 
@@ -15,7 +17,18 @@ public class Settings implements java.io.Serializable{
     public String resWidth = "";
     public String resHeight = "";
     public Settings(){
+    }
+    public Settings(String vName,String Hres,String Wres){
+        this.videoname=vName;
+        this.resHeight=Hres;
+        this.resWidth=Wres;
 
+        //mk output dir if not exist
+        File F=new File(this.outputDir() );
+        if(!F.exists()){
+            System.out.println("mkdir :"+F.getPath());
+            F.mkdir();
+        }
     }
     public Settings(HttpServletRequest request) {
         this.videoname = request.getParameter("videoname");
@@ -26,6 +39,12 @@ public class Settings implements java.io.Serializable{
             String[] resData = resolution.split("x");
             this.resWidth = resData[0];
             this.resHeight = resData[1];
+        }
+        //mk output dir if not exist
+        File F=new File(this.outputDir() );
+        if(!F.exists()){
+            System.out.println("mkdir :"+F.getPath());
+            F.mkdir();
         }
     }
 

@@ -41,7 +41,8 @@ public class TranscodingThread extends Thread{
                 if(delay!=0){
                     sleep(delay);
                 }
-                //
+                //wait, so the thread never go down
+                jobs.wait();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
