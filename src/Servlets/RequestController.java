@@ -23,20 +23,23 @@ public class RequestController extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("In servlet");
+        String path = request.getContextPath();
         String absPath = "/home/pi/Documents/VHPCC/workspace/CVSS_impl";
         Settings userRequest = new Settings(request);
         userRequest.absPath = absPath;
 
         //check for existing output directory and create one if it does not exist
-        //CreateDirectory(userRequest);
+        CreateDirectory(userRequest);
 
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         //response.getWriter().write(userRequest.outputDir() + "/out.m3u8");
-        response.getWriter().write(userRequest.outputDir());
+        String test = userRequest.videoDir();
         //start video processing
         //
-        //InitializeStream(userRequest);
+        InitializeStream(userRequest);
+        response.getWriter().write(userRequest.videoDir());
         //
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,7 +47,7 @@ public class RequestController extends HttpServlet {
     }
 
     public void CreateDirectory(Settings userRequest){
-        File dir = new File("web/" + userRequest.outputDir());
+        File dir = new File(userRequest.outputDir());
         if (dir.exists()){
             return;
         }
@@ -54,7 +57,7 @@ public class RequestController extends HttpServlet {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
 
-        String[] command = {"bash", absPath + "/bash/createDir.sh", userRequest.outputDir(),userRequest.absPath, userRequest.videoname};
+        String[] command = {"bash",ServerConfig.path + "bash/createDir.sh", userRequest.outputDir(),ServerConfig.path, userRequest.videoname};
 
         try {
             ProcessBuilder pb = new ProcessBuilder(command);

@@ -14,9 +14,11 @@
     <VMscalingInterval>10000</VMscalingInterval>
     <enableVMscalingoutofInterval>true</enableVMscalingoutofInterval>
 
-    <maxVM>100</maxVM>
+    <maxVM>7</maxVM>
     <maxVMqueuelength>2</maxVMqueuelength>
-    <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>
+    <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
+	
+    <path>/home/pi/Documents/VHPCC/workspace/CVSS_impl/</path>
 
     <videoList>./repositoryvideos/ff_trailer_part1/</videoList>
     <videoList>./repositoryvideos/ff_trailer_part3/</videoList>

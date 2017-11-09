@@ -14,6 +14,7 @@ public class ServerConfig {
     public static String defaultInputPath; //
     public static String defaultOutputPath; //
     public static String defaultBatchScript; //
+    public static String path;
     public static ArrayList<String> VM_address=new ArrayList<>();
     public static ArrayList<Integer> VM_ports=new ArrayList<>();
     public static ArrayList<String> videoList=new ArrayList<>();
@@ -64,7 +65,10 @@ public class ServerConfig {
     }
 
     ////belows are all function intended for unmasher code to use parsing config
-
+    @XmlElement(name = "path")
+    public void setPath(String path) {
+        ServerConfig.path = path;
+    }
     @XmlElement(name = "defaultInputPath")
     public void setDefaultInputPath(String defaultInputPath) {
         ServerConfig.defaultInputPath = defaultInputPath;

@@ -25,7 +25,6 @@ public class Stream {
 
     public Stream(Video v,Settings settings,int startSegment,int endSegment){
         status=0;
-
         video =v;
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){

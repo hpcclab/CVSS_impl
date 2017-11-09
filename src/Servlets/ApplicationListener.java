@@ -25,6 +25,8 @@ public class ApplicationListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent arg0) {
         this.sc = arg0.getServletContext();
+        System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
         try {
             // initialization code
             GlobalController.InitializeComponents(2);

@@ -81,6 +81,7 @@ public class TranscodingVM extends Thread{
     public void AddJob(StreamGOP segment)
     {
         TT.jobs.add(segment);
+        System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
         if(!TT.isAlive()){
             TT.start();
             //System.out.println("test");

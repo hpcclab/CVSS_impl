@@ -29,6 +29,7 @@
           $('#submit').click(function(event){
               var videoname=$('#Videos').val();
               var resolution=$('#resolution').val();
+
               if(videoname !== null){
                 $.get('RequestController',{videoname:videoname, resolution:resolution},function(responseText){
                     //$('#somediv').text(responseText);
@@ -67,10 +68,9 @@
   <div id="Wrapper">
 
     <div id="VideoPlayer" style="margin: auto">
-
-      <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls="" autoplay="">
+      <!--src="repositoryvideos/bbb_trailer/out.m3u8"-->
+      <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls="" autoplay="true">
         <source id="videosrc"
-                src="repositoryvideos/bbb_trailer/out.m3u8"
                 type="application/x-mpegURL">
       </video>
       <script>

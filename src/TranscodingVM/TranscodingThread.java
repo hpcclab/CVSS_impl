@@ -28,7 +28,7 @@ public class TranscodingThread extends Thread{
             //System.out.println(aRepositoryGOP.getPath());
             String filename= aRepositoryGOP.getPath().substring(aRepositoryGOP.getPath().lastIndexOf("/")+1, aRepositoryGOP.getPath().length());
             //String[] command = {"ffmpeg", "-i", aRepositoryGOP.getPath(), "-s", "320:240", "-c:a", "copy", "/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/output/"+(i++) +".mp4"};//jobs.poll().getPath()
-            String[] command = {"bash", "./bash/resize.sh", aRepositoryGOP.getPath(),aRepositoryGOP.userSetting.resWidth,aRepositoryGOP.userSetting.resHeight,aRepositoryGOP.userSetting.outputDir(),filename};
+            String[] command = {"bash",ServerConfig.path + "bash/resize.sh", aRepositoryGOP.getPath(),aRepositoryGOP.userSetting.resWidth,aRepositoryGOP.userSetting.resHeight,aRepositoryGOP.userSetting.outputDir(),filename};
             //ideally, we should be able to pull setting out from StreamGOP but now use fixed
 
             try {

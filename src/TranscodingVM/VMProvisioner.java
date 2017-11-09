@@ -85,19 +85,22 @@ public class VMProvisioner {
     public static int AddInstances(int diff){
 
         for(int i=0;i<diff;i++){
-            TranscodingVM TC = new TranscodingVM(ServerConfig.VM_ports.get(VMcount));
-            TC.start();
-            instance.add(TC);
-            System.out.println("VM " + VMcount + " started");
-            // connect interface to GOPTaskScheduler, add small delay before connect
-            try {
-                sleep(2);
-            }catch(Exception e){
 
+            if(VMcount <ServerConfig.maxVM) {
+                TranscodingVM TC = new TranscodingVM(ServerConfig.VM_ports.get(VMcount));
+                TC.start();
+                instance.add(TC);
+                System.out.println("VM " + VMcount + " started");
+                // connect interface to GOPTaskScheduler, add small delay before connect
+                try {
+                    sleep(2);
+                } catch (Exception e) {
+
+                }
+                GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+
+                VMcount++;
             }
-            GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
-
-            VMcount++;
         }
         System.out.println("VMCount="+VMcount);
         return VMcount;

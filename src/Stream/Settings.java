@@ -1,5 +1,7 @@
 package Stream;
 
+import Scheduler.ServerConfig;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class Settings implements java.io.Serializable{
@@ -27,8 +29,14 @@ public class Settings implements java.io.Serializable{
         }
     }
 
+    public String videoDir(){
+        return "output/" + videoname + resWidth + resHeight + "/out.m3u8";
+    }
+
     public String outputDir() {
-        return "repositoryvideos/" + videoname + "/out.m3u8";
+        //return "repositoryvideos/output";
+        //return System.getProperty("user.dir") + "./webapps/CVSS_Implementation_war_exploded/repositoryvideos/" + videoname + "/out.m3u8";
+        return ServerConfig.path + "web/output/" + videoname + resWidth + resHeight;
         //return "output/" + videoname + resWidth + resHeight;
     }
 }
