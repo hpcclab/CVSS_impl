@@ -44,7 +44,7 @@ public class VMProvisioner {
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
         for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
-            int x=GOPTaskScheduler.VMinterfaces.get(i).queueSizeUpdate();
+            int x=GOPTaskScheduler.VMinterfaces.get(i).dataUpdate();
             GOPTaskScheduler.VMinterfaces.get(i).estimatedqueuelength=x;
             System.out.println("update queue length data to "+x);
         }
@@ -97,7 +97,7 @@ public class VMProvisioner {
                 } catch (Exception e) {
 
                 }
-                GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+                GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
 
                 VMcount++;
             }

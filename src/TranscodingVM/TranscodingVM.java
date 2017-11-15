@@ -1,11 +1,12 @@
 package TranscodingVM;
 
-import Repository.RepositoryGOP;
 import Stream.StreamGOP;
+import miscTools.Tuple;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 //import com.amazonaws.services.ec2.model.Instance;
 
 /**
@@ -13,6 +14,18 @@ import java.net.Socket;
  */
 //TODO: best logical upgrade is to use FST instead of just serialization https://github.com/RuedigerMoeller/fast-serialization
 //TODO: evaluate and implement jobqueue? activeMQ? rabbitMQ? Apache Qpid? threadpools?
+
+class report implements Serializable{
+    int queue_size;
+    HashMap<Integer, Tuple<Long,Integer>> runtime_report;
+
+
+    public report(int queue_size, HashMap<Integer, Tuple<Long, Integer>> runtime_report) {
+        this.runtime_report = runtime_report;
+        this.queue_size=queue_size;
+    }
+}
+
 public class TranscodingVM extends Thread{
     private int myport;
     private ServerSocket ss;
@@ -46,29 +59,25 @@ public class TranscodingVM extends Thread{
     {
 
     }
+
     public void run(){
         createRecvSocket();
 
         //TODO: have a way to gracefully terminate without causing error and force quit
         try {
             while(!s.isClosed()){
-                System.out.println(-1);
                 StreamGOP objectX =(StreamGOP) ois.readObject();
                 //System.out.println("ObjectX's path"+objectX.getPath());
-                System.out.println(0);
                 if(objectX.setting.equalsIgnoreCase("shutdown")){
                     //receive shutting down message, close down receiving communication
                     //whatever in the queue will still be processed until queue is empty
                     AddJob(objectX); //still add to the queue
-                    System.out.println(1);
+                    System.out.println("Shutting Down");
                     close();
                     break;
                 }else if (objectX.setting.equalsIgnoreCase("query")){
-                    System.out.println(2);
-                    System.out.println("replying back "+TT.jobs.size());
-                    oos.writeObject(TT.jobs.size());
+                    oos.writeObject(new report(TT.jobs.size(),TT.runtime_report));
                 }else{
-                    System.out.println(3);
                     AddJob(objectX);
                 }
             }

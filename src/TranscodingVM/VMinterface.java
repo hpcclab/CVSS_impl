@@ -1,6 +1,7 @@
 package TranscodingVM;
 
 import Repository.RepositoryGOP;
+import Scheduler.TimeEstimator;
 import Stream.StreamGOP;
 
 import java.io.InputStream;
@@ -17,7 +18,9 @@ public class VMinterface {
     public ObjectInputStream ois;
     private int status;
     public int estimatedqueuelength=0;
-    public VMinterface(String addr,int port){
+    public int id;
+
+    public VMinterface(String addr,int port,int id){
         try {
             s = new Socket(addr, port);
             os=s.getOutputStream();
@@ -42,12 +45,18 @@ public class VMinterface {
         }
         return true;
     }
-    public int queueSizeUpdate(){
+    public int dataUpdate(){
         try {
             StreamGOP query = new StreamGOP();
             query.setting = "query";
             oos.writeObject(query); //they expect an object, thus we need to send object
-            return (Integer)ois.readObject();
+            report answer= (report)ois.readObject();
+            //TODO: save that data for TimeEstimator
+            TimeEstimator.updateTable(this.id,answer.runtime_report);
+            //
+
+            return answer.queue_size;
+
         }catch(Exception e){
             System.out.println(e);
             return -1;

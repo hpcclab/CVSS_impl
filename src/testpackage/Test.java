@@ -34,10 +34,8 @@ public class Test {
             VMProvisioner VMP=new VMProvisioner(2); //says we need at least two machines
             GOPTaskScheduler GTS=new GOPTaskScheduler();
 
-
             //load Videos into Repository
             VR.addAllKnownVideos();
-
 
 
             // Check point, enter any key to continue

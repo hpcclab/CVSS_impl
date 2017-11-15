@@ -16,6 +16,7 @@ public class Settings implements java.io.Serializable{
     public String videoname = "";
     public String resWidth = "";
     public String resHeight = "";
+    public int settingIdentifier=0;
     public Settings(){
     }
     public Settings(String vName,String Hres,String Wres){

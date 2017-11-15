@@ -18,8 +18,8 @@ public class GOPTaskScheduler {
         }
     }
 
-    public static boolean add_VM(String addr,int port){
-        VMinterface t=new VMinterface(addr,port);
+    public static boolean add_VM(String addr,int port,int id){
+        VMinterface t=new VMinterface(addr,port,id);
         VMinterfaces.add(t);
         ShortestQueueFirstList.add(t);
         return true; //for success
