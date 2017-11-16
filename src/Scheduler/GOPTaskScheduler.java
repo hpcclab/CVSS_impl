@@ -21,7 +21,6 @@ public class GOPTaskScheduler {
     public static boolean add_VM(String addr,int port,int id){
         VMinterface t=new VMinterface(addr,port,id);
         VMinterfaces.add(t);
-        ShortestQueueFirstList.add(t);
         return true; //for success
     }
 
@@ -34,22 +33,44 @@ public class GOPTaskScheduler {
         }
 
     }
-    private static PriorityQueue<VMinterface> ShortestQueueFirstList=new PriorityQueue<VMinterface>(
-            new Comparator<VMinterface>() {
-                @Override
-                public int compare(VMinterface vMinterface,VMinterface t1) {
-                     return vMinterface.estimatedqueuelength-t1.estimatedqueuelength;
+
+    private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator){
+        if(VMinterfaces.size()>0) {
+            VMinterface answer=VMinterfaces.get(0);
+            long min;
+            if(useTimeEstimator){
+                x.estimatedExecutionTime=TimeEstimator.getHistoricProcessTime(0,x);
+                min=answer.estimatedExecutionTime+x.estimatedExecutionTime;
+            }else{
+                min = answer.estimatedQueueLength;
+            }
+            for (int i = 1; i < VMinterfaces.size(); i++) {
+                VMinterface aMachine = VMinterfaces.get(i);
+                long estimatedT;
+                if(useTimeEstimator){
+                    estimatedT=aMachine.estimatedExecutionTime+TimeEstimator.getHistoricProcessTime(0,x);
+                }else{
+                    estimatedT=aMachine.estimatedQueueLength;
                 }
-            }   );
-    private VMinterface shortestQueueFirst(){
-        VMinterface X=ShortestQueueFirstList.poll();
-        X.estimatedqueuelength++;
-        ShortestQueueFirstList.add(X);
-        return X;
+                if(estimatedT<min){
+                    answer=aMachine;
+                    min=estimatedT;
+                }
+            }
+            return answer;
+        }
+        System.out.println("BUG: try to schedule to 0 VM");
+        return null;
     }
+
     //will have more ways to assign works later
     private VMinterface assignworks(StreamGOP x){
-        return shortestQueueFirst();
+        if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
+            //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
+            return shortestQueueFirst(x,true);
+        }else { //default way, shortestQueueFirst
+            return shortestQueueFirst(x,false); //false for not using TimeEstimator
+        }
     }
     private void submitworks(){ //will be a thread
         //read through list and assign to TranscodingVM
@@ -61,7 +82,7 @@ public class GOPTaskScheduler {
             //mapping_policy function
             //
             VMinterface chosenVM = assignworks(X);
-            if(chosenVM.estimatedqueuelength>ServerConfig.maxVMqueuelength){
+            if(chosenVM.estimatedQueueLength>ServerConfig.maxVMqueuelength){
                 //do reprovisioner, we need more VM!
                 System.out.println("queue too long");
                 //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
@@ -71,9 +92,11 @@ public class GOPTaskScheduler {
                 //re-assign works
                 chosenVM = assignworks(X);
             }
+
             chosenVM.sendJob(X);
             System.out.println("send job "+X.getPath()+" to "+chosenVM.toString());
-            System.out.println("estimated queuelength="+chosenVM.estimatedqueuelength);
+            System.out.println("estimated queuelength="+chosenVM.estimatedQueueLength);
+            System.out.println("estimated ExecutionTime="+chosenVM.estimatedExecutionTime);
         }
         working=0;
     }

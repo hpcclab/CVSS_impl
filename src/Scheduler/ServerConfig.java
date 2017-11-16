@@ -24,6 +24,7 @@ public class ServerConfig {
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
     //public static int maximumResolution;
     public static boolean enableTimeEstimator=false; //if true, use Time estimator to do scheduling
+    public static String schedulerPolicy="";
     public static boolean enableCaching=false; //if true, use caching system
     public static boolean enableVMscaling=false;
     public static int VMscalingInterval=10000; //millisecond, 0 to disable
@@ -113,6 +114,10 @@ public class ServerConfig {
         }else{
             ServerConfig.enableTimeEstimator = false;
         }
+    }
+    @XmlElement(name = "schedulerPolicy")
+    public void setSchedulerPolicy(String schedulerPolicy) {
+        ServerConfig.schedulerPolicy = schedulerPolicy;
     }
     @XmlElement(name = "enableCaching")
     public void setEnableCaching(String check) {

@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 //import com.amazonaws.services.ec2.model.Instance;
 
 /**
@@ -17,11 +18,13 @@ import java.util.HashMap;
 
 class report implements Serializable{
     int queue_size;
-    HashMap<Integer, Tuple<Long,Integer>> runtime_report;
+    long queue_executionTime;
+    HashMap<Integer, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
 
-    public report(int queue_size, HashMap<Integer, Tuple<Long, Integer>> runtime_report) {
-        this.runtime_report = runtime_report;
+    public report(int queue_size,long time, ConcurrentHashMap<Integer, Tuple<Long, Integer>> runtime_report) {
+        this.runtime_report.putAll(runtime_report);
+        this.queue_executionTime=time;
         this.queue_size=queue_size;
     }
 }
@@ -68,15 +71,18 @@ public class TranscodingVM extends Thread{
             while(!s.isClosed()){
                 StreamGOP objectX =(StreamGOP) ois.readObject();
                 //System.out.println("ObjectX's path"+objectX.getPath());
-                if(objectX.setting.equalsIgnoreCase("shutdown")){
+                if(objectX.command.equalsIgnoreCase("shutdown")){
                     //receive shutting down message, close down receiving communication
                     //whatever in the queue will still be processed until queue is empty
                     AddJob(objectX); //still add to the queue
                     System.out.println("Shutting Down");
                     close();
                     break;
-                }else if (objectX.setting.equalsIgnoreCase("query")){
-                    oos.writeObject(new report(TT.jobs.size(),TT.runtime_report));
+                }else if (objectX.command.equalsIgnoreCase("query")){
+                    if(!TT.runtime_report.isEmpty()) {
+                        //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
+                    }
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.runtime_report));
                 }else{
                     AddJob(objectX);
                 }
@@ -89,8 +95,9 @@ public class TranscodingVM extends Thread{
 
     public void AddJob(StreamGOP segment)
     {
+        TT.requiredTime+=segment.estimatedExecutionTime;
         TT.jobs.add(segment);
-        System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
+        //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
         if(!TT.isAlive()){
             TT.start();
             //System.out.println("test");

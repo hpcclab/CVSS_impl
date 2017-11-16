@@ -1,6 +1,8 @@
 package TranscodingVM;
 
 import Repository.RepositoryGOP;
+import Scheduler.GOPTaskScheduler;
+import Scheduler.ServerConfig;
 import Scheduler.TimeEstimator;
 import Stream.StreamGOP;
 
@@ -17,7 +19,8 @@ public class VMinterface {
     public InputStream is;
     public ObjectInputStream ois;
     private int status;
-    public int estimatedqueuelength=0;
+    public int estimatedQueueLength=0;
+    public long estimatedExecutionTime=0;
     public int id;
 
     public VMinterface(String addr,int port,int id){
@@ -28,6 +31,7 @@ public class VMinterface {
             is = s.getInputStream();
             ois = new ObjectInputStream(is);
             status=1;
+            this.id=id;
         }catch(Exception e) {
             System.out.println("Failed: " + e);
         }
@@ -36,37 +40,43 @@ public class VMinterface {
         return status==1;
     }
 
-    public boolean sendJob(RepositoryGOP segment){
+    public boolean sendJob(StreamGOP segment){
+        estimatedQueueLength++;
+        estimatedExecutionTime+=segment.estimatedExecutionTime;
         try {
             oos.writeObject(segment);
         }catch(Exception e){
-            System.out.println("sendJob:"+e);
+            System.out.println("sendJob fail:"+e);
             return false;
         }
         return true;
     }
-    public int dataUpdate(){
+    public boolean dataUpdate(){
         try {
             StreamGOP query = new StreamGOP();
-            query.setting = "query";
+            query.command = "query";
             oos.writeObject(query); //they expect an object, thus we need to send object
             report answer= (report)ois.readObject();
-            //TODO: save that data for TimeEstimator
+            System.out.println("id= " +id+" update queue length data to "+answer.runtime_report);
+
+            System.out.println("id= " +id+" update queue Time data to "+answer.queue_executionTime);
+            GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength=answer.queue_size;
+            GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime=answer.queue_executionTime;
             TimeEstimator.updateTable(this.id,answer.runtime_report);
             //
 
-            return answer.queue_size;
+            return true;
 
         }catch(Exception e){
             System.out.println(e);
-            return -1;
+            return false;
         }
         //return 0;
     }
     public boolean sendShutdownmessage(){
         try {
             StreamGOP poison=new StreamGOP();
-            poison.setting="shutdown";
+            poison.command="shutdown";
             poison.setPriority(0);
             oos.writeObject(poison);
         }catch(Exception e){

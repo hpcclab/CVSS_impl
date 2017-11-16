@@ -9,6 +9,7 @@
     <highscalingThreshold>0.5</highscalingThreshold>
 
     <enableTimeEstimator>true</enableTimeEstimator>
+    <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
     <enableVMscaling>true</enableVMscaling>
     <VMscalingInterval>10000</VMscalingInterval>
