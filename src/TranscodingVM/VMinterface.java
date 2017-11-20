@@ -51,7 +51,7 @@ public class VMinterface {
         }
         return true;
     }
-    public boolean dataUpdate(){
+    public double dataUpdate(){
         try {
             StreamGOP query = new StreamGOP();
             query.command = "query";
@@ -64,12 +64,12 @@ public class VMinterface {
             GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime=answer.queue_executionTime;
             TimeEstimator.updateTable(this.id,answer.runtime_report);
             //
-
-            return true;
+            System.out.println("got deadLineMissRate="+answer.deadLineMissRate);
+            return answer.deadLineMissRate;
 
         }catch(Exception e){
             System.out.println(e);
-            return false;
+            return -1;
         }
         //return 0;
     }

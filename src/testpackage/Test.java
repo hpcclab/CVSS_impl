@@ -41,19 +41,8 @@ public class Test {
             // Check point, enter any key to continue
             System.out.println("system start and video loaded, enter any key to continue");
             scanner.next();
-            Settings setting=new Settings("ff_trailer_part1","480","640");
-
-            // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
-            Stream ST=new Stream(VR.videos.get(0),setting); //admission control can work in constructor, or later?
-            //ST.setting = ServerConfig.defaultBatchScript; //setting creation or selection?
-
-            //Admission Control assign Priority of each segments
-            AdmissionControl.AssignStreamPriority(ST);
-            for(StreamGOP x:ST.streamGOPs){
-                System.out.println(x.getPriority());
-            }
-            //Scheduler
-            GTS.addStream(ST);
+            //create a lot of request to test out
+            RequestGenerator.nRandomRequest(GTS,6,500);
 
             // Check point, enter any key to continue
             System.out.println("enter any key to terminate the system");
@@ -71,7 +60,6 @@ public class Test {
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
         try {
-
         } catch (Exception e) {
             return "Failed: " + e;
         }

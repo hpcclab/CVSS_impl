@@ -35,6 +35,8 @@ public class GOPTaskScheduler {
     }
 
     private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator){
+        int addedConstForDeadLine=500;
+
         if(VMinterfaces.size()>0) {
             VMinterface answer=VMinterfaces.get(0);
             long min;
@@ -47,16 +49,20 @@ public class GOPTaskScheduler {
             for (int i = 1; i < VMinterfaces.size(); i++) {
                 VMinterface aMachine = VMinterfaces.get(i);
                 long estimatedT;
+                //calculate new choice
                 if(useTimeEstimator){
-                    estimatedT=aMachine.estimatedExecutionTime+TimeEstimator.getHistoricProcessTime(0,x);
+                    estimatedT=aMachine.estimatedExecutionTime+TimeEstimator.getHistoricProcessTime(i,x);
                 }else{
                     estimatedT=aMachine.estimatedQueueLength;
                 }
+                //decide
                 if(estimatedT<min){
                     answer=aMachine;
                     min=estimatedT;
                 }
             }
+            //TODO: set dead line based on real world time
+            x.deadLine=System.currentTimeMillis()+min+addedConstForDeadLine;
             return answer;
         }
         System.out.println("BUG: try to schedule to 0 VM");

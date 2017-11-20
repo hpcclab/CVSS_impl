@@ -19,12 +19,14 @@ import java.util.concurrent.ConcurrentHashMap;
 class report implements Serializable{
     int queue_size;
     long queue_executionTime;
+    double deadLineMissRate;
     HashMap<Integer, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
 
-    public report(int queue_size,long time, ConcurrentHashMap<Integer, Tuple<Long, Integer>> runtime_report) {
+    public report(int queue_size,long time,double deadLineMissRate, ConcurrentHashMap<Integer, Tuple<Long, Integer>> runtime_report) {
         this.runtime_report.putAll(runtime_report);
         this.queue_executionTime=time;
+        this.deadLineMissRate=deadLineMissRate;
         this.queue_size=queue_size;
     }
 }
@@ -82,7 +84,15 @@ public class TranscodingVM extends Thread{
                     if(!TT.runtime_report.isEmpty()) {
                         //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
                     }
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.runtime_report));
+                    double deadLineMiss;
+                    if(TT.workDone==0){
+                        deadLineMiss=0;
+                    }else{
+                        deadLineMiss=(1.0*TT.deadLineMiss)/TT.workDone;
+                    }
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,deadLineMiss,TT.runtime_report));
+                    TT.deadLineMiss=0;
+                    TT.workDone=0;
                 }else{
                     AddJob(objectX);
                 }

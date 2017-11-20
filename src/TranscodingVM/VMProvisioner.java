@@ -18,6 +18,7 @@ public class VMProvisioner {
     //private String imageId;
     private static int minimumMaintain;
     private static int VMcount=0;
+    private static double deadLineMissRate=0.8;
     //private double highscalingThreshold; //get from ServerConfig
     //private double lowscalingThreshold;
     private int semaphore;
@@ -31,7 +32,7 @@ public class VMProvisioner {
         if(ServerConfig.VMscalingInterval>0){
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    EvaluateClusterSize(0.8, 10); //still need new values for parameters
+                    EvaluateClusterSize(deadLineMissRate, 10); //still need new values for parameters
                 }
             };
             new Timer(ServerConfig.VMscalingInterval, taskPerformer).start();
@@ -43,8 +44,18 @@ public class VMProvisioner {
     private static void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
+        double sum=0;
+        int count=0;
         for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
-            GOPTaskScheduler.VMinterfaces.get(i).dataUpdate();
+            double ret=GOPTaskScheduler.VMinterfaces.get(i).dataUpdate();
+            if(ret!=-1){
+                sum+=ret;
+                count++;
+            }
+        }
+        if(count!=0) {
+            deadLineMissRate = sum / count;
+            System.out.println("deadline miss rate="+deadLineMissRate);
         }
     }
     //this need to be call periodically somehow

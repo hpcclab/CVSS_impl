@@ -14,6 +14,8 @@ public class TranscodingThread extends Thread{
     public PriorityBlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<StreamGOP>();
     public ConcurrentHashMap<Integer, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
     private HashMap<Integer,Integer> FakeDelay=new HashMap<>();
+    public int workDone;
+    public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
     private void TranscodeSegment()
     {
@@ -22,7 +24,7 @@ public class TranscodingThread extends Thread{
         int delay=0;
 
         while(true) {
-            long savedTime=System.nanoTime()/1000;
+            long savedTime=System.nanoTime()/1000000;
 
             try {
                 StreamGOP aStreamGOP = jobs.poll(1, TimeUnit.MINUTES);
@@ -38,7 +40,7 @@ public class TranscodingThread extends Thread{
                         if (FakeDelay.containsKey(aStreamGOP.userSetting.settingIdentifier)) //if we already have delay for this setting randomized,
                             delay = FakeDelay.get(aStreamGOP.userSetting.settingIdentifier); //use that value
                         else {
-                            delay = (int) (Math.random() * 100); //0-100 ms
+                            delay = (int) (Math.random() * 1000); //0-1000 ms
                             FakeDelay.put(aStreamGOP.userSetting.settingIdentifier, delay);
                         }
                     }
@@ -60,8 +62,13 @@ public class TranscodingThread extends Thread{
                     }
                     //it's done, reduce estimationTime
                     this.requiredTime-=aStreamGOP.estimatedExecutionTime;
-                    //get RunTime
-                    long elapsedTime = System.nanoTime()/1000 - savedTime;
+                    //get RunTime, reduce from nano to millisecond
+                    long elapsedTime = System.nanoTime()/1000000 - savedTime;
+                    workDone++;
+                    if(System.currentTimeMillis()>aStreamGOP.deadLine){
+                        System.out.println("DEADLINE missed "+System.currentTimeMillis()+" "+aStreamGOP.deadLine );
+                        deadLineMiss++;
+                    }
                     //runtime_report.is
                     Tuple<Long, Integer> pulled = runtime_report.get(aStreamGOP.userSetting.settingIdentifier);
                     if (pulled == null) {

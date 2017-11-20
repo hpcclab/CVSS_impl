@@ -5,4 +5,4 @@ height=$3
 outdir=$4
 filename=$5
 
-ffmpeg -i $path -s $width:$height -c:a copy $outdir/$filename 
+ffmpeg -hide_banner -y -i $path -s $width:$height -c:a copy $outdir/$filename 
