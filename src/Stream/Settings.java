@@ -42,11 +42,13 @@ public class Settings implements java.io.Serializable{
             this.resHeight = resData[1];
         }
         //mk output dir if not exist
+       /*
         File F=new File(this.outputDir() );
         if(!F.exists()){
             System.out.println("mkdir :"+F.getPath());
             F.mkdir();
         }
+        */
     }
 
     public String videoDir(){

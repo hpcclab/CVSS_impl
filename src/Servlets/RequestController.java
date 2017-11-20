@@ -29,16 +29,17 @@ public class RequestController extends HttpServlet {
         Settings userRequest = new Settings(request);
         userRequest.absPath = absPath;
 
-        //check for existing output directory and create one if it does not exist
-        CreateDirectory(userRequest);
-
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         //response.getWriter().write(userRequest.outputDir() + "/out.m3u8");
         String test = userRequest.videoDir();
         //start video processing
         //
-        InitializeStream(userRequest);
+
+        if (CreateDirectory(userRequest)){
+            InitializeStream(userRequest);
+        }
+
         response.getWriter().write(userRequest.videoDir());
         //
     }
@@ -46,10 +47,10 @@ public class RequestController extends HttpServlet {
 
     }
 
-    public void CreateDirectory(Settings userRequest){
+    public boolean CreateDirectory(Settings userRequest){
         File dir = new File(userRequest.outputDir());
         if (dir.exists()){
-            return;
+            return false;
         }
 
         String absPath = "/home/pi/Documents/VHPCC/workspace/CVSS_impl";
@@ -70,9 +71,11 @@ public class RequestController extends HttpServlet {
         } catch (Exception e){
 
         }
+        return true;
     }
 
     public void InitializeStream(Settings userRequest){
+        System.out.println("before stream");
         // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
         Stream ST=new Stream(VR.videos.get(0),userRequest); //admission control can work in constructor, or later?
 
@@ -82,6 +85,9 @@ public class RequestController extends HttpServlet {
             System.out.println(x.getPriority());
         }
         //Scheduler
+        System.out.println("test1");
         GTS.addStream(ST);
+        System.out.println("test2");
+        System.out.println("after stream");
     }
 }

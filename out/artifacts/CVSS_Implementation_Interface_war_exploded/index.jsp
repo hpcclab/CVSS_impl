@@ -35,11 +35,17 @@
                     //$('#somediv').text(responseText);
                     var player = videojs('example-video');
                     var text = responseText;
+                   // /*
                     player.src({
                         src: text,
                         type: 'application/x-mpegURL',
                         withCredentials: true
                     });
+                   // */
+                    /*
+                    $('#vidsrc').attr('src',$(this).data(text));
+                    return false;
+                    */
                     player.play();
                 });
               }
@@ -101,8 +107,6 @@
           <option value="640x480">640x480</option>
           <option value="1280x720">1280x720</option>
         </select>
-
-        <button id="ScreenCapButton" class="button" title="screenCap" onclick=''>Screen Cap</button>
 
         <div id="ConversionPanel">
 

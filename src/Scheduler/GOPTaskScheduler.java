@@ -71,6 +71,7 @@ public class GOPTaskScheduler {
 
     //will have more ways to assign works later
     private VMinterface assignworks(StreamGOP x){
+        System.out.println("assigning works");
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
             return shortestQueueFirst(x,true);
@@ -98,7 +99,7 @@ public class GOPTaskScheduler {
                 //re-assign works
                 chosenVM = assignworks(X);
             }
-
+            System.out.println("sent job");
             chosenVM.sendJob(X);
             System.out.println("send job "+X.getPath()+" to "+chosenVM.toString());
             System.out.println("estimated queuelength="+chosenVM.estimatedQueueLength);
