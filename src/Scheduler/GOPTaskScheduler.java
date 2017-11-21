@@ -48,17 +48,19 @@ public class GOPTaskScheduler {
             }
             for (int i = 1; i < VMinterfaces.size(); i++) {
                 VMinterface aMachine = VMinterfaces.get(i);
-                long estimatedT;
-                //calculate new choice
-                if(useTimeEstimator){
-                    estimatedT=aMachine.estimatedExecutionTime+TimeEstimator.getHistoricProcessTime(i,x);
-                }else{
-                    estimatedT=aMachine.estimatedQueueLength;
-                }
-                //decide
-                if(estimatedT<min){
-                    answer=aMachine;
-                    min=estimatedT;
+                if (aMachine.isWorking()) {
+                    long estimatedT;
+                    //calculate new choice
+                    if (useTimeEstimator) {
+                        estimatedT = aMachine.estimatedExecutionTime + TimeEstimator.getHistoricProcessTime(i, x);
+                    } else {
+                        estimatedT = aMachine.estimatedQueueLength;
+                    }
+                    //decide
+                    if (estimatedT < min) {
+                        answer = aMachine;
+                        min = estimatedT;
+                    }
                 }
             }
             //TODO: set dead line based on real world time
@@ -71,7 +73,7 @@ public class GOPTaskScheduler {
 
     //will have more ways to assign works later
     private VMinterface assignworks(StreamGOP x){
-        System.out.println("assigning works");
+        //System.out.println("assigning works");
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
             return shortestQueueFirst(x,true);

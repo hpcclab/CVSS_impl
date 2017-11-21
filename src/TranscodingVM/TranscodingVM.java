@@ -32,26 +32,32 @@ class report implements Serializable{
 }
 
 public class TranscodingVM extends Thread{
-    private int myport;
-    private ServerSocket ss;
-    private Socket s;
-    private TranscodingThread TT;
-    private OutputStream os;
-    private ObjectOutputStream oos;
-    private InputStream is;
-    private ObjectInputStream ois;
+    public String type;
+    protected int myport;
+    protected String centerAddr;
+    //private ServerSocket ss;
+    protected Socket s;
+    protected TranscodingThread TT;
+    protected OutputStream os;
+    protected ObjectOutputStream oos;
+    protected InputStream is;
+    protected ObjectInputStream ois;
     //private Instance instance = new Instance();
-    public TranscodingVM(int port){
 
+    public TranscodingVM(){}
+
+    public TranscodingVM(String itype,String addr,int port){
+        type=itype;
         myport=port;
+        centerAddr=addr;
         TT=new TranscodingThread();
-
     }
     public void createRecvSocket(){
         try {
-            ss = new ServerSocket(myport);
-            s = ss.accept();
-            ss.close();
+            s = new Socket(centerAddr, myport);
+            //ss = new ServerSocket(myport);
+            //s = ss.accept();
+            //ss.close();
             os = s.getOutputStream();
             oos = new ObjectOutputStream(os);
             is = s.getInputStream();
@@ -103,7 +109,7 @@ public class TranscodingVM extends Thread{
         System.out.println("closed");
     }
 
-    public void AddJob(StreamGOP segment)
+    protected void AddJob(StreamGOP segment)
     {
         TT.requiredTime+=segment.estimatedExecutionTime;
         TT.jobs.add(segment);
@@ -113,7 +119,7 @@ public class TranscodingVM extends Thread{
             //System.out.println("test");
         }
     }
-    public void close(){
+    protected void close(){
         try {
             s.close();
         } catch (Exception e) {

@@ -96,18 +96,30 @@ public class VMProvisioner {
         for(int i=0;i<diff;i++){
 
             if(VMcount <ServerConfig.maxVM) {
-                TranscodingVM TC = new TranscodingVM(ServerConfig.VM_ports.get(VMcount));
-                TC.start();
-                instance.add(TC);
-                System.out.println("VM " + VMcount + " started");
-                // connect interface to GOPTaskScheduler, add small delay before connect
-                try {
-                    sleep(2);
-                } catch (Exception e) {
-
-                }
+                //create local waiting VMinterface
                 GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+                //create a TranscodingVM that'll connect to VMinterface
 
+                if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
+                    System.out.println("local virtual server");
+                    TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+                    TC.start();
+                    try {
+                        sleep(20);
+                    }catch(Exception e){
+                        System.out.println("sleep bug in AddInstance (localVMThread)");
+                    }
+                    instance.add(TC);
+                }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
+                    System.out.println("Adding EC2");
+                    // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
+                    //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+                    //make sure instance is up and running line above
+
+                }else{
+                    System.out.println("Adding unknown");
+                }
+                System.out.println("VM " + VMcount + " started");
                 VMcount++;
             }
         }
@@ -117,10 +129,17 @@ public class VMProvisioner {
     public static int DeleteInstances(int diff){
         diff*=-1; //change to positive numbers
         for(int i=0;i<diff;i++) {
-            TranscodingVM TCtoRemove=instance.remove(instance.size()-1);
-            //need a way to tell GOPTaskScheduler to send shutdown message
-            VMcount--;
-            TCtoRemove.close();
+            if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
+                System.out.println("Removing Thread");
+                TranscodingVM TCtoRemove = instance.remove(instance.size() - 1);
+                //need a way to tell GOPTaskScheduler to send shutdown message
+                VMcount--;
+                TCtoRemove.close();
+            }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
+                System.out.println("Removing EC2");
+            }else{
+                System.out.println("Removing unknown");
+            }
         }
         ///
         ///

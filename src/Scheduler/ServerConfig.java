@@ -15,6 +15,7 @@ public class ServerConfig {
     public static String defaultOutputPath; //
     public static String defaultBatchScript; //
     public static String path;
+    public static ArrayList<String> VM_type=new ArrayList<>();
     public static ArrayList<String> VM_address=new ArrayList<>();
     public static ArrayList<Integer> VM_ports=new ArrayList<>();
     public static ArrayList<String> videoList=new ArrayList<>();
@@ -91,13 +92,16 @@ public class ServerConfig {
         }
     }
 
-    @XmlElement(name = "VM_address")
-    public void setVM_address(String VM_address) {
-        ServerConfig.VM_address.add(VM_address);
-    }
-    @XmlElement(name = "VM_ports")
-    public void setVM_ports(int VM_ports) {
-        ServerConfig.VM_ports.add(VM_ports);
+    @XmlElement(name = "VM")
+    public void setVM(String VM_Texts) {
+        String s[]=VM_Texts.split(",");
+        if(s.length==3) {
+            ServerConfig.VM_type.add(s[0]);
+            ServerConfig.VM_address.add(s[1]);
+            ServerConfig.VM_ports.add(Integer.parseInt(s[2]));
+            return;
+        }
+        System.out.println("invalid format");
     }
     @XmlElement(name = "supportedCodecs")
     public void setSupportedCodecs(String supportedCodecs) {

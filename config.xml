@@ -25,27 +25,15 @@
     <videoList>./repositoryvideos/ff_trailer_part3/</videoList>
     <videoList>./repositoryvideos/bbb_trailer/</videoList>
 
-    <VM_address>localhost</VM_address>
-    <VM_ports>5060</VM_ports>
-
-    <VM_address>localhost</VM_address>
-    <VM_ports>5061</VM_ports>
-
-    <VM_address>localhost</VM_address>
-    <VM_ports>5062</VM_ports>
-
-    <VM_address>localhost</VM_address>
-    <VM_ports>5063</VM_ports>
-
-    <VM_address>localhost</VM_address>
-    <VM_ports>5064</VM_ports>
-
-    <VM_address>localhost</VM_address>
-    <VM_ports>5065</VM_ports>
-    <VM_address>localhost</VM_address>
-    <VM_ports>5066</VM_ports>
-    <VM_address>localhost</VM_address>
-    <VM_ports>5067</VM_ports>
+    <VM>thread,localhost,5060</VM>
+    <VM>thread,localhost,5061</VM>
+    <VM>thread,localhost,5062</VM>
+    <VM>thread,localhost,5063</VM>
+    <VM>thread,localhost,5064</VM>
+    <VM>thread,localhost,5065</VM>
+    <VM>thread,localhost,5066</VM>
+    <VM>thread,localhost,5067</VM>
+    <VM>thread,localhost,5068</VM>
 </serverConfig>
 
 
