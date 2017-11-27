@@ -31,10 +31,11 @@ public class ServerConfig {
     public static int VMscalingInterval=10000; //millisecond, 0 to disable
     public static boolean enableVMscalingoutofInterval=false;
     public static int maxVM; //set max number of VMs
+    public static int minVM; //set max number of VMs
     public static int maxVMqueuelength=2; //maximum allowable queue length
     public static int remedialVM_constantfactor=10; //default value=10
-    public static int lowscalingThreshold; // for VM provisioning algorithms
-    public static int highscalingThreshold;
+    public static double lowscalingThreshold; // for VM provisioning algorithms
+    public static double highscalingThreshold;
     public static double c_const_for_utilitybased=0.1; //default value=0.1
     public static String mapping_mechanism;// can be either MM,MSD,MMU
 
@@ -157,6 +158,10 @@ public class ServerConfig {
     public void setMaxVM(int maxVM) {
         ServerConfig.maxVM = maxVM;
     }
+    @XmlElement(name = "minVM")
+    public void setminVM(int minVM) {
+        ServerConfig.minVM = minVM;
+    }
     @XmlElement(name = "maxVMqueuelength")
     public void setMaxVMqueuelength(int maxVMqueuelength) {
         ServerConfig.maxVMqueuelength = maxVMqueuelength;
@@ -166,11 +171,11 @@ public class ServerConfig {
         ServerConfig.remedialVM_constantfactor = remedialVM_constantfactor;
     }
     @XmlElement(name = "lowscalingThreshold")
-    public void setLowscalingThreshold(int lowscalingThreshold) {
+    public void setLowscalingThreshold(Double lowscalingThreshold) {
         ServerConfig.lowscalingThreshold = lowscalingThreshold;
     }
     @XmlElement(name = "highscalingThreshold")
-    public void setHighscalingThreshold(int highscalingThreshold) {
+    public void setHighscalingThreshold(Double highscalingThreshold) {
         ServerConfig.highscalingThreshold = highscalingThreshold;
     }
     @XmlElement(name = "c_const_for_utilitybased")

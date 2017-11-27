@@ -23,6 +23,10 @@ public class GOPTaskScheduler {
         VMinterfaces.add(t);
         return true; //for success
     }
+    public static boolean remove_VM(int which){
+        VMinterfaces.remove(which);
+        return true;
+    }
 
     public void addStream(Stream ST){
         Batchqueue.addAll(ST.streamGOPs);
@@ -96,7 +100,7 @@ public class GOPTaskScheduler {
                 System.out.println("queue too long");
                 //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
                 if(ServerConfig.enableVMscalingoutofInterval) {
-                    VMProvisioner.EvaluateClusterSize(0.8, 10);
+                    VMProvisioner.EvaluateClusterSize(-2);
                 }
                 //re-assign works
                 chosenVM = assignworks(X);

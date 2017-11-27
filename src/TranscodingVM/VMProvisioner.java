@@ -18,7 +18,7 @@ public class VMProvisioner {
     //private String imageId;
     private static int minimumMaintain;
     private static int VMcount=0;
-    private static double deadLineMissRate=0.8;
+    public static double deadLineMissRate=0.8;
     //private double highscalingThreshold; //get from ServerConfig
     //private double lowscalingThreshold;
     private int semaphore;
@@ -32,14 +32,14 @@ public class VMProvisioner {
         if(ServerConfig.VMscalingInterval>0){
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    EvaluateClusterSize(deadLineMissRate, 10); //still need new values for parameters
+                    EvaluateClusterSize(10); //still need new values for parameters
                 }
             };
             new Timer(ServerConfig.VMscalingInterval, taskPerformer).start();
 
         }
         //
-        EvaluateClusterSize(-1,0);
+        EvaluateClusterSize(-1);
     }
     private static void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
@@ -59,25 +59,29 @@ public class VMProvisioner {
         }
     }
     //this need to be call periodically somehow
-    public static void EvaluateClusterSize(double deadlineMissrate,int virtual_queuelength){
+    public static void EvaluateClusterSize(int virtual_queuelength){
         int diff=0;
+        System.out.println(deadLineMissRate+" vs "+ServerConfig.lowscalingThreshold);
         //check QOS UpperBound, QOS LowerBound, update decision parameters
-        if(deadlineMissrate!=-1){ //-1 set special for just ignore this section
+        if(virtual_queuelength==-1){ //-1 set special for just ignore this section
+            diff=minimumMaintain; // tempolary
+        }else if(virtual_queuelength==-2) { //unconditionally scale up
+            diff = 1;
+        }else {
             collectData();
-            if(deadlineMissrate>ServerConfig.highscalingThreshold){
-                //we need to scale up by n
-                diff= virtual_queuelength/(ServerConfig.remedialVM_constantfactor); // then divided by beta?
-                System.out.println("diff="+diff);
-            }else if(deadlineMissrate<ServerConfig.lowscalingThreshold){
-                //we might consider scale down
+            if (deadLineMissRate > ServerConfig.highscalingThreshold) {
 
+                //         if(deadLineMissRate>ServerConfig.highscalingThreshold){
+                //we need to scale up by n
+                diff = virtual_queuelength / (ServerConfig.remedialVM_constantfactor); // then divided by beta?
+                System.out.println("diff=" + diff);
+            } else if (deadLineMissRate < ServerConfig.lowscalingThreshold) {
+                //we might consider scale down, for now, one at a time
+                System.out.println("scaling down");
+                diff = -1;
                 //select a VM to terminate, as they are not all the same
                 //
             }
-
-                //no remidial yet
-        }else{
-            diff=minimumMaintain; // tempolary
         }
         // ...
 
@@ -129,16 +133,20 @@ public class VMProvisioner {
     public static int DeleteInstances(int diff){
         diff*=-1; //change to positive numbers
         for(int i=0;i<diff;i++) {
-            if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
-                System.out.println("Removing Thread");
-                TranscodingVM TCtoRemove = instance.remove(instance.size() - 1);
-                //need a way to tell GOPTaskScheduler to send shutdown message
-                VMcount--;
-                TCtoRemove.close();
-            }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
-                System.out.println("Removing EC2");
-            }else{
-                System.out.println("Removing unknown");
+            if(VMcount >ServerConfig.minVM) {
+                if (ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
+                    System.out.println("Removing Thread " + (instance.size() - 1));
+                    GOPTaskScheduler.remove_VM(instance.size() - 1);
+                    TranscodingVM TCtoRemove = instance.remove(instance.size() - 1);
+
+                    VMcount--;
+
+                    TCtoRemove.close();
+                } else if (ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")) {
+                    System.out.println("Removing EC2");
+                } else {
+                    System.out.println("Removing unknown");
+                }
             }
         }
         ///

@@ -14,7 +14,7 @@
     <enableVMscaling>true</enableVMscaling>
     <VMscalingInterval>10000</VMscalingInterval>
     <enableVMscalingoutofInterval>true</enableVMscalingoutofInterval>
-
+    <minVM>2</minVM>
     <maxVM>7</maxVM>
     <maxVMqueuelength>6</maxVMqueuelength>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
