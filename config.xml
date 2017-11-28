@@ -27,8 +27,8 @@
 
 
     <VM>EC2,18.217.136.38,5060</VM>
-    <VM>EC2,130.70.82.50,5060</VM>
-<!--
+    <VM>EC2,i-0bce5f77aa6e0f3a2,5061</VM>
+
     <VM>thread,localhost,5060</VM>
     <VM>thread,localhost,5061</VM>
     <VM>thread,localhost,5062</VM>
@@ -38,7 +38,7 @@
     <VM>thread,localhost,5066</VM>
     <VM>thread,localhost,5067</VM>
     <VM>thread,localhost,5068</VM>
--->
+<!---->
 </serverConfig>
 
 

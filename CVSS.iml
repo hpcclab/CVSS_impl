@@ -21,8 +21,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 8.5.23" level="application_server_libraries" />
     <orderEntry type="library" name="Jersey-2.2" level="project" />
-    <orderEntry type="library" name="aws-java-sdk-1.11.156-javadoc" level="project" />
-    <orderEntry type="library" name="aws-java-sdk-1.11.156-sources" level="project" />
     <orderEntry type="library" name="servlet-api" level="project" />
+    <orderEntry type="library" name="documentation" level="application" />
+    <orderEntry type="library" name="com.amazonaws:aws-java-sdk:1.11.236" level="project" />
   </component>
 </module>

@@ -6,6 +6,9 @@ import Scheduler.ServerConfig;
 import TranscodingVM.*;
 import Repository.*;
 import Stream.*;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
+import com.amazonaws.services.ec2.model.StartInstancesRequest;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -22,7 +25,6 @@ public class Test {
         try {
             Scanner scanner=new Scanner(System.in);
             //read config file
-
 
             File configfile=new File("config.xml");
             JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
@@ -60,7 +62,13 @@ public class Test {
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
         try {
+            //this thing work!
+            AmazonEC2 instance=AmazonEC2ClientBuilder.defaultClient();
+            StartInstancesRequest request=new StartInstancesRequest().withInstanceIds("i-0bce5f77aa6e0f3a2");
 
+            instance.startInstances(request);
+            //instance.
+            //instance.
         } catch (Exception e) {
             return "Failed: " + e;
         }
@@ -68,8 +76,8 @@ public class Test {
     }
     //for test
     public static void main(String[] args){
-        System.out.println(test());
-        //System.out.println(testbug());
+        //System.out.println(test());
+        System.out.println(testbug());
     }
 
 }

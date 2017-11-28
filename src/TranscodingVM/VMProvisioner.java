@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
 
@@ -21,7 +22,7 @@ public class VMProvisioner {
     public static double deadLineMissRate=0.8;
     //private double highscalingThreshold; //get from ServerConfig
     //private double lowscalingThreshold;
-    private int semaphore;
+    private static Semaphore x=new Semaphore(1);
     private static ArrayList<TranscodingVM> instance=new ArrayList<>();
     public VMProvisioner(){
         this(0);
@@ -60,39 +61,45 @@ public class VMProvisioner {
     }
     //this need to be call periodically somehow
     public static void EvaluateClusterSize(int virtual_queuelength){
-        int diff=0;
-        System.out.println(deadLineMissRate+" vs "+ServerConfig.lowscalingThreshold);
-        //check QOS UpperBound, QOS LowerBound, update decision parameters
-        if(virtual_queuelength==-1){ //-1 set special for just ignore this section
-            diff=minimumMaintain; // tempolary
-        }else if(virtual_queuelength==-2) { //unconditionally scale up
-            diff = 1;
-        }else {
-            collectData();
-            if (deadLineMissRate > ServerConfig.highscalingThreshold) {
-
-                //         if(deadLineMissRate>ServerConfig.highscalingThreshold){
-                //we need to scale up by n
-                diff = virtual_queuelength / (ServerConfig.remedialVM_constantfactor); // then divided by beta?
-                System.out.println("diff=" + diff);
-            } else if (deadLineMissRate < ServerConfig.lowscalingThreshold) {
-                //we might consider scale down, for now, one at a time
-                System.out.println("scaling down");
-                diff = -1;
-                //select a VM to terminate, as they are not all the same
-                //
-            }
+        try {
+            x.acquire();
+        }catch(Exception e){
+            System.out.println("Semaphore Bug");
         }
-        // ...
+            int diff = 0;
+            System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
+            //check QOS UpperBound, QOS LowerBound, update decision parameters
+            if (virtual_queuelength == -1) { //-1 set special for just ignore this section
+                diff = minimumMaintain; // tempolary
+            } else if (virtual_queuelength == -2) { //unconditionally scale up
+                diff = 1;
+            } else {
+                collectData();
+                if (deadLineMissRate > ServerConfig.highscalingThreshold) {
 
-        // then scaling to size
-        if(diff>0){
-            //add more VM
-            AddInstances(diff);
-        }else if(diff<0){
-            //reduce VM numbers
-            DeleteInstances(diff);
-        } //do nothing if diff==0
+                    //         if(deadLineMissRate>ServerConfig.highscalingThreshold){
+                    //we need to scale up by n
+                    diff = virtual_queuelength / (ServerConfig.remedialVM_constantfactor); // then divided by beta?
+                    System.out.println("diff=" + diff);
+                } else if (deadLineMissRate < ServerConfig.lowscalingThreshold) {
+                    //we might consider scale down, for now, one at a time
+                    System.out.println("scaling down");
+                    diff = -1;
+                    //select a VM to terminate, as they are not all the same
+                    //
+                }
+            }
+            // ...
+
+            // then scaling to size
+            if (diff > 0) {
+                //add more VM
+                AddInstances(diff);
+            } else if (diff < 0) {
+                //reduce VM numbers
+                DeleteInstances(diff);
+            } //do nothing if diff==0
+        x.release();
     }
     //pull VM data from setting file
     public static int AddInstances(int diff){
