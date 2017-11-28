@@ -31,7 +31,7 @@ public class Test {
 
             //Set things up
             VideoRepository VR=new VideoRepository();
-            VMProvisioner VMP=new VMProvisioner(2); //says we need at least two machines
+            VMProvisioner VMP=new VMProvisioner(ServerConfig.minVM); //says we need at least two machines
             GOPTaskScheduler GTS=new GOPTaskScheduler();
 
             //load Videos into Repository

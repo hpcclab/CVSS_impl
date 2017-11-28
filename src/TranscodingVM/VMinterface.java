@@ -41,13 +41,18 @@ public class VMinterface {
                         try {
                             sleep(1000);
                             s = new Socket(addr, port);
+                            System.out.println("1");
                             os = s.getOutputStream();
+                            System.out.println("2");
                             oos = new ObjectOutputStream(os);
+                            System.out.println("3");
                             is = s.getInputStream();
+                            System.out.println("4");
                             ois = new ObjectInputStream(is);
                             status = 1;
+                            System.out.println("succesfully set status=1");
+                            sleep(1000);
                         } catch (Exception e) {
-
                             System.out.println("connector thread Failed: " + e);
                         }
                     }

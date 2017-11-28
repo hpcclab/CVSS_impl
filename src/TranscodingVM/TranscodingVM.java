@@ -43,7 +43,7 @@ public class TranscodingVM extends Thread{
     protected ObjectOutputStream oos;
     protected InputStream is;
     protected ObjectInputStream ois;
-    int status=0;
+    private int status;
     //private Instance instance = new Instance();
 
     public TranscodingVM(){}
@@ -55,22 +55,27 @@ public class TranscodingVM extends Thread{
         TT=new TranscodingThread();
     }
     public void createRecvSocket(){
+        status=0;
         try {
             //s = new Socket(centerAddr, myport);
             ss = new ServerSocket(myport);
-            while (status != 1) {
-                try {
-                    s = ss.accept();
-                    ss.close();
-                    os = s.getOutputStream();
-                    oos = new ObjectOutputStream(os);
-                    is = s.getInputStream();
-                    ois = new ObjectInputStream(is);
-                    status = 1;
-                } catch (Exception e) {
-                    System.out.println("connector thread Failed: " + e+", retry");
-                }
-            }
+                System.out.println(1);
+                s = ss.accept();
+                ss.close();
+                os = s.getOutputStream();
+                System.out.println(2);
+                oos = new ObjectOutputStream(os);
+
+                System.out.println(3);
+                is = s.getInputStream();
+
+                System.out.println(4);
+                ois = new ObjectInputStream(is);
+                status = 1;
+
+                System.out.println("succesfully set status=1");
+
+
         }catch(Exception e){
             System.out.println("createRecvSocket Failed: " + e);
         }

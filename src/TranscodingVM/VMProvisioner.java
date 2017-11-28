@@ -100,16 +100,14 @@ public class VMProvisioner {
         for(int i=0;i<diff;i++){
 
             if(VMcount <ServerConfig.maxVM) {
-                //create local waiting VMinterface
-                GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
-                //create a TranscodingVM that'll connect to VMinterface
+
 
                 if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
                     System.out.println("local virtual server");
                     TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
                     TC.start();
                     try {
-                        sleep(20);
+                        sleep(200);
                     }catch(Exception e){
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
@@ -123,6 +121,7 @@ public class VMProvisioner {
                 }else{
                     System.out.println("Adding unknown");
                 }
+                GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
                 System.out.println("VM " + VMcount + " started");
                 VMcount++;
             }
