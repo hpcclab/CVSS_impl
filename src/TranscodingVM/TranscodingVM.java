@@ -126,4 +126,11 @@ public class TranscodingVM extends Thread{
             System.out.println("Failed: " + e);
         }
     }
+    //have a main?
+    /*
+    public static void main(String[] args){
+        //TranscodingVMcloud.("ec2","test",2);
+
+    }
+    */
 }
