@@ -37,11 +37,13 @@ public class TranscodingVM extends Thread{
     protected String centerAddr;
     //private ServerSocket ss;
     protected Socket s;
+    private ServerSocket ss;
     protected TranscodingThread TT;
     protected OutputStream os;
     protected ObjectOutputStream oos;
     protected InputStream is;
     protected ObjectInputStream ois;
+    int status=0;
     //private Instance instance = new Instance();
 
     public TranscodingVM(){}
@@ -54,14 +56,21 @@ public class TranscodingVM extends Thread{
     }
     public void createRecvSocket(){
         try {
-            s = new Socket(centerAddr, myport);
-            //ss = new ServerSocket(myport);
-            //s = ss.accept();
-            //ss.close();
-            os = s.getOutputStream();
-            oos = new ObjectOutputStream(os);
-            is = s.getInputStream();
-            ois = new ObjectInputStream(is);
+            //s = new Socket(centerAddr, myport);
+            ss = new ServerSocket(myport);
+            while (status != 1) {
+                try {
+                    s = ss.accept();
+                    ss.close();
+                    os = s.getOutputStream();
+                    oos = new ObjectOutputStream(os);
+                    is = s.getInputStream();
+                    ois = new ObjectInputStream(is);
+                    status = 1;
+                } catch (Exception e) {
+                    System.out.println("connector thread Failed: " + e+", retry");
+                }
+            }
         }catch(Exception e){
             System.out.println("createRecvSocket Failed: " + e);
         }

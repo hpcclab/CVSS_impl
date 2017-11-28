@@ -60,6 +60,7 @@ public class Test {
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
         try {
+
         } catch (Exception e) {
             return "Failed: " + e;
         }

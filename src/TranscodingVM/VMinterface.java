@@ -13,9 +13,11 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static java.lang.Thread.sleep;
+
 public class VMinterface {
     private Socket s;
-    private ServerSocket ss;
+    //private ServerSocket ss;
     public OutputStream os;
     public ObjectOutputStream oos;
     public InputStream is;
@@ -29,22 +31,25 @@ public class VMinterface {
     public VMinterface(String addr,int port,int inid){
         try {
             //s = new Socket(addr, port);
-            ss = new ServerSocket(port);
+
             id=inid;
             //new thread to accept connection
             connector = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        s = ss.accept();
-                        ss.close();
-                        os=s.getOutputStream();
-                        oos = new ObjectOutputStream(os);
-                        is = s.getInputStream();
-                        ois = new ObjectInputStream(is);
-                        status=1;
-                    }catch(Exception e) {
-                        System.out.println("connector thread Failed: " + e);
+                    while (status != 1) {
+                        try {
+                            sleep(1000);
+                            s = new Socket(addr, port);
+                            os = s.getOutputStream();
+                            oos = new ObjectOutputStream(os);
+                            is = s.getInputStream();
+                            ois = new ObjectInputStream(is);
+                            status = 1;
+                        } catch (Exception e) {
+
+                            System.out.println("connector thread Failed: " + e);
+                        }
                     }
                 }
             });
