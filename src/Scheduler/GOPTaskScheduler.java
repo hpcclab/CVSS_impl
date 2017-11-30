@@ -95,7 +95,7 @@ public class GOPTaskScheduler {
             //mapping_policy function
             //
             VMinterface chosenVM = assignworks(X);
-            if(chosenVM.estimatedQueueLength>ServerConfig.maxVMqueuelength){
+            if(ServerConfig.enableVMscalingoutofInterval&&(chosenVM.estimatedQueueLength>ServerConfig.maxVMqueuelength)){
                 //do reprovisioner, we need more VM!
                 System.out.println("queue too long");
                 //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());

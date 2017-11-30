@@ -2,18 +2,41 @@ package TranscodingVM;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
-import TranscodingVM.VMinterface;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
+import com.amazonaws.services.ec2.model.InstanceStatus;
+import com.amazonaws.services.ec2.model.StartInstancesRequest;
+import com.amazonaws.services.ec2.model.StopInstancesRequest;
 
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
+class vmi{
+    String type;
+    String identification;
+    TranscodingVM TVM;
+    AmazonEC2 EC2inst;
+    public vmi(String type, String identification, TranscodingVM TVM) {
+        this.type = type;
+        this.identification = identification;
+        this.TVM = TVM;
+    }
+    public vmi(String type, String identification,AmazonEC2 ec2i) {
+        this.type = type;
+        this.identification = identification;
+        this.EC2inst=ec2i;
+    }
+}
 
 public class VMProvisioner {
+
     private int numberOfinstances=0;
 
     //private String imageId;
@@ -23,12 +46,18 @@ public class VMProvisioner {
     //private double highscalingThreshold; //get from ServerConfig
     //private double lowscalingThreshold;
     private static Semaphore x=new Semaphore(1);
-    private static ArrayList<TranscodingVM> instance=new ArrayList<>();
+    private static ArrayList<vmi> VMCollection =new ArrayList<>();
     public VMProvisioner(){
         this(0);
     }
     public VMProvisioner(int minimumVMtomaintain){
         minimumMaintain=minimumVMtomaintain;
+        EvaluateClusterSize(-1);
+        try {
+            sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //set up task for evaluate cluster size every ms
         if(ServerConfig.VMscalingInterval>0){
             ActionListener taskPerformer = new ActionListener() {
@@ -40,7 +69,6 @@ public class VMProvisioner {
 
         }
         //
-        EvaluateClusterSize(-1);
     }
     private static void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
@@ -118,9 +146,38 @@ public class VMProvisioner {
                     }catch(Exception e){
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
-                    instance.add(TC);
+                    VMCollection.add(new vmi("thread","",TC));
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
                     System.out.println("Adding EC2");
+                    AmazonEC2 EC2instance= AmazonEC2ClientBuilder.defaultClient();
+
+                    StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
+                    EC2instance.startInstances(start);
+                    VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount),EC2instance));
+                    //get IP back and feed to GOPTaskScheduler.addVM
+
+                    System.out.println("Halt!, waiting for instance to run");
+                    Scanner scanner=new Scanner(System.in);
+                    scanner.nextInt();
+                    try {
+                        sleep(4000);
+                    while(true){
+                        sleep(2000);
+                        List<InstanceStatus> poll=EC2instance.describeInstanceStatus().getInstanceStatuses();
+                        //System.out.println("poll:"+poll);
+                        if(poll.size()>0){
+                            //System.out.println("poll:" +poll);
+                            break;
+                        }
+                    }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    String IP=EC2instance.describeNetworkInterfaces().getNetworkInterfaces().get(0).getAssociation().getPublicIp();
+                    System.out.println("get IP:"+IP);
+                    GOPTaskScheduler.add_VM(IP, ServerConfig.VM_ports.get(VMcount),VMcount);
+
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
                     //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
                     //make sure instance is up and running line above
@@ -128,7 +185,7 @@ public class VMProvisioner {
                 }else{
                     System.out.println("Adding unknown");
                 }
-                GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+
                 System.out.println("VM " + VMcount + " started");
                 VMcount++;
             }
@@ -140,16 +197,19 @@ public class VMProvisioner {
         diff*=-1; //change to positive numbers
         for(int i=0;i<diff;i++) {
             if(VMcount >ServerConfig.minVM) {
-                if (ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
-                    System.out.println("Removing Thread " + (instance.size() - 1));
-                    GOPTaskScheduler.remove_VM(instance.size() - 1);
-                    TranscodingVM TCtoRemove = instance.remove(instance.size() - 1);
+                vmi vmitoRemove = VMCollection.remove(VMCollection.size() - 1);
 
+                if (vmitoRemove.type.equalsIgnoreCase("thread")) {
+                    System.out.println("Removing Thread " + (VMCollection.size() - 1));
+                    GOPTaskScheduler.remove_VM(VMCollection.size() - 1);
                     VMcount--;
-
-                    TCtoRemove.close();
-                } else if (ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")) {
+                    vmitoRemove.TVM.close();
+                } else if (vmitoRemove.type.equalsIgnoreCase("EC2")) {
                     System.out.println("Removing EC2");
+                    StopInstancesRequest stop=new StopInstancesRequest().withInstanceIds(vmitoRemove.identification);
+                    //
+                    System.out.println("can't just stop a running VMCollection immediately, need a way to solve this!");
+                    //vmitoRemove.EC2inst.stopInstances(stop);
                 } else {
                     System.out.println("Removing unknown");
                 }
@@ -160,8 +220,16 @@ public class VMProvisioner {
         return VMcount;
     }
     public static void closeAll(){
-        for(TranscodingVM vm :instance){
-            vm.close();
+        for(vmi vm : VMCollection){
+            if (vm.type.equalsIgnoreCase("thread")) {
+                vm.TVM.close();
+            }else if(vm.type.equalsIgnoreCase("EC2")){
+                //can force close in this mode
+                StopInstancesRequest stop=new StopInstancesRequest().withInstanceIds(vm.identification);
+                vm.EC2inst.stopInstances(stop);
+            }else{
+                System.out.println("Removing unknown");
+            }
         }
     }
 }

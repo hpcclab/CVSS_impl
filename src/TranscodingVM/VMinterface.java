@@ -18,10 +18,8 @@ import static java.lang.Thread.sleep;
 public class VMinterface {
     private Socket s;
     //private ServerSocket ss;
-    public OutputStream os;
-    public ObjectOutputStream oos;
-    public InputStream is;
-    public ObjectInputStream ois;
+    public ObjectOutputStream oos=null;
+    public ObjectInputStream ois=null;
     Thread connector;
     private int status;
     public int estimatedQueueLength=0;
@@ -29,39 +27,43 @@ public class VMinterface {
     public int id;
 
     public VMinterface(String addr,int port,int inid){
-        try {
+       // try {
             //s = new Socket(addr, port);
 
             id=inid;
             //new thread to accept connection
-            connector = new Thread(new Runnable() {
-                @Override
-                public void run() {
+            //connector = new Thread(new Runnable() {
+                //@Override
+                //public void run() {
                     while (status != 1) {
+                        System.out.println("connecting");
                         try {
-                            sleep(1000);
+                            System.out.println("connect to :"+addr+" "+port);
                             s = new Socket(addr, port);
-                            System.out.println("1");
-                            os = s.getOutputStream();
+                            while(!s.isConnected()){
+                                System.out.println("socket is not connected");
+                                sleep(1000);
+                            }
+                            oos = new ObjectOutputStream(s.getOutputStream());
+                            oos.flush();
+                            oos.reset();
+                            sleep(2000);
                             System.out.println("2");
-                            oos = new ObjectOutputStream(os);
-                            System.out.println("3");
-                            is = s.getInputStream();
-                            System.out.println("4");
-                            ois = new ObjectInputStream(is);
+                            ois = new ObjectInputStream(s.getInputStream());
                             status = 1;
                             System.out.println("succesfully set status=1");
-                            sleep(1000);
                         } catch (Exception e) {
-                            System.out.println("connector thread Failed: " + e);
+                            System.out.println("connector Failed: " + e);
                         }
                     }
-                }
-            });
-            connector.start();
-        }catch(Exception e) {
-            System.out.println("Failed: " + e);
-        }
+
+
+             //   }
+          //  });
+           // connector.start();
+       // }catch(Exception e) {
+       //     System.out.println("Failed: " + e);
+       // }
     }
     public boolean isWorking(){
         return status==1;

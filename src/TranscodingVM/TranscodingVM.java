@@ -36,13 +36,11 @@ public class TranscodingVM extends Thread{
     protected int myport;
     protected String centerAddr;
     //private ServerSocket ss;
-    protected Socket s;
-    private ServerSocket ss;
+    public Socket s;
+    public ServerSocket ss;
     protected TranscodingThread TT;
-    protected OutputStream os;
-    protected ObjectOutputStream oos;
-    protected InputStream is;
-    protected ObjectInputStream ois;
+    public ObjectOutputStream oos=null;
+    public ObjectInputStream ois=null;
     private int status;
     //private Instance instance = new Instance();
 
@@ -59,18 +57,23 @@ public class TranscodingVM extends Thread{
         try {
             //s = new Socket(centerAddr, myport);
             ss = new ServerSocket(myport);
+                System.out.println("waiting at "+myport);
                 System.out.println(1);
                 s = ss.accept();
+                while(!s.isConnected()){
+                    System.out.println("socket is not connected");
+                    sleep(1000);
+                }
+                //ss.close();
+                oos = new ObjectOutputStream(s.getOutputStream());
+
+                oos.flush();
+                oos.reset();
+                sleep(2000);
+                System.out.println("2");
+            ois = new ObjectInputStream(s.getInputStream());
+
                 ss.close();
-                os = s.getOutputStream();
-                System.out.println(2);
-                oos = new ObjectOutputStream(os);
-
-                System.out.println(3);
-                is = s.getInputStream();
-
-                System.out.println(4);
-                ois = new ObjectInputStream(is);
                 status = 1;
 
                 System.out.println("succesfully set status=1");
@@ -125,12 +128,25 @@ public class TranscodingVM extends Thread{
 
     protected void AddJob(StreamGOP segment)
     {
-        TT.requiredTime+=segment.estimatedExecutionTime;
-        TT.jobs.add(segment);
-        //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
-        if(!TT.isAlive()){
-            TT.start();
-            //System.out.println("test");
+
+        TT.requiredTime += segment.estimatedExecutionTime;
+
+        if(type.equalsIgnoreCase("EC2")){
+            //debugging, until i have real S3 data
+         System.out.println("got segment "+segment.getSegmentNum());
+         File f=new File("bug"+segment.getSegmentNum()+".txt");
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            TT.jobs.add(segment);
+            //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
+            if (!TT.isAlive()) {
+                TT.start();
+                //System.out.println("test");
+            }
         }
     }
     protected void close(){
