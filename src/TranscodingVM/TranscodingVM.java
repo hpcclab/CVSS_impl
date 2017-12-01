@@ -58,7 +58,6 @@ public class TranscodingVM extends Thread{
             //s = new Socket(centerAddr, myport);
             ss = new ServerSocket(myport);
                 System.out.println("waiting at "+myport);
-                System.out.println(1);
                 s = ss.accept();
                 while(!s.isConnected()){
                     System.out.println("socket is not connected");
@@ -70,7 +69,6 @@ public class TranscodingVM extends Thread{
                 oos.flush();
                 oos.reset();
                 sleep(2000);
-                System.out.println("2");
             ois = new ObjectInputStream(s.getInputStream());
 
                 ss.close();
@@ -132,26 +130,22 @@ public class TranscodingVM extends Thread{
         TT.requiredTime += segment.estimatedExecutionTime;
 
         if(type.equalsIgnoreCase("EC2")){
-            //debugging, until i have real S3 data
-         System.out.println("got segment "+segment.getSegmentNum());
-         System.out.println("it's at: "+segment.getPath());
-         System.out.println("it's at: "+segment.userSetting.outputDir());
-/*
-         File f=new File("bug"+segment.getSegmentNum()+".txt");
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-  */
-        }else {
+            //debugging,
+         //System.out.println("got segment "+segment.getSegmentNum());
+        // System.out.println("it's at: "+segment.getPath());
+        // System.out.println("it's at: "+segment.userSetting.outputDir());
+         File file=new File(segment.userSetting.outputDir());
+         file.mkdirs();
+        }
+
+        //else {
             TT.jobs.add(segment);
             //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
             if (!TT.isAlive()) {
                 TT.start();
                 //System.out.println("test");
             }
-        }
+     //   }
     }
     protected void close(){
         try {

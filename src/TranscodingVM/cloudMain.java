@@ -42,7 +42,7 @@ public class cloudMain {
                 ServerConfig.path=args[2];
                 ServerConfig.addFakeDelay=Boolean.parseBoolean(args[3]);
                 //ServerConfig.
-                ServerConfig.defaultInputPath="/sdc/";
+                ServerConfig.defaultInputPath="";
                 ServerConfig.defaultOutputPath="";
 
                 System.out.println("running ec2 test x");

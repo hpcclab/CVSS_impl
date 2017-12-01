@@ -38,7 +38,7 @@ public class ServerConfig {
     public static double highscalingThreshold;
     public static double c_const_for_utilitybased=0.1; //default value=0.1
     public static String mapping_mechanism;// can be either MM,MSD,MMU
-
+    public static boolean useEC2;
     // not configurable from xml yet
     public static String file_mode="S3";
 
@@ -190,4 +190,13 @@ public class ServerConfig {
         ServerConfig.mapping_mechanism = mapping_mechanism;
     }
 
+    @XmlElement(name = "useEC2")
+    public void setuseEC2(String useEC2) {
+        System.out.println("parse");
+        ServerConfig.useEC2 = Boolean.parseBoolean(useEC2);
+    }
+    @XmlElement(name = "file_mode")
+    public void setfile_mode(String mode) {
+        ServerConfig.file_mode = mode;
+    }
 }

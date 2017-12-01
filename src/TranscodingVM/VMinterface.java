@@ -47,8 +47,7 @@ public class VMinterface {
                             oos = new ObjectOutputStream(s.getOutputStream());
                             oos.flush();
                             oos.reset();
-                            sleep(2000);
-                            System.out.println("2");
+                            //sleep(2000);
                             ois = new ObjectInputStream(s.getInputStream());
                             status = 1;
                             System.out.println("succesfully set status=1");

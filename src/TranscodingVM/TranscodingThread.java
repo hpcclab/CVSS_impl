@@ -20,9 +20,14 @@ public class TranscodingThread extends Thread{
     public int workDone;
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
-    Boolean useS3=false;
-    AmazonS3Client s3;
-    String bucketName;
+    private Boolean useS3=false;
+    public AmazonS3Client s3;
+    public String bucketName;
+    public void addS3(AmazonS3Client ns3,String nbucketName){
+        this.useS3=true;
+        this.s3=ns3;
+        this.bucketName=nbucketName;
+    }
     private void TranscodeSegment()
     {
         int i=0;
@@ -31,7 +36,6 @@ public class TranscodingThread extends Thread{
 
         while(true) {
             long savedTime=System.nanoTime()/1000000;
-
             try {
                 StreamGOP aStreamGOP = jobs.poll(1, TimeUnit.MINUTES);
                 if(aStreamGOP!=null) {
@@ -53,7 +57,7 @@ public class TranscodingThread extends Thread{
 
                     //System.out.println(aStreamGOP.getPath());
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
-                    //String[] command = {"ffmpeg", "-i", aStreamGOP.getPath(), "-s", "320:240", "-c:a", "copy", "/home/pi/apache-tomcat-7.0.78/webapps/CVSS_Implementation_Interface_war/videos/output/"+(i++) +".mp4"};//jobs.poll().getPath()
+
                     String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, aStreamGOP.userSetting.outputDir(), filename};
                     //ideally, we should be able to pull setting out from StreamGOP but now use fixed
 
@@ -66,8 +70,13 @@ public class TranscodingThread extends Thread{
 
                     //put to S3
                     if(useS3){
-                        File file = new File(aStreamGOP.userSetting.outputDir());
-                        testpackage.S3Control.PutFile(bucketName, filename, file, s3);
+                        File file = new File(aStreamGOP.userSetting.outputDir()+"/"+filename);
+                        System.out.println("from "+"output"+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename);
+                        if(file.exists()){
+                        testpackage.S3Control.PutFile(bucketName, "output"+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename, file, s3);
+                        }else{
+                            System.out.println("tried to upload nonexist file");
+                        }
                     }
                     if (delay != 0) {
                         sleep(delay);
@@ -92,7 +101,6 @@ public class TranscodingThread extends Thread{
                         //System.out.println("change Tuple "+runtime_report.get(0).x+" "+runtime_report.get(0).y);
                     }
 
-                    //TODO: see if it miss deadline
 
                     //
                 }else{

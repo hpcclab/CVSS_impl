@@ -2,11 +2,16 @@ package TranscodingVM;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
-import com.amazonaws.services.ec2.model.InstanceStatus;
-import com.amazonaws.services.ec2.model.StartInstancesRequest;
-import com.amazonaws.services.ec2.model.StopInstancesRequest;
+import com.amazonaws.services.ec2.model.*;
+import com.amazonaws.services.opsworkscm.model.Server;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
 
 
 import javax.swing.*;
@@ -22,16 +27,14 @@ class vmi{
     String type;
     String identification;
     TranscodingVM TVM;
-    AmazonEC2 EC2inst;
     public vmi(String type, String identification, TranscodingVM TVM) {
         this.type = type;
         this.identification = identification;
         this.TVM = TVM;
     }
-    public vmi(String type, String identification,AmazonEC2 ec2i) {
+    public vmi(String type, String identification) {
         this.type = type;
         this.identification = identification;
-        this.EC2inst=ec2i;
     }
 }
 
@@ -47,17 +50,30 @@ public class VMProvisioner {
     //private double lowscalingThreshold;
     private static Semaphore x=new Semaphore(1);
     private static ArrayList<vmi> VMCollection =new ArrayList<>();
+    private static AmazonEC2 EC2instance;
+
+    private static AmazonS3Client s3;
+    private static String s3BucketName;
     public VMProvisioner(){
         this(0);
     }
     public VMProvisioner(int minimumVMtomaintain){
         minimumMaintain=minimumVMtomaintain;
-        EvaluateClusterSize(-1);
-        try {
-            sleep(6000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(ServerConfig.useEC2){
+            EC2instance=AmazonEC2ClientBuilder.defaultClient();
+            System.out.println("use EC2");
         }
+        if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
+            AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
+
+            com.amazonaws.regions.Region region = Region.getRegion(Regions.US_EAST_2);
+            String bucket_name = "cvss-video-bucket";
+            s3 = new AmazonS3Client(credentials);
+            s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
+            s3BucketName = bucket_name;
+            System.out.println("S3 config finished");
+        }
+        EvaluateClusterSize(-1);
         //set up task for evaluate cluster size every ms
         if(ServerConfig.VMscalingInterval>0){
             ActionListener taskPerformer = new ActionListener() {
@@ -66,10 +82,10 @@ public class VMProvisioner {
                 }
             };
             new Timer(ServerConfig.VMscalingInterval, taskPerformer).start();
-
         }
         //
     }
+
     private static void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
@@ -140,6 +156,9 @@ public class VMProvisioner {
                 if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
                     System.out.println("local virtual server");
                     TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+                    if(ServerConfig.file_mode.equalsIgnoreCase("S3")){
+                        TC.TT.addS3(s3,s3BucketName);
+                    }
                     TC.start();
                     try {
                         sleep(200);
@@ -150,16 +169,14 @@ public class VMProvisioner {
                     GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
                     System.out.println("Adding EC2");
-                    AmazonEC2 EC2instance= AmazonEC2ClientBuilder.defaultClient();
 
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
                     EC2instance.startInstances(start);
-                    VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount),EC2instance));
+                    VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount)));
                     //get IP back and feed to GOPTaskScheduler.addVM
 
-                    System.out.println("Halt!, waiting for instance to run");
+
                     Scanner scanner=new Scanner(System.in);
-                    scanner.nextInt();
                     try {
                         sleep(4000);
                     while(true){
@@ -174,8 +191,28 @@ public class VMProvisioner {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    String IP=EC2instance.describeNetworkInterfaces().getNetworkInterfaces().get(0).getAssociation().getPublicIp();
+                    DescribeInstancesRequest request = new   DescribeInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
+                    DescribeInstancesResult result= EC2instance.describeInstances(request);
+
+                    /* //list all from request
+                    List <Reservation> list  = result.getReservations();
+                    //System.out.println(list);
+                    for (Reservation res:list) {
+                        List <Instance> instanceList= res.getInstances();
+
+                        for (Instance instance:instanceList){
+
+                            System.out.println("Public IP :" + instance.getPublicIpAddress());
+                            System.out.println("Public DNS :" + instance.getPublicDnsName());
+                            System.out.println("Instance State :" + instance.getState());
+                            System.out.println("Instance TAGS :" + instance.getTags());
+                        }
+                    }
+                    */
+                    String IP=result.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
                     System.out.println("get IP:"+IP);
+                    System.out.println("Halt!, before connect");
+                    scanner.nextInt();
                     GOPTaskScheduler.add_VM(IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
@@ -226,7 +263,7 @@ public class VMProvisioner {
             }else if(vm.type.equalsIgnoreCase("EC2")){
                 //can force close in this mode
                 StopInstancesRequest stop=new StopInstancesRequest().withInstanceIds(vm.identification);
-                vm.EC2inst.stopInstances(stop);
+                EC2instance.stopInstances(stop);
             }else{
                 System.out.println("Removing unknown");
             }
