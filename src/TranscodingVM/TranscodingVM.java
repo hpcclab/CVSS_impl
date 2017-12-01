@@ -51,6 +51,9 @@ public class TranscodingVM extends Thread{
         myport=port;
         centerAddr=addr;
         TT=new TranscodingThread();
+        if(itype.equalsIgnoreCase("EC2")){
+            TT.useS3=true;
+        }
     }
     public void createRecvSocket(){
         status=0;
@@ -134,12 +137,16 @@ public class TranscodingVM extends Thread{
         if(type.equalsIgnoreCase("EC2")){
             //debugging, until i have real S3 data
          System.out.println("got segment "+segment.getSegmentNum());
+         System.out.println("it's at: "+segment.getPath());
+         System.out.println("it's at: "+segment.userSetting.outputDir());
+/*
          File f=new File("bug"+segment.getSegmentNum()+".txt");
             try {
                 f.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+  */
         }else {
             TT.jobs.add(segment);
             //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");

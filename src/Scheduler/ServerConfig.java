@@ -39,6 +39,9 @@ public class ServerConfig {
     public static double c_const_for_utilitybased=0.1; //default value=0.1
     public static String mapping_mechanism;// can be either MM,MSD,MMU
 
+    // not configurable from xml yet
+    public static String file_mode="S3";
+
 
     //check for each parameters if there is any Invalid
     public static boolean isSettingValid(){

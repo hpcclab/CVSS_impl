@@ -1,6 +1,6 @@
 <serverConfig>
-    <defaultInputPath>./</defaultInputPath>
-    <defaultOutputPath>./output/</defaultOutputPath>
+    <defaultInputPath></defaultInputPath>
+    <defaultOutputPath></defaultOutputPath>
     <defaultBatchScript>../bash/testbash.sh</defaultBatchScript>
     <addFakeDelay>True</addFakeDelay>
 

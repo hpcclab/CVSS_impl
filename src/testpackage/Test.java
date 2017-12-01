@@ -72,11 +72,6 @@ public class Test {
     }
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
-/*
-        AWSCredentials credentials = new BasicAWSCredentials(
-                "AKIAJTLLH5SVF74IJ6NQ",
-                "ZJCx4bcqYb78EZc/1d1foHSSgJSIDMhV+uiQkFKG");
-*/
         try {
 
             //this thing work!

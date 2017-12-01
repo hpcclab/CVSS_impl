@@ -26,9 +26,14 @@ public class Settings implements java.io.Serializable{
 
         //mk output dir if not exist
         File F=new File(this.outputDir() );
-        if(!F.exists()){
-            System.out.println("mkdir :"+F.getPath());
-            F.mkdir();
+        if(ServerConfig.file_mode.equalsIgnoreCase("EC2")){
+            //create directory here
+            
+        }else {
+            if (!F.exists()) {
+                System.out.println("mkdir :" + F.getPath());
+                F.mkdir();
+            }
         }
     }
     public Settings(HttpServletRequest request) {

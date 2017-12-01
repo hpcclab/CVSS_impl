@@ -17,6 +17,7 @@ public class TranscodingThread extends Thread{
     public int workDone;
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
+    Boolean useS3=false;
     private void TranscodeSegment()
     {
         int i=0;

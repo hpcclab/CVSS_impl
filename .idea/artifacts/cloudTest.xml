@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="cloudTest">
+    <output-path>$PROJECT_DIR$/out/artifacts/cloudTest</output-path>
+    <root id="root">
+      <element id="archive" name="CVSS.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/metaData/forCloudMain/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="CVSS" />
+      </element>
+      <element id="library" level="project" name="Jersey-2.2" />
+      <element id="library" level="project" name="com.amazonaws:aws-java-sdk:1.11.236" />
+      <element id="library" level="project" name="servlet-api" />
+      <element id="library" level="application" name="documentation" />
+    </root>
+  </artifact>
+</component>
