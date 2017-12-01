@@ -1,12 +1,24 @@
 package TranscodingVM;
 import Scheduler.ServerConfig;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.Bucket;
 import java.util.List;
 public class cloudMain {
     public static void main(String[] args){
+
+
+
+
+
+        /*
         final AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
         List<Bucket> buckets=s3.listBuckets();
         Bucket b;
@@ -21,6 +33,9 @@ public class cloudMain {
             System.out.println("Bucket Not Exist");
             b = s3.createBucket("cvss-video-bucket");
         }
+*/
+
+
 
         if(args.length==4) {
             if(args[0].equalsIgnoreCase("EC2")) {

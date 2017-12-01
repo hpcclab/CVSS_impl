@@ -51,9 +51,6 @@ public class TranscodingVM extends Thread{
         myport=port;
         centerAddr=addr;
         TT=new TranscodingThread();
-        if(itype.equalsIgnoreCase("EC2")){
-            TT.useS3=true;
-        }
     }
     public void createRecvSocket(){
         status=0;

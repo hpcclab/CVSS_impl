@@ -3,8 +3,11 @@ package TranscodingVM;
 import Repository.RepositoryGOP;
 import Scheduler.ServerConfig;
 import Stream.StreamGOP;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import miscTools.Tuple;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -18,6 +21,8 @@ public class TranscodingThread extends Thread{
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
     Boolean useS3=false;
+    AmazonS3Client s3;
+    String bucketName;
     private void TranscodeSegment()
     {
         int i=0;
@@ -58,6 +63,12 @@ public class TranscodingThread extends Thread{
 
                     Process p = pb.start();
                     p.waitFor();
+
+                    //put to S3
+                    if(useS3){
+                        File file = new File(aStreamGOP.userSetting.outputDir());
+                        testpackage.S3Control.PutFile(bucketName, filename, file, s3);
+                    }
                     if (delay != 0) {
                         sleep(delay);
                     }

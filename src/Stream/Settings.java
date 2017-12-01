@@ -24,17 +24,19 @@ public class Settings implements java.io.Serializable{
         this.resHeight=Hres;
         this.resWidth=Wres;
 
+        /* //don't make dir here
         //mk output dir if not exist
         File F=new File(this.outputDir() );
         if(ServerConfig.file_mode.equalsIgnoreCase("EC2")){
-            //create directory here
-            
+            //create cloud directory here
+
         }else {
             if (!F.exists()) {
                 System.out.println("mkdir :" + F.getPath());
                 F.mkdir();
             }
         }
+        */
     }
     public Settings(HttpServletRequest request) {
         this.videoname = request.getParameter("videoname");
