@@ -14,6 +14,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class TranscodingThread extends Thread{
+    public String type;
     public PriorityBlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<StreamGOP>();
     public ConcurrentHashMap<Integer, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
     private HashMap<Integer,Integer> FakeDelay=new HashMap<>();
@@ -57,8 +58,16 @@ public class TranscodingThread extends Thread{
 
                     //System.out.println(aStreamGOP.getPath());
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
-
-                    String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, aStreamGOP.userSetting.outputDir(), filename};
+                    String outputdir=aStreamGOP.userSetting.outputDir();;
+                    /*
+                    if(type.equalsIgnoreCase("EC2")){
+                        aStreamGOP.setPath("/home/ec2-user/"+aStreamGOP.getPath());
+                        outputdir= ("/home/ec2-user/"+aStreamGOP.userSetting.outputDir());
+                    }else{
+                        outputdir=aStreamGOP.userSetting.outputDir();
+                    }
+                    */
+                    String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, outputdir, filename};
                     //ideally, we should be able to pull setting out from StreamGOP but now use fixed
 
                     ProcessBuilder pb = new ProcessBuilder(command);
@@ -71,12 +80,14 @@ public class TranscodingThread extends Thread{
                     //put to S3
                     if(useS3){
                         File file = new File(aStreamGOP.userSetting.outputDir()+"/"+filename);
-                        System.out.println("from "+"output"+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename);
+                        System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir()+"/"+filename);
+                        System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename);
                         if(file.exists()){
                         testpackage.S3Control.PutFile(bucketName, "output"+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename, file, s3);
                         }else{
                             System.out.println("tried to upload nonexist file");
                         }
+                        file.delete();
                     }
                     if (delay != 0) {
                         sleep(delay);

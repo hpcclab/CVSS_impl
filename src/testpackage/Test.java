@@ -55,7 +55,7 @@ public class Test {
             System.out.println("system start and video loaded, enter any key to continue");
             scanner.next();
             //create a lot of request to test out
-            RequestGenerator.nRandomRequest(GTS,3,500);
+            RequestGenerator.nRandomRequest(GTS,1,500);
 
             // Check point, enter any key to continue
             System.out.println("enter any key to terminate the system");

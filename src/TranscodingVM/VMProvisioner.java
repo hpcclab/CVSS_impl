@@ -175,12 +175,10 @@ public class VMProvisioner {
                     VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount)));
                     //get IP back and feed to GOPTaskScheduler.addVM
 
-
-                    Scanner scanner=new Scanner(System.in);
                     try {
-                        sleep(4000);
+                        sleep(6000);
                     while(true){
-                        sleep(2000);
+                        sleep(1000);
                         List<InstanceStatus> poll=EC2instance.describeInstanceStatus().getInstanceStatuses();
                         //System.out.println("poll:"+poll);
                         if(poll.size()>0){
@@ -210,9 +208,21 @@ public class VMProvisioner {
                     }
                     */
                     String IP=result.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
+
+                    while(IP==null){
+                        try {
+
+
+                        sleep(500);
+                        result= EC2instance.describeInstances(request);
+                        IP=result.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
+                        }catch(Exception e){
+                            System.out.println("get IP fail :"+e);
+                        }
+                    }
                     System.out.println("get IP:"+IP);
-                    System.out.println("Halt!, before connect");
-                    scanner.nextInt();
+                    //System.out.println("Halt!, before connect");
+                    //scanner.nextInt();
                     GOPTaskScheduler.add_VM(IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code

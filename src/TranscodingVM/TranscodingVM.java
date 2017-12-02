@@ -32,7 +32,7 @@ class report implements Serializable{
 }
 
 public class TranscodingVM extends Thread{
-    public String type;
+
     protected int myport;
     protected String centerAddr;
     //private ServerSocket ss;
@@ -47,10 +47,10 @@ public class TranscodingVM extends Thread{
     public TranscodingVM(){}
 
     public TranscodingVM(String itype,String addr,int port){
-        type=itype;
         myport=port;
         centerAddr=addr;
         TT=new TranscodingThread();
+        TT.type=itype;
     }
     public void createRecvSocket(){
         status=0;
@@ -129,14 +129,14 @@ public class TranscodingVM extends Thread{
 
         TT.requiredTime += segment.estimatedExecutionTime;
 
-        if(type.equalsIgnoreCase("EC2")){
+        //if(type.equalsIgnoreCase("EC2")){
             //debugging,
          //System.out.println("got segment "+segment.getSegmentNum());
         // System.out.println("it's at: "+segment.getPath());
         // System.out.println("it's at: "+segment.userSetting.outputDir());
          File file=new File(segment.userSetting.outputDir());
          file.mkdirs();
-        }
+       // }
 
         //else {
             TT.jobs.add(segment);

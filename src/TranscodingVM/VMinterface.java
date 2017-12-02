@@ -42,7 +42,7 @@ public class VMinterface {
                             s = new Socket(addr, port);
                             while(!s.isConnected()){
                                 System.out.println("socket is not connected");
-                                sleep(1000);
+                                sleep(3000);
                             }
                             oos = new ObjectOutputStream(s.getOutputStream());
                             oos.flush();
