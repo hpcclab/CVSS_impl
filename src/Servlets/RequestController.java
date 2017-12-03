@@ -1,9 +1,19 @@
 package Servlets;
 
+import CloudTesting.s3Control;
 import Scheduler.AdmissionControl;
 import Scheduler.ServerConfig;
 import Stream.Settings;
-import Stream.*;
+import Stream.Stream;
+import Stream.StreamGOP;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.S3ClientOptions;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,16 +46,54 @@ public class RequestController extends HttpServlet {
         //start video processing
         //
 
-        if (CreateDirectory(userRequest)){
-            InitializeStream(userRequest);
+        String prefix = "";
+
+        if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
+
+            AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
+
+            Region region = Region.getRegion(Regions.US_EAST_2);
+
+            String bucket_name = "cvss-video-bucket";
+
+            AmazonS3Client s3 = new AmazonS3Client(credentials);
+
+            //AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_2).withForceGlobalBucketAccessEnabled(true).build();
+
+          //  s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
+
+            boolean exists = s3.doesBucketExist(bucket_name);
+
+            CreateS3Dir(userRequest, s3);
+
+            prefix = "http://cvss-video-bucket.s3.amazonaws.com/";
+            //prefix = "http://d2fl8y9ld5lot6.cloudfront.net/";
         }
 
-        response.getWriter().write(userRequest.videoDir());
+        //if (CreateDirectory(userRequest)){
+        InitializeStream(userRequest);
+        //}
+
+        response.getWriter().write(prefix + userRequest.videoDir());
         //
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
+
+    public void CreateS3Dir(Settings userRequest, AmazonS3 s3){
+        String bucket_name = "cvss-video-bucket";
+
+       // s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
+
+        try {
+            s3Control.CreateVideoDirectory("cvss-video-bucket", userRequest.videoname, userRequest.videoname+userRequest.resWidth+userRequest.resHeight, s3);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+      //  */
+    }
+
 
     public boolean CreateDirectory(Settings userRequest){
         File dir = new File(userRequest.outputDir());
@@ -77,7 +125,10 @@ public class RequestController extends HttpServlet {
     public void InitializeStream(Settings userRequest){
         System.out.println("before stream");
         // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
-        Stream ST=new Stream(VR.videos.get(0),userRequest); //admission control can work in constructor, or later?
+
+        Settings newRequest = new Settings(userRequest.videoname, userRequest.resHeight, userRequest.resWidth);
+
+        Stream ST=new Stream(VR.videos.get(0),newRequest); //admission control can work in constructor, or later?
 
         //Admission Control assign Priority of each segments
         AdmissionControl.AssignStreamPriority(ST);

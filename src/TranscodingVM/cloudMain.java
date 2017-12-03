@@ -39,10 +39,10 @@ public class cloudMain {
 
         if(args.length==4) {
             if(args[0].equalsIgnoreCase("EC2")) {
-                ServerConfig.path=""; //don't take arg2 for now
+                ServerConfig.path=args[2];
                 ServerConfig.addFakeDelay=Boolean.parseBoolean(args[3]);
                 //ServerConfig.
-                ServerConfig.defaultInputPath="";
+                ServerConfig.defaultInputPath="/sdc/";
                 ServerConfig.defaultOutputPath="";
 
                 System.out.println("running ec2 test x");

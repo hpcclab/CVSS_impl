@@ -31,7 +31,7 @@ public class ApplicationListener implements ServletContextListener {
             // initialization code
             GlobalController.InitializeComponents(2);
         } catch (Exception e) {
-            System.out.println("oops");
+            System.out.println("oops"+e);
         }
         System.out.println("webapp started");
     }

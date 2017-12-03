@@ -29,7 +29,6 @@ public class Settings implements java.io.Serializable{
         File F=new File(this.outputDir() );
         if(ServerConfig.file_mode.equalsIgnoreCase("EC2")){
             //create cloud directory here
-
         }else {
             if (!F.exists()) {
                 System.out.println("mkdir :" + F.getPath());

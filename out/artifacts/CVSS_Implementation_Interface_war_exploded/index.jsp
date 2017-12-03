@@ -38,8 +38,7 @@
                    // /*
                     player.src({
                         src: text,
-                        type: 'application/x-mpegURL',
-                        withCredentials: true
+                        type: 'application/x-mpegURL'
                     });
                    // */
                     /*
@@ -77,6 +76,7 @@
       <!--src="repositoryvideos/bbb_trailer/out.m3u8"-->
       <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls="" autoplay="true">
         <source id="videosrc"
+                src="http://cvss-video-bucket.s3.amazonaws.com/output/ff_trailer_part1640480/out.m3u8"
                 type="application/x-mpegURL">
       </video>
       <script>

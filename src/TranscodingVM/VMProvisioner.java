@@ -7,9 +7,11 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.*;
 import com.amazonaws.services.opsworkscm.model.Server;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
 
@@ -58,9 +60,41 @@ public class VMProvisioner {
         this(0);
     }
     public VMProvisioner(int minimumVMtomaintain){
+        System.out.println("In VMP Constructor");
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
-            EC2instance=AmazonEC2ClientBuilder.defaultClient();
+            System.out.println("Before EC2 client");
+            AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
+            EC2instance= new AmazonEC2Client(credentials);
+            Region region = Region.getRegion(Regions.US_EAST_2);
+            EC2instance.setRegion(region);
+            EC2instance.describeInstances();
+
+            List<Instance> allInstances = new ArrayList<Instance>();
+            List<Instance> instances1 = new ArrayList<Instance>();
+
+
+            DescribeInstancesResult result = EC2instance.describeInstances();
+            List<Reservation> reservations = result.getReservations();
+
+            for (Reservation reservation : reservations)
+            {
+                instances1 = reservation.getInstances();
+
+                for (Instance instance : instances1)
+                {
+
+                    if(instance.getInstanceId() != null)
+                    {
+                        allInstances.add(instance);
+                    }
+
+                }
+            }
+
+
+
+
             System.out.println("use EC2");
         }
         if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
@@ -71,6 +105,7 @@ public class VMProvisioner {
             s3 = new AmazonS3Client(credentials);
             s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
             s3BucketName = bucket_name;
+            boolean exists = s3.doesBucketExist(bucket_name);
             System.out.println("S3 config finished");
         }
         EvaluateClusterSize(-1);
@@ -110,39 +145,39 @@ public class VMProvisioner {
         }catch(Exception e){
             System.out.println("Semaphore Bug");
         }
-            int diff = 0;
-            System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
-            //check QOS UpperBound, QOS LowerBound, update decision parameters
-            if (virtual_queuelength == -1) { //-1 set special for just ignore this section
-                diff = minimumMaintain; // tempolary
-            } else if (virtual_queuelength == -2) { //unconditionally scale up
-                diff = 1;
-            } else {
-                collectData();
-                if (deadLineMissRate > ServerConfig.highscalingThreshold) {
+        int diff = 0;
+        System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
+        //check QOS UpperBound, QOS LowerBound, update decision parameters
+        if (virtual_queuelength == -1) { //-1 set special for just ignore this section
+            diff = minimumMaintain; // tempolary
+        } else if (virtual_queuelength == -2) { //unconditionally scale up
+            diff = 1;
+        } else {
+            collectData();
+            if (deadLineMissRate > ServerConfig.highscalingThreshold) {
 
-                    //         if(deadLineMissRate>ServerConfig.highscalingThreshold){
-                    //we need to scale up by n
-                    diff = virtual_queuelength / (ServerConfig.remedialVM_constantfactor); // then divided by beta?
-                    System.out.println("diff=" + diff);
-                } else if (deadLineMissRate < ServerConfig.lowscalingThreshold) {
-                    //we might consider scale down, for now, one at a time
-                    System.out.println("scaling down");
-                    diff = -1;
-                    //select a VM to terminate, as they are not all the same
-                    //
-                }
+                //         if(deadLineMissRate>ServerConfig.highscalingThreshold){
+                //we need to scale up by n
+                diff = virtual_queuelength / (ServerConfig.remedialVM_constantfactor); // then divided by beta?
+                System.out.println("diff=" + diff);
+            } else if (deadLineMissRate < ServerConfig.lowscalingThreshold) {
+                //we might consider scale down, for now, one at a time
+                System.out.println("scaling down");
+                diff = -1;
+                //select a VM to terminate, as they are not all the same
+                //
             }
-            // ...
+        }
+        // ...
 
-            // then scaling to size
-            if (diff > 0) {
-                //add more VM
-                AddInstances(diff);
-            } else if (diff < 0) {
-                //reduce VM numbers
-                DeleteInstances(diff);
-            } //do nothing if diff==0
+        // then scaling to size
+        if (diff > 0) {
+            //add more VM
+            AddInstances(diff);
+        } else if (diff < 0) {
+            //reduce VM numbers
+            DeleteInstances(diff);
+        } //do nothing if diff==0
         x.release();
     }
     //pull VM data from setting file
@@ -177,15 +212,15 @@ public class VMProvisioner {
 
                     try {
                         sleep(6000);
-                    while(true){
-                        sleep(1000);
-                        List<InstanceStatus> poll=EC2instance.describeInstanceStatus().getInstanceStatuses();
-                        //System.out.println("poll:"+poll);
-                        if(poll.size()>0){
-                            //System.out.println("poll:" +poll);
-                            break;
+                        while(true){
+                            sleep(1000);
+                            List<InstanceStatus> poll=EC2instance.describeInstanceStatus().getInstanceStatuses();
+                            //System.out.println("poll:"+poll);
+                            if(poll.size()>0){
+                                //System.out.println("poll:" +poll);
+                                break;
+                            }
                         }
-                    }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -213,9 +248,9 @@ public class VMProvisioner {
                         try {
 
 
-                        sleep(500);
-                        result= EC2instance.describeInstances(request);
-                        IP=result.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
+                            sleep(500);
+                            result= EC2instance.describeInstances(request);
+                            IP=result.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
                         }catch(Exception e){
                             System.out.println("get IP fail :"+e);
                         }

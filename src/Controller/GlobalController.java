@@ -4,6 +4,7 @@ import Scheduler.ServerConfig;
 import Singletons.GTSSingleton;
 import Singletons.VMPSingleton;
 import Singletons.VRSingleton;
+import TranscodingVM.VMProvisioner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -19,7 +20,6 @@ import static Singletons.VRSingleton.VR;
 public class GlobalController {
 
     public static void InitializeComponents(int initialClusterSize){
-
         File configfile=new File("config.xml");
         try {
             JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
@@ -29,7 +29,13 @@ public class GlobalController {
         catch(Exception e){ }
 
         VRSingleton VRS = VRSingleton.getInstance();
-        VMPSingleton VMPS = VMPSingleton.getInstance(initialClusterSize);
+        try{
+            //VMProvisioner VMP = new VMProvisioner(ServerConfig.minVM);
+            VMPSingleton VMPS = VMPSingleton.getInstance(ServerConfig.minVM);
+        }
+        catch (Exception e){
+            System.out.println("Provisioner error " + e.toString());
+        }
         GTSSingleton GTSS = GTSSingleton.getInstance();
 
         //load Videos into Repository

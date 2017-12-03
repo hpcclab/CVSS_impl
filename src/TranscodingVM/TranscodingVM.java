@@ -57,24 +57,24 @@ public class TranscodingVM extends Thread{
         try {
             //s = new Socket(centerAddr, myport);
             ss = new ServerSocket(myport);
-                System.out.println("waiting at "+myport);
-                s = ss.accept();
-                while(!s.isConnected()){
-                    System.out.println("socket is not connected");
-                    sleep(1000);
-                }
-                //ss.close();
-                oos = new ObjectOutputStream(s.getOutputStream());
+            System.out.println("waiting at "+myport);
+            s = ss.accept();
+            while(!s.isConnected()){
+                System.out.println("socket is not connected");
+                sleep(1000);
+            }
+            //ss.close();
+            oos = new ObjectOutputStream(s.getOutputStream());
 
-                oos.flush();
-                oos.reset();
-                sleep(2000);
+            oos.flush();
+            oos.reset();
+            sleep(2000);
             ois = new ObjectInputStream(s.getInputStream());
 
-                ss.close();
-                status = 1;
+            ss.close();
+            status = 1;
 
-                System.out.println("succesfully set status=1");
+            System.out.println("succesfully set status=1");
 
 
         }catch(Exception e){
@@ -130,22 +130,22 @@ public class TranscodingVM extends Thread{
         TT.requiredTime += segment.estimatedExecutionTime;
 
         //if(type.equalsIgnoreCase("EC2")){
-            //debugging,
-         //System.out.println("got segment "+segment.getSegmentNum());
+        //debugging,
+        //System.out.println("got segment "+segment.getSegmentNum());
         // System.out.println("it's at: "+segment.getPath());
         // System.out.println("it's at: "+segment.userSetting.outputDir());
-         File file=new File(segment.userSetting.outputDir());
-         file.mkdirs();
-       // }
+        File file=new File(segment.userSetting.outputDir());
+        file.mkdirs();
+        // }
 
         //else {
-            TT.jobs.add(segment);
-            //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
-            if (!TT.isAlive()) {
-                TT.start();
-                //System.out.println("test");
-            }
-     //   }
+        TT.jobs.add(segment);
+        //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
+        if (!TT.isAlive()) {
+            TT.start();
+            //System.out.println("test");
+        }
+        //   }
     }
     protected void close(){
         try {

@@ -22,9 +22,9 @@ public class TranscodingThread extends Thread{
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
     private Boolean useS3=false;
-    public AmazonS3Client s3;
+    public AmazonS3 s3;
     public String bucketName;
-    public void addS3(AmazonS3Client ns3,String nbucketName){
+    public void addS3(AmazonS3 ns3,String nbucketName){
         this.useS3=true;
         this.s3=ns3;
         this.bucketName=nbucketName;
@@ -83,7 +83,7 @@ public class TranscodingThread extends Thread{
                         System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir()+"/"+filename);
                         System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename);
                         if(file.exists()){
-                        testpackage.S3Control.PutFile(bucketName, "output"+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename, file, s3);
+                            testpackage.S3Control.PutFile(bucketName, "output"+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename, file, s3);
                         }else{
                             System.out.println("tried to upload nonexist file");
                         }
