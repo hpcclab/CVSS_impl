@@ -72,11 +72,10 @@
 
   <div id="Wrapper">
 
-    <div id="VideoPlayer" style="margin: auto">
-      <!--src="repositoryvideos/bbb_trailer/out.m3u8"-->
-      <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls="" autoplay="true">
+    <div id="VideoPlayer" >
+      <!--src="repositoryvideos/bbb_trailer/out.m3u8"  src="http://cvss-video-bucket.s3.amazonaws.com/output/ff_trailer_part1640480/out.m3u8"-->
+      <video id=example-video width=900 height=450 style="margin: 0px auto;" class="video-js vjs-default-skin" controls="" autoplay="true">
         <source id="videosrc"
-                src="http://cvss-video-bucket.s3.amazonaws.com/output/ff_trailer_part1640480/out.m3u8"
                 type="application/x-mpegURL">
       </video>
       <script>
@@ -107,35 +106,6 @@
           <option value="640x480">640x480</option>
           <option value="1280x720">1280x720</option>
         </select>
-
-        <div id="ConversionPanel">
-
-          <select name="Format">
-            <option value="convert" selected disabled>Convert</option>
-            <option value="mp4">.mp4</option>
-            <option value="flv">.flv</option>
-            <option value="ogg">.ogg</option>
-            <option value="webm">.webm</option>
-            <option value="gif">.gif</option>
-          </select>
-
-          <input type="text" name="start" value="Start Time" size=4 >
-          <input type="text" name="end" value="End Time" size=4 >
-
-        </div>
-
-
-        <button id="SubtitleButton" class="button" title="subtitles" onclick=''>Subtitles</button>
-
-        <select id="PlaybackRate" name="PlaybackRate" onchange="changePlaybackRate();">
-          <option value=1 selected disabled>Playback Rate</option>
-          <option value=.25>.25</option>
-          <option value=.5>.5</option>
-          <option value=1>1</option>
-          <option value=1.5>1.5</option>
-          <option value=2>2</option>
-        </select>
-
 
         <input id="submit" type="button" value="Play">
       </form>

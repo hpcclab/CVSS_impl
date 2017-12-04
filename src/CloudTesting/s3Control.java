@@ -86,7 +86,7 @@ public class s3Control {
             }
             */
 
-          //  CreateFolder(bucket_name, "output/ff_trailer_part1", s3);
+           // CreateFolder(bucket_name, "output/ff_trailer_part1", s3);
 
         } catch (AmazonServiceException e) {
             System.err.println(e.getErrorMessage());
@@ -96,7 +96,9 @@ public class s3Control {
 
     public static void CreateVideoDirectory(String bucketName, String videoName, String settingsName,  AmazonS3 s3) throws IOException {
 
-        s3.copyObject(bucketName, "repository/" + videoName + "/out.m3u8", bucketName, "output/" + settingsName + "/out.m3u8");
+        CopyObjectRequest cr = new CopyObjectRequest(bucketName, "repository/" + videoName + "/out.m3u8", bucketName, "output/" + settingsName + "/out.m3u8").withCannedAccessControlList(CannedAccessControlList.PublicReadWrite);
+
+        s3.copyObject(cr);
 
         int test = 0;
         test++;

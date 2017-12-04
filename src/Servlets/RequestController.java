@@ -122,13 +122,30 @@ public class RequestController extends HttpServlet {
         return true;
     }
 
+    private int GetVideoNumber(String videoName)
+    {
+        int vidNum = 0;
+
+        if(videoName.equals("bbb_trailer")){
+            vidNum = 0;
+        }
+        else if(videoName.equals("ff_trailer_part1")){
+            vidNum = 1;
+        }
+        else if(videoName.equals("ff_trailer_part3")){
+            vidNum = 2;
+        }
+
+        return vidNum;
+    }
+
     public void InitializeStream(Settings userRequest){
         System.out.println("before stream");
         // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
 
         Settings newRequest = new Settings(userRequest.videoname, userRequest.resHeight, userRequest.resWidth);
 
-        Stream ST=new Stream(VR.videos.get(0),newRequest); //admission control can work in constructor, or later?
+        Stream ST=new Stream(VR.videos.get(GetVideoNumber(userRequest.videoname)),newRequest); //admission control can work in constructor, or later?
 
         //Admission Control assign Priority of each segments
         AdmissionControl.AssignStreamPriority(ST);
