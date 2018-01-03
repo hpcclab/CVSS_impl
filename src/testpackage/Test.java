@@ -51,12 +51,13 @@ public class Test {
             VR.addAllKnownVideos();
 
 
-            // Check point, enter any key to continue
-            System.out.println("system start and video loaded, enter any key to continue");
-            scanner.next();
-            //create a lot of request to test out
-            RequestGenerator.nRandomRequest(GTS,3,500);
-
+            int n=1;
+            while(n!=0) {
+                System.out.println("enter video request numbers to generate");
+                n=scanner.nextInt();
+                //create a lot of request to test out
+                RequestGenerator.nRandomRequest(GTS, n, 500);
+            }
             // Check point, enter any key to continue
             System.out.println("enter any key to terminate the system");
             scanner.next();
@@ -72,6 +73,7 @@ public class Test {
     }
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
+        /*
         try {
 
             //this thing work!
@@ -99,7 +101,8 @@ public class Test {
             return "Failed: " + e;
         }
         return "done";
-
+        */
+return "";
     }
     //for test
     public static void main(String[] args){

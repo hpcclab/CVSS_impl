@@ -29,7 +29,7 @@ public class ApplicationListener implements ServletContextListener {
                 System.getProperty("user.dir"));
         try {
             // initialization code
-            //GlobalController.InitializeComponents(2);
+            GlobalController.InitializeComponents(2);
         } catch (Exception e) {
             System.out.println("oops"+e);
         }

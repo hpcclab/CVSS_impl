@@ -7,7 +7,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import miscTools.Tuple;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -58,6 +60,8 @@ public class TranscodingThread extends Thread{
 
                     //System.out.println(aStreamGOP.getPath());
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
+                    //extra line for windows below, need test if work with linux
+                    filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.length());
                     String outputdir=aStreamGOP.userSetting.outputDir();;
                     /*
                     if(type.equalsIgnoreCase("EC2")){
@@ -67,38 +71,52 @@ public class TranscodingThread extends Thread{
                         outputdir=aStreamGOP.userSetting.outputDir();
                     }
                     */
+                    //System.out.println(filename);
                     String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, outputdir, filename};
                     //ideally, we should be able to pull setting out from StreamGOP but now use fixed
 
-                    ProcessBuilder pb = new ProcessBuilder(command);
-                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                    pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                    //if not deyMode
+                    if(!ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+                        //linux style
+                        ProcessBuilder pb = new ProcessBuilder(command);
+                        //pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        //pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        Process p = pb.start();
+                        p.waitFor();
 
-                    Process p = pb.start();
-                    p.waitFor();
 
-                    //put to S3
-                    if(useS3){
-                        File file = new File(aStreamGOP.userSetting.outputDir()+"/"+filename);
-                        System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir()+"/"+filename);
-                        System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename);
-                        if(file.exists()){
-                            testpackage.S3Control.PutFile(bucketName, "output"+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename, file, s3);
-                        }else{
-                            System.out.println("tried to upload nonexist file");
+                         /*   //test for windows
+                            Process process = Runtime.getRuntime().exec(command);
+                            BufferedReader reader =
+                                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            while ((reader.readLine()) != null) {}
+                            process.waitFor();
+                            //
+                         */
+                        System.out.println("finished a segment");
+                        //put to S3
+                        if (useS3) {
+                            File file = new File(aStreamGOP.userSetting.outputDir() + "/" + filename);
+                            //System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir()+"/"+filename);
+                            //System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename);
+                            if (file.exists()) {
+                                testpackage.S3Control.PutFile(bucketName, "output" + aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"), aStreamGOP.userSetting.outputDir().length()) + "/" + filename, file, s3);
+                            } else {
+                                System.out.println("tried to upload nonexist file");
+                            }
+                            file.delete();
                         }
-                        file.delete();
-                    }
-                    if (delay != 0) {
-                        sleep(delay);
+                        if (delay != 0) {
+                            sleep(delay);
+                        }
                     }
                     //it's done, reduce estimationTime
                     this.requiredTime-=aStreamGOP.estimatedExecutionTime;
                     //get RunTime, reduce from nano to millisecond
                     long elapsedTime = System.nanoTime()/1000000 - savedTime;
                     workDone++;
-                    if(System.currentTimeMillis()>aStreamGOP.deadLine){
-                        System.out.println("DEADLINE missed "+System.currentTimeMillis()+" "+aStreamGOP.deadLine );
+                    if(System.currentTimeMillis()>aStreamGOP.getDeadLine()){
+                        System.out.println("DEADLINE missed "+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
                         deadLineMiss++;
                     }
                     //runtime_report.is

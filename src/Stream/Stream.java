@@ -8,12 +8,14 @@ public class Stream {
     public Settings settings;
     private int status;
     public ArrayList<StreamGOP> streamGOPs;
+    public long startTime;
     public void ScheduleVideoSegments(){
 
     }
     public Stream(){
         status=0;
         video =new Video();
+        startTime=System.currentTimeMillis()+500; //thisTime+Constant for now, should really be scheduleTime
         streamGOPs= new ArrayList<StreamGOP>();
     }
     public Stream(Video v,Settings settings){
@@ -26,10 +28,11 @@ public class Stream {
     public Stream(Video v,Settings settings,int startSegment,int endSegment){
         status=0;
         video =v;
+        startTime=System.currentTimeMillis()+500; //thisTime+Constant for now, should really be scheduleTime
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){
         for(int i=startSegment;i<endSegment;i++){
-            StreamGOP xcopy=new StreamGOP(v.repositoryGOPs.get(i),settings);
+            StreamGOP xcopy=new StreamGOP(this,v.repositoryGOPs.get(i),settings);
             streamGOPs.add(xcopy);
         }
     }

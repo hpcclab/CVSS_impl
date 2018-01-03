@@ -11,7 +11,6 @@
       <element id="library" level="project" name="Jersey-2.2" />
       <element id="library" level="project" name="com.amazonaws:aws-java-sdk:1.11.236" />
       <element id="library" level="project" name="servlet-api" />
-      <element id="library" level="application" name="documentation" />
     </root>
   </artifact>
 </component>

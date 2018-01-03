@@ -2,15 +2,76 @@ package Scheduler;
 
 import Stream.*;
 import TranscodingVM.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.PriorityQueue;
+class request{ //fill every thing for lvl1 mapping constructor, skip resolution for lvl2 mapping, ...
+    private final String command;
+    private final String  Setting_resWidth;
+    private final String  Setting_resHeight;
+    private final String  Setting_absPath;
+
+    //constructor with StreamGOP and intended level of matching
+    request(StreamGOP original,int level){
+        if(level==3) {
+            Setting_absPath=original.userSetting.absPath; //match video segment
+            command="";
+            Setting_resHeight="";
+            Setting_resWidth="";
+        }else if(level==2){
+            Setting_absPath=original.userSetting.absPath;
+            command=original.command; //match command
+            Setting_resHeight="";
+            Setting_resWidth="";
+        }else{ //level 1
+            Setting_absPath=original.userSetting.absPath;
+            command=original.command;
+            Setting_resHeight=original.userSetting.resHeight; //match resolution too
+            Setting_resWidth=original.userSetting.resWidth;
+
+        }
+
+    }
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(command).
+                        append(Setting_resWidth).
+                        append(Setting_resHeight).
+                        append(Setting_absPath).
+                        toHashCode();
+    }
+
+    //return true if it's match, design to compare to request constructed with the SAME level
+    public boolean equals(Object obj){
+        if (!(obj instanceof request)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        request X=(request)obj;
+        return new EqualsBuilder().
+                append(command,X.command).
+                append(Setting_resWidth,X.Setting_resWidth).
+                append(Setting_resHeight,X.Setting_resHeight).
+                append(Setting_absPath,X.Setting_absPath).
+                isEquals();
+        }
+}
 
 public class GOPTaskScheduler {
     private PriorityQueue<StreamGOP> Batchqueue=new PriorityQueue<StreamGOP>();
     private int working=0;
+    private HashMap<request,StreamGOP> LV1map_pending=new HashMap<request,StreamGOP>();;
+    private HashMap<request,StreamGOP> LV2map_pending=new HashMap<request,StreamGOP>(); //level2's request record skip resolution so more matches
+
     public static ArrayList<VMinterface> VMinterfaces =new ArrayList<VMinterface>();
     public GOPTaskScheduler(){
         if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
@@ -29,8 +90,31 @@ public class GOPTaskScheduler {
     }
 
     public void addStream(Stream ST){
-        Batchqueue.addAll(ST.streamGOPs);
+        //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
 
+        for(StreamGOP X:ST.streamGOPs) {
+            //HOLD UP! check for duplication first
+            request aRequestlvl1 = new request(X,1); //= ... derive from X
+            if (LV1map_pending.containsKey(aRequestlvl1)) {
+                System.out.println("match level 1 (exactly the same request) -> dropping this request");
+            }else{
+                LV1map_pending.put(aRequestlvl1,X); //add to the level0 map
+                //check lvl2
+                request aRequestlvl2 = new request(X,2);
+                if (LV2map_pending.containsKey(aRequestlvl2)) {
+                    System.out.println("match level 2 (request on the same video and same command, dif resolution");
+                    // do merging
+                    System.out.println("MERGE!");
+                    //
+                }else{
+                    LV2map_pending.put(aRequestlvl2,X);
+
+                    Batchqueue.add(X);
+                }
+            }
+
+
+        }
         if(working!=1){
             //assignwork thread start
             submitworks();
@@ -39,7 +123,7 @@ public class GOPTaskScheduler {
     }
 
     private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator){
-        int addedConstForDeadLine=500;
+        int addedConstForDeadLine=50;
 
         if(VMinterfaces.size()>0) {
             VMinterface answer=VMinterfaces.get(0);
@@ -67,8 +151,8 @@ public class GOPTaskScheduler {
                     }
                 }
             }
-            //TODO: set dead line based on real world time
-            x.deadLine=System.currentTimeMillis()+min+addedConstForDeadLine;
+            // this is outdated
+            //x.deadLine=System.currentTimeMillis()+min+addedConstForDeadLine;
             return answer;
         }
         System.out.println("BUG: try to schedule to 0 VM");
@@ -105,7 +189,15 @@ public class GOPTaskScheduler {
                 //re-assign works
                 chosenVM = assignworks(X);
             }
-            System.out.println("sent job");
+
+            //change deadLine to absolute value
+            X.setDeadline(X.getDeadLine());
+            //change StreamGOP type to Dispatched
+            X.dispatched=true;
+            //X.parentStream=null;
+
+            //then it's ready to send out
+            System.out.println("sending job");
             chosenVM.sendJob(X);
             System.out.println("send job "+X.getPath()+" to "+chosenVM.toString());
             System.out.println("estimated queuelength="+chosenVM.estimatedQueueLength);

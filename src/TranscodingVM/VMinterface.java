@@ -6,10 +6,7 @@ import Scheduler.ServerConfig;
 import Scheduler.TimeEstimator;
 import Stream.StreamGOP;
 
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -71,6 +68,13 @@ public class VMinterface {
 
     public boolean sendJob(StreamGOP segment){
         if(isWorking()) {
+
+            //convert path if needed
+               // if(!ServerConfig.VM_type.get(id).equalsIgnoreCase("thread")){
+                   // System.out.println("convert!");
+                    segment.setPath(segment.getPath().replaceAll("\\\\","/"));
+               // }
+
             estimatedQueueLength++;
             estimatedExecutionTime += segment.estimatedExecutionTime;
             try {

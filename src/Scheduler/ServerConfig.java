@@ -20,6 +20,7 @@ public class ServerConfig {
     public static ArrayList<Integer> VM_ports=new ArrayList<>();
     public static ArrayList<String> videoList=new ArrayList<>();
     public static boolean addFakeDelay=false;
+    public static String run_mode="real";
 
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
@@ -39,8 +40,7 @@ public class ServerConfig {
     public static double c_const_for_utilitybased=0.1; //default value=0.1
     public static String mapping_mechanism;// can be either MM,MSD,MMU
     public static boolean useEC2;
-    // not configurable from xml yet
-    public static String file_mode="S3";
+    public static String file_mode="S3"; //can be S3 or
 
 
     //check for each parameters if there is any Invalid
@@ -192,11 +192,14 @@ public class ServerConfig {
 
     @XmlElement(name = "useEC2")
     public void setuseEC2(String useEC2) {
-        System.out.println("parse");
         ServerConfig.useEC2 = Boolean.parseBoolean(useEC2);
     }
     @XmlElement(name = "file_mode")
     public void setfile_mode(String mode) {
         ServerConfig.file_mode = mode;
+    }
+    @XmlElement(name = "run_mode")
+    public void setrunMode(String mode) {
+        ServerConfig.run_mode = mode;
     }
 }

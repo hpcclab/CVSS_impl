@@ -115,6 +115,7 @@ public class TranscodingVM extends Thread{
                     TT.deadLineMiss=0;
                     TT.workDone=0;
                 }else{
+                    System.out.println("localthread: work adding");
                     AddJob(objectX);
                 }
             }
@@ -126,26 +127,19 @@ public class TranscodingVM extends Thread{
 
     protected void AddJob(StreamGOP segment)
     {
-
         TT.requiredTime += segment.estimatedExecutionTime;
-
-        //if(type.equalsIgnoreCase("EC2")){
         //debugging,
         //System.out.println("got segment "+segment.getSegmentNum());
         // System.out.println("it's at: "+segment.getPath());
         // System.out.println("it's at: "+segment.userSetting.outputDir());
         File file=new File(segment.userSetting.outputDir());
         file.mkdirs();
-        // }
 
-        //else {
         TT.jobs.add(segment);
         //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");
         if (!TT.isAlive()) {
             TT.start();
-            //System.out.println("test");
         }
-        //   }
     }
     protected void close(){
         try {

@@ -5,20 +5,34 @@ import Repository.RepositoryGOP;
 public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
     public Settings userSetting;
     public String command="";
-    public long deadLine;
+    public transient Stream parentStream;
+    private long deadLine;
     public long estimatedExecutionTime=0;
-
+    public boolean dispatched=false;
 
     public StreamGOP(){
         super();
     }
-    public StreamGOP(RepositoryGOP x){
+    public StreamGOP(Stream p,RepositoryGOP x){
         super(x);
+        parentStream=p;
     }
-    public StreamGOP(RepositoryGOP x, Settings settings){
+    public StreamGOP(Stream p,RepositoryGOP x, Settings settings){
         super(x);
+        parentStream=p;
         this.userSetting=settings;
     }
+    public long getDeadLine(){
+        if(dispatched){
+            return deadLine;
+        }else{
+            return deadLine+parentStream.startTime;
+        }
+    }
+    public void setDeadline(long newD){
+        this.deadLine=newD;
+    }
+
 
     private double priority;
 

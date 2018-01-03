@@ -1,5 +1,6 @@
 package TranscodingVM;
 
+import Scheduler.ServerConfig;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
@@ -31,10 +32,11 @@ public class TranscodingVMcloud extends TranscodingVM{
 
         Region region = Region.getRegion(Regions.US_EAST_2);
         String bucket_name = "cvss-video-bucket";
-        AmazonS3Client s3 = new AmazonS3Client(credentials);
-        s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
-
-        TT.addS3(s3,bucket_name);
+        if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
+            AmazonS3Client s3 = new AmazonS3Client(credentials);
+            s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
+            TT.addS3(s3, bucket_name);
+        }
         System.out.println("config cloud finished");
     }
 }

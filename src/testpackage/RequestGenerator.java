@@ -10,9 +10,9 @@ public class RequestGenerator {
     static String videoList[]={"bbb_trailer","ff_trailer_part1","ff_trailer_part3"};
     public static void OneRandomRequest(GOPTaskScheduler GTS){
         //random a resolution
-        int randomRes=(int)(Math.random()*15)+1;
-        int x=randomRes*30;
-        int y=randomRes*40;
+        int randomRes=(int)(Math.random()*7)+1;
+        int x=randomRes*60;
+        int y=randomRes*80;
         int videoChoice=(int)(Math.random()*3);
         Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
 
