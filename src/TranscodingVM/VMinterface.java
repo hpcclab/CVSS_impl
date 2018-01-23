@@ -98,6 +98,7 @@ public class VMinterface {
                 System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
 
                 System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
+                GOPTaskScheduler.workpending-=(estimatedQueueLength-answer.queue_size);
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = answer.queue_size;
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
                 TimeEstimator.updateTable(this.id, answer.runtime_report);

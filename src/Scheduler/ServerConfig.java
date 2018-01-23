@@ -21,6 +21,7 @@ public class ServerConfig {
     public static ArrayList<String> videoList=new ArrayList<>();
     public static boolean addFakeDelay=false;
     public static String run_mode="real";
+    public static int localqueuelengthperVM=4; //not configurable yet
 
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
@@ -29,7 +30,8 @@ public class ServerConfig {
     public static String schedulerPolicy;
     public static boolean enableCaching=false; //if true, use caching system
     public static boolean enableVMscaling=false;
-    public static int VMscalingInterval=10000; //millisecond, 0 to disable
+    public static int dataUpdateInterval=1000; //millisecond, 0 to disable
+    public static int VMscalingIntervalTick=10; //millisecond, 0 to disable
     public static boolean enableVMscalingoutofInterval=false;
     public static int maxVM; //set max number of VMs
     public static int minVM; //set max number of VMs
@@ -143,11 +145,14 @@ public class ServerConfig {
             ServerConfig.enableVMscaling = false;
         }
     }
-    @XmlElement(name = "VMscalingInterval")
-    public void setVMscalingInterval(int VMscalingInterval) {
-        ServerConfig.VMscalingInterval = VMscalingInterval;
+    @XmlElement(name = "VMscalingIntervalTick")
+    public void setVMscalingIntervalTick(int VMscalingIntervalTick) {
+        ServerConfig.VMscalingIntervalTick = VMscalingIntervalTick;
     }
-
+    @XmlElement(name = "dataUpdateInterval")
+    public void setdataUpdateInterval(int dataUpdateInterval) {
+        ServerConfig.dataUpdateInterval = dataUpdateInterval;
+    }
     @XmlElement(name = "enableVMscalingoutofInterval")
     public void setEnableVMscalingoutofInterval(String check) {
         if(check.equalsIgnoreCase("True")) {

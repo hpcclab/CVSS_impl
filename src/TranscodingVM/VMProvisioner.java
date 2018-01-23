@@ -53,7 +53,7 @@ public class VMProvisioner {
     private static Semaphore x=new Semaphore(1);
     private static ArrayList<vmi> VMCollection =new ArrayList<>();
     private static AmazonEC2 EC2instance;
-
+    private static GOPTaskScheduler GTS;
     private static AmazonS3Client s3;
     private static String s3BucketName;
     public VMProvisioner(){
@@ -110,17 +110,20 @@ public class VMProvisioner {
         }
         EvaluateClusterSize(-1);
         //set up task for evaluate cluster size every ms
-        if(ServerConfig.VMscalingInterval>0){
+        if(ServerConfig.dataUpdateInterval>0){
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    EvaluateClusterSize(10); //still need new values for parameters
+                    Tick();
                 }
             };
-            new Timer(ServerConfig.VMscalingInterval, taskPerformer).start();
+            new Timer(ServerConfig.dataUpdateInterval, taskPerformer).start();
+
         }
         //
     }
-
+    public void setGTS(GOPTaskScheduler X){
+        GTS=X;
+    }
     private static void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
@@ -135,16 +138,28 @@ public class VMProvisioner {
         }
         if(count!=0) {
             deadLineMissRate = sum / count;
-            System.out.println("deadline miss rate="+deadLineMissRate);
+            //System.out.println("deadline miss rate="+deadLineMissRate);
         }
     }
-    //this need to be call periodically somehow
-    public static void EvaluateClusterSize(int virtual_queuelength){
+    private static int tcount=0;
+    public static void Tick(){
         try {
             x.acquire();
         }catch(Exception e){
             System.out.println("Semaphore Bug");
         }
+
+        tcount++;
+        collectData();
+        if(tcount%ServerConfig.VMscalingIntervalTick==0){
+            EvaluateClusterSize(10);
+        }
+        GTS.submitworks();
+        x.release();
+    }
+    //this need to be call periodically somehow
+    public static void EvaluateClusterSize(int virtual_queuelength){
+
         int diff = 0;
         System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
         //check QOS UpperBound, QOS LowerBound, update decision parameters
@@ -153,7 +168,7 @@ public class VMProvisioner {
         } else if (virtual_queuelength == -2) { //unconditionally scale up
             diff = 1;
         } else {
-            collectData();
+            //collectData();
             if (deadLineMissRate > ServerConfig.highscalingThreshold) {
 
                 //         if(deadLineMissRate>ServerConfig.highscalingThreshold){
@@ -178,7 +193,6 @@ public class VMProvisioner {
             //reduce VM numbers
             DeleteInstances(diff);
         } //do nothing if diff==0
-        x.release();
     }
     //pull VM data from setting file
     public static int AddInstances(int diff){

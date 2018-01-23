@@ -2,6 +2,7 @@ package Scheduler;
 
 import Stream.*;
 import TranscodingVM.*;
+import com.amazonaws.services.opsworkscm.model.Server;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -71,6 +72,8 @@ public class GOPTaskScheduler {
     //private HashMap<request,List<StreamGOP>> LV2map_pending=new HashMap<request,List<StreamGOP>>(); //level2's request record skip resolution so more matches
     private HashMap<request,StreamGOP> LV2map_pending=new HashMap<request,StreamGOP>();
     public static ArrayList<VMinterface> VMinterfaces =new ArrayList<VMinterface>();
+    private static int maxpending=0;
+    public static int workpending=0;
     public GOPTaskScheduler(){
         if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
             //add server list to ShortestQueueFirst list too
@@ -79,11 +82,13 @@ public class GOPTaskScheduler {
 
     public static boolean add_VM(String addr,int port,int id){
         VMinterface t=new VMinterface(addr,port,id);
+        maxpending+= ServerConfig.localqueuelengthperVM; //4?
         VMinterfaces.add(t);
         return true; //for success
     }
     public static boolean remove_VM(int which){
         VMinterfaces.remove(which);
+        maxpending-= ServerConfig.localqueuelengthperVM; //4?
         return true;
     }
 
@@ -121,14 +126,9 @@ public class GOPTaskScheduler {
                     Batchqueue.add(X);
                 }
             }
-
-
         }
-        if(working!=1){
             //assignwork thread start
             submitworks();
-        }
-
     }
 
     private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator){
@@ -178,41 +178,47 @@ public class GOPTaskScheduler {
             return shortestQueueFirst(x,false); //false for not using TimeEstimator
         }
     }
-    private void submitworks(){ //will be a thread
+    public void submitworks(){ //will be a thread
         //read through list and assign to TranscodingVM
         //now we only assign task in round robin
-        working=1;
-        while (!Batchqueue.isEmpty()) {
-            StreamGOP X=Batchqueue.poll();
-            //
-            //mapping_policy function
-            //
-            VMinterface chosenVM = assignworks(X);
-            if(ServerConfig.enableVMscalingoutofInterval&&(chosenVM.estimatedQueueLength>ServerConfig.maxVMqueuelength)){
-                //do reprovisioner, we need more VM!
-                System.out.println("queue too long");
-                //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
-                if(ServerConfig.enableVMscalingoutofInterval) {
-                    VMProvisioner.EvaluateClusterSize(-2);
+        if(working!=1) {
+            working = 1;
+            while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
+                StreamGOP X = Batchqueue.poll();
+                //
+                //mapping_policy function
+                //
+                VMinterface chosenVM = assignworks(X);
+                if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.maxVMqueuelength)) {
+                    //do reprovisioner, we need more VM!
+                    System.out.println("queue too long");
+                    //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
+                    if (ServerConfig.enableVMscalingoutofInterval) {
+                        VMProvisioner.EvaluateClusterSize(-2);
+                    }
+                    //re-assign works
+                    chosenVM = assignworks(X);
                 }
-                //re-assign works
-                chosenVM = assignworks(X);
+
+                //change deadLine to absolute value
+                X.setDeadline(X.getDeadLine());
+                //change StreamGOP type to Dispatched
+                X.dispatched = true;
+                //X.parentStream=null;
+
+                //then it's ready to send out
+                chosenVM.sendJob(X);
+                System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());
+                System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
+                System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);
+                workpending++;
+                System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
+                if (workpending == maxpending) {
+                    System.out.println("workpending==maxpending");
+                }
             }
-
-            //change deadLine to absolute value
-            X.setDeadline(X.getDeadLine());
-            //change StreamGOP type to Dispatched
-            X.dispatched=true;
-            //X.parentStream=null;
-
-            //then it's ready to send out
-            System.out.println("sending job");
-            chosenVM.sendJob(X);
-            System.out.println("send job "+X.getPath()+" to "+chosenVM.toString());
-            System.out.println("estimated queuelength="+chosenVM.estimatedQueueLength);
-            System.out.println("estimated ExecutionTime="+chosenVM.estimatedExecutionTime);
+            working=0;
         }
-        working=0;
     }
 
     //turn off VMS socket connection sockets

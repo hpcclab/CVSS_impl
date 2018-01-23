@@ -12,7 +12,8 @@
     <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
     <enableVMscaling>true</enableVMscaling>
-    <VMscalingInterval>30000</VMscalingInterval>
+	<dataUpdateInterval>1000</dataUpdateInterval>
+    <VMscalingIntervalTick>30</VMscalingIntervalTick>
     <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
     <minVM>2</minVM>
     <maxVM>4</maxVM>
