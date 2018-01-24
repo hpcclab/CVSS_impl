@@ -80,8 +80,8 @@ public class GOPTaskScheduler {
         }
     }
 
-    public static boolean add_VM(String addr,int port,int id){
-        VMinterface t=new VMinterface(addr,port,id);
+    public static boolean add_VM(String VM_class,String addr,int port,int id){
+        VMinterface t=new VMinterface(VM_class,addr,port,id);
         maxpending+= ServerConfig.localqueuelengthperVM; //4?
         VMinterfaces.add(t);
         return true; //for success
@@ -178,6 +178,7 @@ public class GOPTaskScheduler {
             return shortestQueueFirst(x,false); //false for not using TimeEstimator
         }
     }
+
     public void submitworks(){ //will be a thread
         //read through list and assign to TranscodingVM
         //now we only assign task in round robin

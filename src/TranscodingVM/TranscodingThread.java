@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -19,13 +20,15 @@ public class TranscodingThread extends Thread{
     public String type;
     public PriorityBlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<StreamGOP>();
     public ConcurrentHashMap<Integer, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
-    private HashMap<Integer,Integer> FakeDelay=new HashMap<>();
+    private HashMap<Integer,Long> FakeDelay=new HashMap<>();
     public int workDone;
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
     private Boolean useS3=false;
     public AmazonS3 s3;
     public String bucketName;
+    public String VM_class;
+    Random r=new Random();
     public void addS3(AmazonS3 ns3,String nbucketName){
         this.useS3=true;
         this.s3=ns3;
@@ -35,8 +38,8 @@ public class TranscodingThread extends Thread{
     {
         int i=0;
         int exit=0;
-        int delay=0;
-
+        long delay=0;
+        long elapsedTime;
         while(true) {
             long savedTime=System.nanoTime()/1000000;
             try {
@@ -56,7 +59,12 @@ public class TranscodingThread extends Thread{
                             delay = (int) (Math.random() * 1000); //0-1000 ms
                             FakeDelay.put(aStreamGOP.userSetting.settingIdentifier, delay);
                         }
+
+                    }else if(ServerConfig.addProfiledDelay) {
+                        delay=(long) (aStreamGOP.estimatedExecutionTime+aStreamGOP.estimatedExecutionSD*r.nextGaussian());
                     }
+
+
 
                     //System.out.println(aStreamGOP.getPath());
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
@@ -75,7 +83,7 @@ public class TranscodingThread extends Thread{
                     String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, outputdir, filename};
                     //ideally, we should be able to pull setting out from StreamGOP but now use fixed
 
-                    //if not deyMode
+                    //if not dryMode
                     if(!ServerConfig.run_mode.equalsIgnoreCase("dry")) {
                         //linux style
                         ProcessBuilder pb = new ProcessBuilder(command);
@@ -109,11 +117,15 @@ public class TranscodingThread extends Thread{
                         if (delay != 0) {
                             sleep(delay);
                         }
+
+                        elapsedTime = System.nanoTime()/1000000 - savedTime;
+                    }else{
+                        elapsedTime=delay;
                     }
+
                     //it's done, reduce estimationTime
                     this.requiredTime-=aStreamGOP.estimatedExecutionTime;
                     //get RunTime, reduce from nano to millisecond
-                    long elapsedTime = System.nanoTime()/1000000 - savedTime;
                     workDone++;
                     if(System.currentTimeMillis()>aStreamGOP.getDeadLine()){
                         System.out.println("DEADLINE missed "+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
@@ -129,8 +141,6 @@ public class TranscodingThread extends Thread{
                         runtime_report.replace(aStreamGOP.userSetting.settingIdentifier, new Tuple<Long, Integer>(newAvg, pulled.y + 1));
                         //System.out.println("change Tuple "+runtime_report.get(0).x+" "+runtime_report.get(0).y);
                     }
-
-
                     //
                 }else{
                     System.out.println("A thread wait 1 minute without getting any works!");

@@ -204,7 +204,7 @@ public class VMProvisioner {
 
                 if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
                     System.out.println("local virtual server");
-                    TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+                    TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
                     if(ServerConfig.file_mode.equalsIgnoreCase("S3")){
                         TC.TT.addS3(s3,s3BucketName);
                     }
@@ -215,7 +215,7 @@ public class VMProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new vmi("thread","",TC));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
                     System.out.println("Adding EC2");
 
@@ -272,7 +272,7 @@ public class VMProvisioner {
                     System.out.println("get IP:"+IP);
                     //System.out.println("Halt!, before connect");
                     //scanner.nextInt();
-                    GOPTaskScheduler.add_VM(IP, ServerConfig.VM_ports.get(VMcount),VMcount);
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
                     //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));

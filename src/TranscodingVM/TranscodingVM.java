@@ -46,9 +46,10 @@ public class TranscodingVM extends Thread{
 
     public TranscodingVM(){}
 
-    public TranscodingVM(String itype,String addr,int port){
+    public TranscodingVM(String itype,String vclass,String addr,int port){
         myport=port;
         centerAddr=addr;
+        TT.VM_class=vclass;
         TT=new TranscodingThread();
         TT.type=itype;
     }

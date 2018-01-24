@@ -16,10 +16,14 @@ public class ServerConfig {
     public static String defaultBatchScript; //
     public static String path;
     public static ArrayList<String> VM_type=new ArrayList<>();
+    public static ArrayList<String> VM_class=new ArrayList<>();
+
     public static ArrayList<String> VM_address=new ArrayList<>();
     public static ArrayList<Integer> VM_ports=new ArrayList<>();
     public static ArrayList<String> videoList=new ArrayList<>();
-    public static boolean addFakeDelay=false;
+    public static boolean addFakeDelay=false; //this is primitive randomized fake delay
+    public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
+
     public static String run_mode="real";
     public static int localqueuelengthperVM=4; //not configurable yet
 
@@ -97,14 +101,22 @@ public class ServerConfig {
             ServerConfig.addFakeDelay = false;
         }
     }
-
+    @XmlElement(name = "addProfiledDelay")
+    public void setAddProfiledDelay(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.addProfiledDelay = true;
+        }else{
+            ServerConfig.addProfiledDelay = false;
+        }
+    }
     @XmlElement(name = "VM")
     public void setVM(String VM_Texts) {
         String s[]=VM_Texts.split(",");
         if(s.length==3) {
             ServerConfig.VM_type.add(s[0]);
-            ServerConfig.VM_address.add(s[1]);
-            ServerConfig.VM_ports.add(Integer.parseInt(s[2]));
+            ServerConfig.VM_class.add(s[1]);
+            ServerConfig.VM_address.add(s[2]);
+            ServerConfig.VM_ports.add(Integer.parseInt(s[3]));
             return;
         }
         System.out.println("invalid format");

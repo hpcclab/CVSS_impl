@@ -17,6 +17,7 @@ public class TimeEstimator {
         Table.put(id,runtime_report);
         System.out.println("Update TimeEstimator table of VM "+id+" to "+runtime_report);
     }
+
     public static long getHistoricProcessTime(int id,StreamGOP segment){
         HashMap<Integer, Tuple<Long,Integer>> polled1=Table.get(id);
         if(polled1!=null){

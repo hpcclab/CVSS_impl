@@ -22,11 +22,11 @@ public class VMinterface {
     public int estimatedQueueLength=0;
     public long estimatedExecutionTime=0;
     public int id;
-
-    public VMinterface(String addr,int port,int inid){
+    public String VM_class;
+    public VMinterface(String vclass,String addr,int port,int inid){
        // try {
             //s = new Socket(addr, port);
-
+            this.VM_class=vclass;
             id=inid;
             //new thread to accept connection
             //connector = new Thread(new Runnable() {

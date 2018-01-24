@@ -8,6 +8,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public transient Stream parentStream;
     private long deadLine;
     public long estimatedExecutionTime=0;
+    public double estimatedExecutionSD=0;
     public boolean dispatched=false;
 
     public StreamGOP(){
