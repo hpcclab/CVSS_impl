@@ -138,7 +138,8 @@ public class GOPTaskScheduler {
             VMinterface answer=VMinterfaces.get(0);
             long min;
             if(useTimeEstimator){
-                x.estimatedExecutionTime=TimeEstimator.getHistoricProcessTime(0,x);
+                Stat y=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),x);
+                x.estimatedExecutionTime=y.mean;
                 min=answer.estimatedExecutionTime+x.estimatedExecutionTime;
             }else{
                 min = answer.estimatedQueueLength;
@@ -147,14 +148,21 @@ public class GOPTaskScheduler {
                 VMinterface aMachine = VMinterfaces.get(i);
                 if (aMachine.isWorking()) {
                     long estimatedT;
+                    long savedmean=0;
                     //calculate new choice
                     if (useTimeEstimator) {
-                        estimatedT = aMachine.estimatedExecutionTime + TimeEstimator.getHistoricProcessTime(i, x);
+                        Stat y=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), x);
+                        savedmean=y.mean;
+                        estimatedT = aMachine.estimatedExecutionTime + y.mean;
+
                     } else {
                         estimatedT = aMachine.estimatedQueueLength;
                     }
                     //decide
                     if (estimatedT < min) {
+                        if (useTimeEstimator){ //update estimatedExecutionTime
+                            x.estimatedExecutionTime = savedmean;
+                        }
                         answer = aMachine;
                         min = estimatedT;
                     }
@@ -178,7 +186,13 @@ public class GOPTaskScheduler {
             return shortestQueueFirst(x,false); //false for not using TimeEstimator
         }
     }
+    //function to test if virtually assign and nothing miss their deadline
+    private boolean virtualTest(){
+    //update Data, need updated Estimated ExecutionTime
+        //...
 
+        return false;
+    }
     public void submitworks(){ //will be a thread
         //read through list and assign to TranscodingVM
         //now we only assign task in round robin

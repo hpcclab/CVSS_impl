@@ -6,6 +6,7 @@ import Scheduler.ServerConfig;
 import Stream.Settings;
 import Stream.Stream;
 import Stream.StreamGOP;
+/*
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
@@ -14,7 +15,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.S3ClientOptions;
-
+*/
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +50,7 @@ public class RequestController extends HttpServlet {
         String prefix = "";
 
         if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
+        /* //EC2 disabling
 
             AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
 
@@ -68,6 +70,7 @@ public class RequestController extends HttpServlet {
 
             prefix = "http://cvss-video-bucket.s3.amazonaws.com/";
             //prefix = "http://d2fl8y9ld5lot6.cloudfront.net/";
+        */
         }
 
         //if (CreateDirectory(userRequest)){
@@ -80,7 +83,7 @@ public class RequestController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
-
+/* //EC2
     public void CreateS3Dir(Settings userRequest, AmazonS3 s3){
         String bucket_name = "cvss-video-bucket";
 
@@ -91,9 +94,9 @@ public class RequestController extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-      //  */
+      //
     }
-
+*/
 
     public boolean CreateDirectory(Settings userRequest){
         File dir = new File(userRequest.outputDir());

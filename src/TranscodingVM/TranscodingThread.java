@@ -3,7 +3,7 @@ package TranscodingVM;
 import Repository.RepositoryGOP;
 import Scheduler.ServerConfig;
 import Stream.StreamGOP;
-import com.amazonaws.services.s3.AmazonS3;
+//import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import miscTools.Tuple;
 
@@ -25,15 +25,17 @@ public class TranscodingThread extends Thread{
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
     private Boolean useS3=false;
-    public AmazonS3 s3;
+   //EC2 public AmazonS3 s3;
     public String bucketName;
     public String VM_class;
     Random r=new Random();
+    /* //EC2
     public void addS3(AmazonS3 ns3,String nbucketName){
         this.useS3=true;
         this.s3=ns3;
         this.bucketName=nbucketName;
     }
+    */
     private void TranscodeSegment()
     {
         int i=0;
@@ -103,6 +105,7 @@ public class TranscodingThread extends Thread{
                          */
                         System.out.println("finished a segment");
                         //put to S3
+                        /* //EC2
                         if (useS3) {
                             File file = new File(aStreamGOP.userSetting.outputDir() + "/" + filename);
                             //System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir()+"/"+filename);
@@ -114,6 +117,7 @@ public class TranscodingThread extends Thread{
                             }
                             file.delete();
                         }
+                        */
                         if (delay != 0) {
                             sleep(delay);
                         }

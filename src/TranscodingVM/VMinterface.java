@@ -101,7 +101,7 @@ public class VMinterface {
                 GOPTaskScheduler.workpending-=(estimatedQueueLength-answer.queue_size);
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = answer.queue_size;
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
-                TimeEstimator.updateTable(this.id, answer.runtime_report);
+                //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
                 VMProvisioner.deadLineMissRate=answer.deadLineMissRate;
                 //
                 System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);

@@ -112,14 +112,16 @@ public class ServerConfig {
     @XmlElement(name = "VM")
     public void setVM(String VM_Texts) {
         String s[]=VM_Texts.split(",");
-        if(s.length==3) {
+        if(s.length==4) {
             ServerConfig.VM_type.add(s[0]);
             ServerConfig.VM_class.add(s[1]);
             ServerConfig.VM_address.add(s[2]);
             ServerConfig.VM_ports.add(Integer.parseInt(s[3]));
-            return;
+            System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" ");
+
+        }else {
+            System.out.println("invalid format");
         }
-        System.out.println("invalid format");
     }
     @XmlElement(name = "supportedCodecs")
     public void setSupportedCodecs(String supportedCodecs) {

@@ -2,6 +2,7 @@ package TranscodingVM;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
+/*
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
@@ -14,7 +15,7 @@ import com.amazonaws.services.opsworkscm.model.Server;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
-
+*/
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -52,9 +53,9 @@ public class VMProvisioner {
     //private double lowscalingThreshold;
     private static Semaphore x=new Semaphore(1);
     private static ArrayList<vmi> VMCollection =new ArrayList<>();
-    private static AmazonEC2 EC2instance;
+    //EC2 private static AmazonEC2 EC2instance;
     private static GOPTaskScheduler GTS;
-    private static AmazonS3Client s3;
+    //EC2 private static AmazonS3Client s3;
     private static String s3BucketName;
     public VMProvisioner(){
         this(0);
@@ -63,7 +64,8 @@ public class VMProvisioner {
         System.out.println("In VMP Constructor");
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
-            System.out.println("Before EC2 client");
+            System.out.println("Before EC2 client, disabled for now");
+            /* //EC2
             AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
             EC2instance= new AmazonEC2Client(credentials);
             Region region = Region.getRegion(Regions.US_EAST_2);
@@ -96,8 +98,10 @@ public class VMProvisioner {
 
 
             System.out.println("use EC2");
+            */
         }
         if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
+            /* //EC2
             AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
 
             com.amazonaws.regions.Region region = Region.getRegion(Regions.US_EAST_2);
@@ -107,6 +111,7 @@ public class VMProvisioner {
             s3BucketName = bucket_name;
             boolean exists = s3.doesBucketExist(bucket_name);
             System.out.println("S3 config finished");
+            */
         }
         EvaluateClusterSize(-1);
         //set up task for evaluate cluster size every ms
@@ -162,6 +167,7 @@ public class VMProvisioner {
 
         int diff = 0;
         System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
+        System.out.println("virtual_queuelength= "+virtual_queuelength);
         //check QOS UpperBound, QOS LowerBound, update decision parameters
         if (virtual_queuelength == -1) { //-1 set special for just ignore this section
             diff = minimumMaintain; // tempolary
@@ -198,16 +204,22 @@ public class VMProvisioner {
     public static int AddInstances(int diff){
 
         for(int i=0;i<diff;i++){
-
+            System.out.println("VMcount="+VMcount);
             if(VMcount <ServerConfig.maxVM) {
 
 
                 if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
                     System.out.println("local virtual server");
+                    //System.out.println(ServerConfig.VM_class.get(VMcount));
+                    //System.out.println(ServerConfig.VM_address.get(VMcount));
+                    //System.out.println(ServerConfig.VM_ports.get(VMcount));
+
                     TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+                    /* //EC2
                     if(ServerConfig.file_mode.equalsIgnoreCase("S3")){
                         TC.TT.addS3(s3,s3BucketName);
                     }
+                    */
                     TC.start();
                     try {
                         sleep(200);
@@ -217,8 +229,8 @@ public class VMProvisioner {
                     VMCollection.add(new vmi("thread","",TC));
                     GOPTaskScheduler.add_VM(ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
-                    System.out.println("Adding EC2");
-
+                    System.out.println("Adding EC2, disabled");
+                    /* //EC2
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
                     EC2instance.startInstances(start);
                     VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount)));
@@ -255,7 +267,8 @@ public class VMProvisioner {
                             System.out.println("Instance TAGS :" + instance.getTags());
                         }
                     }
-                    */
+                    ////
+
                     String IP=result.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
 
                     while(IP==null){
@@ -277,7 +290,7 @@ public class VMProvisioner {
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
                     //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
                     //make sure instance is up and running line above
-
+                */
                 }else{
                     System.out.println("Adding unknown");
                 }
@@ -301,11 +314,14 @@ public class VMProvisioner {
                     VMcount--;
                     vmitoRemove.TVM.close();
                 } else if (vmitoRemove.type.equalsIgnoreCase("EC2")) {
-                    System.out.println("Removing EC2");
+                    System.out.println("Removing EC2, disabled");
+                    /* //EC2
                     StopInstancesRequest stop=new StopInstancesRequest().withInstanceIds(vmitoRemove.identification);
                     //
                     System.out.println("can't just stop a running VMCollection immediately, need a way to solve this!");
                     //vmitoRemove.EC2inst.stopInstances(stop);
+
+                    */
                 } else {
                     System.out.println("Removing unknown");
                 }
@@ -319,10 +335,12 @@ public class VMProvisioner {
         for(vmi vm : VMCollection){
             if (vm.type.equalsIgnoreCase("thread")) {
                 vm.TVM.close();
-            }else if(vm.type.equalsIgnoreCase("EC2")){
+            }else if(vm.type.equalsIgnoreCase("EC2, disabled")){
+                /* //EC2
                 //can force close in this mode
                 StopInstancesRequest stop=new StopInstancesRequest().withInstanceIds(vm.identification);
                 EC2instance.stopInstances(stop);
+                */
             }else{
                 System.out.println("Removing unknown");
             }

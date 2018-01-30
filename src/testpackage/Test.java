@@ -6,7 +6,7 @@ import Scheduler.ServerConfig;
 import TranscodingVM.*;
 import Repository.*;
 import Stream.*;
-import com.amazonaws.services.ec2.AmazonEC2;
+/*import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
@@ -15,7 +15,7 @@ import com.amazonaws.services.ec2.model.StartInstancesRequest;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-
+*/
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
@@ -30,9 +30,11 @@ import static java.lang.Thread.sleep;
 public class Test {
 
     public static String test() {
+        /*
         AWSCredentials credentials = new BasicAWSCredentials(
                 "AKIAJTLLH5SVF74IJ6NQ",
                 "ZJCx4bcqYb78EZc/1d1foHSSgJSIDMhV+uiQkFKG");
+        */
         try {
             Scanner scanner=new Scanner(System.in);
             //read config file
@@ -100,9 +102,9 @@ public class Test {
         } catch (Exception e) {
             return "Failed: " + e;
         }
-        return "done";
         */
-return "";
+        return "done";
+
     }
     //for test
     public static void main(String[] args){
