@@ -92,11 +92,10 @@ public class VMinterface {
         if(isWorking()) {
             try {
                 StreamGOP query = new StreamGOP();
-                query.command = "query";
+                query.cmdSet.put("query",null);
                 oos.writeObject(query); //they expect an object, thus we need to send object
                 report answer = (report) ois.readObject();
                 System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
-
                 System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
                 GOPTaskScheduler.workpending-=(estimatedQueueLength-answer.queue_size);
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = answer.queue_size;
@@ -106,9 +105,8 @@ public class VMinterface {
                 //
                 System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);
                 return answer.deadLineMissRate;
-
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.println("data update error:"+e);
                 return -1;
             }
         }
@@ -119,7 +117,7 @@ public class VMinterface {
         if(isWorking()) {
             try {
                 StreamGOP poison = new StreamGOP();
-                poison.command = "shutdown";
+                poison.cmdSet.put("shutdown",null);
                 poison.setPriority(0);
                 oos.writeObject(poison);
             } catch (Exception e) {

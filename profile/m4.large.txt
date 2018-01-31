@@ -1,0 +1,9 @@
+Resolution,80x60,100,15,20,50         
+Resolution,160x120,140,15,20,50 
+Resolution,240x180,220,15,20,50 
+Resolution,320x240,380,15,20,50 
+Resolution,400x300,480,15,20,50 
+Resolution,480x360,610,15,20,50 
+Resolution,560x420,760,15,20,50 
+Resolution,640x480,940,15,20,50 
+

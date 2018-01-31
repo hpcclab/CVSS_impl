@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class TranscodingThread extends Thread{
     public String type;
     public PriorityBlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<StreamGOP>();
-    public ConcurrentHashMap<Integer, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
+    public ConcurrentHashMap<String, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
     private HashMap<Integer,Long> FakeDelay=new HashMap<>();
     public int workDone;
     public int deadLineMiss;
@@ -47,22 +47,24 @@ public class TranscodingThread extends Thread{
             try {
                 StreamGOP aStreamGOP = jobs.poll(1, TimeUnit.MINUTES);
                 if(aStreamGOP!=null) {
-                    if (aStreamGOP.command.equalsIgnoreCase("shutdown")) {
+                    if (aStreamGOP.cmdSet.containsKey("shutdown")) {
                         exit = 1;
                         System.out.println("VM's queue is empty and receiving shutting down command");
                         break;
                     }
 
-                    //random delay
+                    //random delay, BROKEN for now, userSetting does not exist.
+
                     if (ServerConfig.addFakeDelay) {
-                        if (FakeDelay.containsKey(aStreamGOP.userSetting.settingIdentifier)) //if we already have delay for this setting randomized,
-                            delay = FakeDelay.get(aStreamGOP.userSetting.settingIdentifier); //use that value
+                        int identifier =0; //was aStreamGOP.userSetting.settingIdentifier;
+                        if (FakeDelay.containsKey(identifier)) //if we already have delay for this setting randomized,
+                            delay = FakeDelay.get(identifier); //use that value
                         else {
                             delay = (int) (Math.random() * 1000); //0-1000 ms
-                            FakeDelay.put(aStreamGOP.userSetting.settingIdentifier, delay);
+                            FakeDelay.put(identifier, delay);
                         }
 
-                    }else if(ServerConfig.addProfiledDelay) {
+                    }else  if(ServerConfig.addProfiledDelay) {
                         delay=(long) (aStreamGOP.estimatedExecutionTime+aStreamGOP.estimatedExecutionSD*r.nextGaussian());
                     }
 
@@ -72,7 +74,7 @@ public class TranscodingThread extends Thread{
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
                     //extra line for windows below, need test if work with linux
                     filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.length());
-                    String outputdir=aStreamGOP.userSetting.outputDir();;
+                    String outputdir=aStreamGOP.outputDir();;
                     /*
                     if(type.equalsIgnoreCase("EC2")){
                         aStreamGOP.setPath("/home/ec2-user/"+aStreamGOP.getPath());
@@ -82,27 +84,24 @@ public class TranscodingThread extends Thread{
                     }
                     */
                     //System.out.println(filename);
-                    String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, outputdir, filename};
+
+                     //don't process, always do dry mode
+                    // String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, outputdir, filename};
+
                     //ideally, we should be able to pull setting out from StreamGOP but now use fixed
 
                     //if not dryMode
                     if(!ServerConfig.run_mode.equalsIgnoreCase("dry")) {
-                        //linux style
+                        /* //dry mode, did not fix the processing
+
                         ProcessBuilder pb = new ProcessBuilder(command);
                         //pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
                         //pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
                         Process p = pb.start();
                         p.waitFor();
 
+                        */
 
-                         /*   //test for windows
-                            Process process = Runtime.getRuntime().exec(command);
-                            BufferedReader reader =
-                                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-                            while ((reader.readLine()) != null) {}
-                            process.waitFor();
-                            //
-                         */
                         System.out.println("finished a segment");
                         //put to S3
                         /* //EC2
@@ -136,6 +135,7 @@ public class TranscodingThread extends Thread{
                         deadLineMiss++;
                     }
                     //runtime_report.is
+                    /*
                     Tuple<Long, Integer> pulled = runtime_report.get(aStreamGOP.userSetting.settingIdentifier);
                     if (pulled == null) {
                         runtime_report.put(aStreamGOP.userSetting.settingIdentifier, new Tuple<Long, Integer>(elapsedTime, 1));
@@ -145,6 +145,7 @@ public class TranscodingThread extends Thread{
                         runtime_report.replace(aStreamGOP.userSetting.settingIdentifier, new Tuple<Long, Integer>(newAvg, pulled.y + 1));
                         //System.out.println("change Tuple "+runtime_report.get(0).x+" "+runtime_report.get(0).y);
                     }
+                    */
                     //
                 }else{
                     System.out.println("A thread wait 1 minute without getting any works!");

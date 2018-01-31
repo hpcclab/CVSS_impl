@@ -2,6 +2,8 @@ package TranscodingVM;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
+import Scheduler.TimeEstimator;
+import sun.misc.VM;
 /*
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -61,7 +63,6 @@ public class VMProvisioner {
         this(0);
     }
     public VMProvisioner(int minimumVMtomaintain){
-        System.out.println("In VMP Constructor");
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
             System.out.println("Before EC2 client, disabled for now");
@@ -220,6 +221,8 @@ public class VMProvisioner {
                         TC.TT.addS3(s3,s3BucketName);
                     }
                     */
+
+                    TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
                     TC.start();
                     try {
                         sleep(200);

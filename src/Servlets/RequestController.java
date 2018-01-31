@@ -148,8 +148,8 @@ public class RequestController extends HttpServlet {
 
         Settings newRequest = new Settings(userRequest.videoname, userRequest.resHeight, userRequest.resWidth);
 
-        Stream ST=new Stream(VR.videos.get(GetVideoNumber(userRequest.videoname)),newRequest); //admission control can work in constructor, or later?
-
+        //Stream ST=new Stream(VR.videos.get(GetVideoNumber(userRequest.videoname)),newRequest); //admission control can work in constructor, or later?
+/*
         //Admission Control assign Priority of each segments
         AdmissionControl.AssignStreamPriority(ST);
         for(StreamGOP x:ST.streamGOPs){
@@ -160,5 +160,7 @@ public class RequestController extends HttpServlet {
         GTS.addStream(ST);
         System.out.println("test2");
         System.out.println("after stream");
+    */
     }
+
 }

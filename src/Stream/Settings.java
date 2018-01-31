@@ -9,11 +9,11 @@ import java.io.File;
 public class Settings implements java.io.Serializable{
 
     public String absPath;
+    public String videoname = "";
     public boolean resolution = false;
     public boolean bitrate = false;
     public boolean subtitles = false;
     public boolean summarization = false;
-    public String videoname = "";
     public String resWidth = "";
     public String resHeight = "";
     public int settingIdentifier=0;

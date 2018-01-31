@@ -1,3 +1,0 @@
-
-Resolution,1,760,15,20,50         
-Resolution,2,380,15,20,50 

@@ -11,27 +11,35 @@ import java.util.*;
 
 class request{ //fill every thing for lvl1 mapping constructor, skip resolution for lvl2 mapping, ...
     private final String command;
-    private final String  param_resWidth;
-    private final String  param_resHeight;
+    private final String param;
     private final String Path;
-
     //constructor with StreamGOP and intended level of matching
+    //command list will only contain ONE command and param, no merge
     request(StreamGOP original,int level){
+        System.out.println("test");
+        String thecmd="";
+        String theparam="";
+        int i=0;
+        for(String cmd : original.cmdSet.keySet()){
+            thecmd=cmd;
+            theparam=original.cmdSet.get(thecmd).get(0);
+            i++;
+            if(i>1){
+                System.out.println("why do we have merged command here?");
+            }
+        }
         if(level==3) {
             Path=original.getPath(); //match video segment
             command="";
-            param_resHeight="";
-            param_resWidth="";
+            param="";
         }else if(level==2){
             Path=original.getPath();
-            command=original.command; //match command
-            param_resHeight="";
-            param_resWidth="";
+            command=thecmd; //match command
+            param="";
         }else{ //level 1, level 3 is not yet supported
             Path=original.getPath();
-            command=original.command;
-            param_resHeight=original.userSetting.resHeight; //match resolution too
-            param_resWidth=original.userSetting.resWidth;
+            command=thecmd;
+            param=theparam; //match resolution too
 
         }
 
@@ -40,8 +48,7 @@ class request{ //fill every thing for lvl1 mapping constructor, skip resolution 
         return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
                 // if deriving: appendSuper(super.hashCode()).
                         append(command).
-                        append(param_resWidth).
-                        append(param_resHeight).
+                        append(param).
                         append(Path).
                         toHashCode();
     }
@@ -58,8 +65,7 @@ class request{ //fill every thing for lvl1 mapping constructor, skip resolution 
         request X=(request)obj;
         return new EqualsBuilder().
                 append(command,X.command).
-                append(param_resWidth,X.param_resWidth).
-                append(param_resHeight,X.param_resHeight).
+                append(param,X.param).
                 append(Path,X.Path).
                 isEquals();
         }
@@ -98,7 +104,7 @@ public class GOPTaskScheduler {
         for(StreamGOP X:ST.streamGOPs) {
             //HOLD UP! check for duplication first
             request aRequestlvl1 = new request(X,1); //= ... derive from X
-            System.out.println(X.userSetting.absPath +" "+X.userSetting.videoname);
+            System.out.println(X.getPath() +" "+X.videoname);
             if (LV1map_pending.containsKey(aRequestlvl1)) {
                 System.out.println("match level 1 (exactly the same request) -> dropping this request, no question!");
                 //don't even need to check if it is not null or state is not dispatched
@@ -138,8 +144,7 @@ public class GOPTaskScheduler {
             VMinterface answer=VMinterfaces.get(0);
             long min;
             if(useTimeEstimator){
-                Stat y=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),x);
-                x.estimatedExecutionTime=y.mean;
+                x.estimatedExecutionTime=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),x,0);;
                 min=answer.estimatedExecutionTime+x.estimatedExecutionTime;
             }else{
                 min = answer.estimatedQueueLength;
@@ -151,9 +156,8 @@ public class GOPTaskScheduler {
                     long savedmean=0;
                     //calculate new choice
                     if (useTimeEstimator) {
-                        Stat y=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), x);
-                        savedmean=y.mean;
-                        estimatedT = aMachine.estimatedExecutionTime + y.mean;
+                        savedmean=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), x,0);;
+                        estimatedT = aMachine.estimatedExecutionTime + savedmean;
 
                     } else {
                         estimatedT = aMachine.estimatedQueueLength;

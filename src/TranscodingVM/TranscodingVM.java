@@ -20,10 +20,10 @@ class report implements Serializable{
     int queue_size;
     long queue_executionTime;
     double deadLineMissRate;
-    HashMap<Integer, Tuple<Long,Integer>> runtime_report=new HashMap<>();
+    HashMap<String, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
 
-    public report(int queue_size,long time,double deadLineMissRate, ConcurrentHashMap<Integer, Tuple<Long, Integer>> runtime_report) {
+    public report(int queue_size,long time,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
         this.runtime_report.putAll(runtime_report);
         this.queue_executionTime=time;
         this.deadLineMissRate=deadLineMissRate;
@@ -95,14 +95,14 @@ public class TranscodingVM extends Thread{
             while(!s.isClosed()){
                 StreamGOP objectX =(StreamGOP) ois.readObject();
                 //System.out.println("ObjectX's path"+objectX.getPath());
-                if(objectX.command.equalsIgnoreCase("shutdown")){
+                if(objectX.cmdSet.containsKey("shutdown")){
                     //receive shutting down message, close down receiving communication
                     //whatever in the queue will still be processed until queue is empty
                     AddJob(objectX); //still add to the queue
                     System.out.println("Shutting Down");
                     close();
                     break;
-                }else if (objectX.command.equalsIgnoreCase("query")){
+                }else if (objectX.cmdSet.containsKey("query")){
                     if(!TT.runtime_report.isEmpty()) {
                         //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
                     }
@@ -133,7 +133,7 @@ public class TranscodingVM extends Thread{
         //System.out.println("got segment "+segment.getSegmentNum());
         // System.out.println("it's at: "+segment.getPath());
         // System.out.println("it's at: "+segment.userSetting.outputDir());
-        File file=new File(segment.userSetting.outputDir());
+        File file=new File(segment.outputDir());
         file.mkdirs();
 
         TT.jobs.add(segment);

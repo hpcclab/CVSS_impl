@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Stream {
     public Video video; // for reference of which video we are talking about
     public String id;
-    public Settings settings;
     private int status;
     public ArrayList<StreamGOP> streamGOPs;
     public long startTime;
@@ -18,21 +17,21 @@ public class Stream {
         startTime=System.currentTimeMillis()+500; //thisTime+Constant for now, should really be scheduleTime
         streamGOPs= new ArrayList<StreamGOP>();
     }
-    public Stream(Video v,Settings settings){
-        this(v,settings,0,v.repositoryGOPs.size());
+    public Stream(Video v,String command,String settings){
+        this(v,command,settings,0,v.repositoryGOPs.size());
     }
-    public Stream(Video v, Settings settings, int startSegment){
-        this(v,settings,startSegment,v.repositoryGOPs.size());
+    public Stream(Video v,String command, String settings, int startSegment){
+        this(v,command,settings,startSegment,v.repositoryGOPs.size());
     }
 
-    public Stream(Video v,Settings settings,int startSegment,int endSegment){
+    public Stream(Video v,String command,String settings,int startSegment,int endSegment){
         status=0;
         video =v;
         startTime=System.currentTimeMillis()+500; //thisTime+Constant for now, should really be scheduleTime
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){
         for(int i=startSegment;i<endSegment;i++){
-            StreamGOP xcopy=new StreamGOP(this,v.repositoryGOPs.get(i),settings);
+            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,settings);
             streamGOPs.add(xcopy);
         }
     }

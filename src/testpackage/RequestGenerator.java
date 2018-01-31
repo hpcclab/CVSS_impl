@@ -11,14 +11,15 @@ public class RequestGenerator {
     public static void OneRandomRequest(GOPTaskScheduler GTS){
         //random a resolution
         int randomRes=(int)(Math.random()*7)+1;
-        int x=randomRes*60;
-        int y=randomRes*80;
+        int x=randomRes*80;
+        int y=randomRes*60;
         int videoChoice=(int)(Math.random()*3);
-        Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
+        //Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
+        String setting=x+"x"+y;
+        //setting.settingIdentifier=randomRes;
 
         // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
-        Stream ST=new Stream(VideoRepository.videos.get(0),setting); //admission control can work in constructor, or later?
-
+        Stream ST=new Stream(VideoRepository.videos.get(0),"Resolution",setting); //admission control can work in constructor, or later?
         //Admission Control assign Priority of each segments
         AdmissionControl.AssignStreamPriority(ST);
         /* //print out priorities
