@@ -43,6 +43,21 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this(name,p,x);
         addCMD(Command, Setting);
     }
+    //deep clone
+    public StreamGOP(StreamGOP X){
+        this.setPath(X.getPath());
+        this.segment=X.segment;
+        this.isTranscoded=X.getIsTranscoded();
+        this.setting=X.setting;
+        //
+        this.videoname=X.videoname;
+        this.parentStream=X.parentStream;
+        //
+        for(String command : X.cmdSet.keySet()){
+            LinkedList<String> param= new LinkedList<>(X.cmdSet.get(command) );
+            cmdSet.put(command,param);
+        }
+    }
     public long getDeadLine(){
         if(dispatched){
             return deadLine;
@@ -85,4 +100,5 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     {
         return "estimatedExeT: "+estimatedExecutionTime+"estimatedExeSD: "+estimatedExecutionSD+"deadline: "+deadLine+" "+cmdSet.toString();
     }
+
 }

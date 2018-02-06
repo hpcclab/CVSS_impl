@@ -38,7 +38,7 @@ public class TimeEstimator {
 
     //design decision, should this return per segment or per action?
     //select do it all in here!
-    public static Long getHistoricProcessTime(String VMclass,StreamGOP segment,int SDcoefficient){
+    public static Long getHistoricProcessTime(String VMclass,StreamGOP segment,double SDcoefficient){
         //SDcoefficient=1 is Worst case, -1 is BestCase,
         HashMap<String,Stat> polled1=Table.get(VMclass);
         long Time=0;

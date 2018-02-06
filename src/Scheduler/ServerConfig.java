@@ -23,7 +23,7 @@ public class ServerConfig {
     public static ArrayList<String> videoList=new ArrayList<>();
     public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
-
+    public static boolean sortedBatchQueue=true;
     public static String run_mode="real";
     public static int localqueuelengthperVM=4; //not configurable yet
 

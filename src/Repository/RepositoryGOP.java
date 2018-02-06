@@ -7,7 +7,7 @@ public class RepositoryGOP implements java.io.Serializable {
 
     private String path;
     public String segment;
-    private Boolean isTranscoded;
+    public Boolean isTranscoded;
     public String setting;
 
     public RepositoryGOP(String path){
