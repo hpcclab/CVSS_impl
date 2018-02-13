@@ -28,7 +28,7 @@ public class TranscodingThread extends Thread{
    //EC2 public AmazonS3 s3;
     public String bucketName;
     public String VM_class;
-    Random r=new Random();
+    private Random r=new Random();
     /* //EC2
     public void addS3(AmazonS3 ns3,String nbucketName){
         this.useS3=true;

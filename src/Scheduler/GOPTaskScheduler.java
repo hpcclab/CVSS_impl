@@ -16,7 +16,6 @@ class request{ //fill every thing for lvl1 mapping constructor, skip resolution 
     //constructor with StreamGOP and intended level of matching
     //command list will only contain ONE command and param, no merge
     request(StreamGOP original,int level){
-        System.out.println("test");
         String thecmd="";
         String theparam="";
         int i=0;
@@ -72,7 +71,8 @@ class request{ //fill every thing for lvl1 mapping constructor, skip resolution 
 }
 
 public class GOPTaskScheduler {
-    private PriorityQueue<StreamGOP> Batchqueue=new PriorityQueue<StreamGOP>();
+    private miscTools.SortableList Batchqueue=new miscTools.SortableList();
+    private miscTools.SortableList pendingqueue=new miscTools.SortableList();
     private int working=0;
     private HashMap<request,StreamGOP> LV1map_pending=new HashMap<request,StreamGOP>();;
     private HashMap<request,StreamGOP> LV2map_pending=new HashMap<request,StreamGOP>();
@@ -100,7 +100,44 @@ public class GOPTaskScheduler {
         maxpending-= ServerConfig.localqueuelengthperVM; //4?
         return true;
     }
+    //return -1, can't merge
+    //1, tail
+    //2, head
+    //3, between
+public int try3Positions(request key,HashMap<request,StreamGOP> thislvlmap,StreamGOP X,StreamGOP original,StreamGOP merged){
+    //batch queue is not sorted, try 3+ location
+    ArrayList<StreamGOP> newVQ = new ArrayList<StreamGOP>(Batchqueue);
 
+    //try latest location
+    newVQ.remove(original);
+    newVQ.add(merged);
+    if (virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(), merged, merged) == 1) { //succesful, no miss
+        Batchqueue.remove(original);
+        //and need to update table?
+        Batchqueue.add(original); //so that we don't need to update table, rather than add merged and update table to point to merged
+        original.getAllCMD(X);
+        return 1;
+    }
+
+    //try early location
+    newVQ = new ArrayList<StreamGOP>(Batchqueue);
+    newVQ.set(newVQ.indexOf(original), merged);
+    if (virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(), merged, merged) == 1) {
+        //Batchqueue.set(Batchqueue.indexOf(original),merged); //not like this! that would mean we need to update table a b c!
+        original.getAllCMD(X);
+        return 2;
+    }
+
+    //todo: try in between
+    // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
+    Batchqueue.add(X);
+    thislvlmap.replace(key, X);
+    //return 3;
+
+    //nothing success, return -1;
+    return -1;
+
+}
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
 
@@ -118,67 +155,57 @@ public class GOPTaskScheduler {
                 if (LV2map_pending.containsKey(aRequestlvl2)) {
                     System.out.println("match Type B (request on the same video and same command, dif resolution)");
                     StreamGOP original=LV2map_pending.get(aRequestlvl2);
-                    // create merged StreamGOP
-                    StreamGOP merged=new StreamGOP(original);
-                    for(String command : X.cmdSet.keySet()){ //not really needed, since X should have just one cmd at the moment
-                        LinkedList<String> param= new LinkedList<>(X.cmdSet.get(command) );
-                        for(String aparam : param) {
-                            merged.addCMD(command,aparam );
-                        }
-                    }
+                    if(original.dispatched){
+                        System.out.println("too late to merge, already dispatched");
+                    }else {
+                        System.out.println("not too late to merge");
+                        // create merged StreamGOP
+                        StreamGOP merged = new StreamGOP(original);
+                        merged.getAllCMD(X);
 
-                    // do merging
-                    if(ServerConfig.sortedBatchQueue){
-                        //batch queue sorted by deadline, no need to change anything
-                        //TODO: if batchqueue sorted by latest start, need to resort it
-                        if(virtualQueueCheckReplace(original,merged)==1){
-                            Batchqueue.remove(original);
-                            Batchqueue.add(merged);
-                        }else{
-                            // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
-                            Batchqueue.add(X);
-                            LV2map_pending.replace(aRequestlvl2,X);
-                        }
-                    }else{
-                        //batch queue is not sorted, try 3+ location
-                            ArrayList<StreamGOP> newVQ=new ArrayList<StreamGOP>(Batchqueue);
-                            //try latest location
-                            newVQ.remove(original);
-                            newVQ.add(merged);
-                            int tried=virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(),merged,merged);
-                            if(tried==1){ //succesful, no miss
+                        // do merging
+                        if (ServerConfig.sortedBatchQueue) {
+                            System.out.println("merge on sorted batch queue");
+                            //batch queue sorted by deadline, no need to change anything
+                            if (virtualQueueCheckReplace(original, merged) == 1) {
                                 Batchqueue.remove(original);
                                 Batchqueue.add(merged);
-                            }else { //
-                                if(tried==-1) { // the merged one is miss, can try further
-                                    //try early location
-                                    newVQ = new ArrayList<StreamGOP>(Batchqueue);
-                                    newVQ.set(newVQ.indexOf(original), merged);
-                                    if (virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(), merged, merged) == 1) {
-                                        Batchqueue.remove(original); //todo, make it appropriate for unsorted list
-                                        Batchqueue.add(merged);
-                                    } else {
-                                        //todo: try in between
-
-                                        // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
-                                        Batchqueue.add(X);
-                                        LV2map_pending.replace(aRequestlvl2, X);
-                                    }
-                                }else{
-                                    Batchqueue.add(X);
-                                    LV2map_pending.replace(aRequestlvl2, X);
-                                }
+                                System.out.println("merged");
+                            } else {
+                                System.out.println("don't merge");
+                                // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
+                                Batchqueue.add(X);
+                                LV2map_pending.replace(aRequestlvl2, X);
                             }
-                        //
+                        } else {
+                            System.out.println("merge on unsorted batch queue");
+                            if(try3Positions(aRequestlvl2,LV2map_pending,X,original,merged)==-1){
+                                //didn't merge
+                                Batchqueue.add(X);
+                                LV2map_pending.replace(aRequestlvl2, X);
+                            }
+                        }
                     }
                 }else{
+                    //didn't see in lvl2, try lvl3 merge
                     LV2map_pending.put(aRequestlvl2,X);
                     request aRequestlvl3 = new request(X,3);
+
                     if(LV3map_pending.containsKey(aRequestlvl3)){
-                        System.out.println("match Type C (same  video)");
-                        System.out.println("MERGE or not?");
+                        System.out.println("match Type C (same video)");
+                        StreamGOP original=LV3map_pending.get(aRequestlvl3);
+                        if(original.dispatched){
+                            System.out.println("too late to merge, already dispatched");
+
+                        }else {
+                            System.out.println("not too late to merge (lvl3, is not doing yet");
+                            //TODO: finish this
+                        }
+
                     }else{
+                        System.out.println("add to queue directly, not matching anything");
                         LV3map_pending.put(aRequestlvl3,X);
+                        Batchqueue.add(X); //only add directly if no match at all
                     }
                    // ArrayList<StreamGOP> listofGOP=new ArrayList<StreamGOP>();
                    // listofGOP.add(X);
@@ -187,7 +214,6 @@ public class GOPTaskScheduler {
                     // check level 3
 
                     //...
-                    Batchqueue.add(X);
                 }
             }
         }
@@ -196,7 +222,9 @@ public class GOPTaskScheduler {
     }
 
     private int virtualQueueCheckReplace(StreamGOP Original,StreamGOP merged){
-        StreamGOP[] virtualQueue=(StreamGOP[])Batchqueue.toArray();
+        System.out.println("01");
+        StreamGOP[] virtualQueue=Batchqueue.toArray(new StreamGOP[Batchqueue.size()]);
+        System.out.println("02");
         return virtualQueueCheckReplace(virtualQueue,Original,merged);
     }
     private int virtualQueueCheckReplace(StreamGOP[] virtualQueue,StreamGOP Original,StreamGOP merged){
@@ -311,7 +339,15 @@ public class GOPTaskScheduler {
         if(working!=1) {
             working = 1;
             while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
-                StreamGOP X = Batchqueue.poll();
+                StreamGOP X;
+                if(ServerConfig.sortedBatchQueue) {
+                    //X=Batchqueue.pollHighestPrio(); //don't forget to remove them later
+                    X=Batchqueue.removeHighestPrio();
+                }else{
+                    //X= Batchqueue.poll();
+                    X= Batchqueue.remove();
+                }
+                pendingqueue.add(X);
                 //
                 //mapping_policy function
                 //
@@ -334,6 +370,7 @@ public class GOPTaskScheduler {
                 //X.parentStream=null;
 
                 //then it's ready to send out
+
                 chosenVM.sendJob(X);
                 System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());
                 System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);

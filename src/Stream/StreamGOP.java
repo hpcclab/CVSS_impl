@@ -18,16 +18,34 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public double estimatedExecutionSD=0;
     public boolean dispatched=false;
 
-
+    public boolean containCmdParam(String Command,String Setting){
+        if(cmdSet.containsKey(Command)) {
+            LinkedList<String> paramList=cmdSet.get(Command);
+            if(paramList.contains(Setting)){
+                return true;
+            }
+        }
+        return false;
+    }
     public void addCMD(String Command,String Setting){
-        if(cmdSet.containsKey(Command)){
-            LinkedList<String> parameterList=cmdSet.get(Command);
-            parameterList.add(Setting);
-            // do i need to put back?, NO? it's pointer!
-        }else{
-            LinkedList<String> parameterList=new LinkedList<>();
-            parameterList.add(Setting);
-            cmdSet.put(Command,parameterList);
+        if(containCmdParam(Command,Setting)) {
+            if (cmdSet.containsKey(Command)) {
+                LinkedList<String> parameterList = cmdSet.get(Command);
+                parameterList.add(Setting);
+                // do i need to put back?, NO? it's pointer!
+            } else {
+                LinkedList<String> parameterList = new LinkedList<>();
+                parameterList.add(Setting);
+                cmdSet.put(Command, parameterList);
+            }
+        }
+    }
+    public void getAllCMD(StreamGOP aGOP){
+        for (String command : aGOP.cmdSet.keySet()) { //not really needed, since X should have just one cmd at the moment
+            LinkedList<String> param = new LinkedList<>(aGOP.cmdSet.get(command));
+            for (String aparam : param) {
+                addCMD(command, aparam);
+            }
         }
     }
     public StreamGOP(){
@@ -74,7 +92,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
 
     @Override
     public int compareTo(StreamGOP t1) {
-        double diff=t1.getPriority()-this.priority;
+        double diff=this.priority-t1.getPriority();
         if(diff<0){
             return -1;
         }else if(diff>0){

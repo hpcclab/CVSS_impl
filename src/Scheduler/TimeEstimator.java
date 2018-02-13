@@ -42,7 +42,7 @@ public class TimeEstimator {
         //SDcoefficient=1 is Worst case, -1 is BestCase,
         HashMap<String,Stat> polled1=Table.get(VMclass);
         long Time=0;
-        if(polled1!=null){ //have thay machine type data
+        if(polled1!=null){ //have the machine type data
 
             for (String cmd : segment.cmdSet.keySet()) {
 
