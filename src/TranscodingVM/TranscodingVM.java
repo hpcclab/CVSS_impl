@@ -108,7 +108,10 @@ public class TranscodingVM extends Thread{
                         //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
                     }
                     double deadLineMiss=0;
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.spentTime,deadLineMiss,TT.runtime_report));
+                    if(objectX.getDeadLine()>TT.synctime){ //syncTime
+                        TT.synctime=objectX.getDeadLine();
+                    }
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,deadLineMiss,TT.runtime_report));
 
                 }else if (objectX.cmdSet.containsKey("fullstat")){
                     if(!TT.runtime_report.isEmpty()) {
@@ -120,7 +123,10 @@ public class TranscodingVM extends Thread{
                     }else{
                         deadLineMiss=(1.0*TT.deadLineMiss)/TT.workDone;
                     }
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.spentTime,deadLineMiss,TT.runtime_report));
+                    if(objectX.getDeadLine()>TT.synctime){ //syncTime
+                        TT.synctime=objectX.getDeadLine();
+                    }
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,deadLineMiss,TT.runtime_report));
                     TT.deadLineMiss=0; //don't remove old stat
                     TT.workDone=0;
                 }else{

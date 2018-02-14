@@ -53,12 +53,14 @@ public class Test {
             VR.addAllKnownVideos();
 
 
-            int n=1;
-            while(n!=0) {
-                System.out.println("enter video request numbers to generate");
+            int rqn=1,interval,n;
+            while(rqn!=0) {
+                System.out.println("enter video request numbers to generate and their interval and how many times");
+                rqn=scanner.nextInt();
+                interval=scanner.nextInt();
                 n=scanner.nextInt();
                 //create a lot of request to test out
-                RequestGenerator.nRandomRequest(GTS, n, 500);
+                RequestGenerator.nRandomRequest(GTS, rqn, interval,n);
             }
             // Check point, enter any key to continue
             System.out.println("enter any key to terminate the system");

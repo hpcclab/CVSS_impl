@@ -24,7 +24,8 @@ public class TranscodingThread extends Thread{
     public int workDone;
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
-    long spentTime=0; //spentTime+requiredTime is imaginary total time to clear the queue
+    long synctime=0; //spentTime+requiredTime is imaginary total time to clear the queue
+    long realspentTime=0; //realspentTime is spentTime without Syncing
     private Boolean useS3=false;
    //EC2 public AmazonS3 s3;
     public String bucketName;
@@ -126,12 +127,14 @@ public class TranscodingThread extends Thread{
                             deadLineMiss++;
                         }
                         elapsedTime = System.nanoTime()/1000000 - savedTime;
-                        spentTime+=elapsedTime;
+                        synctime+=elapsedTime;
+                        realspentTime+=elapsedTime;
                     }else{
                         elapsedTime=delay;
-                        spentTime+=elapsedTime;
-                        if(spentTime>aStreamGOP.getDeadLine()){
-                            System.out.println("DEADLINE missed "+spentTime+" "+aStreamGOP.getDeadLine() );
+                        synctime+=elapsedTime;
+                        realspentTime+=elapsedTime;
+                        if(synctime>aStreamGOP.getDeadLine()){
+                            System.out.println("DEADLINE missed "+synctime+" "+aStreamGOP.getDeadLine() );
                             deadLineMiss++;
                         }
                     }
@@ -156,7 +159,7 @@ public class TranscodingThread extends Thread{
                     //
                 }else{
                     System.out.println("A thread wait 1 minute without getting any works!");
-                    System.out.println("total spentTime= "+spentTime);
+                    System.out.println("total spentTime= "+realspentTime);
                 }
             } catch (Exception e) {
                 System.out.println("Thread Error:" +e.getMessage());

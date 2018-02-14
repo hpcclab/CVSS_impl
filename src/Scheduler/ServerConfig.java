@@ -29,6 +29,7 @@ public class ServerConfig {
 
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
+    public static String videoRepository_mode="list.txt"; //either list.txt or scan
     //public static int maximumResolution;
     public static boolean enableTimeEstimator=false; //if true, use Time estimator to do scheduling
     public static String schedulerPolicy;
@@ -126,6 +127,10 @@ public class ServerConfig {
     @XmlElement(name = "supportedCodecs")
     public void setSupportedCodecs(String supportedCodecs) {
         ServerConfig.supportedCodecs.add(supportedCodecs);
+    }
+    @XmlElement(name = "videoRepository_mode")
+    public void setvideoRepository_mode(String repomode) {
+        ServerConfig.videoRepository_mode = repomode;
     }
     @XmlElement(name = "videoList")
     public void setvideoList(String videoList) {

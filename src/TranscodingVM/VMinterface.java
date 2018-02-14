@@ -96,8 +96,12 @@ public class VMinterface {
                 StreamGOP query = new StreamGOP();
                 if(full){
                     query.cmdSet.put("fullstat", null);
+                    query.dispatched=true;
+                    query.setDeadline(GOPTaskScheduler.maxElapsedTime);
                 }else {
                     query.cmdSet.put("query", null);
+                    query.dispatched=true;
+                    query.setDeadline(GOPTaskScheduler.maxElapsedTime);
                 }
                 oos.writeObject(query); //they expect an object, thus we need to send object
                 report answer = (report) ois.readObject();
