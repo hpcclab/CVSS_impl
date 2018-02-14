@@ -117,7 +117,7 @@ public class ServerConfig {
             ServerConfig.VM_class.add(s[1]);
             ServerConfig.VM_address.add(s[2]);
             ServerConfig.VM_ports.add(Integer.parseInt(s[3]));
-            System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" ");
+            //System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" ");
 
         }else {
             System.out.println("invalid format");

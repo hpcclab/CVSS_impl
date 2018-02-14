@@ -21,6 +21,8 @@ public class VMinterface {
     private int status;
     public int estimatedQueueLength=0;
     public long estimatedExecutionTime=0;
+    public long elapsedTime=0;
+
     public int id;
     public String VM_class;
     public VMinterface(String vclass,String addr,int port,int inid){
@@ -88,22 +90,29 @@ public class VMinterface {
         System.out.println("not working!");
         return false;
     }
-    public double dataUpdate(){
+    public double dataUpdate(boolean full){
         if(isWorking()) {
             try {
                 StreamGOP query = new StreamGOP();
-                query.cmdSet.put("query",null);
+                if(full){
+                    query.cmdSet.put("fullstat", null);
+                }else {
+                    query.cmdSet.put("query", null);
+                }
                 oos.writeObject(query); //they expect an object, thus we need to send object
                 report answer = (report) ois.readObject();
-                System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
-                System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
+                //System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
+                //System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
                 GOPTaskScheduler.workpending-=(estimatedQueueLength-answer.queue_size);
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = answer.queue_size;
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
+                GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=answer.VMelapsedTime;
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
                 VMProvisioner.deadLineMissRate=answer.deadLineMissRate;
                 //
-                System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);
+                if(full) {
+                    System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);
+                }
                 return answer.deadLineMissRate;
             } catch (Exception e) {
                 System.out.println("data update error:"+e);

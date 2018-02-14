@@ -130,18 +130,23 @@ public class VMProvisioner {
     public void setGTS(GOPTaskScheduler X){
         GTS=X;
     }
-    private static void collectData(){
+    private static void collectData(boolean full){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
         double sum=0;
         int count=0;
+        long maxElapsedTime=0;
         for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
-            double ret=GOPTaskScheduler.VMinterfaces.get(i).dataUpdate();
+            double ret=GOPTaskScheduler.VMinterfaces.get(i).dataUpdate(full);
             if(ret!=-1){
                 sum+=ret;
                 count++;
             }
+            if(GOPTaskScheduler.VMinterfaces.get(i).elapsedTime>maxElapsedTime){
+                maxElapsedTime=GOPTaskScheduler.VMinterfaces.get(i).elapsedTime;
+            }
         }
+        GOPTaskScheduler.maxElapsedTime=maxElapsedTime;
         if(count!=0) {
             deadLineMissRate = sum / count;
             //System.out.println("deadline miss rate="+deadLineMissRate);
@@ -156,9 +161,12 @@ public class VMProvisioner {
         }
 
         tcount++;
-        collectData();
+        collectData(false);
         if(tcount%ServerConfig.VMscalingIntervalTick==0){
-            EvaluateClusterSize(10);
+            collectData(true);
+            EvaluateClusterSize(20);
+        }else{
+            collectData(false);
         }
         GTS.submitworks();
         x.release();

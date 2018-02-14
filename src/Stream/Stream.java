@@ -1,5 +1,7 @@
 package Stream;
 import Repository.*;
+import Scheduler.ServerConfig;
+
 import java.util.ArrayList;
 
 public class Stream {
@@ -14,7 +16,11 @@ public class Stream {
     public Stream(){
         status=0;
         video =new Video();
-        startTime=System.currentTimeMillis()+500; //thisTime+Constant for now, should really be scheduleTime
+        if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+
+        }else {
+            startTime = System.currentTimeMillis() + 1000; //thisTime+Constant for now, should really be scheduleTime
+        }
         streamGOPs= new ArrayList<StreamGOP>();
     }
     public Stream(Video v,String command,String settings){
@@ -27,7 +33,11 @@ public class Stream {
     public Stream(Video v,String command,String settings,int startSegment,int endSegment){
         status=0;
         video =v;
-        startTime=System.currentTimeMillis()+500; //thisTime+Constant for now, should really be scheduleTime
+        if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+
+        }else {
+            startTime=System.currentTimeMillis()+1000; //thisTime+Constant for now, should really be scheduleTime
+        }
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){
         for(int i=startSegment;i<endSegment;i++){

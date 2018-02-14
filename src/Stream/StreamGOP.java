@@ -13,7 +13,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public transient Stream parentStream;
 
     public String videoname = "";
-    private long deadLine;
+    private long deadLine=0;
     public long estimatedExecutionTime=0;
     public double estimatedExecutionSD=0;
     public boolean dispatched=false;

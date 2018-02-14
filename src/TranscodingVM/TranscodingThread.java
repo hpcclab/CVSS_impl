@@ -24,6 +24,7 @@ public class TranscodingThread extends Thread{
     public int workDone;
     public int deadLineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
+    long spentTime=0; //spentTime+requiredTime is imaginary total time to clear the queue
     private Boolean useS3=false;
    //EC2 public AmazonS3 s3;
     public String bucketName;
@@ -120,20 +121,26 @@ public class TranscodingThread extends Thread{
                         if (delay != 0) {
                             sleep(delay);
                         }
-
+                        if(System.currentTimeMillis()>aStreamGOP.getDeadLine()){
+                            System.out.println("DEADLINE missed "+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
+                            deadLineMiss++;
+                        }
                         elapsedTime = System.nanoTime()/1000000 - savedTime;
+                        spentTime+=elapsedTime;
                     }else{
                         elapsedTime=delay;
+                        spentTime+=elapsedTime;
+                        if(spentTime>aStreamGOP.getDeadLine()){
+                            System.out.println("DEADLINE missed "+spentTime+" "+aStreamGOP.getDeadLine() );
+                            deadLineMiss++;
+                        }
                     }
 
                     //it's done, reduce estimationTime
                     this.requiredTime-=aStreamGOP.estimatedExecutionTime;
                     //get RunTime, reduce from nano to millisecond
                     workDone++;
-                    if(System.currentTimeMillis()>aStreamGOP.getDeadLine()){
-                        System.out.println("DEADLINE missed "+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
-                        deadLineMiss++;
-                    }
+
                     //runtime_report.is
                     /*
                     Tuple<Long, Integer> pulled = runtime_report.get(aStreamGOP.userSetting.settingIdentifier);
@@ -149,6 +156,7 @@ public class TranscodingThread extends Thread{
                     //
                 }else{
                     System.out.println("A thread wait 1 minute without getting any works!");
+                    System.out.println("total spentTime= "+spentTime);
                 }
             } catch (Exception e) {
                 System.out.println("Thread Error:" +e.getMessage());

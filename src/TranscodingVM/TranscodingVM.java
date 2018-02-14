@@ -18,14 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class report implements Serializable{
     int queue_size;
-    long queue_executionTime;
+    long queue_executionTime,VMelapsedTime;
     double deadLineMissRate;
     HashMap<String, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
 
-    public report(int queue_size,long time,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
+    public report(int queue_size,long time,long timeSpent,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
         this.runtime_report.putAll(runtime_report);
         this.queue_executionTime=time;
+        this.VMelapsedTime=timeSpent;
         this.deadLineMissRate=deadLineMissRate;
         this.queue_size=queue_size;
     }
@@ -106,14 +107,21 @@ public class TranscodingVM extends Thread{
                     if(!TT.runtime_report.isEmpty()) {
                         //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
                     }
+                    double deadLineMiss=0;
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.spentTime,deadLineMiss,TT.runtime_report));
+
+                }else if (objectX.cmdSet.containsKey("fullstat")){
+                    if(!TT.runtime_report.isEmpty()) {
+                        //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
+                    }
                     double deadLineMiss;
                     if(TT.workDone==0){
                         deadLineMiss=0;
                     }else{
                         deadLineMiss=(1.0*TT.deadLineMiss)/TT.workDone;
                     }
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,deadLineMiss,TT.runtime_report));
-                    TT.deadLineMiss=0;
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.spentTime,deadLineMiss,TT.runtime_report));
+                    TT.deadLineMiss=0; //don't remove old stat
                     TT.workDone=0;
                 }else{
                     System.out.println("localthread: work adding");

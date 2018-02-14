@@ -80,6 +80,7 @@ public class GOPTaskScheduler {
     //private HashMap<request,List<StreamGOP>> LV2map_pending=new HashMap<request,List<StreamGOP>>(); //level2's request record skip resolution so more matches
 
 
+    public static long maxElapsedTime; //use for setting Deadline
     public static ArrayList<VMinterface> VMinterfaces =new ArrayList<VMinterface>();
     private static int maxpending=0;
     public static int workpending=0;
@@ -104,43 +105,53 @@ public class GOPTaskScheduler {
     //1, tail
     //2, head
     //3, between
-public int try3Positions(request key,HashMap<request,StreamGOP> thislvlmap,StreamGOP X,StreamGOP original,StreamGOP merged){
-    //batch queue is not sorted, try 3+ location
-    ArrayList<StreamGOP> newVQ = new ArrayList<StreamGOP>(Batchqueue);
+    public int try3Positions(request key,HashMap<request,StreamGOP> thislvlmap,StreamGOP X,StreamGOP original,StreamGOP merged){
+        //batch queue is not sorted, try 3+ location
+        ArrayList<StreamGOP> newVQ = new ArrayList<StreamGOP>(Batchqueue);
 
-    //try latest location
-    newVQ.remove(original);
-    newVQ.add(merged);
-    if (virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(), merged, merged) == 1) { //succesful, no miss
-        Batchqueue.remove(original);
-        //and need to update table?
-        Batchqueue.add(original); //so that we don't need to update table, rather than add merged and update table to point to merged
-        original.getAllCMD(X);
-        return 1;
+        //try latest location
+        newVQ.remove(original);
+        newVQ.add(merged);
+        if (virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(), merged, merged) == 1) { //succesful, no miss
+            Batchqueue.remove(original);
+            //and need to update table?
+            Batchqueue.add(original); //so that we don't need to update table, rather than add merged and update table to point to merged
+            original.getAllCMD(X);
+            return 1;
+        }
+
+        //try early location
+        newVQ = new ArrayList<StreamGOP>(Batchqueue);
+        newVQ.set(newVQ.indexOf(original), merged);
+        if (virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(), merged, merged) == 1) {
+            //Batchqueue.set(Batchqueue.indexOf(original),merged); //not like this! that would mean we need to update table a b c!
+            original.getAllCMD(X);
+            return 2;
+        }
+
+        //todo: try in between
+        // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
+        Batchqueue.add(X);
+        thislvlmap.replace(key, X);
+        //return 3;
+
+        //nothing success, return -1;
+        return -1;
+
     }
 
-    //try early location
-    newVQ = new ArrayList<StreamGOP>(Batchqueue);
-    newVQ.set(newVQ.indexOf(original), merged);
-    if (virtualQueueCheckReplace((StreamGOP[]) newVQ.toArray(), merged, merged) == 1) {
-        //Batchqueue.set(Batchqueue.indexOf(original),merged); //not like this! that would mean we need to update table a b c!
-        original.getAllCMD(X);
-        return 2;
+    public void removeStreamGOPfromTable(StreamGOP X){
+        //remove anything with this value (need removeAll, not remove or it'll only remove the first one)
+        LV1map_pending.values().removeAll(Collections.singleton(X));
+        LV2map_pending.values().removeAll(Collections.singleton(X));
+        LV3map_pending.values().removeAll(Collections.singleton(X));
+        pendingqueue.remove(X); //only one record here
+        //can try this way too
+        //LV1map_pending.values().removeIf(val -> X.equals(val));
     }
-
-    //todo: try in between
-    // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
-    Batchqueue.add(X);
-    thislvlmap.replace(key, X);
-    //return 3;
-
-    //nothing success, return -1;
-    return -1;
-
-}
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
-
+        ST.startTime=maxElapsedTime+2000; //add prelimary numbers
         for(StreamGOP X:ST.streamGOPs) {
             //HOLD UP! check for duplication first
             request aRequestlvl1 = new request(X,1); //= ... derive from X
@@ -236,6 +247,9 @@ public int try3Positions(request key,HashMap<request,StreamGOP> thislvlmap,Strea
         double[] VM_Q=new double[VMinterfaces.size()];
         for (int i = 0; i < VMinterfaces.size(); i++) {
             VM_Q[i]=(double)VMinterfaces.get(i).estimatedExecutionTime;
+            if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+                VM_Q[i]+=VMinterfaces.get(i).elapsedTime; //dry mode need to measure elapsedTime too
+            }
         }
         // perform check
         for(int i=0;i<virtualQueue.length;i++){
@@ -281,6 +295,9 @@ public int try3Positions(request key,HashMap<request,StreamGOP> thislvlmap,Strea
             if(useTimeEstimator){
                     x.estimatedExecutionTime = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), x, SDcoefficient);
                 min=answer.estimatedExecutionTime+x.estimatedExecutionTime;
+                if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+                    min+=answer.estimatedQueueLength;
+                }
 
             }else{
                 min = answer.estimatedQueueLength;
@@ -294,7 +311,9 @@ public int try3Positions(request key,HashMap<request,StreamGOP> thislvlmap,Strea
                     if (useTimeEstimator) {
                         savedmean=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), x,SDcoefficient);;
                         estimatedT = aMachine.estimatedExecutionTime + savedmean;
-
+                        if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+                            min+=answer.estimatedQueueLength;
+                        }
                     } else {
                         estimatedT = aMachine.estimatedQueueLength;
                     }
@@ -308,8 +327,14 @@ public int try3Positions(request key,HashMap<request,StreamGOP> thislvlmap,Strea
                     }
                 }
             }
-            // this is outdated
-            //x.deadLine=System.currentTimeMillis()+min+addedConstForDeadLine;
+            /*
+            // set up (pseudo) deadline ?
+            if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+                x.setDeadline(min);
+            }else {
+                x.setDeadline(System.currentTimeMillis() + min + addedConstForDeadLine);
+            }
+            */
             return answer;
         }
         System.out.println("BUG: try to schedule to 0 VM");
