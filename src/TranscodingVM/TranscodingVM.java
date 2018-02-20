@@ -130,7 +130,7 @@ public class TranscodingVM extends Thread{
                     TT.deadLineMiss=0; //don't remove old stat
                     TT.workDone=0;
                 }else{
-                    System.out.println("localthread: work adding");
+                    //System.out.println("localthread: work adding");
                     AddJob(objectX);
                 }
             }

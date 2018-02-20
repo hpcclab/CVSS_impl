@@ -166,8 +166,10 @@ public class VMProvisioner {
             collectData(true);
             EvaluateClusterSize(20);
         }else{
+            //System.out.println("tick, collect Data");
             collectData(false);
         }
+        //System.out.println("tick, submit work");
         GTS.submitworks();
         x.release();
     }

@@ -31,6 +31,7 @@ public class RequestGenerator {
         */
         //Scheduler
         GTS.addStream(ST);
+        System.out.println("test2");
     }
     //simple static RandomRequest Generator
     public static void nRandomRequest(GOPTaskScheduler GTS,int Request_Numbers, int interval,int n){
