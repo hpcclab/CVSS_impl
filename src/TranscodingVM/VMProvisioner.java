@@ -3,7 +3,9 @@ package TranscodingVM;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import Scheduler.TimeEstimator;
+import com.amazonaws.services.opsworkscm.model.Server;
 import sun.misc.VM;
+import testpackage.RequestGenerator;
 /*
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -135,18 +137,26 @@ public class VMProvisioner {
         //choice B: send packet to ask and wait for reply (need ID)
         double sum=0;
         int count=0;
-        long maxElapsedTime=0;
+        long T_maxElapsedTime=0;
         for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
             double ret=GOPTaskScheduler.VMinterfaces.get(i).dataUpdate(full);
             if(ret!=-1){
                 sum+=ret;
                 count++;
             }
-            if(GOPTaskScheduler.VMinterfaces.get(i).elapsedTime>maxElapsedTime){
-                maxElapsedTime=GOPTaskScheduler.VMinterfaces.get(i).elapsedTime;
+            if(GOPTaskScheduler.VMinterfaces.get(i).elapsedTime>T_maxElapsedTime){
+                T_maxElapsedTime=GOPTaskScheduler.VMinterfaces.get(i).elapsedTime;
             }
         }
-        GOPTaskScheduler.maxElapsedTime=maxElapsedTime;
+        if(GOPTaskScheduler.maxElapsedTime!=T_maxElapsedTime){
+            GOPTaskScheduler.maxElapsedTime=T_maxElapsedTime;
+        }else{ //force time to move, by 200
+            GOPTaskScheduler.maxElapsedTime+=200;
+        }
+        if(ServerConfig.profiledRequests){
+            RequestGenerator.contProfileRequestsGen(GTS);
+        }
+
         if(count!=0) {
             deadLineMissRate = sum / count;
             //System.out.println("deadline miss rate="+deadLineMissRate);

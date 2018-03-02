@@ -203,7 +203,6 @@ public class GOPTaskScheduler {
     //bloated version of addStream, check duplication and similarity first
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
-        ST.startTime=maxElapsedTime+2000; //add prelimary numbers
         for(StreamGOP X:ST.streamGOPs) {
             //HOLD UP! check for duplication first
             request aRequestlvl1 = new request(X,1); //= ... derive from X

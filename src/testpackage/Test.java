@@ -54,13 +54,18 @@ public class Test {
 
 
             int rqn=1,interval,n;
-            while(rqn!=0) {
-                System.out.println("enter video request numbers to generate and their interval and how many times");
-                rqn=scanner.nextInt();
-                interval=scanner.nextInt();
-                n=scanner.nextInt();
-                //create a lot of request to test out
-                RequestGenerator.nRandomRequest(GTS, rqn, interval,n);
+            if(ServerConfig.profiledRequests){
+                RequestGenerator.ReadProfileRequests("test.txt");
+                RequestGenerator.contProfileRequestsGen(GTS);
+            }else {
+                while (rqn != 0) {
+                    System.out.println("enter video request numbers to generate and their interval and how many times");
+                    rqn = scanner.nextInt();
+                    interval = scanner.nextInt();
+                    n = scanner.nextInt();
+                    //create a lot of request to test out
+                    RequestGenerator.nRandomRequest(GTS, rqn, interval, n);
+                }
             }
             // Check point, enter any key to continue
             System.out.println("enter any key to terminate the system");
@@ -105,13 +110,18 @@ public class Test {
             return "Failed: " + e;
         }
         */
+        try {
+            RequestGenerator.generateDistributedRandomRequests("test",500,27,30,800,2000,500);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "done";
 
     }
     //for test
     public static void main(String[] args){
-        System.out.println(test());
-        //System.out.println(testbug());
+        //System.out.println(test());
+        System.out.println(testbug());
     }
 
 }

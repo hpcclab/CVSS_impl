@@ -4,7 +4,7 @@
     <defaultBatchScript>..\bash\testbash.sh</defaultBatchScript>
     <addFakeDelay>False</addFakeDelay>
 	<addProfiledDelay>True</addProfiledDelay>
-	
+	<profiledRequests>True</profiledRequests>
 
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
     <lowscalingThreshold>0.1</lowscalingThreshold>
@@ -26,7 +26,36 @@
 	<run_mode>dry</run_mode>
     <videoList>repositoryvideos/ff_trailer_part1/</videoList>
     <videoList>repositoryvideos/ff_trailer_part3/</videoList>
-    <videoList>repositoryvideos/bbb_trailer/</videoList>
+    <videoList>repositoryvideos/bbb_trailer/</videoList>    
+<!-- below are fake videos, not real -->
+<videoList>repositoryvideos/fantasticfour-riseofthesilversurfer-trailer01</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_h264_05</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_h264_03</videoList>
+<videoList>repositoryvideos/thesimpsonsmovie-trailer05</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_h264_04</videoList>
+<videoList>repositoryvideos/beamextract_final_revb</videoList>
+<videoList>repositoryvideos/big_buck_bunny_480p_30mb</videoList>
+<videoList>repositoryvideos/serenity-hddvdtrailer02</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_stereo02</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_stereo03</videoList>
+<videoList>repositoryvideos/thesimpsonsmovie-trailer02</videoList>
+<videoList>repositoryvideos/thesimpsonsmovie-trailer03</videoList>
+<videoList>repositoryvideos/thebourneultimatum-trailer01</videoList>
+<videoList>repositoryvideos/thesimpsonsmovie-trailer04</videoList>
+<videoList>repositoryvideos/serenity-hddvdtrailer04</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_stereo01</videoList>
+<videoList>repositoryvideos/serenity-hddvdtrailer03</videoList>
+<videoList>repositoryvideos/thebourneultimatum-trailer02</videoList>
+<videoList>repositoryvideos/fantasticfour-riseofthesilversurfer-trailer03</videoList>
+<videoList>repositoryvideos/fantasticfour-riseofthesilversurfer-trailer02</videoList>
+<videoList>repositoryvideos/towersofpfeiffer_mpeg4</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_h264_02</videoList>
+<videoList>repositoryvideos/big_buck_bunny_720p_h264_01</videoList>
+<videoList>repositoryvideos/thesimpsonsmovie-trailer01</videoList>
+<videoList>repositoryvideos/orion_sm</videoList>
+<videoList>repositoryvideos/thesimpsonsmovie-trailer06</videoList>
+<videoList>repositoryvideos/serenity-hddvdtrailer01</videoList>
+
 
     <useEC2>False</useEC2>
     <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->

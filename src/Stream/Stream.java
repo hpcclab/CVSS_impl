@@ -1,5 +1,6 @@
 package Stream;
 import Repository.*;
+import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 
 import java.util.ArrayList;
@@ -23,21 +24,27 @@ public class Stream {
         }
         streamGOPs= new ArrayList<StreamGOP>();
     }
-    public Stream(Video v,String command,String settings){
-        this(v,command,settings,0,v.repositoryGOPs.size());
+    public Stream(Video v,String command,String settings,long ST){
+        this(v,command,settings,0,v.repositoryGOPs.size(),ST);
     }
-    public Stream(Video v,String command, String settings, int startSegment){
-        this(v,command,settings,startSegment,v.repositoryGOPs.size());
+    public Stream(Video v,String command, String settings, int startSegment,long ST){
+        this(v,command,settings,startSegment,v.repositoryGOPs.size(),ST);
     }
 
-    public Stream(Video v,String command,String settings,int startSegment,int endSegment){
+    public Stream(Video v,String command,String settings,int startSegment,int endSegment,long ST){
         status=0;
         video =v;
-        if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
 
-        }else {
-            startTime=System.currentTimeMillis()+1000; //thisTime+Constant for now, should really be scheduleTime
+        if(ST==0) { //ST==0, did not specified start time, make a new startTime
+            if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+                startTime= GOPTaskScheduler.maxElapsedTime+2000; //add a prelinary value
+            }else{
+                startTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
+            }
+        }else{
+            startTime=ST;
         }
+
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){
         for(int i=startSegment;i<endSegment;i++){

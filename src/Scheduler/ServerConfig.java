@@ -24,6 +24,7 @@ public class ServerConfig {
     public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
     public static boolean sortedBatchQueue=true;
+    public static boolean profiledRequests=false;
     public static String run_mode="real";
     public static int localqueuelengthperVM=4; //not configurable yet
 
@@ -108,6 +109,14 @@ public class ServerConfig {
             ServerConfig.addProfiledDelay = true;
         }else{
             ServerConfig.addProfiledDelay = false;
+        }
+    }
+    @XmlElement(name = "profiledRequests")
+    public void setprofiledRequests(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.profiledRequests = true;
+        }else{
+            ServerConfig.profiledRequests = false;
         }
     }
     @XmlElement(name = "VM")
