@@ -12,20 +12,25 @@ import java.util.Scanner;
 /**
  * Created by pi on 5/21/17.
  */
-class Stat{
+class histStat{
     long mean=0;
     double SD=0,plusB=0,plusC=0;
 
-    Stat(long m,double s,double b,double c){
+    histStat(long m,double s,double b,double c){
     mean=m;SD=s;plusB=b;plusC=c;
     }
-    Stat(){
+}
+class retStat{
+    long mean=0;
+    double SD=0;
 
+    retStat(long m,double s){
+        mean=m;SD=s;
     }
 }
 public class TimeEstimator {
     //HashMap<(str)machinetype,  Hashmap<str(command+paramID),class stat >    >
-    static HashMap<String,HashMap<String,Stat>> Table=new HashMap<>();
+    static HashMap<String,HashMap<String,histStat>> Table=new HashMap<>();
 
 
 
@@ -38,33 +43,39 @@ public class TimeEstimator {
 
     //design decision, should this return per segment or per action?
     //select do it all in here!
-    public static Long getHistoricProcessTime(String VMclass,StreamGOP segment,double SDcoefficient){
+
+
+    public static retStat getHistoricProcessTime(String VMclass,StreamGOP segment){
         //SDcoefficient=1 is Worst case, -1 is BestCase,
-        HashMap<String,Stat> polled1=Table.get(VMclass);
-        long Time=0;
+        HashMap<String,histStat> polled1=Table.get(VMclass);
+        long ESTTime=0;
+        double SD=0;
         if(polled1!=null){ //have the machine type data
 
-            for (String cmd : segment.cmdSet.keySet()) {
 
+            for (String cmd : segment.cmdSet.keySet()) {
+                //System.out.println("cmd="+cmd);
                 for(String param: segment.cmdSet.get(cmd)) {
-                    System.out.println(cmd+param);
-                    Stat polled2 = polled1.get(cmd + param);
+                    histStat polled2 = polled1.get(cmd + param);
 
                     if (polled2 != null) {
-                        System.out.println("Historically, this task takes " + polled2.mean + " SD:" + polled2.SD + " on class:" + VMclass);
-                        Time+=(long) (polled2.mean*polled2.SD*SDcoefficient);
+                        //System.out.println("Historically, this task takes " + polled2.mean + " SD:" + polled2.SD + " on class:" + VMclass);
+                        ESTTime+=polled2.mean;
+                        SD+=polled2.SD;
                     }else{
                         System.out.println("No historic data for this cmd!:"+cmd + param);
+                        System.out.println("keyset="+polled1.keySet());
                     }
                 }
             }
-            return Time;
+
+            return new retStat(ESTTime,SD);
 
             //System.out.println("No historic data1!");
         }
         System.out.println();
         System.out.println("No historic data for this machine type!: "+VMclass);
-        return 0L; //set at arbitary value
+        return new retStat(0,0); //set at arbitary value
     }
 
     //function called at the beginning of running to populate data
@@ -78,15 +89,16 @@ public class TimeEstimator {
             System.out.println(e);
         }
 
-        HashMap<String,Stat> X=new HashMap<>();
+        HashMap<String,histStat> X=new HashMap<>();
         while(scanner.hasNext()) {
 
             long mean;
             double SD, plusB, plusC;
             String command;
             String setting;
-
-            String[] line = scanner.nextLine().split(",");
+            String fullline=scanner.nextLine();
+            //System.out.println(fullline);
+            String[] line = fullline.split(",");
             if (line.length == 6) {
                 command = line[0];
                 setting = line[1];
@@ -94,10 +106,14 @@ public class TimeEstimator {
                 SD = Double.parseDouble(line[3]);
                 plusB = Double.parseDouble(line[4]);
                 plusC = Double.parseDouble(line[5]);
-                Stat S = new Stat(mean, SD, plusB, plusC);
+                histStat S = new histStat(mean, SD, plusB, plusC);
                 X.put(command + setting, S);
+                //System.out.println(line[1]);
+            }else{
+                System.out.println("profile not correctly formatted");
             }
         }
+        //System.out.println("read a profile");
         Table.put(VMclass,X);
     }
     public static void SetSegmentProcessingTime(StreamGOP segment)

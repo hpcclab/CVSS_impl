@@ -19,14 +19,17 @@ import java.util.concurrent.ConcurrentHashMap;
 class report implements Serializable{
     int queue_size;
     long queue_executionTime,VMelapsedTime;
+    long completed,missed;
     double deadLineMissRate;
     HashMap<String, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
 
-    public report(int queue_size,long time,long timeSpent,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
+    public report(int queue_size,long time,long timeSpent,long cmp,long miss,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
         this.runtime_report.putAll(runtime_report);
         this.queue_executionTime=time;
         this.VMelapsedTime=timeSpent;
+        this.completed=cmp;
+        this.missed=miss;
         this.deadLineMissRate=deadLineMissRate;
         this.queue_size=queue_size;
     }
@@ -111,7 +114,7 @@ public class TranscodingVM extends Thread{
                     if(objectX.getDeadLine()>TT.synctime){ //syncTime
                         TT.synctime=objectX.getDeadLine();
                     }
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,deadLineMiss,TT.runtime_report));
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.workDone,TT.deadLineMiss,deadLineMiss,TT.runtime_report));
 
                 }else if (objectX.cmdSet.containsKey("fullstat")){
                     if(!TT.runtime_report.isEmpty()) {
@@ -126,7 +129,7 @@ public class TranscodingVM extends Thread{
                     if(objectX.getDeadLine()>TT.synctime){ //syncTime
                         TT.synctime=objectX.getDeadLine();
                     }
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,deadLineMiss,TT.runtime_report));
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.workDone,TT.deadLineMiss,deadLineMiss,TT.runtime_report));
                     TT.deadLineMiss=0; //don't remove old stat
                     TT.workDone=0;
                 }else{

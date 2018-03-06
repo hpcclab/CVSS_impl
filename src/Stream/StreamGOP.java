@@ -28,7 +28,8 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         return false;
     }
     public void addCMD(String Command,String Setting){
-        if(containCmdParam(Command,Setting)) {
+        System.out.println("call addcmd"+Command+" "+Setting);
+        if(!containCmdParam(Command,Setting)) {
             if (cmdSet.containsKey(Command)) {
                 LinkedList<String> parameterList = cmdSet.get(Command);
                 parameterList.add(Setting);

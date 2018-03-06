@@ -132,6 +132,7 @@ public class VMProvisioner {
     public void setGTS(GOPTaskScheduler X){
         GTS=X;
     }
+    static int timeforced=0;
     private static void collectData(boolean full){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
@@ -148,18 +149,35 @@ public class VMProvisioner {
                 T_maxElapsedTime=GOPTaskScheduler.VMinterfaces.get(i).elapsedTime;
             }
         }
-        if(GOPTaskScheduler.maxElapsedTime!=T_maxElapsedTime){
-            GOPTaskScheduler.maxElapsedTime=T_maxElapsedTime;
-        }else{ //force time to move, by 200
-            GOPTaskScheduler.maxElapsedTime+=200;
-        }
-        if(ServerConfig.profiledRequests){
-            RequestGenerator.contProfileRequestsGen(GTS);
-        }
-
+        //now update deadline miss rate
         if(count!=0) {
             deadLineMissRate = sum / count;
             //System.out.println("deadline miss rate="+deadLineMissRate);
+        }
+
+        //if time doesn't move,
+        if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+            if (GOPTaskScheduler.maxElapsedTime != T_maxElapsedTime) {
+                GOPTaskScheduler.maxElapsedTime = T_maxElapsedTime;
+                timeforced = 0;
+            } else { //force time to move, by 200
+                System.out.println("force time move");
+                GOPTaskScheduler.maxElapsedTime += 200;
+                timeforced++;
+                if (timeforced == 1) {
+                    //print stat!
+                    for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
+                        VMinterface vmi=GOPTaskScheduler.VMinterfaces.get(i);
+                        System.out.println("Machine " + i + "time elapsed"+vmi.elapsedTime);
+                        System.out.println("completed: "+vmi.workdone+" missed"+vmi.deadlinemiss);
+
+
+                    }
+                }
+            }
+        }
+        if(ServerConfig.profiledRequests){
+            RequestGenerator.contProfileRequestsGen(GTS);
         }
     }
     private static int tcount=0;

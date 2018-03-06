@@ -316,8 +316,14 @@ public class GOPTaskScheduler {
 
     private int virtualQueueCheckReplace(StreamGOP Original,StreamGOP merged,int threshold){
         ArrayList<StreamGOP> newVQ = new ArrayList<StreamGOP>(Batchqueue);
-        newVQ.set(newVQ.indexOf(Original),merged);
-        return virtualQueueCheckReplace(newVQ,Original,threshold,false);
+        int indexofOriginal=newVQ.indexOf(Original);
+        if(indexofOriginal<0||indexofOriginal>newVQ.size()){
+            System.out.println("anomaly in virtualQueueCheckReplace index="+indexofOriginal);
+            return -999;
+        }else {
+            newVQ.set(newVQ.indexOf(Original), merged); //can not find original???
+            return virtualQueueCheckReplace(newVQ, Original, threshold, false);
+        }
     }
     //return 0 for no miss, x for x missed deadline, -x for x missed deadline which include the original GOP miss their deadline too
     private int virtualQueueCheckReplace(ArrayList<StreamGOP> virtualQueue,StreamGOP focussed,int threshold,boolean find_Xpos){
@@ -335,7 +341,8 @@ public class GOPTaskScheduler {
         int latestXpos=0;
         for(int i=0;i<virtualQueue.size();i++){
                 int choice=virtualShortestExeFirst(VM_Q,focussed,1);
-                double exeT=VM_Q[choice]+TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice), virtualQueue.get(i), 1);
+                retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice),virtualQueue.get(i));
+                double exeT=VM_Q[choice]+chk.mean+chk.SD*1;
                 if(exeT>virtualQueue.get(i).getDeadLine()){
                     //deadline miss
                     if(virtualQueue.get(i)==focussed){
@@ -350,7 +357,9 @@ public class GOPTaskScheduler {
                     VM_Q[choice]=exeT;
                 }
             if(find_Xpos){
-                    if(VM_Q[choice]+TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice), focussed, 1) <focussed.getDeadLine()) {
+                    retStat chk2=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice),focussed);
+                    double exeT2=VM_Q[choice]+chk2.mean+chk2.SD*1;
+                    if(VM_Q[choice]+exeT2 <focussed.getDeadLine()) {
                         latestXpos=i;
                     }
             }
@@ -362,10 +371,12 @@ public class GOPTaskScheduler {
         return missed*originalmissed;
     }
     private int virtualShortestExeFirst(double[] VMQlength,StreamGOP x,double SDcoefficient){
-        double shortest=VMQlength[0]+TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), x, SDcoefficient);
+        retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),x);
+        double shortest=VMQlength[0]+chk.mean+chk.SD*SDcoefficient;
         int choice=0;
         for(int i=1;i<VMQlength.length;i++){
-            double sample=VMQlength[i]+TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), x, SDcoefficient);
+            retStat chkx=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),x);
+            double sample=VMQlength[i]+chkx.mean+chkx.SD*SDcoefficient;
             if(sample<shortest){
                 choice=i;
                 shortest=sample;
@@ -374,13 +385,12 @@ public class GOPTaskScheduler {
     return choice;
     }
     private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator,double SDcoefficient){
-        int addedConstForDeadLine=50;
-
         if(VMinterfaces.size()>0) {
             VMinterface answer=VMinterfaces.get(0);
             long min;
             if(useTimeEstimator){
-                    x.estimatedExecutionTime = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), x, SDcoefficient);
+                retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),x);
+                x.estimatedExecutionTime = (long)(chk.mean+chk.SD*SDcoefficient);
                 min=answer.estimatedExecutionTime+x.estimatedExecutionTime;
                 if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
                     min+=answer.estimatedQueueLength;
@@ -396,10 +406,11 @@ public class GOPTaskScheduler {
                     long savedmean=0;
                     //calculate new choice
                     if (useTimeEstimator) {
-                        savedmean=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), x,SDcoefficient);;
+                        retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i),x);
+                        savedmean=(long)(chk.mean+chk.SD*SDcoefficient);
                         estimatedT = aMachine.estimatedExecutionTime + savedmean;
                         if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
-                            min+=answer.estimatedQueueLength;
+                            estimatedT+=answer.estimatedQueueLength;
                         }
                     } else {
                         estimatedT = aMachine.estimatedQueueLength;
@@ -474,8 +485,17 @@ public class GOPTaskScheduler {
                     //re-assign works
                     chosenVM = assignworks(X);
                 }
+                //it's dry mode, we need
+
+                if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+                    retStat thestat=TimeEstimator.getHistoricProcessTime(chosenVM.VM_class,X);
+                    System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
+                    X.estimatedExecutionTime=thestat.mean;
+                    X.estimatedExecutionSD=thestat.SD;
+                }
 
                 //change deadLine to absolute value
+                System.out.println("X deadline "+X.getDeadLine());
                 X.setDeadline(X.getDeadLine());
                 //change StreamGOP type to Dispatched
                 X.dispatched = true;

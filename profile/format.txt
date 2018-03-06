@@ -1,1 +1,5 @@
 command,generatedConfignumber,Averagetime,SD,percentAddedcaseB,percentAddedcaseC
+
+
+//pick from beamextract_final_rev 
+9,3,5,4

@@ -26,9 +26,10 @@ public class Video {
             //list mode
             try {
                 Scanner scanner=new Scanner(new File(path+"list.txt"));
-                String[] sp=scanner.nextLine().split(" ");
+                String[] sp=scanner.nextLine().split("\\s+");
                 if(sp[0].equalsIgnoreCase("g")){ //auto generate mode
                     //System.out.println("g mode");
+
                     int n=Integer.parseInt(sp[1]);
                     for(int i=0;i<n;i++){
                         String GOPname=i+".ts";

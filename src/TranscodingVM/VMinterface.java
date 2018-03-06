@@ -22,6 +22,9 @@ public class VMinterface {
     public int estimatedQueueLength=0;
     public long estimatedExecutionTime=0;
     public long elapsedTime=0;
+    public double deadLineMissRate;
+    public long workdone;
+    public long deadlinemiss;
 
     public int id;
     public String VM_class;
@@ -112,9 +115,11 @@ public class VMinterface {
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
                 GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=answer.VMelapsedTime;
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
-                VMProvisioner.deadLineMissRate=answer.deadLineMissRate;
+                GOPTaskScheduler.VMinterfaces.get(id).deadLineMissRate=answer.deadLineMissRate;
+                this.deadlinemiss=answer.missed;
+                this.workdone=answer.completed;
                 //
-                if(full) {
+                if(full) { //so we don't print too much
                     System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);
                 }
                 return answer.deadLineMissRate;

@@ -66,7 +66,8 @@ public class TranscodingThread extends Thread{
                             FakeDelay.put(identifier, delay);
                         }
 
-                    }else  if(ServerConfig.addProfiledDelay) {
+                    }else if(ServerConfig.addProfiledDelay) {
+                        System.out.println("est="+aStreamGOP.estimatedExecutionTime+" sd:"+aStreamGOP.estimatedExecutionSD);
                         delay=(long) (aStreamGOP.estimatedExecutionTime+aStreamGOP.estimatedExecutionSD*r.nextGaussian());
                     }
 
@@ -123,7 +124,7 @@ public class TranscodingThread extends Thread{
                             sleep(delay);
                         }
                         if(System.currentTimeMillis()>aStreamGOP.getDeadLine()){
-                            System.out.println("DEADLINE missed "+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
+                            System.out.println("DEADLINE missed (realmode)"+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
                             deadLineMiss++;
                         }
                         elapsedTime = System.nanoTime()/1000000 - savedTime;
@@ -131,10 +132,11 @@ public class TranscodingThread extends Thread{
                         realspentTime+=elapsedTime;
                     }else{
                         elapsedTime=delay;
+                        System.out.println("delay="+delay);
                         synctime+=elapsedTime;
                         realspentTime+=elapsedTime;
                         if(synctime>aStreamGOP.getDeadLine()){
-                            System.out.println("DEADLINE missed "+synctime+" "+aStreamGOP.getDeadLine() );
+                            System.out.println("DEADLINE missed (drymode)"+synctime+" "+aStreamGOP.getDeadLine() );
                             deadLineMiss++;
                         }
                     }

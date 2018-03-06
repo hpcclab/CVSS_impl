@@ -29,7 +29,7 @@ import static java.lang.Thread.sleep;
  */
 public class Test {
 
-    public static String test() {
+    public static String test(String opt) {
         /*
         AWSCredentials credentials = new BasicAWSCredentials(
                 "AKIAJTLLH5SVF74IJ6NQ",
@@ -55,7 +55,7 @@ public class Test {
 
             int rqn=1,interval,n;
             if(ServerConfig.profiledRequests){
-                RequestGenerator.ReadProfileRequests("test.txt");
+                RequestGenerator.ReadProfileRequests(opt);
                 RequestGenerator.contProfileRequestsGen(GTS);
             }else {
                 while (rqn != 0) {
@@ -111,7 +111,7 @@ public class Test {
         }
         */
         try {
-            RequestGenerator.generateDistributedRandomRequests("test",500,27,30,800,2000,500);
+            RequestGenerator.generateDistributedRandomRequests("test",500,27,100,800000,40000,15000);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -120,8 +120,8 @@ public class Test {
     }
     //for test
     public static void main(String[] args){
-        //System.out.println(test());
-        System.out.println(testbug());
+        System.out.println(test("test.txt"));
+        //System.out.println(testbug());
     }
 
 }

@@ -92,7 +92,7 @@ public class RequestGenerator {
 
     //read all data profile to rqe
     public static void ReadProfileRequests(String filename){
-        File F=new File("BenchmarkInput/"+filename+".txt");
+        File F=new File("BenchmarkInput/"+filename);
         Scanner scanner= null;
         try {
             scanner = new Scanner(F);
@@ -114,7 +114,7 @@ public class RequestGenerator {
     //a once call to push out data that past their startTime
     public static void contProfileRequestsGen(GOPTaskScheduler GTS){
         if(currentIndex<rqe_arr.size()) {
-            while (rqe_arr.get(currentIndex).appearTime > GOPTaskScheduler.maxElapsedTime) {
+            while (rqe_arr.get(currentIndex).appearTime < GOPTaskScheduler.maxElapsedTime) {
                 requestprofile arqe = rqe_arr.get(currentIndex);
                 currentIndex++;
                 OneSpecificRequest(GTS, arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline);
@@ -127,7 +127,11 @@ public class RequestGenerator {
     }
 
     public static requestprofile[] modifyrqe(requestprofile[] original_rqe){
-
+        //set first few requests to start from Time 0
+        int maxchange=Math.min(original_rqe.length,5);
+        for(int i=0;i<maxchange;i++){
+            original_rqe[i].appearTime=0;
+        }
         return original_rqe;
     }
 
@@ -139,17 +143,27 @@ public class RequestGenerator {
         FileWriter F = new FileWriter("BenchmarkInput/"+filename+".txt");
         PrintWriter writer = new PrintWriter(F);
         requestprofile rqe[]=new requestprofile[totalRequest];
-        String commandList[]={"Resolution","Codec","addsub"};
+        String commandList[]={"Bitrate","Resolution","to1000","Codec"};
         //random
         for(i=0;i<totalRequest;i++) {
             //int videoChoice, String command, String setting,long appearTime, long deadline
-            int randomRes=r.nextInt(7);
-            String setting=randomRes*80+"x"+randomRes*60;
+            int randomSetting=r.nextInt(4);
+            int randomCommand=r.nextInt(4);
+            String setting ="";
+            switch(randomCommand) {
+                case 1:setting = randomSetting * 160+160 + "x" + randomSetting * 90+90;break;
+                default:setting = commandList[randomCommand]+"settingChoice_"+randomSetting;
+            }
             long appear=r.nextLong()%timeSpan;
             if(appear<0){
                 appear*=-1;
             }
-            rqe[i]=new requestprofile(r.nextInt(totalVideos),commandList[r.nextInt(2)],setting,appear,appear+(int)(r.nextGaussian()*sdslack) );
+            long deadline=(long)(r.nextGaussian()*sdslack);
+            if(deadline<0){
+                deadline*=-1;
+            }
+            deadline+=appear;
+            rqe[i]=new requestprofile(r.nextInt(totalVideos),commandList[randomCommand],setting,appear,deadline);
         }
         //modify
         requestprofile modded_rqe[]=modifyrqe(rqe);
