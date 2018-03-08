@@ -111,7 +111,7 @@ public class Test {
         }
         */
         try {
-            RequestGenerator.generateDistributedRandomRequests("test",500,27,100,800000,40000,15000);
+            RequestGenerator.generateProfiledRandomRequests("test",500,27,40,60000,10000,5000);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -120,8 +120,8 @@ public class Test {
     }
     //for test
     public static void main(String[] args){
-        System.out.println(test("test.txt"));
-        //System.out.println(testbug());
+        //System.out.println(test("test.txt"));
+        System.out.println(testbug());
     }
 
 }

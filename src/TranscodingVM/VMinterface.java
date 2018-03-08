@@ -22,6 +22,7 @@ public class VMinterface {
     public int estimatedQueueLength=0;
     public long estimatedExecutionTime=0;
     public long elapsedTime=0;
+    public long actualSpentTime=0;
     public double deadLineMissRate;
     public long workdone;
     public long deadlinemiss;
@@ -114,10 +115,11 @@ public class VMinterface {
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = answer.queue_size;
                 GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
                 GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=answer.VMelapsedTime;
+                GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime=answer.VMspentTime;
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
                 GOPTaskScheduler.VMinterfaces.get(id).deadLineMissRate=answer.deadLineMissRate;
-                this.deadlinemiss=answer.missed;
-                this.workdone=answer.completed;
+                GOPTaskScheduler.VMinterfaces.get(id).deadlinemiss=answer.missed;
+                GOPTaskScheduler.VMinterfaces.get(id).workdone=answer.completed;
                 //
                 if(full) { //so we don't print too much
                     System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);

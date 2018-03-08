@@ -28,7 +28,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         return false;
     }
     public void addCMD(String Command,String Setting){
-        System.out.println("call addcmd"+Command+" "+Setting);
+        //System.out.println("call addcmd"+Command+" "+Setting);
         if(!containCmdParam(Command,Setting)) {
             if (cmdSet.containsKey(Command)) {
                 LinkedList<String> parameterList = cmdSet.get(Command);
@@ -51,12 +51,13 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     }
     public StreamGOP(){
         super();
-
+        deadLine=presentationTime;
     }
     public StreamGOP(String name,Stream p,RepositoryGOP x){
         super(x);
         videoname=name;
         parentStream=p;
+        deadLine=presentationTime;
     }
     public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting){
         this(name,p,x);
@@ -68,9 +69,14 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this.segment=X.segment;
         this.isTranscoded=X.getIsTranscoded();
         this.setting=X.setting;
+        this.presentationTime=X.presentationTime;
         //
         this.videoname=X.videoname;
         this.parentStream=X.parentStream;
+        this.deadLine=X.deadLine;
+        this.estimatedExecutionSD=X.estimatedExecutionSD;
+        this.estimatedExecutionTime=X.estimatedExecutionTime;
+        this.dispatched=X.dispatched;
         //
         for(String command : X.cmdSet.keySet()){
             LinkedList<String> param= new LinkedList<>(X.cmdSet.get(command) );

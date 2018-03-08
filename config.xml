@@ -17,8 +17,8 @@
 	<dataUpdateInterval>1000</dataUpdateInterval>
     <VMscalingIntervalTick>30</VMscalingIntervalTick>
     <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
-    <minVM>4</minVM>
-    <maxVM>4</maxVM>
+    <minVM>8</minVM>
+    <maxVM>8</maxVM>
     <maxVMqueuelength>4</maxVMqueuelength>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
@@ -64,15 +64,15 @@
     <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
 	
 	
-    <VM>thread,m4.large,localhost,5060</VM>
-    <VM>thread,m4.large,localhost,5061</VM>
-    <VM>thread,m4.large,localhost,5062</VM>
-    <VM>thread,m4.large,localhost,5063</VM>
-    <VM>thread,m4.large,localhost,5064</VM>
-    <VM>thread,m4.large,localhost,5065</VM>
-    <VM>thread,m4.large,localhost,5066</VM>
-    <VM>thread,m4.large,localhost,5067</VM>
-    <VM>thread,m4.large,localhost,5068</VM>
+    <VM>thread,g2.2xlarge,localhost,5060</VM>
+    <VM>thread,g2.2xlarge,localhost,5061</VM>
+    <VM>thread,g2.2xlarge,localhost,5062</VM>
+    <VM>thread,g2.2xlarge,localhost,5063</VM>
+    <VM>thread,g2.2xlarge,localhost,5064</VM>
+    <VM>thread,g2.2xlarge,localhost,5065</VM>
+    <VM>thread,g2.2xlarge,localhost,5066</VM>
+    <VM>thread,g2.2xlarge,localhost,5067</VM>
+    <VM>thread,g2.2xlarge,localhost,5068</VM>
 	
 
 	<VM>EC2,t2.micro,i-019a067d161b807d4,5061</VM> <!-- small -->

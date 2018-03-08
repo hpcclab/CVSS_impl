@@ -136,7 +136,7 @@ public class TranscodingThread extends Thread{
                         synctime+=elapsedTime;
                         realspentTime+=elapsedTime;
                         if(synctime>aStreamGOP.getDeadLine()){
-                            System.out.println("DEADLINE missed (drymode)"+synctime+" "+aStreamGOP.getDeadLine() );
+                            System.out.println("DEADLINE missed (drymode) "+synctime+" "+aStreamGOP.getDeadLine() );
                             deadLineMiss++;
                         }
                     }

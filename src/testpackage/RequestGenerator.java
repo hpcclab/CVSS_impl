@@ -21,7 +21,7 @@ class requestprofile implements Comparable<requestprofile> {
     public String setting;
     public long appearTime;
     public long deadline;
-
+//recipe is at Video level, each presentation time of each GOPS are in repository video
     public requestprofile(int videoChoice, String command, String setting, long appearTime, long deadline) {
         this.videoChoice = videoChoice;
         this.command = command;
@@ -132,6 +132,25 @@ public class RequestGenerator {
         for(int i=0;i<maxchange;i++){
             original_rqe[i].appearTime=0;
         }
+        //set 5% of the request to match type A
+        int cloneindex=original_rqe.length/5;
+        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/20;i++){
+            original_rqe[i].command=original_rqe[cloneindex].command;
+            original_rqe[i].setting=original_rqe[cloneindex].setting;
+            original_rqe[i].videoChoice=original_rqe[cloneindex].videoChoice;
+        }
+        //set 10% of the request to match type B
+        cloneindex=original_rqe.length/3; //this is where problem arise, mismatch setting
+        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/10;i++){
+            original_rqe[i].command=original_rqe[cloneindex].command;
+            original_rqe[i].videoChoice=original_rqe[cloneindex].videoChoice;
+        }
+        //set 20% of the request to match type C
+        cloneindex=original_rqe.length/2;
+        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/5;i++){
+            original_rqe[i].videoChoice=original_rqe[cloneindex].videoChoice;
+        }
+
         return original_rqe;
     }
 
@@ -150,18 +169,12 @@ public class RequestGenerator {
             int randomSetting=r.nextInt(4);
             int randomCommand=r.nextInt(4);
             String setting ="";
-            switch(randomCommand) {
-                case 1:setting = randomSetting * 160+160 + "x" + randomSetting * 90+90;break;
-                default:setting = commandList[randomCommand]+"settingChoice_"+randomSetting;
-            }
+            setting = "settingChoice_"+randomSetting;
             long appear=r.nextLong()%timeSpan;
             if(appear<0){
                 appear*=-1;
             }
-            long deadline=(long)(r.nextGaussian()*sdslack);
-            if(deadline<0){
-                deadline*=-1;
-            }
+            long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
             deadline+=appear;
             rqe[i]=new requestprofile(r.nextInt(totalVideos),commandList[randomCommand],setting,appear,deadline);
         }
@@ -176,4 +189,59 @@ public class RequestGenerator {
         }
         writer.close();
     }
+    //enforce least duplicate or match, unless neccessery
+    public static void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
+        //random into array, modify, sort array, write to file
+        Random r =new Random(seed);
+        int i=0;
+        FileWriter F = new FileWriter("BenchmarkInput/"+filename+".txt");
+        PrintWriter writer = new PrintWriter(F);
+        requestprofile rqe[]=new requestprofile[totalRequest];
+        String commandList[]={"Framerate","Resolution","Bitrate","Codec"};
+        int randomDone=0;
+        int fold=0; //each fold means there is at least one type C matchable, every 4 fold then a type A matched
+        int positionMatchup[]=new int[totalVideos];
+        //randomly make it not match at all
+        while(totalRequest-randomDone>0 ){
+            int randomtodo=Math.min(totalVideos,totalRequest-randomDone); //random upto totalVideos
+            //created index 0-totalVideos in order before shuffle
+            for(int p=0;p<randomtodo;p++){
+                positionMatchup[p]=p;
+            }
+            //shuffle, swap s with random index
+            for(int s=0;s<randomtodo;s++){
+                int tmp=positionMatchup[s];
+                int swappair=Math.abs(r.nextInt()%randomtodo);
+                positionMatchup[s]=positionMatchup[swappair];
+                positionMatchup[swappair]=tmp;
+            }
+            //create the request
+            for(int q=0;q<randomtodo;q++) {
+                // video choice is in the positionMatchup
+                String acmd=commandList[(positionMatchup[q]+fold)%4];// ensure least command overlap as possible
+                long appear=Math.abs(r.nextLong()%timeSpan);
+                long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
+                deadline+=appear;
+                //System.out.println("rqe[]="+(randomDone+q)+" positionMatup[]="+q);
+                rqe[randomDone+q]=new requestprofile(positionMatchup[q],acmd,"TBD",appear,deadline); //setting ToBeDetermined
+            }
+
+            fold++;
+            randomDone+=randomtodo;
+        }
+
+        //modify
+        //requestprofile modded_rqe[]=modifyrqe(rqe);
+        //sort
+        Arrays.sort(rqe);
+
+        // write to file
+        for(i=0;i<totalRequest;i++){
+            writer.println(rqe[i].videoChoice+" "+rqe[i].command+" "+rqe[i].setting+" "+rqe[i].appearTime+" "+rqe[i].deadline);
+        }
+        writer.close();
+
+        writer.close();
+    }
+
 }

@@ -29,18 +29,23 @@ public class Video {
                 String[] sp=scanner.nextLine().split("\\s+");
                 if(sp[0].equalsIgnoreCase("g")){ //auto generate mode
                     //System.out.println("g mode");
-
                     int n=Integer.parseInt(sp[1]);
                     for(int i=0;i<n;i++){
                         String GOPname=i+".ts";
-                        RepositoryGOP repositoryGop = new RepositoryGOP(path+GOPname);
+                        RepositoryGOP repositoryGop = new RepositoryGOP(path+GOPname,i*500);
                         this.addGOP(repositoryGop);
                     }
                 }else if(sp[0].equalsIgnoreCase("l")){ //list mode
                     while(scanner.hasNext()){ // didn't test
-                        String GOPname=scanner.nextLine();
-                        RepositoryGOP repositoryGop = new RepositoryGOP(path+GOPname);
-                        this.addGOP(repositoryGop);
+                        String aLine[]=scanner.nextLine().split("\\s+");
+                        if(aLine.length==2) {
+                            String GOPname =aLine[0];
+                            int presentationTime=Integer.parseInt(aLine[1]);
+                            RepositoryGOP repositoryGop = new RepositoryGOP(path + GOPname,presentationTime);
+                            this.addGOP(repositoryGop);
+                        }else{
+                            System.out.println("repository list mode incorrect format");
+                        }
                     }
                 }else{
                     System.out.println("uncrecognize a mode in list.txt");

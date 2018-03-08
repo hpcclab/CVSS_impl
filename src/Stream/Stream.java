@@ -48,7 +48,14 @@ public class Stream {
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){
         for(int i=startSegment;i<endSegment;i++){
-            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,settings);
+            String designatedSettings;
+            if(settings.equalsIgnoreCase("TBD")){ //change TBD to stream&gops specific
+                designatedSettings=v.name+i;
+                System.out.println("setting="+designatedSettings);
+            }else{
+                designatedSettings=settings;
+            }
+            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings);
             streamGOPs.add(xcopy);
         }
     }
