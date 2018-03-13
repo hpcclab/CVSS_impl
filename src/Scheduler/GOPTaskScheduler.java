@@ -204,7 +204,7 @@ public class GOPTaskScheduler {
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
-            boolean mergecheck=false;
+            boolean mergecheck=true;
             if(mergecheck){
             //HOLD UP! check for duplication first
             request aRequestlvl1 = new request(X,1); //= ... derive from X
@@ -275,7 +275,7 @@ public class GOPTaskScheduler {
                             Batchqueue.add(X);
                             LV3map_pending.replace(aRequestlvl3, X);
                         } else {
-                            System.out.println("not too late to merge (lvl3, is not doing yet");
+                            System.out.println("not too late to merge");
                             // create merged StreamGOP
                             StreamGOP merged = new StreamGOP(original);
                             merged.getAllCMD(X);
@@ -521,10 +521,10 @@ public class GOPTaskScheduler {
                 chosenVM.sendJob(X);
                 removeStreamGOPfromTable(X);
                 System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());
-                System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
-                System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);
+                //System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
+                //System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);
                 workpending++;
-                System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
+                //System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
                 if (workpending == maxpending) {
                     System.out.println("workpending==maxpending");
                 }

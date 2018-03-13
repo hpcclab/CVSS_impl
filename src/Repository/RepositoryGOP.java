@@ -21,6 +21,7 @@ public class RepositoryGOP implements java.io.Serializable {
         isTranscoded = false;
         //segment = path.substring(path.length()-7,path.length()-3);//gets last 4 characters of path before extension, a number between 0000 and 9999
         String[] psplit=path.split("/");
+        presentationTime=presentTime;
         segment=psplit[psplit.length-1].split("\\.")[0];
     }
     public RepositoryGOP(){

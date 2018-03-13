@@ -50,12 +50,13 @@ public class Stream {
         for(int i=startSegment;i<endSegment;i++){
             String designatedSettings;
             if(settings.equalsIgnoreCase("TBD")){ //change TBD to stream&gops specific
-                designatedSettings=v.name+i;
-                System.out.println("setting="+designatedSettings);
+                designatedSettings=(i+1)+"_"+v.name;
+                //System.out.println("setting="+designatedSettings);
             }else{
                 designatedSettings=settings;
             }
             StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings);
+            //System.out.println("deadline of "+video.name+" "+(i+1)+"="+xcopy.getDeadLine());
             streamGOPs.add(xcopy);
         }
     }

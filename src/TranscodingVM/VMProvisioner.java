@@ -172,12 +172,12 @@ public class VMProvisioner {
                     for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
                         VMinterface vmi=GOPTaskScheduler.VMinterfaces.get(i);
                         System.out.println("Machine " + i + "time elapsed"+vmi.elapsedTime+" time actually spent:"+vmi.actualSpentTime);
-                        System.out.println("completed: "+vmi.workdone+" missed "+vmi.deadlinemiss);
+                        System.out.println("completed: "+vmi.Nworkdone +" as "+vmi.workdone+"requests missed "+vmi.deadlinemiss+"("+vmi.Ndeadlinemiss+")");
                         avgActualSpentTime+=vmi.actualSpentTime;
                         totalWorkDone+=vmi.workdone;
                         totaldeadlinemiss+=vmi.deadlinemiss;
                     }
-                    System.out.println("total completed: "+totalWorkDone+" missed "+totaldeadlinemiss);
+                    System.out.println("total completed: "+totalWorkDone+" missed "+totaldeadlinemiss );
                     System.out.println("avgspentTime "+avgActualSpentTime/ServerConfig.maxVM);
 
                 }

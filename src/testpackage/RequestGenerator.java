@@ -125,71 +125,42 @@ public class RequestGenerator {
             }
         }
     }
-
-    public static requestprofile[] modifyrqe(requestprofile[] original_rqe){
+    //
+    public static requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe){
         //set first few requests to start from Time 0
         int maxchange=Math.min(original_rqe.length,5);
         for(int i=0;i<maxchange;i++){
             original_rqe[i].appearTime=0;
+            original_rqe[i].videoChoice=original_rqe[0].videoChoice;
         }
         //set 5% of the request to match type A
         int cloneindex=original_rqe.length/5;
-        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/20;i++){
-            original_rqe[i].command=original_rqe[cloneindex].command;
-            original_rqe[i].setting=original_rqe[cloneindex].setting;
-            original_rqe[i].videoChoice=original_rqe[cloneindex].videoChoice;
+        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/20;i+=2){
+            original_rqe[i].command=original_rqe[i-1].command;
+            original_rqe[i].setting=original_rqe[i-1].setting;
+            original_rqe[i].videoChoice=original_rqe[i-1].videoChoice;
         }
+        /* //we don't have type B matching at the moment
         //set 10% of the request to match type B
         cloneindex=original_rqe.length/3; //this is where problem arise, mismatch setting
-        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/10;i++){
-            original_rqe[i].command=original_rqe[cloneindex].command;
-            original_rqe[i].videoChoice=original_rqe[cloneindex].videoChoice;
+        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/10;i+=2){
+            original_rqe[i].command=original_rqe[i-1].command;
+            original_rqe[i].videoChoice=original_rqe[i-1].videoChoice;
         }
+        */
         //set 20% of the request to match type C
         cloneindex=original_rqe.length/2;
-        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/5;i++){
-            original_rqe[i].videoChoice=original_rqe[cloneindex].videoChoice;
+        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/5;i+=2){
+            original_rqe[i].videoChoice=original_rqe[i-1].videoChoice;
         }
 
         return original_rqe;
     }
 
-    //generator function, save to file
-    public static void generateDistributedRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
-        //random into array, modify, sort array, write to file
-        Random r =new Random(seed);
-        int i=0;
-        FileWriter F = new FileWriter("BenchmarkInput/"+filename+".txt");
-        PrintWriter writer = new PrintWriter(F);
-        requestprofile rqe[]=new requestprofile[totalRequest];
-        String commandList[]={"Bitrate","Resolution","to1000","Codec"};
-        //random
-        for(i=0;i<totalRequest;i++) {
-            //int videoChoice, String command, String setting,long appearTime, long deadline
-            int randomSetting=r.nextInt(4);
-            int randomCommand=r.nextInt(4);
-            String setting ="";
-            setting = "settingChoice_"+randomSetting;
-            long appear=r.nextLong()%timeSpan;
-            if(appear<0){
-                appear*=-1;
-            }
-            long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
-            deadline+=appear;
-            rqe[i]=new requestprofile(r.nextInt(totalVideos),commandList[randomCommand],setting,appear,deadline);
-        }
-        //modify
-        requestprofile modded_rqe[]=modifyrqe(rqe);
-        //sort
-        Arrays.sort(modded_rqe);
-
-        // write to file
-        for(i=0;i<totalRequest;i++){
-            writer.println(modded_rqe[i].videoChoice+" "+modded_rqe[i].command+" "+modded_rqe[i].setting+" "+modded_rqe[i].appearTime+" "+modded_rqe[i].deadline);
-        }
-        writer.close();
+    public static requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe) {
+        return original_rqe;
     }
-    //enforce least duplicate or match, unless neccessery
+    //enforce least duplicate or match, unless neccessery, then modify to add matching
     public static void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
         //random into array, modify, sort array, write to file
         Random r =new Random(seed);
@@ -231,10 +202,11 @@ public class RequestGenerator {
         }
 
         //modify
-        //requestprofile modded_rqe[]=modifyrqe(rqe);
+        modifyrqeb4sort(rqe);
         //sort
         Arrays.sort(rqe);
-
+        //modify again?
+        modifyrqeaftersort(rqe);
         // write to file
         for(i=0;i<totalRequest;i++){
             writer.println(rqe[i].videoChoice+" "+rqe[i].command+" "+rqe[i].setting+" "+rqe[i].appearTime+" "+rqe[i].deadline);

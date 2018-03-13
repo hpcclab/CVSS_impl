@@ -19,18 +19,20 @@ import java.util.concurrent.ConcurrentHashMap;
 class report implements Serializable{
     int queue_size;
     long queue_executionTime,VMelapsedTime,VMspentTime;
-    long completed,missed;
+    long Nworkdone,workdone,Nmissed,missed;
     double deadLineMissRate;
     HashMap<String, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
 
-    public report(int queue_size,long time,long timeElapsed,long timeSpent,long cmp,long miss,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
+    public report(int queue_size,long time,long timeElapsed,long timeSpent,long ncmp,long cmp,long miss,long nmiss,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
         this.runtime_report.putAll(runtime_report);
         this.queue_executionTime=time;
         this.VMelapsedTime=timeElapsed;
         this.VMspentTime=timeSpent;
-        this.completed=cmp;
+        this.workdone=cmp;
+        this.Nworkdone=ncmp;
         this.missed=miss;
+        this.Nmissed=nmiss;
         this.deadLineMissRate=deadLineMissRate;
         this.queue_size=queue_size;
     }
@@ -115,7 +117,7 @@ public class TranscodingVM extends Thread{
                     if(objectX.getDeadLine()>TT.synctime){ //syncTime
                         TT.synctime=objectX.getDeadLine();
                     }
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.workDone,TT.deadLineMiss,deadLineMiss,TT.runtime_report));
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
 
                 }else if (objectX.cmdSet.containsKey("fullstat")){
                     if(!TT.runtime_report.isEmpty()) {
@@ -125,15 +127,15 @@ public class TranscodingVM extends Thread{
                     if(TT.workDone==0){
                         deadLineMiss=0;
                     }else{
-                        deadLineMiss=(1.0*TT.deadLineMiss)/TT.workDone;
+                        deadLineMiss=(1.0*TT.deadlineMiss)/TT.workDone;
                     }
                     if(objectX.getDeadLine()>TT.synctime){ //syncTime
                         TT.synctime=objectX.getDeadLine();
                     }
                     //System.out.println("real spent Time="+TT.realspentTime); //good
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.workDone,TT.deadLineMiss,deadLineMiss,TT.runtime_report));
+                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
                     //don't remove old stat, maybe reset stat later if keep full stat too!
-                    //TT.deadLineMiss=0;
+                    //TT.deadlineMiss=0;
                     //TT.workDone=0;
                 }else{
                     //System.out.println("localthread: work adding");

@@ -1,15 +1,10 @@
 package TranscodingVM;
 
-import Repository.RepositoryGOP;
 import Scheduler.ServerConfig;
 import Stream.StreamGOP;
 //import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import miscTools.Tuple;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,8 +16,9 @@ public class TranscodingThread extends Thread{
     public PriorityBlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<StreamGOP>();
     public ConcurrentHashMap<String, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
     private HashMap<Integer,Long> FakeDelay=new HashMap<>();
-    public int workDone;
-    public int deadLineMiss;
+    public int workDone; //count each work as one
+    public int NworkDone; //count each work as suggested in StreamGOP.requestcount
+    public int deadlineMiss,NdeadlineMiss;
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
     long synctime=0; //spentTime+requiredTime is imaginary total time to clear the queue
     long realspentTime=0; //realspentTime is spentTime without Syncing
@@ -125,7 +121,8 @@ public class TranscodingThread extends Thread{
                         }
                         if(System.currentTimeMillis()>aStreamGOP.getDeadLine()){
                             System.out.println("DEADLINE missed (realmode)"+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
-                            deadLineMiss++;
+                            deadlineMiss++;
+                            NdeadlineMiss+=aStreamGOP.requestcount;
                         }
                         elapsedTime = System.nanoTime()/1000000 - savedTime;
                         synctime+=elapsedTime;
@@ -137,7 +134,8 @@ public class TranscodingThread extends Thread{
                         realspentTime+=elapsedTime;
                         if(synctime>aStreamGOP.getDeadLine()){
                             System.out.println("DEADLINE missed (drymode) "+synctime+" "+aStreamGOP.getDeadLine() );
-                            deadLineMiss++;
+                            deadlineMiss++;
+                            NdeadlineMiss+=aStreamGOP.requestcount;
                         }
                     }
 
@@ -145,7 +143,7 @@ public class TranscodingThread extends Thread{
                     this.requiredTime-=aStreamGOP.estimatedExecutionTime;
                     //get RunTime, reduce from nano to millisecond
                     workDone++;
-
+                    NworkDone+=aStreamGOP.requestcount;
                     //runtime_report.is
                     /*
                     Tuple<Long, Integer> pulled = runtime_report.get(aStreamGOP.userSetting.settingIdentifier);

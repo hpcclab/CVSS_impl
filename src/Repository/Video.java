@@ -22,11 +22,16 @@ public class Video {
     public Video(){
     }
     public Video(String path){
+        //set name
+        String pathsplit[]=path.split("/");
+        name=pathsplit[pathsplit.length-1];
         if(ServerConfig.videoRepository_mode.equalsIgnoreCase("list.txt")){
             //list mode
             try {
+                //System.out.println("look for path:"+path);
                 Scanner scanner=new Scanner(new File(path+"list.txt"));
                 String[] sp=scanner.nextLine().split("\\s+");
+                //System.out.println("split size="+sp.length);
                 if(sp[0].equalsIgnoreCase("g")){ //auto generate mode
                     //System.out.println("g mode");
                     int n=Integer.parseInt(sp[1]);
@@ -36,9 +41,11 @@ public class Video {
                         this.addGOP(repositoryGop);
                     }
                 }else if(sp[0].equalsIgnoreCase("l")){ //list mode
+                    //System.out.println("l mode");
                     while(scanner.hasNext()){ // didn't test
                         String aLine[]=scanner.nextLine().split("\\s+");
                         if(aLine.length==2) {
+                            //System.out.println("correct format");
                             String GOPname =aLine[0];
                             int presentationTime=Integer.parseInt(aLine[1]);
                             RepositoryGOP repositoryGop = new RepositoryGOP(path + GOPname,presentationTime);

@@ -17,6 +17,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public long estimatedExecutionTime=0;
     public double estimatedExecutionSD=0;
     public boolean dispatched=false;
+    public int requestcount=0; //be 1 unless merged
 
     public boolean containCmdParam(String Command,String Setting){
         if(cmdSet.containsKey(Command)) {
@@ -39,6 +40,11 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
                 parameterList.add(Setting);
                 cmdSet.put(Command, parameterList);
             }
+
+            requestcount++;
+            System.out.println("cmd count="+requestcount+"\n\n");
+        }else{
+            System.out.println("already have this cmd");
         }
     }
     public void getAllCMD(StreamGOP aGOP){
@@ -46,6 +52,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
             LinkedList<String> param = new LinkedList<>(aGOP.cmdSet.get(command));
             for (String aparam : param) {
                 addCMD(command, aparam);
+                System.out.println("a call to add cmd");
             }
         }
     }
@@ -58,6 +65,8 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         videoname=name;
         parentStream=p;
         deadLine=presentationTime;
+        //System.out.println("X presentationTime="+x.presentationTime);
+        //System.out.println("this deadline="+deadLine);
     }
     public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting){
         this(name,p,x);
@@ -70,6 +79,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this.isTranscoded=X.getIsTranscoded();
         this.setting=X.setting;
         this.presentationTime=X.presentationTime;
+        //System.out.println("X presentationTime="+X.presentationTime);
         //
         this.videoname=X.videoname;
         this.parentStream=X.parentStream;
@@ -77,6 +87,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this.estimatedExecutionSD=X.estimatedExecutionSD;
         this.estimatedExecutionTime=X.estimatedExecutionTime;
         this.dispatched=X.dispatched;
+        this.requestcount=X.requestcount;
         //
         for(String command : X.cmdSet.keySet()){
             LinkedList<String> param= new LinkedList<>(X.cmdSet.get(command) );
