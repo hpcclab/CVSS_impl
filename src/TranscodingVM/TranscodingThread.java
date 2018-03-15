@@ -7,13 +7,13 @@ import miscTools.Tuple;
 
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class TranscodingThread extends Thread{
     public String type;
-    public PriorityBlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<StreamGOP>();
+    public BlockingQueue<StreamGOP> jobs = new ArrayBlockingQueue<StreamGOP>(ServerConfig.localqueuelengthperVM*2);
+    //or
+    //public BlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<>();
     public ConcurrentHashMap<String, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
     private HashMap<Integer,Long> FakeDelay=new HashMap<>();
     public int workDone; //count each work as one

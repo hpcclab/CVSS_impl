@@ -119,8 +119,8 @@ public class TimeEstimator {
                 setting = line[1];
                 mean = Long.parseLong(line[2]);
                 SD = Double.parseDouble(line[3]);
-                plusB = Double.parseDouble(line[4]);
-                plusC = Double.parseDouble(line[5]);
+                plusB = Double.parseDouble(line[4])/100;
+                plusC = Double.parseDouble(line[5])/100;
                 histStat S = new histStat(mean, SD, plusB, plusC);
                 X.put(command + setting, S);
                 //System.out.println(line[1]);

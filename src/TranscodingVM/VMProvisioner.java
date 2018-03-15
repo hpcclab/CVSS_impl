@@ -166,18 +166,18 @@ public class VMProvisioner {
                 timeforced++;
                 if (timeforced == 1) {
                     long avgActualSpentTime=0;
-                    long totalWorkDone=0;
-                    long totaldeadlinemiss=0;
+                    long totalWorkDone=0,ntotalWorkDone=0;
+                    long totaldeadlinemiss=0, ntotaldeadlinemiss=0;
                     //print stat!
                     for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
                         VMinterface vmi=GOPTaskScheduler.VMinterfaces.get(i);
-                        System.out.println("Machine " + i + "time elapsed"+vmi.elapsedTime+" time actually spent:"+vmi.actualSpentTime);
-                        System.out.println("completed: "+vmi.Nworkdone +" as "+vmi.workdone+"requests missed "+vmi.deadlinemiss+"("+vmi.Ndeadlinemiss+")");
+                        System.out.println("Machine " + i + " time elapsed:"+vmi.elapsedTime+" time actually spent:"+vmi.actualSpentTime);
+                        System.out.println("completed: "+vmi.Nworkdone +"("+vmi.workdone+") requests, missed "+vmi.deadlinemiss+"("+vmi.Ndeadlinemiss+")");
                         avgActualSpentTime+=vmi.actualSpentTime;
-                        totalWorkDone+=vmi.workdone;
-                        totaldeadlinemiss+=vmi.deadlinemiss;
+                        totalWorkDone+=vmi.workdone; ntotalWorkDone+=vmi.Nworkdone;
+                        totaldeadlinemiss+=vmi.deadlinemiss; ntotaldeadlinemiss+=vmi.Ndeadlinemiss;
                     }
-                    System.out.println("total completed: "+totalWorkDone+" missed "+totaldeadlinemiss );
+                    System.out.println("total completed: "+totalWorkDone+"("+ntotalWorkDone+") missed "+totaldeadlinemiss+"("+ntotaldeadlinemiss+")" );
                     System.out.println("avgspentTime "+avgActualSpentTime/ServerConfig.maxVM);
 
                 }

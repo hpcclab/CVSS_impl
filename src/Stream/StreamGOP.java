@@ -42,7 +42,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
             }
 
             requestcount++;
-            System.out.println("cmd count="+requestcount+"\n\n");
+            //System.out.println("cmd count="+requestcount+"\n\n");
         }else{
             System.out.println("already have this cmd");
         }
