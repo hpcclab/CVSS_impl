@@ -114,8 +114,8 @@ public class TranscodingVM extends Thread{
                         //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
                     }
                     double deadLineMiss=0;
-                    if(objectX.getDeadLine()>TT.synctime){ //syncTime
-                        TT.synctime=objectX.getDeadLine();
+                    if(objectX.deadLine>TT.synctime){ //syncTime
+                        TT.synctime=objectX.deadLine;
                     }
                     oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
 
@@ -129,8 +129,8 @@ public class TranscodingVM extends Thread{
                     }else{
                         deadLineMiss=(1.0*TT.deadlineMiss)/TT.workDone;
                     }
-                    if(objectX.getDeadLine()>TT.synctime){ //syncTime
-                        TT.synctime=objectX.getDeadLine();
+                    if(objectX.deadLine>TT.synctime){ //syncTime
+                        TT.synctime=objectX.deadLine;
                     }
                     //System.out.println("real spent Time="+TT.realspentTime); //good
                     oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));

@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 
 public class TranscodingThread extends Thread{
     public String type;
-    public BlockingQueue<StreamGOP> jobs = new ArrayBlockingQueue<StreamGOP>(ServerConfig.localqueuelengthperVM*2);
+    public BlockingQueue<StreamGOP> jobs = new LinkedBlockingQueue<StreamGOP>();
     //or
     //public BlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<>();
     public ConcurrentHashMap<String, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
@@ -119,8 +119,8 @@ public class TranscodingThread extends Thread{
                         if (delay != 0) {
                             sleep(delay);
                         }
-                        if(System.currentTimeMillis()>aStreamGOP.getDeadLine()){
-                            System.out.println("DEADLINE missed (realmode)"+System.currentTimeMillis()+" "+aStreamGOP.getDeadLine() );
+                        if(System.currentTimeMillis()>aStreamGOP.deadLine){ //don't support counting for merging task's individual deadline evaluation yet
+                            System.out.println("DEADLINE missed (realmode)"+System.currentTimeMillis()+" "+aStreamGOP.deadLine );
                             deadlineMiss++;
                             NdeadlineMiss+=aStreamGOP.requestcount;
                         }
@@ -132,10 +132,15 @@ public class TranscodingThread extends Thread{
                         System.out.println("delay="+delay);
                         synctime+=elapsedTime;
                         realspentTime+=elapsedTime;
-                        if(synctime>aStreamGOP.getDeadLine()){
-                            System.out.println("DEADLINE missed (drymode) "+synctime+" "+aStreamGOP.getDeadLine() );
-                            deadlineMiss++;
-                            NdeadlineMiss+=aStreamGOP.requestcount;
+                        boolean missed=false;
+                        for (String cmd:aStreamGOP.deadlineSet.keySet()){
+                            if(aStreamGOP.getdeadlineof(cmd)<=synctime){
+                                if(!missed) {
+                                    deadlineMiss++;
+                                    missed=true;
+                                }
+                                NdeadlineMiss++;
+                            }
                         }
                     }
 

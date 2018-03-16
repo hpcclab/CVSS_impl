@@ -101,11 +101,11 @@ public class VMinterface {
                 if(full){
                     query.cmdSet.put("fullstat", null);
                     query.dispatched=true;
-                    query.setDeadline(GOPTaskScheduler.maxElapsedTime);
+                    query.deadLine=GOPTaskScheduler.maxElapsedTime;
                 }else {
                     query.cmdSet.put("query", null);
                     query.dispatched=true;
-                    query.setDeadline(GOPTaskScheduler.maxElapsedTime);
+                    query.deadLine=GOPTaskScheduler.maxElapsedTime;
                 }
                 oos.writeObject(query); //they expect an object, thus we need to send object
                 report answer = (report) ois.readObject();

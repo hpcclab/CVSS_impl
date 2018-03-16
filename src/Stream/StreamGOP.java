@@ -10,15 +10,24 @@ import java.util.*;
 public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
     //public Settings userSetting;
     public HashMap<String,LinkedList<String>> cmdSet=new HashMap<>();
+    public HashMap<String,Long> deadlineSet=new HashMap<>();
     public transient Stream parentStream;
 
     public String videoname = "";
-    private long deadLine=0;
+    public long deadLine=0;
+    public boolean dispatched=false;
     public long estimatedExecutionTime=0;
     public double estimatedExecutionSD=0;
-    public boolean dispatched=false;
     public int requestcount=0; //be 1 unless merged
+    public long getdeadlineof(String key){
+        if(!deadlineSet.containsKey(key)){
+            System.out.println("does not contain data for this deadline!");
+            return -1;
+        }else{
+                return deadlineSet.get(key);
+        }
 
+    }
     public boolean containCmdParam(String Command,String Setting){
         if(cmdSet.containsKey(Command)) {
             LinkedList<String> paramList=cmdSet.get(Command);
@@ -28,7 +37,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         }
         return false;
     }
-    public void addCMD(String Command,String Setting){
+    public void addCMD(String Command,String Setting,long in_deadline){
         //System.out.println("call addcmd"+Command+" "+Setting);
         if(!containCmdParam(Command,Setting)) {
             if (cmdSet.containsKey(Command)) {
@@ -40,8 +49,8 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
                 parameterList.add(Setting);
                 cmdSet.put(Command, parameterList);
             }
-
             requestcount++;
+            deadlineSet.put(Command+Setting,in_deadline);
             //System.out.println("cmd count="+requestcount+"\n\n");
         }else{
             System.out.println("already have this cmd");
@@ -51,8 +60,8 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         for (String command : aGOP.cmdSet.keySet()) { //not really needed, since X should have just one cmd at the moment
             LinkedList<String> param = new LinkedList<>(aGOP.cmdSet.get(command));
             for (String aparam : param) {
-                addCMD(command, aparam);
-                System.out.println("a call to add cmd");
+                addCMD(command, aparam,aGOP.getdeadlineof(command+aparam));
+                //System.out.println("a call to add cmd");
             }
         }
     }
@@ -60,17 +69,17 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         super();
         deadLine=presentationTime;
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x){
+    public StreamGOP(String name,Stream p,RepositoryGOP x,long time){
         super(x);
         videoname=name;
         parentStream=p;
-        deadLine=presentationTime;
+        deadLine=presentationTime+time;
         //System.out.println("X presentationTime="+x.presentationTime);
         //System.out.println("this deadline="+deadLine);
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting){
-        this(name,p,x);
-        addCMD(Command, Setting);
+    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long time){
+        this(name,p,x,time);
+        addCMD(Command, Setting,deadLine);
     }
     //deep clone
     public StreamGOP(StreamGOP X){
@@ -86,23 +95,12 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this.deadLine=X.deadLine;
         this.estimatedExecutionSD=X.estimatedExecutionSD;
         this.estimatedExecutionTime=X.estimatedExecutionTime;
-        this.dispatched=X.dispatched;
         this.requestcount=X.requestcount;
         //
         for(String command : X.cmdSet.keySet()){
             LinkedList<String> param= new LinkedList<>(X.cmdSet.get(command) );
             cmdSet.put(command,param);
         }
-    }
-    public long getDeadLine(){
-        if(dispatched){
-            return deadLine;
-        }else{
-            return deadLine+parentStream.startTime;
-        }
-    }
-    public void setDeadline(long newD){
-        this.deadLine=newD;
     }
 
 

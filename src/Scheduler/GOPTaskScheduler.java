@@ -323,7 +323,7 @@ public class GOPTaskScheduler {
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
-            boolean mergecheck=true;
+            boolean mergecheck=false;
             if(mergecheck){
                 mergeifpossible(X);
             }else{
@@ -365,7 +365,7 @@ public class GOPTaskScheduler {
                 retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice),virtualQueue.get(i));
                 double exeT=VM_Q[choice]+chk.mean+chk.SD*1;
                 StreamGOP thisone=virtualQueue.get(i);
-                if(exeT>thisone.getDeadLine()){
+                if(exeT>thisone.deadLine){
                     //deadline miss
                     if(thisone==focussed){
                         originalmissed=-1;
@@ -381,7 +381,7 @@ public class GOPTaskScheduler {
             if(find_Xpos){
                     retStat chk2=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice),focussed);
                     double exeT2=VM_Q[choice]+chk2.mean+chk2.SD*1;
-                    if(VM_Q[choice]+exeT2 <focussed.getDeadLine()) {
+                    if(VM_Q[choice]+exeT2 <focussed.deadLine) {
                         latestXpos=i;
                     }
             }
@@ -516,9 +516,6 @@ public class GOPTaskScheduler {
                     X.estimatedExecutionSD=thestat.SD;
                 }
 
-                //change deadLine to absolute value
-                System.out.println("X deadline "+X.getDeadLine());
-                X.setDeadline(X.getDeadLine());
                 //change StreamGOP type to Dispatched
                 X.dispatched = true;
                 //X.parentStream=null;
