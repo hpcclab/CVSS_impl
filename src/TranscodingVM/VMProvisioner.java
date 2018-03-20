@@ -169,6 +169,12 @@ public class VMProvisioner {
                     long totalWorkDone=0,ntotalWorkDone=0;
                     long totaldeadlinemiss=0, ntotaldeadlinemiss=0;
                     //print stat!
+                    System.out.println("File"+ServerConfig.profileRequestsBenhmark);
+                    if(ServerConfig.sortedBatchQueue){
+                        System.out.println("Stat for Queuesort="+ServerConfig.sortedBatchQueue+" policy="+ServerConfig.batchqueuesortpolicy+" mergable="+ServerConfig.taskmerge);
+                    }else{
+                        System.out.println("Stat for Queuesort="+ServerConfig.sortedBatchQueue+" mergable="+ServerConfig.taskmerge);
+                    }
                     for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
                         VMinterface vmi=GOPTaskScheduler.VMinterfaces.get(i);
                         System.out.println("Machine " + i + " time elapsed:"+vmi.elapsedTime+" time actually spent:"+vmi.actualSpentTime);
@@ -177,7 +183,7 @@ public class VMProvisioner {
                         totalWorkDone+=vmi.workdone; ntotalWorkDone+=vmi.Nworkdone;
                         totaldeadlinemiss+=vmi.deadlinemiss; ntotaldeadlinemiss+=vmi.Ndeadlinemiss;
                     }
-                    System.out.println("total completed: "+totalWorkDone+"("+ntotalWorkDone+") missed "+totaldeadlinemiss+"("+ntotaldeadlinemiss+")" );
+                    System.out.println("total completed: "+totalWorkDone+"("+ntotalWorkDone+") missed "+totaldeadlinemiss+"("+ntotaldeadlinemiss+") type A merged:"+GOPTaskScheduler.typeAmerged );
                     System.out.println("avgspentTime "+avgActualSpentTime/ServerConfig.maxVM);
 
                 }

@@ -24,9 +24,13 @@ public class ServerConfig {
     public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
     public static boolean sortedBatchQueue=true;
+    public static String batchqueuesortpolicy="Deadline";
+    public static boolean taskmerge=false;
     public static boolean profiledRequests=false;
+    public static String profileRequestsBenhmark;
+
     public static String run_mode="real";
-    public static int localqueuelengthperVM=4; //not configurable yet
+    public static int localqueuelengthperVM=4;
 
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
@@ -111,6 +115,18 @@ public class ServerConfig {
             ServerConfig.addProfiledDelay = false;
         }
     }
+    @XmlElement(name = "sortedBatchQueue")
+    public void setsortedBatchQueue(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.sortedBatchQueue = true;
+        }else{
+            ServerConfig.sortedBatchQueue = false;
+        }
+    }
+    @XmlElement(name = "batchqueuesortpolicy")
+    public void setbatchqueuesortpolicy(String defaultInputPath) {
+        ServerConfig.batchqueuesortpolicy = defaultInputPath;
+    }
     @XmlElement(name = "profiledRequests")
     public void setprofiledRequests(String check) {
         if(check.equalsIgnoreCase("True")) {
@@ -119,6 +135,11 @@ public class ServerConfig {
             ServerConfig.profiledRequests = false;
         }
     }
+    @XmlElement(name = "profileRequestsBenhmark")
+    public void setprofileRequestsBenhmark(String input) {
+        ServerConfig.profileRequestsBenhmark=input;
+    }
+
     @XmlElement(name = "VM")
     public void setVM(String VM_Texts) {
         String s[]=VM_Texts.split(",");
@@ -176,6 +197,18 @@ public class ServerConfig {
     @XmlElement(name = "VMscalingIntervalTick")
     public void setVMscalingIntervalTick(int VMscalingIntervalTick) {
         ServerConfig.VMscalingIntervalTick = VMscalingIntervalTick;
+    }
+    @XmlElement(name = "localqueuelengthperVM")
+    public void setlocalqueuelengthperVM(int ilocalqueuelengthperVM) {
+        ServerConfig.localqueuelengthperVM = ilocalqueuelengthperVM;
+    }
+    @XmlElement(name = "taskmerge")
+    public void settaskmerge(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.taskmerge = true;
+        }else{
+            ServerConfig.taskmerge = false;
+        }
     }
     @XmlElement(name = "dataUpdateInterval")
     public void setdataUpdateInterval(int dataUpdateInterval) {

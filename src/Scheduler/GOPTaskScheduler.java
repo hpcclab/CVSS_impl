@@ -81,6 +81,7 @@ public class GOPTaskScheduler {
 
 
     public static long maxElapsedTime; //use for setting Deadline
+    public static long typeAmerged=0;
     public static ArrayList<VMinterface> VMinterfaces =new ArrayList<VMinterface>();
     private static int maxpending=0;
     public static int workpending=0;
@@ -143,13 +144,19 @@ public class GOPTaskScheduler {
     }
     public int linearsearch_trybetweenPositions(request key,HashMap<request,StreamGOP> thislvlmap,StreamGOP X,StreamGOP original,StreamGOP merged,int originalmiss) {
         ArrayList<StreamGOP> newVQ = new ArrayList<StreamGOP>(Batchqueue);
+        //put merged to latest position (at the moment)
         newVQ.remove(original);
         newVQ.add(merged);
         //get latest position for X not to miss their deadline
         int latestpos=virtualQueueCheckReplace(newVQ, merged,Math.abs(originalmiss),true);
+        System.out.println("latestpos="+latestpos);
+        //put merged to position that it'll not miss
         newVQ.remove(merged);
         newVQ.add(latestpos,merged);
-        if (virtualQueueCheckReplace( newVQ, merged,Math.abs(originalmiss),false) <= Math.abs(originalmiss)) {
+        long check=virtualQueueCheckReplace( newVQ, merged,Math.abs(originalmiss),false);
+        System.out.println(check +" vs "+originalmiss);
+        if ( Math.abs(check)<= Math.abs(originalmiss)) {
+            System.out.println("merged");
             Batchqueue.remove(original); //remove from old position
             original.getAllCMD(X);
             Batchqueue.add(latestpos,original); //re add at new specific position
@@ -204,6 +211,7 @@ public class GOPTaskScheduler {
         request aRequestlvl1 = new request(X,1); //= ... derive from X
         System.out.println(X.getPath() +" "+X.videoname);
         if (LV1map_pending.containsKey(aRequestlvl1)) {
+            typeAmerged++;
             System.out.println("match Type A (exactly the same request) -> dropping this request, no question!");
             //don't even need to check if it is not null or state is not dispatched
         }else {
@@ -229,9 +237,6 @@ public class GOPTaskScheduler {
                     // do merging
                     if (ServerConfig.sortedBatchQueue) {
                         System.out.println("merge on sorted batch queue");
-                        System.out.println("runtime merged:"+merged.estimatedExecutionTime+"("+merged.estimatedExecutionSD+")");
-                        System.out.println("runtime X:"+X.estimatedExecutionTime+"("+X.estimatedExecutionSD+")");
-                        System.out.println("runtime original:"+original.estimatedExecutionTime+"("+original.estimatedExecutionSD+")");
                         //batch queue sorted by deadline, no need to change anything
                         long checked=virtualQueueCheckReplace(original, merged, Math.abs(originalmiss));
                         System.out.println(checked+" vs "+originalmiss);
@@ -248,13 +253,22 @@ public class GOPTaskScheduler {
                         }
                     } else {
                         System.out.println("merge on unsorted batch queue");
-                        if (try2Positions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
-                            //try hard to merge
+                        boolean uselinearprobe=true; //hard switch here for now
+                        if(uselinearprobe) {
                             if (linearsearch_trybetweenPositions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
+                                System.out.println("don't merge");
                                 Batchqueue.add(X);
                                 LV2map_pending.replace(aRequestlvl2, X);
                             }
-                            // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
+                        }else { //logarithmic probe
+                            if (try2Positions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
+                                //try hard to merge
+                                if (linearsearch_trybetweenPositions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
+                                    Batchqueue.add(X);
+                                    LV2map_pending.replace(aRequestlvl2, X);
+                                }
+                                // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
+                            }
                         }
                     }
                 }
@@ -300,13 +314,24 @@ public class GOPTaskScheduler {
                             }
                         } else {
                             System.out.println("merge on unsorted batch queue");
-                            if (try2Positions(aRequestlvl3, LV3map_pending, X, original, merged, originalmiss) == -1) {
-                                //try hard to merge
-                                // if(trybetweenPositions(aRequestlvl3,LV3map_pending,X,original,merged,originalmiss)==-1) {
-                                Batchqueue.add(X);
-                                LV3map_pending.replace(aRequestlvl3, X);
-                                //  }
-                                // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
+                            boolean uselinearprobe=true; //hard switch here for now
+                            if(uselinearprobe) {
+                                if (linearsearch_trybetweenPositions(aRequestlvl3, LV3map_pending, X, original, merged, originalmiss) == -1) {
+                                    System.out.println("don't merge");
+                                    Batchqueue.add(X);
+                                    LV2map_pending.replace(aRequestlvl2, X);
+                                }
+
+                            }else {
+                                // logarithmic probe
+                                if (try2Positions(aRequestlvl3, LV3map_pending, X, original, merged, originalmiss) == -1) {
+                                    //try hard to merge
+                                    //if(trybetweenPositions(aRequestlvl3,LV3map_pending,X,original,merged,originalmiss)==-1) {
+                                    Batchqueue.add(X);
+                                    LV3map_pending.replace(aRequestlvl3, X);
+                                    //}
+                                    // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
+                                }
                             }
                         }
                     }
@@ -323,8 +348,7 @@ public class GOPTaskScheduler {
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
-            boolean mergecheck=false;
-            if(mergecheck){
+            if(ServerConfig.taskmerge){
                 mergeifpossible(X);
             }else{
                 //dont merge check
@@ -347,7 +371,7 @@ public class GOPTaskScheduler {
         }
     }
     //return 0 for no miss, x for x missed deadline, -x for x missed deadline which include the original GOP miss their deadline too
-    private int virtualQueueCheckReplace(ArrayList<StreamGOP> virtualQueue,StreamGOP focussed,int threshold,boolean find_Xpos){
+    private int virtualQueueCheckReplace(ArrayList<StreamGOP> virtualQueue,StreamGOP focussed,int rthreshold,boolean find_Xpos){
         // copy machine queue
         double[] VM_Q=new double[VMinterfaces.size()];
         for (int i = 0; i < VMinterfaces.size(); i++) {
@@ -360,6 +384,7 @@ public class GOPTaskScheduler {
         int missed=0;
         int originalmissed=1;
         int latestXpos=0;
+        int threshold=Math.abs(rthreshold);
         for(int i=0;i<virtualQueue.size();i++){
                 int choice=virtualShortestExeFirst(VM_Q,focussed,1);
                 retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice),virtualQueue.get(i));
@@ -379,15 +404,20 @@ public class GOPTaskScheduler {
                     VM_Q[choice]=exeT;
                 }
             if(find_Xpos){
+                //System.out.println("find Xpos");
                     retStat chk2=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice),focussed);
                     double exeT2=VM_Q[choice]+chk2.mean+chk2.SD*1;
                     if(VM_Q[choice]+exeT2 <focussed.deadLine) {
                         latestXpos=i;
+                    }else{
+                        System.out.println("return Xpos");
+                        return latestXpos;
                     }
             }
         }
-        //
+        //might return the latest position
         if(find_Xpos){ //finding latest position x can resides
+            System.out.println("return Xpos");
             return latestXpos;
         }
         return missed*originalmissed;
@@ -486,8 +516,16 @@ public class GOPTaskScheduler {
             while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
                 StreamGOP X;
                 if(ServerConfig.sortedBatchQueue) {
-                    //X=Batchqueue.pollHighestPrio(); //don't forget to remove them later
-                    X=Batchqueue.removeHighestPrio();
+                    if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Priority")) {
+                        X=Batchqueue.removeHighestPrio();
+                    }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
+                        X = Batchqueue.removeEDL();
+                    }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
+                        X=Batchqueue.removeMaxUrgency(); //Homogeneous Only
+                    }else{
+                        System.out.println("unrecognize batchqueue policy");
+                        X = Batchqueue.removeEDL();
+                    }
                 }else{
                     //X= Batchqueue.poll();
                     X= Batchqueue.remove();

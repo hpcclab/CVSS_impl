@@ -63,7 +63,7 @@ public class TranscodingThread extends Thread{
                         }
 
                     }else if(ServerConfig.addProfiledDelay) {
-                        System.out.println("est="+aStreamGOP.estimatedExecutionTime+" sd:"+aStreamGOP.estimatedExecutionSD);
+                        //System.out.println("est="+aStreamGOP.estimatedExecutionTime+" sd:"+aStreamGOP.estimatedExecutionSD);
                         delay=(long) (aStreamGOP.estimatedExecutionTime+aStreamGOP.estimatedExecutionSD*r.nextGaussian());
                     }
 
@@ -129,7 +129,7 @@ public class TranscodingThread extends Thread{
                         realspentTime+=elapsedTime;
                     }else{
                         elapsedTime=delay;
-                        System.out.println("delay="+delay);
+                        //System.out.println("delay="+delay);
                         synctime+=elapsedTime;
                         realspentTime+=elapsedTime;
                         boolean missed=false;

@@ -126,39 +126,70 @@ public class RequestGenerator {
         }
     }
     //
-    public static requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe){
+    public static requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe,int videos,long segmentcounts){
+
+        double TypeArate=0.04,TypeCrate=0.19;
         //set first few requests to start from Time 0
-        int maxchange=Math.min(original_rqe.length,5);
+        int maxchange=Math.min(original_rqe.length,3);
         for(int i=0;i<maxchange;i++){
             original_rqe[i].appearTime=0;
-            original_rqe[i].videoChoice=original_rqe[0].videoChoice;
         }
-        //set 5% of the request to match type A
-        int cloneindex=original_rqe.length/5;
-        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/20;i+=2){
-            original_rqe[i].command=original_rqe[i-1].command;
-            original_rqe[i].setting=original_rqe[i-1].setting;
-            original_rqe[i].videoChoice=original_rqe[i-1].videoChoice;
+        //set 5% of the request to match type A, this is before sort so it'll be shuffle later
+        int cloneindex=original_rqe.length/3;
+        double changed=videos/108.0;
+        System.out.println("changed="+changed);
+        if(changed<1+TypeArate) { //need to add more match to type A
+            System.out.println("type A match injection");
+            int altered = 0;
+            double togo;
+            if(changed>1) {
+                togo = TypeArate - changed + 1;
+            }else{
+                togo = TypeArate;
+            }
+            while (altered < togo * segmentcounts) {
+                original_rqe[cloneindex].command = original_rqe[cloneindex - 1].command;
+                original_rqe[cloneindex].setting = original_rqe[cloneindex - 1].setting;
+                original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - 1].videoChoice;
+                altered += VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+                cloneindex += 2;
+            }
+        }else{
+            System.out.println("Already have too many type A match");
         }
         /* //we don't have type B matching at the moment
         //set 10% of the request to match type B
-        cloneindex=original_rqe.length/3; //this is where problem arise, mismatch setting
+        cloneindex=original_rqe.length/2; //this is where problem arise, mismatch setting
         for(int i= cloneindex+1;i<cloneindex+original_rqe.length/10;i+=2){
             original_rqe[i].command=original_rqe[i-1].command;
             original_rqe[i].videoChoice=original_rqe[i-1].videoChoice;
         }
         */
         //set 20% of the request to match type C
-        cloneindex=original_rqe.length/2;
-        for(int i= cloneindex+1;i<cloneindex+original_rqe.length/5;i+=2){
-            original_rqe[i].videoChoice=original_rqe[i-1].videoChoice;
+        if(changed<1+TypeCrate) {
+            System.out.println("type C match injection");
+            int altered = 0;
+            double togo;
+            if(changed>1) {
+                togo = TypeCrate - changed + 1;
+            }else{
+                togo = TypeCrate;
+            }
+            while (altered < togo * segmentcounts) {
+                original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - 1].videoChoice;
+                altered += VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+                cloneindex += 2;
+            }
+        }else{
+            System.out.println("Already have too many type C match");
         }
-
         return original_rqe;
     }
 
     public static requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe) {
+
         return original_rqe;
+
     }
     //enforce least duplicate or match, unless neccessery, then modify to add matching
     public static void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
@@ -172,15 +203,16 @@ public class RequestGenerator {
         int randomDone=0;
         int fold=0; //each fold means there is at least one type C matchable, every 4 fold then a type A matched
         int positionMatchup[]=new int[totalVideos];
+        long totalSegmentcount=0;
         //randomly make it not match at all
         while(totalRequest-randomDone>0 ){
             int randomtodo=Math.min(totalVideos,totalRequest-randomDone); //random upto totalVideos
             //created index 0-totalVideos in order before shuffle
-            for(int p=0;p<randomtodo;p++){
+            for(int p=0;p<totalVideos;p++){
                 positionMatchup[p]=p;
             }
             //shuffle, swap s with random index
-            for(int s=0;s<randomtodo;s++){
+            for(int s=0;s<totalVideos;s++){
                 int tmp=positionMatchup[s];
                 int swappair=Math.abs(r.nextInt()%randomtodo);
                 positionMatchup[s]=positionMatchup[swappair];
@@ -195,6 +227,8 @@ public class RequestGenerator {
                 deadline+=appear;
                 //System.out.println("rqe[]="+(randomDone+q)+" positionMatup[]="+q);
                 rqe[randomDone+q]=new requestprofile(positionMatchup[q],acmd,"TBD",appear,deadline); //setting ToBeDetermined
+                totalSegmentcount+=VideoRepository.videos.get(positionMatchup[q]).getTotalSegments();
+
             }
 
             fold++;
@@ -202,18 +236,18 @@ public class RequestGenerator {
         }
 
         //modify
-        modifyrqeb4sort(rqe);
+        modifyrqeb4sort(rqe,totalRequest,totalSegmentcount);
         //sort
         Arrays.sort(rqe);
         //modify again?
         modifyrqeaftersort(rqe);
         // write to file
+        System.out.println("randomized "+ totalSegmentcount+" segments");
         for(i=0;i<totalRequest;i++){
             writer.println(rqe[i].videoChoice+" "+rqe[i].command+" "+rqe[i].setting+" "+rqe[i].appearTime+" "+rqe[i].deadline);
         }
         writer.close();
 
-        writer.close();
     }
 
 }

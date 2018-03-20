@@ -17,6 +17,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 */
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.List;
@@ -55,7 +56,11 @@ public class Test {
 
             int rqn=1,interval,n;
             if(ServerConfig.profiledRequests){
-                RequestGenerator.ReadProfileRequests(opt);
+                if(opt.equalsIgnoreCase("config")){
+                    RequestGenerator.ReadProfileRequests(ServerConfig.profileRequestsBenhmark);
+                }else {
+                    RequestGenerator.ReadProfileRequests(opt);
+                }
                 RequestGenerator.contProfileRequestsGen(GTS);
             }else {
                 while (rqn != 0) {
@@ -82,46 +87,30 @@ public class Test {
     }
     //sandbox testing something strange, not really doing the program code
     private static String testbug() {
-        /*
-        try {
+        Scanner scanner=new Scanner(System.in);
+        //read config file
 
-            //this thing work!
-            AmazonEC2 instance=AmazonEC2ClientBuilder.defaultClient(); //use system default credential also works
-            //AmazonEC2 instance=AmazonEC2ClientBuilder.standard().withCredentials().build();
-            StartInstancesRequest start=new StartInstancesRequest().withInstanceIds("i-0bce5f77aa6e0f3a2");
-            StopInstancesRequest stop=new StopInstancesRequest().withInstanceIds("i-0bce5f77aa6e0f3a2");
-            instance.startInstances(start);
-            //wait until online then get IP
-            sleep(5000);
-            while(true){
-                sleep(2000);
-                List<InstanceStatus> poll=instance.describeInstanceStatus().getInstanceStatuses();
-                //System.out.println("poll:"+poll);
-                if(poll.size()>0){
-                    System.out.println("poll:" +poll);
-                    break;
-                }
-            }
-            System.out.println(instance.describeNetworkInterfaces().getNetworkInterfaces().get(0).getAssociation().getPublicIp());
-            //instance.
-            //instance.stopInstances(stop);
-            //instance.shutdown();
-        } catch (Exception e) {
-            return "Failed: " + e;
-        }
-        */
+        File configfile=new File("config.xml");
+        JAXBContext ctx = null;
         try {
-            RequestGenerator.generateProfiledRandomRequests("test60v_60000_10000_3000",500,27,60,60000,10000,3000);
-        } catch (IOException e) {
+            ctx = JAXBContext.newInstance(ServerConfig.class);
+
+        Unmarshaller um = ctx.createUnmarshaller();
+        ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
+
+        //load video repo so we know their v numbers
+        VideoRepository VR=new VideoRepository();
+            VR.addAllKnownVideos();
+            RequestGenerator.generateProfiledRandomRequests("test130v_180000_10000_3000_s699",699,27,130,180000,10000,3000);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "done";
-
     }
     //for test
     public static void main(String[] args){
-        System.out.println(test("test60v_60000_10000_3000.txt"));
         //System.out.println(testbug());
+        System.out.println(test("config"));
     }
 
 }

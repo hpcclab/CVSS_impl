@@ -93,6 +93,10 @@ public class TimeEstimator {
         return new retStat(0,0); //set at arbitary value
     }
 
+    public static long getHistoricProcessTimeLong(String VMclass,StreamGOP segment,double SDr) {
+    retStat rS=getHistoricProcessTime(VMclass,segment);
+    return rS.mean+ (long)(rS.SD*SDr);
+    }
     //function called at the beginning of running to populate data
     public static void populate(String VMclass){
 

@@ -5,10 +5,15 @@
     <addFakeDelay>False</addFakeDelay>
 	<addProfiledDelay>True</addProfiledDelay>
 	<profiledRequests>True</profiledRequests>
-
+    <localqueuelengthperVM>4</localqueuelengthperVM>
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
     <lowscalingThreshold>0.1</lowscalingThreshold>
     <highscalingThreshold>0.5</highscalingThreshold>
+    
+    <taskmerge>False</taskmerge>
+    <sortedBatchQueue>False</sortedBatchQueue>
+    <batchqueuesortpolicy>Urgency</batchqueuesortpolicy> <!-- Deadline or Urgency -->
+    <profileRequestsBenhmark>test130v_180000_10000_3000_s699.txt</profileRequestsBenhmark>
 
     <enableTimeEstimator>true</enableTimeEstimator>
     <schedulerPolicy>minmin</schedulerPolicy>
