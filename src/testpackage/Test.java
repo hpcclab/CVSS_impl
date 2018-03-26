@@ -30,7 +30,7 @@ import static java.lang.Thread.sleep;
  */
 public class Test {
 
-    public static String test(String opt) {
+    public static String test(String confFile,String opt) {
         /*
         AWSCredentials credentials = new BasicAWSCredentials(
                 "AKIAJTLLH5SVF74IJ6NQ",
@@ -40,7 +40,7 @@ public class Test {
             Scanner scanner=new Scanner(System.in);
             //read config file
 
-            File configfile=new File("config.xml");
+            File configfile=new File("config/"+confFile);
             JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
             Unmarshaller um = ctx.createUnmarshaller();
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
@@ -59,6 +59,8 @@ public class Test {
                 if(opt.equalsIgnoreCase("config")){
                     RequestGenerator.ReadProfileRequests(ServerConfig.profileRequestsBenhmark);
                 }else {
+                    System.out.println("overwrite profileRequestBenhmark with "+opt);
+                    ServerConfig.profileRequestsBenhmark=opt;
                     RequestGenerator.ReadProfileRequests(opt);
                 }
                 RequestGenerator.contProfileRequestsGen(GTS);
@@ -86,11 +88,11 @@ public class Test {
 
     }
     //sandbox testing something strange, not really doing the program code
-    private static String testbug() {
+    private static String testbug(int seed) {
         Scanner scanner=new Scanner(System.in);
         //read config file
 
-        File configfile=new File("config.xml");
+        File configfile=new File("config/config.xml");
         JAXBContext ctx = null;
         try {
             ctx = JAXBContext.newInstance(ServerConfig.class);
@@ -101,7 +103,19 @@ public class Test {
         //load video repo so we know their v numbers
         VideoRepository VR=new VideoRepository();
             VR.addAllKnownVideos();
-            RequestGenerator.generateProfiledRandomRequests("test130v_180000_10000_3000_s699",699,27,130,180000,10000,3000);
+            //sweep create many requests
+            if(seed==0){
+                int[] sr={699,1911,16384,9999,555,687,9199,104857,212223,777};
+                for(int j=0;j<sr.length;j++) {
+                    for (int i = 90; i <= 130; i += 10) {
+                        RequestGenerator.generateProfiledRandomRequests("test" + i + "v_180000_10000_3000_s" + sr[j], sr[j], 108, i, 180000, 10000, 3000);
+                    }
+                }
+            }else {
+                for (int i = 90; i <= 130; i += 10) {
+                    RequestGenerator.generateProfiledRandomRequests("test" + i + "v_180000_10000_3000_s" + seed, seed, 108, i, 180000, 10000, 3000);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,8 +123,18 @@ public class Test {
     }
     //for test
     public static void main(String[] args){
-        //System.out.println(testbug());
-        System.out.println(test("config"));
+
+
+        if(args.length>0){
+            if(args[0].equalsIgnoreCase("makeconfig")){
+                System.out.println(testbug(Integer.parseInt(args[1])));
+            }else{ //run
+                System.out.println(test("config.xml",args[1]));
+            }
+        }else{
+            System.out.println(testbug(0));
+            //System.out.println(test("config.xml","config"));
+        }
     }
 
 }

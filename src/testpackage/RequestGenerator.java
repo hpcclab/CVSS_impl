@@ -109,7 +109,7 @@ public class RequestGenerator {
             System.out.println("read benchmarkProfileFail"+e);
         }
     }
-    static boolean finished=false;
+    public static boolean finished=false;
     static int currentIndex=0;
     //a once call to push out data that past their startTime
     public static void contProfileRequestsGen(GOPTaskScheduler GTS){
@@ -128,35 +128,80 @@ public class RequestGenerator {
     //
     public static requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe,int videos,long segmentcounts){
 
-        double TypeArate=0.04,TypeCrate=0.19;
-        //set first few requests to start from Time 0
-        int maxchange=Math.min(original_rqe.length,3);
+
+        //set first few requests to start from Time 0, start off with some load right away
+        int maxchange=Math.min(original_rqe.length,10);
         for(int i=0;i<maxchange;i++){
             original_rqe[i].appearTime=0;
         }
-        //set 5% of the request to match type A, this is before sort so it'll be shuffle later
-        int cloneindex=original_rqe.length/3;
-        double changed=videos/108.0;
-        System.out.println("changed="+changed);
-        if(changed<1+TypeArate) { //need to add more match to type A
-            System.out.println("type A match injection");
-            int altered = 0;
+
+        return original_rqe;
+    }
+    //modify the rqe after sorting by appearance time done, so
+    public static requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe,Random r,int videos,int requestcount,long segmentcounts) {
+
+
+        double TypeArate=0.04,TypeCrate=0.19;
+        int cmdspace=4;
+        int cloneindex=original_rqe.length/3; //so it doesn't start immediately
+        double requestspace=(videos*1.0)*cmdspace; //108 videos, 4 cmd so request space =424 ?
+        double duplicated=(requestcount*1.0)/requestspace; // 130 /424 = 0% typeA natural match
+        System.out.println("duplicated="+duplicated+" typeArate="+TypeArate);
+        System.out.println("cloneindex="+cloneindex);
+        //set 20% of the request to match type C
+        duplicated*=cmdspace; //type C don't care cmd, so bring it back
+        /*
+        if(duplicated<1+TypeCrate) {
+            System.out.println("type C match injection");
             double togo;
-            if(changed>1) {
-                togo = TypeArate - changed + 1;
+            if(duplicated>1) {
+                togo = TypeCrate - duplicated + 1;
             }else{
-                togo = TypeArate;
-            }
+            */
+        double togo = TypeCrate;
+        //}
+        int altered = 0;
+        while (altered < togo * segmentcounts) {
+            //copy previous 1 or previous 2
+            int pminus=Math.abs(r.nextInt(2))+1;
+            original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - pminus].videoChoice;
+            altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            cloneindex += 3;  //so not too often happened, rather than cloneindex+=2
+        }
+        System.out.println("cloneindex="+cloneindex);
+            /*
+        }else{
+            System.out.println("Already have too many type C match");
+        }
+        */
+
+
+        /*if(duplicated<1+TypeArate) { //need to add more match to type A
+            System.out.println("type A match injection");
+
+            double togo;
+            if(duplicated>1) {
+                togo = TypeArate - duplicated + 1;
+            }else{
+            */
+        togo = TypeArate;
+            //}
+            altered = 0;
             while (altered < togo * segmentcounts) {
-                original_rqe[cloneindex].command = original_rqe[cloneindex - 1].command;
-                original_rqe[cloneindex].setting = original_rqe[cloneindex - 1].setting;
-                original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - 1].videoChoice;
-                altered += VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
-                cloneindex += 2;
+                //copy previous 1 or previous 2 or previous 3
+                int pminus=Math.abs(r.nextInt(3))+1;
+                original_rqe[cloneindex].command = original_rqe[cloneindex - pminus].command;
+                original_rqe[cloneindex].setting = original_rqe[cloneindex - pminus].setting;
+                original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - pminus].videoChoice;
+                altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+                cloneindex += 3; //so not too often happened, rather than cloneindex+=2
             }
+        System.out.println("cloneindex="+cloneindex);
+            /*
         }else{
             System.out.println("Already have too many type A match");
         }
+        */
         /* //we don't have type B matching at the moment
         //set 10% of the request to match type B
         cloneindex=original_rqe.length/2; //this is where problem arise, mismatch setting
@@ -165,28 +210,6 @@ public class RequestGenerator {
             original_rqe[i].videoChoice=original_rqe[i-1].videoChoice;
         }
         */
-        //set 20% of the request to match type C
-        if(changed<1+TypeCrate) {
-            System.out.println("type C match injection");
-            int altered = 0;
-            double togo;
-            if(changed>1) {
-                togo = TypeCrate - changed + 1;
-            }else{
-                togo = TypeCrate;
-            }
-            while (altered < togo * segmentcounts) {
-                original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - 1].videoChoice;
-                altered += VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
-                cloneindex += 2;
-            }
-        }else{
-            System.out.println("Already have too many type C match");
-        }
-        return original_rqe;
-    }
-
-    public static requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe) {
 
         return original_rqe;
 
@@ -207,17 +230,9 @@ public class RequestGenerator {
         //randomly make it not match at all
         while(totalRequest-randomDone>0 ){
             int randomtodo=Math.min(totalVideos,totalRequest-randomDone); //random upto totalVideos
-            //created index 0-totalVideos in order before shuffle
-            for(int p=0;p<totalVideos;p++){
-                positionMatchup[p]=p;
-            }
-            //shuffle, swap s with random index
-            for(int s=0;s<totalVideos;s++){
-                int tmp=positionMatchup[s];
-                int swappair=Math.abs(r.nextInt()%randomtodo);
-                positionMatchup[s]=positionMatchup[swappair];
-                positionMatchup[swappair]=tmp;
-            }
+            //created index 0-totalVideos and shuffle them
+            positionMatchup=miscTools.utils.positionshuffle(r,totalVideos);
+
             //create the request
             for(int q=0;q<randomtodo;q++) {
                 // video choice is in the positionMatchup
@@ -236,11 +251,11 @@ public class RequestGenerator {
         }
 
         //modify
-        modifyrqeb4sort(rqe,totalRequest,totalSegmentcount);
+        modifyrqeb4sort(rqe,totalVideos,totalSegmentcount);
         //sort
         Arrays.sort(rqe);
         //modify again?
-        modifyrqeaftersort(rqe);
+        modifyrqeaftersort(rqe,r,totalVideos,totalRequest,totalSegmentcount);
         // write to file
         System.out.println("randomized "+ totalSegmentcount+" segments");
         for(i=0;i<totalRequest;i++){

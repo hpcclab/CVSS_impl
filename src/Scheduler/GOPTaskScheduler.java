@@ -238,7 +238,10 @@ public class GOPTaskScheduler {
                     if (ServerConfig.sortedBatchQueue) {
                         System.out.println("merge on sorted batch queue");
                         //batch queue sorted by deadline, no need to change anything
-                        long checked=virtualQueueCheckReplace(original, merged, Math.abs(originalmiss));
+                        long checked = 0;
+                        if (ServerConfig.smartmerge){ //if not smart merge, always merge
+                             checked = virtualQueueCheckReplace(original, merged, Math.abs(originalmiss));
+                        }
                         System.out.println(checked+" vs "+originalmiss);
                         if ( Math.abs(checked)<= Math.abs(originalmiss)) {
                             LV2map_pending.replace(aRequestlvl2, merged);
@@ -294,7 +297,10 @@ public class GOPTaskScheduler {
                         if (ServerConfig.sortedBatchQueue) {
                             System.out.println("merge on sorted batch queue");
                             //batch queue sorted by deadline, no need to change anything
-                            long checked=virtualQueueCheckReplace(original, merged, Math.abs(originalmiss));
+                            long checked = 0;
+                            if (ServerConfig.smartmerge){ //if not smart merge, always merge
+                                checked = virtualQueueCheckReplace(original, merged, Math.abs(originalmiss));
+                            }
                             System.out.println(checked+" vs "+originalmiss);
                             retStat chkmerged=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),merged);
                             System.out.println("runtime merged:"+chkmerged.mean+"("+ chkmerged.SD+")");

@@ -24,6 +24,7 @@ public class ServerConfig {
     public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
     public static boolean sortedBatchQueue=true;
+    public static boolean smartmerge=true;
     public static String batchqueuesortpolicy="Deadline";
     public static boolean taskmerge=false;
     public static boolean profiledRequests=false;
