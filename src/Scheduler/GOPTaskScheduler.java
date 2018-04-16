@@ -78,7 +78,7 @@ public class GOPTaskScheduler {
     private HashMap<request,StreamGOP> LV2map_pending=new HashMap<request,StreamGOP>();
     private HashMap<request,StreamGOP> LV3map_pending=new HashMap<request,StreamGOP>();
     //private HashMap<request,List<StreamGOP>> LV2map_pending=new HashMap<request,List<StreamGOP>>(); //level2's request record skip resolution so more matches
-
+    public static long probecounter=0;
 
     public static long maxElapsedTime; //use for setting Deadline
     public static long typeAmerged=0;
@@ -181,6 +181,7 @@ public class GOPTaskScheduler {
             newVQ.add(tryposition,merged);
             int test=virtualQueueCheckReplace( newVQ, merged,Integer.MAX_VALUE,false);
             if(test==0){
+                System.out.println("found a position");
                 return tryposition; //found perfect condition
             }
             if(test<-1){
@@ -193,7 +194,7 @@ public class GOPTaskScheduler {
             }
             newVQ.remove(tryposition); //it fail, so remove this
         }
-        return -1;
+        return 0;
     }
 
 
@@ -210,6 +211,8 @@ public class GOPTaskScheduler {
         //HOLD UP! check for duplication first
         request aRequestlvl1 = new request(X,1); //= ... derive from X
         System.out.println(X.getPath() +" "+X.videoname);
+        boolean uselinearprobe=true; //hard switch here for now
+
         if (LV1map_pending.containsKey(aRequestlvl1)) {
             typeAmerged++;
             System.out.println("match Type A (exactly the same request) -> dropping this request, no question!");
@@ -256,23 +259,29 @@ public class GOPTaskScheduler {
                         }
                     } else {
                         System.out.println("merge on unsorted batch queue");
-                        boolean uselinearprobe=true; //hard switch here for now
+
+                        if(ServerConfig.smartmerge) {
                         if(uselinearprobe) {
-                            if (linearsearch_trybetweenPositions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
-                                System.out.println("don't merge");
-                                Batchqueue.add(X);
-                                LV2map_pending.replace(aRequestlvl2, X);
-                            }
+                                if (linearsearch_trybetweenPositions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
+                                    System.out.println("don't merge");
+                                    Batchqueue.add(X);
+                                    LV2map_pending.replace(aRequestlvl2, X);
+                                }
+
                         }else { //logarithmic probe
                             if (try2Positions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
                                 //try hard to merge
-                                if (linearsearch_trybetweenPositions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
+                                if (Bsearch_trybetweenPositions(aRequestlvl2, LV2map_pending, X, original, merged, originalmiss) == -1) {
+                                    System.out.println("don't merge");
                                     Batchqueue.add(X);
                                     LV2map_pending.replace(aRequestlvl2, X);
                                 }
                                 // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
                             }
                         }
+                    }else{ //dumb merge
+                        original.getAllCMD(X); //add all cmd to old request
+                    }
                     }
                 }
             } else {
@@ -320,22 +329,22 @@ public class GOPTaskScheduler {
                             }
                         } else {
                             System.out.println("merge on unsorted batch queue");
-                            boolean uselinearprobe=true; //hard switch here for now
                             if(uselinearprobe) {
                                 if (linearsearch_trybetweenPositions(aRequestlvl3, LV3map_pending, X, original, merged, originalmiss) == -1) {
                                     System.out.println("don't merge");
                                     Batchqueue.add(X);
-                                    LV2map_pending.replace(aRequestlvl2, X);
+                                    LV3map_pending.replace(aRequestlvl3, X);
                                 }
 
                             }else {
                                 // logarithmic probe
                                 if (try2Positions(aRequestlvl3, LV3map_pending, X, original, merged, originalmiss) == -1) {
                                     //try hard to merge
-                                    //if(trybetweenPositions(aRequestlvl3,LV3map_pending,X,original,merged,originalmiss)==-1) {
+                                    if(Bsearch_trybetweenPositions(aRequestlvl3,LV3map_pending,X,original,merged,originalmiss)==-1) {
+                                    System.out.println("don't merge");
                                     Batchqueue.add(X);
                                     LV3map_pending.replace(aRequestlvl3, X);
-                                    //}
+                                    }
                                     // IMPORTANT, if we don't merge, redo LV2map_pending.put(aRequestlvl2,X); to say we are the candidate for merge not the one we fail to merge with
                                 }
                             }
@@ -392,6 +401,7 @@ public class GOPTaskScheduler {
         int latestXpos=0;
         int threshold=Math.abs(rthreshold);
         for(int i=0;i<virtualQueue.size();i++){
+                probecounter++;
                 int choice=virtualShortestExeFirst(VM_Q,focussed,1);
                 retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(choice),virtualQueue.get(i));
                 double exeT=VM_Q[choice]+chk.mean+chk.SD*1;

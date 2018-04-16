@@ -6,16 +6,6 @@ import Scheduler.ServerConfig;
 import TranscodingVM.*;
 import Repository.*;
 import Stream.*;
-/*import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
-import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
-import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
-import com.amazonaws.services.ec2.model.InstanceStatus;
-import com.amazonaws.services.ec2.model.StartInstancesRequest;
-import com.amazonaws.services.ec2.model.StopInstancesRequest;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-*/
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -31,11 +21,6 @@ import static java.lang.Thread.sleep;
 public class Test {
 
     public static String test(String confFile,String opt) {
-        /*
-        AWSCredentials credentials = new BasicAWSCredentials(
-                "AKIAJTLLH5SVF74IJ6NQ",
-                "ZJCx4bcqYb78EZc/1d1foHSSgJSIDMhV+uiQkFKG");
-        */
         try {
             Scanner scanner=new Scanner(System.in);
             //read config file
@@ -105,15 +90,16 @@ public class Test {
             VR.addAllKnownVideos();
             //sweep create many requests
             if(seed==0){
-                int[] sr={699,1911,16384,9999,555,687,9199,104857,212223,777};
+                //int[] sr={699,1911,16384,9999,555,687,9199,104857,212223,777}; // first 10
+                int[] sr={1920,1080,768,1990,4192,262144,800,12345,678,521,50,167,1,251,68,6,333,1048575,81,7};
                 for(int j=0;j<sr.length;j++) {
-                    for (int i = 90; i <= 130; i += 10) {
-                        RequestGenerator.generateProfiledRandomRequests("test" + i + "v_180000_10000_3000_s" + sr[j], sr[j], 108, i, 180000, 10000, 3000);
+                    for (int i = 2000; i <= 3400; i += 200) {
+                        RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 27,4, i, 180000, 10000, 3000);
                     }
                 }
             }else {
-                for (int i = 90; i <= 130; i += 10) {
-                    RequestGenerator.generateProfiledRandomRequests("test" + i + "v_180000_10000_3000_s" + seed, seed, 108, i, 180000, 10000, 3000);
+                for (int i = 2000; i <= 3400; i += 200) {
+                    RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + seed, seed, 27,4, i, 180000, 10000, 3000);
                 }
             }
         } catch (Exception e) {
@@ -125,11 +111,11 @@ public class Test {
     public static void main(String[] args){
 
 
-        if(args.length>0){
+        if(args.length>1){
             if(args[0].equalsIgnoreCase("makeconfig")){
                 System.out.println(testbug(Integer.parseInt(args[1])));
             }else{ //run
-                System.out.println(test("config.xml",args[1]));
+                System.out.println(test(args[2],args[1]));
             }
         }else{
             System.out.println(testbug(0));

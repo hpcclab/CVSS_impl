@@ -1,0 +1,20 @@
+Filetest120v_180000_10000_3000_s9199.txt
+Stat for Queuesort=false mergable=false
+Machine 0 time elapsed:254590 time actually spent:207171
+completed: 290(290) requests, missed 140(140)
+Machine 1 time elapsed:254590 time actually spent:220886
+completed: 357(357) requests, missed 192(192)
+Machine 2 time elapsed:254590 time actually spent:222238
+completed: 352(352) requests, missed 178(178)
+Machine 3 time elapsed:254590 time actually spent:221616
+completed: 347(347) requests, missed 175(175)
+Machine 4 time elapsed:254590 time actually spent:217483
+completed: 345(345) requests, missed 176(176)
+Machine 5 time elapsed:254590 time actually spent:227789
+completed: 363(363) requests, missed 184(184)
+Machine 6 time elapsed:254590 time actually spent:225461
+completed: 353(353) requests, missed 189(189)
+Machine 7 time elapsed:254590 time actually spent:226670
+completed: 320(320) requests, missed 158(158)
+total completed: 2727(2727) missed 1392(1392) type A merged:0
+avgspentTime 221164

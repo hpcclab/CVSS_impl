@@ -1,0 +1,20 @@
+Filetest3000r_180000_10000_3000_s1048575.txt
+Stat for Queuesort=true policy=Urgency mergable=true
+Machine 0 time elapsed:322084 time actually spent:221777
+completed: 335(320) requests, missed 93(93)
+Machine 1 time elapsed:322084 time actually spent:248548
+completed: 326(300) requests, missed 92(92)
+Machine 2 time elapsed:322084 time actually spent:234755
+completed: 349(331) requests, missed 91(91)
+Machine 3 time elapsed:322084 time actually spent:239674
+completed: 364(334) requests, missed 92(92)
+Machine 4 time elapsed:322084 time actually spent:230833
+completed: 354(331) requests, missed 96(96)
+Machine 5 time elapsed:322084 time actually spent:245612
+completed: 355(327) requests, missed 98(98)
+Machine 6 time elapsed:322084 time actually spent:247534
+completed: 346(328) requests, missed 104(104)
+Machine 7 time elapsed:322084 time actually spent:259068
+completed: 330(313) requests, missed 100(100)
+total completed: 2584(2759) missed 766(766) type A merged:114
+avgspentTime 240975

@@ -71,8 +71,7 @@ public class VMProvisioner {
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
             System.out.println("Before EC2 client, disabled for now");
-            /* //EC2
-            AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
+            /* //EC2, cred removed
             EC2instance= new AmazonEC2Client(credentials);
             Region region = Region.getRegion(Regions.US_EAST_2);
             EC2instance.setRegion(region);
@@ -107,11 +106,7 @@ public class VMProvisioner {
             */
         }
         if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
-            /* //EC2
-            AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
-
-            com.amazonaws.regions.Region region = Region.getRegion(Regions.US_EAST_2);
-            String bucket_name = "cvss-video-bucket";
+            /* //cred removed
             s3 = new AmazonS3Client(credentials);
             s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
             s3BucketName = bucket_name;
@@ -167,7 +162,7 @@ public class VMProvisioner {
                 System.out.println("force time move");
                 GOPTaskScheduler.maxElapsedTime += 200;
                 timeforced++;
-                if (timeforced == 1) {
+                if (timeforced == 20) {
                     printstat();
                 }
             }
@@ -219,6 +214,7 @@ public class VMProvisioner {
                 F1.close();
                 F2.close();
                 System.out.println("Benchmark finished");
+                System.out.println("Probe count="+GOPTaskScheduler.probecounter);
                 sleep(200);
                 System.exit(0);
             }catch(Exception e){

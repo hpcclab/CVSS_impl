@@ -1,0 +1,20 @@
+Filetest2800r_180000_10000_3000_s9199.txt
+Stat for Queuesort=true policy=Deadline mergable=false
+Machine 0 time elapsed:309780 time actually spent:190994
+completed: 281(281) requests, missed 35(35)
+Machine 1 time elapsed:309780 time actually spent:207937
+completed: 316(316) requests, missed 31(31)
+Machine 2 time elapsed:309780 time actually spent:218396
+completed: 356(356) requests, missed 37(37)
+Machine 3 time elapsed:309780 time actually spent:240055
+completed: 331(331) requests, missed 23(23)
+Machine 4 time elapsed:309780 time actually spent:222078
+completed: 322(322) requests, missed 37(37)
+Machine 5 time elapsed:309780 time actually spent:225827
+completed: 341(341) requests, missed 36(36)
+Machine 6 time elapsed:309780 time actually spent:237706
+completed: 330(330) requests, missed 21(21)
+Machine 7 time elapsed:309780 time actually spent:234170
+completed: 334(334) requests, missed 29(29)
+total completed: 2611(2611) missed 249(249) type A merged:0
+avgspentTime 222145

@@ -141,9 +141,9 @@ public class RequestGenerator {
     public static requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe,Random r,int videos,int requestcount,long segmentcounts) {
 
 
-        double TypeArate=0.04,TypeCrate=0.19;
+        double TypeArate=0.05,TypeCrate=0.2;
         int cmdspace=4;
-        int cloneindex=original_rqe.length/3; //so it doesn't start immediately
+        int cloneindex=original_rqe.length/4; //so it doesn't start immediately
         double requestspace=(videos*1.0)*cmdspace; //108 videos, 4 cmd so request space =424 ?
         double duplicated=(requestcount*1.0)/requestspace; // 130 /424 = 0% typeA natural match
         System.out.println("duplicated="+duplicated+" typeArate="+TypeArate);
@@ -162,8 +162,8 @@ public class RequestGenerator {
         //}
         int altered = 0;
         while (altered < togo * segmentcounts) {
-            //copy previous 1 or previous 2
-            int pminus=Math.abs(r.nextInt(2))+1;
+            //copy previous few, can duplicate
+            int pminus=Math.abs(r.nextInt(3))+1;
             original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - pminus].videoChoice;
             altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
             cloneindex += 3;  //so not too often happened, rather than cloneindex+=2
@@ -188,8 +188,8 @@ public class RequestGenerator {
             //}
             altered = 0;
             while (altered < togo * segmentcounts) {
-                //copy previous 1 or previous 2 or previous 3
-                int pminus=Math.abs(r.nextInt(3))+1;
+                //copy previous few
+                int pminus=Math.abs(r.nextInt(4))+1;
                 original_rqe[cloneindex].command = original_rqe[cloneindex - pminus].command;
                 original_rqe[cloneindex].setting = original_rqe[cloneindex - pminus].setting;
                 original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - pminus].videoChoice;
@@ -215,50 +215,52 @@ public class RequestGenerator {
 
     }
     //enforce least duplicate or match, unless neccessery, then modify to add matching
-    public static void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
+    public static void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int videofolds,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
         //random into array, modify, sort array, write to file
         Random r =new Random(seed);
         int i=0;
         FileWriter F = new FileWriter("BenchmarkInput/"+filename+".txt");
         PrintWriter writer = new PrintWriter(F);
-        requestprofile rqe[]=new requestprofile[totalRequest];
+
+        ArrayList<requestprofile> rqes=new ArrayList<>();
         String commandList[]={"Framerate","Resolution","Bitrate","Codec"};
-        int randomDone=0;
         int fold=0; //each fold means there is at least one type C matchable, every 4 fold then a type A matched
         int positionMatchup[]=new int[totalVideos];
         long totalSegmentcount=0;
         //randomly make it not match at all
-        while(totalRequest-randomDone>0 ){
-            int randomtodo=Math.min(totalVideos,totalRequest-randomDone); //random upto totalVideos
+        while(totalSegmentcount-totalRequest<0 ){
             //created index 0-totalVideos and shuffle them
             positionMatchup=miscTools.utils.positionshuffle(r,totalVideos);
 
             //create the request
-            for(int q=0;q<randomtodo;q++) {
+            for(int q=0;q<totalVideos;q++) {
                 // video choice is in the positionMatchup
                 String acmd=commandList[(positionMatchup[q]+fold)%4];// ensure least command overlap as possible
                 long appear=Math.abs(r.nextLong()%timeSpan);
                 long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
                 deadline+=appear;
                 //System.out.println("rqe[]="+(randomDone+q)+" positionMatup[]="+q);
-                rqe[randomDone+q]=new requestprofile(positionMatchup[q],acmd,"TBD",appear,deadline); //setting ToBeDetermined
-                totalSegmentcount+=VideoRepository.videos.get(positionMatchup[q]).getTotalSegments();
+                rqes.add(new requestprofile(totalVideos*fold+positionMatchup[q],acmd,"TBD",appear,deadline)); //setting ToBeDetermined
+                totalSegmentcount+=VideoRepository.videos.get(totalVideos*fold+positionMatchup[q]).getTotalSegments();
 
+                if(totalSegmentcount-totalRequest>=0){
+                    break;
+                }
             }
-
             fold++;
-            randomDone+=randomtodo;
+            fold%=videofolds;
         }
-
+        int randomDone=rqes.size();
+        requestprofile rqe[]=(requestprofile[])rqes.toArray(new requestprofile[rqes.size()]);
         //modify
-        modifyrqeb4sort(rqe,totalVideos,totalSegmentcount);
+        modifyrqeb4sort(rqe,randomDone,totalSegmentcount);
         //sort
         Arrays.sort(rqe);
         //modify again?
-        modifyrqeaftersort(rqe,r,totalVideos,totalRequest,totalSegmentcount);
+        modifyrqeaftersort(rqe,r,randomDone,totalRequest,totalSegmentcount);
         // write to file
         System.out.println("randomized "+ totalSegmentcount+" segments");
-        for(i=0;i<totalRequest;i++){
+        for(i=0;i<randomDone;i++){
             writer.println(rqe[i].videoChoice+" "+rqe[i].command+" "+rqe[i].setting+" "+rqe[i].appearTime+" "+rqe[i].deadline);
         }
         writer.close();

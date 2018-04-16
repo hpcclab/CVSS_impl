@@ -10,6 +10,9 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
 
 public class TranscodingVMcloud extends TranscodingVM{
+    //cred removed
+
+
     /* //EC2
 //just in case anything different to TranscodingVM (thread)
     public TranscodingVMcloud(String type,String addr,int port){
@@ -18,7 +21,6 @@ public class TranscodingVMcloud extends TranscodingVM{
 
       //  TT.useS3=true;
       //  //connect to S3
-      //  AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
 
       //  Region region = Region.getRegion(Regions.US_EAST_2);
       //  String bucket_name = "cvss-video-bucket";
@@ -29,7 +31,6 @@ public class TranscodingVMcloud extends TranscodingVM{
      //   TT.bucketName=bucket_name;
 
 
-        AWSCredentials credentials = new BasicAWSCredentials("AKIAIWLF5HX335BP23RQ", "JP0AWhKmzMvV15Lq69/Az3jJZxUF2FxKvybDyFem");
 
         Region region = Region.getRegion(Regions.US_EAST_2);
         String bucket_name = "cvss-video-bucket";
