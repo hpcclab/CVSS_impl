@@ -114,7 +114,7 @@ public class RequestGenerator {
     //a once call to push out data that past their startTime
     public static void contProfileRequestsGen(GOPTaskScheduler GTS){
         if(currentIndex<rqe_arr.size()) {
-            while (rqe_arr.get(currentIndex).appearTime < GOPTaskScheduler.maxElapsedTime) {
+            while (rqe_arr.get(currentIndex).appearTime <= GOPTaskScheduler.maxElapsedTime) {
                 requestprofile arqe = rqe_arr.get(currentIndex);
                 currentIndex++;
                 OneSpecificRequest(GTS, arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline);
@@ -124,6 +124,12 @@ public class RequestGenerator {
                 }
             }
         }
+    }
+    public static long nextappearTime(){
+        if(currentIndex<rqe_arr.size()) {
+            return rqe_arr.get(currentIndex).appearTime;
+        }
+        return -1;
     }
     //
     public static requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe,int videos,long segmentcounts){

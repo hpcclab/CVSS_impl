@@ -19,4 +19,15 @@ public class utils {
         }
         return positionmatchup;
     }
+
+    public static void printAll(Object ... aList){
+        boolean first=true;
+        for(Object each: aList){
+
+            System.out.print(first ? " " : "");
+            first = false;
+            System.out.print(each.toString());
+        }
+        System.out.print("\n");
+    }
 }

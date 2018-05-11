@@ -90,9 +90,14 @@ public class GOPTaskScheduler {
             //add server list to ShortestQueueFirst list too
         }
     }
-
-    public static boolean add_VM(String VM_class,String addr,int port,int id){
-        VMinterface t=new VMinterface(VM_class,addr,port,id);
+    //connect only
+    public static boolean add_VM(String VM_type,String VM_class,String addr,int port,int id){
+        VMinterface t;
+        if(!VM_type.equalsIgnoreCase("sim")) { //not a simulation, create socket
+            t = new VMinterface_SocketIO(VM_class, addr, port, id);
+        }else{
+            t = new VMinterface_SimLocal(VM_class,id);
+        }
         maxpending+= ServerConfig.localqueuelengthperVM; //4?
         VMinterfaces.add(t);
         return true; //for success
@@ -467,6 +472,8 @@ public class GOPTaskScheduler {
             }else{
                 min = answer.estimatedQueueLength;
             }
+            System.out.println("first est time="+min);
+            //System.out.println("VMINTERFACE SIZE="+VMinterfaces.size());
             for (int i = 1; i < VMinterfaces.size(); i++) {
                 VMinterface aMachine = VMinterfaces.get(i);
                 if (aMachine.isWorking()) {
@@ -484,6 +491,7 @@ public class GOPTaskScheduler {
                         estimatedT = aMachine.estimatedQueueLength;
                     }
                     //decide
+                    System.out.println("estimateT="+estimatedT);
                     if (estimatedT < min) {
                         if (useTimeEstimator){ //update estimatedExecutionTime
                             x.estimatedExecutionTime = savedmean;
@@ -491,16 +499,10 @@ public class GOPTaskScheduler {
                         answer = aMachine;
                         min = estimatedT;
                     }
+                }else{
+                    System.out.println("warning, a machine is not ready");
                 }
             }
-            /*
-            // set up (pseudo) deadline ?
-            if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
-                x.setDeadline(min);
-            }else {
-                x.setDeadline(System.currentTimeMillis() + min + addedConstForDeadLine);
-            }
-            */
             return answer;
         }
         System.out.println("BUG: try to schedule to 0 VM");
@@ -527,7 +529,9 @@ public class GOPTaskScheduler {
     public void submitworks(){ //will be a thread
         //read through list and assign to TranscodingVM
         //now we only assign task in round robin
+        System.out.println("call submit work");
         if(working!=1) {
+            System.out.println("working"+workpending+" "+maxpending);
             working = 1;
             while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
                 StreamGOP X;
@@ -560,12 +564,13 @@ public class GOPTaskScheduler {
                     }
                     //re-assign works
                     chosenVM = assignworks(X);
+                    System.out.println("ChosenVM="+chosenVM);
                 }
                 //it's dry mode, we need
 
                 if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
                     retStat thestat=TimeEstimator.getHistoricProcessTime(chosenVM.VM_class,X);
-                    System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
+                    //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
                     X.estimatedExecutionTime=thestat.mean;
                     X.estimatedExecutionSD=thestat.SD;
                 }
@@ -585,6 +590,7 @@ public class GOPTaskScheduler {
                 //System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
                 if (workpending == maxpending) {
                     System.out.println("workpending==maxpending");
+                    VMProvisioner.collectData(false);
                 }
             }
             working=0;

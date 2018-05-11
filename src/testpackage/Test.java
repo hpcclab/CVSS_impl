@@ -118,8 +118,8 @@ public class Test {
                 System.out.println(test(args[2],args[1]));
             }
         }else{
-            System.out.println(testbug(0));
-            //System.out.println(test("config.xml","config"));
+            //System.out.println(testbug(0));
+            System.out.println(test("config.xml","test2000r_180000_10000_3000_s1920.txt"));
         }
     }
 

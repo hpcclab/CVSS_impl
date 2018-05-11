@@ -99,7 +99,7 @@ public class TimeEstimator {
     }
     //function called at the beginning of running to populate data
     public static void populate(String VMclass){
-
+        //System.out.println("populate table"+VMclass);
         File F=new File("profile/"+VMclass+".txt");
         Scanner scanner= null;
         try {

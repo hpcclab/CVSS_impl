@@ -24,7 +24,6 @@ public class TranscodingThread extends Thread{
     long realspentTime=0; //realspentTime is spentTime without Syncing
     private Boolean useS3=false;
    //EC2 public AmazonS3 s3;
-    public String bucketName;
     public String VM_class;
     private Random r=new Random();
     /* //EC2
@@ -91,7 +90,7 @@ public class TranscodingThread extends Thread{
 
                     //if not dryMode
                     if(!ServerConfig.run_mode.equalsIgnoreCase("dry")) {
-                        /* //dry mode, did not fix the processing
+                        /* //not dry mode,
 
                         ProcessBuilder pb = new ProcessBuilder(command);
                         //pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
@@ -149,19 +148,7 @@ public class TranscodingThread extends Thread{
                     //get RunTime, reduce from nano to millisecond
                     workDone++;
                     NworkDone+=aStreamGOP.requestcount;
-                    //runtime_report.is
-                    /*
-                    Tuple<Long, Integer> pulled = runtime_report.get(aStreamGOP.userSetting.settingIdentifier);
-                    if (pulled == null) {
-                        runtime_report.put(aStreamGOP.userSetting.settingIdentifier, new Tuple<Long, Integer>(elapsedTime, 1));
-                        //System.out.println("new Tuple "+runtime_report.get(0).x+" "+runtime_report.get(0).y);
-                    } else {
-                        long newAvg = (pulled.x * pulled.y + elapsedTime) / (pulled.y + 1);
-                        runtime_report.replace(aStreamGOP.userSetting.settingIdentifier, new Tuple<Long, Integer>(newAvg, pulled.y + 1));
-                        //System.out.println("change Tuple "+runtime_report.get(0).x+" "+runtime_report.get(0).y);
-                    }
-                    */
-                    //
+                    //runtime_report ?
                 }else{
                     System.out.println("A thread wait 1 minute without getting any works!");
                     System.out.println("total spentTime= "+realspentTime);

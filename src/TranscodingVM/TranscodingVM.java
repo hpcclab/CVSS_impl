@@ -123,10 +123,8 @@ public class TranscodingVM extends Thread{
                     if(!TT.runtime_report.isEmpty()) {
                         //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
                     }
-                    double deadLineMiss;
-                    if(TT.workDone==0){
-                        deadLineMiss=0;
-                    }else{
+                    double deadLineMiss=0;
+                    if(TT.workDone!=0){
                         deadLineMiss=(1.0*TT.deadlineMiss)/TT.workDone;
                     }
                     if(objectX.deadLine>TT.synctime){ //syncTime

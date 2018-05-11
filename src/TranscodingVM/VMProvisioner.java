@@ -131,12 +131,12 @@ public class VMProvisioner {
         GTS=X;
     }
     static int timeforced=0;
-    private static void collectData(boolean full){
+    public static void collectData(boolean full){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
         double sum=0;
         int count=0;
-        long T_maxElapsedTime=0;
+        long T_maxElapsedTime=GOPTaskScheduler.maxElapsedTime;
         for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
             double ret=GOPTaskScheduler.VMinterfaces.get(i).dataUpdate(full);
             if(ret!=-1){
@@ -145,6 +145,7 @@ public class VMProvisioner {
             }
             if(GOPTaskScheduler.VMinterfaces.get(i).elapsedTime>T_maxElapsedTime){
                 T_maxElapsedTime=GOPTaskScheduler.VMinterfaces.get(i).elapsedTime;
+                System.out.println("TelapsedTime update to "+T_maxElapsedTime);
             }
         }
         //now update deadline miss rate
@@ -156,14 +157,23 @@ public class VMProvisioner {
         //if time doesn't move,
         if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
             if (GOPTaskScheduler.maxElapsedTime != T_maxElapsedTime) {
+                System.out.println("GOPTaskScheduler.maxElapsedTime="+GOPTaskScheduler.maxElapsedTime);
+                System.out.println("reset timeforced count");
                 GOPTaskScheduler.maxElapsedTime = T_maxElapsedTime;
                 timeforced = 0;
-            } else { //force time to move, by 200
-                System.out.println("force time move");
-                GOPTaskScheduler.maxElapsedTime += 200;
+            } else {
+                long t=RequestGenerator.nextappearTime();
+                if(t!=-1){ //force time move, to next arrival time
+                    GOPTaskScheduler.maxElapsedTime=t;
+                    System.out.println("force time move to" + GOPTaskScheduler.maxElapsedTime);
+                } else{ //force time to move, by 200 at final burst
+                    System.out.println("force time move+200 " + timeforced);
+                    GOPTaskScheduler.maxElapsedTime += 200;
+                }
                 timeforced++;
-                if (timeforced == 20) {
+                if (timeforced >= 3) {
                     printstat();
+                    //timeforced=0;
                 }
             }
         }
@@ -199,6 +209,8 @@ public class VMProvisioner {
                     VMinterface vmi = GOPTaskScheduler.VMinterfaces.get(i);
                     Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
                     Fullwriter.println("completed: " + vmi.Nworkdone + "(" + vmi.workdone + ") requests, missed " + vmi.deadlinemiss + "(" + vmi.Ndeadlinemiss + ")");
+
+
                     avgActualSpentTime += vmi.actualSpentTime;
                     totalWorkDone += vmi.workdone;
                     ntotalWorkDone += vmi.Nworkdone;
@@ -249,9 +261,8 @@ public class VMProvisioner {
         }catch(Exception e){
             System.out.println("Semaphore Bug");
         }
-
+        //System.out.println("Tick, col data");
         tcount++;
-        collectData(false);
         if(tcount%ServerConfig.VMscalingIntervalTick==0){
             collectData(true);
             EvaluateClusterSize(20);
@@ -309,19 +320,13 @@ public class VMProvisioner {
             if(VMcount <ServerConfig.maxVM) {
 
 
-                if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) {
+                if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) { //local transcoding thread mode
                     System.out.println("local virtual server");
                     //System.out.println(ServerConfig.VM_class.get(VMcount));
                     //System.out.println(ServerConfig.VM_address.get(VMcount));
                     //System.out.println(ServerConfig.VM_ports.get(VMcount));
 
                     TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
-                    /* //EC2
-                    if(ServerConfig.file_mode.equalsIgnoreCase("S3")){
-                        TC.TT.addS3(s3,s3BucketName);
-                    }
-                    */
-
                     TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
                     TC.start();
                     try {
@@ -330,8 +335,13 @@ public class VMProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new vmi("thread","",TC));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
-                }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+                }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
+                    System.out.println("local simulated thread");
+                    VMCollection.add(new vmi("sim",""));
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+                    TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
+                }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
                     /* //EC2
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
