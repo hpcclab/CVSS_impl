@@ -1,20 +1,19 @@
 package miscTools;
 
 import Scheduler.GOPTaskScheduler;
-import Scheduler.TimeEstimator;
-import TranscodingVM.VMProvisioner;
+import TimeEstimatorpkg.TimeEstimator;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 //this List can be used as priority queue by take removeHighestPrio, instead of removeFirst.
 
-public class SortableList extends LinkedList<Stream.StreamGOP> {
-    public Stream.StreamGOP pollHighestPrio() {
-        Stream.StreamGOP highest = peekFirst();
-        ListIterator<Stream.StreamGOP> it = listIterator(1);
+public class SortableList extends LinkedList<Streampkg.StreamGOP> {
+    public Streampkg.StreamGOP pollHighestPrio() {
+        Streampkg.StreamGOP highest = peekFirst();
+        ListIterator<Streampkg.StreamGOP> it = listIterator(1);
         while (it.hasNext()) {
-            Stream.StreamGOP t = it.next();
+            Streampkg.StreamGOP t = it.next();
             if (t.compareTo(highest)>0) {
                 highest = t;
             }
@@ -22,23 +21,23 @@ public class SortableList extends LinkedList<Stream.StreamGOP> {
         return highest;
     }
 
-    public Stream.StreamGOP pollEDL(){
-        Stream.StreamGOP earliest = peekFirst();
-        ListIterator<Stream.StreamGOP> it = listIterator(1);
+    public Streampkg.StreamGOP pollEDL(){
+        Streampkg.StreamGOP earliest = peekFirst();
+        ListIterator<Streampkg.StreamGOP> it = listIterator(1);
         while (it.hasNext()) {
-            Stream.StreamGOP t = it.next();
+            Streampkg.StreamGOP t = it.next();
             if (t.deadLine<earliest.deadLine) {
                 earliest = t;
             }
         }
         return earliest;
     }
-    public Stream.StreamGOP pollMaxUrgency(){ //Homogeneous Only
-        Stream.StreamGOP earliest = peekFirst();
+    public Streampkg.StreamGOP pollMaxUrgency(){ //Homogeneous Only
+        Streampkg.StreamGOP earliest = peekFirst();
         long earliestvalue=earliest.deadLine-TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.VMinterfaces.get(0).VM_class, earliest,1);
-        ListIterator<Stream.StreamGOP> it = listIterator(1);
+        ListIterator<Streampkg.StreamGOP> it = listIterator(1);
         while (it.hasNext()) {
-            Stream.StreamGOP t = it.next();
+            Streampkg.StreamGOP t = it.next();
             long checkvalue=t.deadLine- TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.VMinterfaces.get(0).VM_class, t,1);
             if ( checkvalue<earliestvalue) {
                 earliest = t;
@@ -47,18 +46,18 @@ public class SortableList extends LinkedList<Stream.StreamGOP> {
         }
         return earliest;
     }
-    public Stream.StreamGOP removeHighestPrio() {
-        Stream.StreamGOP highest = pollHighestPrio();
+    public Streampkg.StreamGOP removeHighestPrio() {
+        Streampkg.StreamGOP highest = pollHighestPrio();
         removeFirstOccurrence(highest);
         return highest;
     }
-    public Stream.StreamGOP removeEDL(){
-        Stream.StreamGOP earliest = pollEDL();
+    public Streampkg.StreamGOP removeEDL(){
+        Streampkg.StreamGOP earliest = pollEDL();
         removeFirstOccurrence(earliest);
         return earliest;
      }
-    public Stream.StreamGOP removeMaxUrgency(){ //Homogeneous Only
-        Stream.StreamGOP earliest = pollMaxUrgency();
+    public Streampkg.StreamGOP removeMaxUrgency(){ //Homogeneous Only
+        Streampkg.StreamGOP earliest = pollMaxUrgency();
         removeFirstOccurrence(earliest);
         return earliest;
     }

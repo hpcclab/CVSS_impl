@@ -2,10 +2,8 @@ package TranscodingVM;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
-import Scheduler.TimeEstimator;
-import com.amazonaws.services.opsworkscm.model.Server;
-import sun.misc.VM;
-import testpackage.RequestGenerator;
+import TimeEstimatorpkg.TimeEstimator;
+import Simulator.RequestGenerator;
 /*
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -24,12 +22,9 @@ import com.amazonaws.services.s3.S3ClientOptions;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
@@ -217,7 +212,7 @@ public class VMProvisioner {
                     totaldeadlinemiss += vmi.deadlinemiss;
                     ntotaldeadlinemiss += vmi.Ndeadlinemiss;
                 }
-                Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.typeAmerged);
+                Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.typeAmerged);
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
                 numberwriter.println(totalWorkDone+" , "+ntotalWorkDone+" , "+totaldeadlinemiss+" , "+ntotaldeadlinemiss+" , "+avgActualSpentTime / ServerConfig.maxVM);
 
@@ -226,7 +221,7 @@ public class VMProvisioner {
                 F1.close();
                 F2.close();
                 System.out.println("Benchmark finished");
-                System.out.println("Probe count="+GOPTaskScheduler.probecounter);
+                System.out.println("Probe count="+GOPTaskScheduler.mrg.probecounter);
                 sleep(200);
                 System.exit(0);
             }catch(Exception e){
@@ -250,7 +245,7 @@ public class VMProvisioner {
                 totaldeadlinemiss += vmi.deadlinemiss;
                 ntotaldeadlinemiss += vmi.Ndeadlinemiss;
             }
-            System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.typeAmerged);
+            System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.typeAmerged);
             System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
         }
     }

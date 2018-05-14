@@ -1,7 +1,7 @@
 package TranscodingVM;
 
 import Scheduler.ServerConfig;
-import Stream.StreamGOP;
+import Streampkg.StreamGOP;
 //import com.amazonaws.services.s3.AmazonS3;
 import miscTools.Tuple;
 

@@ -2,7 +2,7 @@ package TranscodingVM;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
-import Stream.StreamGOP;
+import Streampkg.StreamGOP;
 
 import java.util.Random;
 

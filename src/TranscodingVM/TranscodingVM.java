@@ -1,6 +1,6 @@
 package TranscodingVM;
 
-import Stream.StreamGOP;
+import Streampkg.StreamGOP;
 import miscTools.Tuple;
 
 import java.io.*;

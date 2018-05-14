@@ -1,11 +1,7 @@
 package Servlets;
 
-import CloudTesting.s3Control;
-import Scheduler.AdmissionControl;
 import Scheduler.ServerConfig;
-import Stream.Settings;
-import Stream.Stream;
-import Stream.StreamGOP;
+import Streampkg.Settings;
 /*
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -22,9 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-
-import static Singletons.GTSSingleton.GTS;
-import static Singletons.VRSingleton.VR;
 
 /**
  * Created by pi on 10/28/17.
@@ -144,11 +137,11 @@ public class RequestController extends HttpServlet {
 
     public void InitializeStream(Settings userRequest){
         System.out.println("before stream");
-        // create Stream from Video, there are 3 constructor for Stream, two for making from only certain segment (not all)
+        // create Streampkg from Video, there are 3 constructor for Streampkg, two for making from only certain segment (not all)
 
         Settings newRequest = new Settings(userRequest.videoname, userRequest.resHeight, userRequest.resWidth);
 
-        //Stream ST=new Stream(VR.videos.get(GetVideoNumber(userRequest.videoname)),newRequest); //admission control can work in constructor, or later?
+        //Streampkg ST=new Streampkg(VR.videos.get(GetVideoNumber(userRequest.videoname)),newRequest); //admission control can work in constructor, or later?
 /*
         //Admission Control assign Priority of each segments
         AdmissionControl.AssignStreamPriority(ST);
