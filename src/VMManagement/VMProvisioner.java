@@ -1,9 +1,11 @@
-package TranscodingVM;
+package VMProvisionerpkg;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import TimeEstimatorpkg.TimeEstimator;
 import Simulator.RequestGenerator;
+import TranscodingVM.TranscodingVM;
+import TranscodingVM.VMinterface;
 /*
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -28,20 +30,6 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
-class vmi{
-    String type;
-    String identification;
-    TranscodingVM TVM;
-    public vmi(String type, String identification, TranscodingVM TVM) {
-        this.type = type;
-        this.identification = identification;
-        this.TVM = TVM;
-    }
-    public vmi(String type, String identification) {
-        this.type = type;
-        this.identification = identification;
-    }
-}
 
 public class VMProvisioner {
 

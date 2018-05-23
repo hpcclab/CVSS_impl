@@ -88,7 +88,7 @@ public class VMinterface_SocketIO extends VMinterface {
                     query.deadLine=GOPTaskScheduler.maxElapsedTime;
                 }
                 oos.writeObject(query); //they expect an object, thus we need to send object
-                report answer = (report) ois.readObject();
+                runtime_report answer = (runtime_report) ois.readObject();
                 //System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
                 //System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
                 GOPTaskScheduler.workpending-=(estimatedQueueLength-answer.queue_size);

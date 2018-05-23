@@ -74,7 +74,7 @@ public class VMinterface_SimLocal extends VMinterface {
                 System.out.println("got deadLineMissRate=" + deadLineMiss);
 
         }else{
-            //not full report, don't update deadlineMiss, then what?
+            //not full runtime_report, don't update deadlineMiss, then what?
         }
         //System.out.println("dataUpdate");
         GOPTaskScheduler.workpending-=(estimatedQueueLength);
