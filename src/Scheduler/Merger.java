@@ -3,7 +3,7 @@ package Scheduler;
 import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
-import TranscodingVM.VMinterface;
+import VMManagement.VMinterface;
 
 import java.util.ArrayList;
 import java.util.Collections;

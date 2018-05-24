@@ -3,7 +3,10 @@ package Scheduler;
 import Streampkg.*;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
-import TranscodingVM.*;
+import VMManagement.VMProvisioner;
+import VMManagement.VMinterface;
+import VMManagement.VMinterface_SimLocal;
+import VMManagement.VMinterface_SocketIO;
 
 
 import java.util.*;
@@ -49,13 +52,6 @@ public class GOPTaskScheduler {
     }
 
 
-
-    //return -1, can't merge
-    //1, tail
-    //2, head
-    //3, between
-
-
     //bloated version of addStream, check duplication and similarity first
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
@@ -70,8 +66,6 @@ public class GOPTaskScheduler {
             //assignwork thread start
             submitworks();
     }
-
-
 
 
     private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator,double SDcoefficient){

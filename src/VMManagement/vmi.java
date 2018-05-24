@@ -1,4 +1,4 @@
-package VMProvisionerpkg;
+package VMManagement;
 
 import TranscodingVM.TranscodingVM;
 

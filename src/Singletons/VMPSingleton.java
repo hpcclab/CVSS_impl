@@ -1,6 +1,6 @@
 package Singletons;
 
-import TranscodingVM.VMProvisioner;
+import VMManagement.VMProvisioner;
 
 /**
  * Created by pi on 11/1/17.

@@ -1,4 +1,4 @@
-package TranscodingVM;
+package VMManagement;
 
 import Streampkg.StreamGOP;
 

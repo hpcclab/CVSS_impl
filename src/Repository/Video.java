@@ -2,7 +2,6 @@ package Repository;
 
 import Repository.RepositoryGOP;
 import Scheduler.ServerConfig;
-import com.amazonaws.services.opsworkscm.model.Server;
 
 import java.io.File;
 import java.io.FileNotFoundException;

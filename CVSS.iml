@@ -21,7 +21,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Jersey-2.2" level="project" />
     <orderEntry type="library" name="servlet-api" level="project" />
-    <orderEntry type="library" name="com.amazonaws:aws-java-sdk:1.11.236" level="project" />
     <orderEntry type="library" name="org.apache.commons:commons-lang3:3.7" level="project" />
   </component>
 </module>

@@ -4,7 +4,6 @@ import Scheduler.ServerConfig;
 import Singletons.GTSSingleton;
 import Singletons.VMPSingleton;
 import Singletons.VRSingleton;
-import TranscodingVM.VMProvisioner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;

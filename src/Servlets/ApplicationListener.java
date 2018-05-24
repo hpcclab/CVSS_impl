@@ -3,15 +3,11 @@ package Servlets;
 import Controller.GlobalController;
 import Repository.VideoRepository;
 import Scheduler.GOPTaskScheduler;
-import Scheduler.ServerConfig;
-import TranscodingVM.VMProvisioner;
+import VMManagement.VMProvisioner;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
 
 /**
  * Created by pi on 11/1/17.

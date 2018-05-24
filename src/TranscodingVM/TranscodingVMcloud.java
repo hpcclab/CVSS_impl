@@ -1,13 +1,13 @@
 package TranscodingVM;
 
 import Scheduler.ServerConfig;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.S3ClientOptions;
+//import com.amazonaws.auth.AWSCredentials;
+//import com.amazonaws.auth.BasicAWSCredentials;
+//import com.amazonaws.regions.Region;
+//import com.amazonaws.regions.Regions;
+//import com.amazonaws.services.s3.AmazonS3;
+//import com.amazonaws.services.s3.AmazonS3Client;
+//import com.amazonaws.services.s3.S3ClientOptions;
 
 public class TranscodingVMcloud extends TranscodingVM{
     //cred removed

@@ -103,10 +103,10 @@ public class RequestGenerator {
         }
         return -1;
     }
-    //
+    ///////////////// before are creation of the profile /////////////////
+
+
     public static requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe,int videos,long segmentcounts){
-
-
         //set first few requests to start from Time 0, start off with some load right away
         int maxchange=Math.min(original_rqe.length,10);
         for(int i=0;i<maxchange;i++){
@@ -117,7 +117,6 @@ public class RequestGenerator {
     }
     //modify the rqe after sorting by appearance time done, so
     public static requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe,Random r,int videos,int requestcount,long segmentcounts) {
-
 
         double TypeArate=0.05,TypeCrate=0.2;
         int cmdspace=4;

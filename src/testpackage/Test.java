@@ -3,8 +3,8 @@ package testpackage;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import Simulator.RequestGenerator;
-import TranscodingVM.*;
 import Repository.*;
+import VMManagement.VMProvisioner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;

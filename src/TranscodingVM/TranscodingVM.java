@@ -16,27 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 //TODO: best logical upgrade is to use FST instead of just serialization https://github.com/RuedigerMoeller/fast-serialization
 //TODO: evaluate and implement jobqueue? activeMQ? rabbitMQ? Apache Qpid? threadpools?
 
-class report implements Serializable{
-    int queue_size;
-    long queue_executionTime,VMelapsedTime,VMspentTime;
-    long Nworkdone,workdone,Nmissed,missed;
-    double deadLineMissRate;
-    HashMap<String, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
-
-    public report(int queue_size,long time,long timeElapsed,long timeSpent,long ncmp,long cmp,long miss,long nmiss,double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
-        this.runtime_report.putAll(runtime_report);
-        this.queue_executionTime=time;
-        this.VMelapsedTime=timeElapsed;
-        this.VMspentTime=timeSpent;
-        this.workdone=cmp;
-        this.Nworkdone=ncmp;
-        this.missed=miss;
-        this.Nmissed=nmiss;
-        this.deadLineMissRate=deadLineMissRate;
-        this.queue_size=queue_size;
-    }
-}
 
 public class TranscodingVM extends Thread{
 
@@ -117,7 +97,7 @@ public class TranscodingVM extends Thread{
                     if(objectX.deadLine>TT.synctime){ //syncTime
                         TT.synctime=objectX.deadLine;
                     }
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
+                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
 
                 }else if (objectX.cmdSet.containsKey("fullstat")){
                     if(!TT.runtime_report.isEmpty()) {
@@ -131,7 +111,7 @@ public class TranscodingVM extends Thread{
                         TT.synctime=objectX.deadLine;
                     }
                     //System.out.println("real spent Time="+TT.realspentTime); //good
-                    oos.writeObject(new report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
+                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
                     //don't remove old stat, maybe reset stat later if keep full stat too!
                     //TT.deadlineMiss=0;
                     //TT.workDone=0;
@@ -162,7 +142,7 @@ public class TranscodingVM extends Thread{
             TT.start();
         }
     }
-    protected void close(){
+    public void close(){
         try {
             s.close();
         } catch (Exception e) {

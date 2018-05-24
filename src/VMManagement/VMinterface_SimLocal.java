@@ -1,4 +1,4 @@
-package TranscodingVM;
+package VMManagement;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;

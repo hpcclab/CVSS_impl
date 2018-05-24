@@ -18,7 +18,7 @@ public class TaskRequest{ //fill every thing for lvl1 mapping constructor, skip 
             theparam=original.cmdSet.get(thecmd).get(0);
             i++;
             if(i>1){
-                System.out.println("why do we have merged command here?");
+                System.out.println("ERROR: why do we have merged command here?");
             }
         }
         if(level==3) { //Type C
