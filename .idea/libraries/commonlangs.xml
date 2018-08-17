@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="commonlangs">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../CVSS Things/commonlangs" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
