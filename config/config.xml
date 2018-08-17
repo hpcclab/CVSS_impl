@@ -11,10 +11,11 @@
     <highscalingThreshold>0.5</highscalingThreshold>
     
     <taskmerge>True</taskmerge>
-    <sortedBatchQueue>False</sortedBatchQueue>
-    <batchqueuesortpolicy>Deadline</batchqueuesortpolicy> <!-- Deadline or Urgency -->
+    <batchqueuesortpolicy>Deadline</batchqueuesortpolicy> <!-- Priority or Deadline or Urgency or None -->
     <profileRequestsBenhmark>test2000r_180000_10000_3000_s699.txt</profileRequestsBenhmark>
-    <smartmerge>True</smartmerge>
+    <consideratemerge>True</consideratemerge>
+    <mergeOverwriteQueuePolicy>True</mergeOverwriteQueuePolicy>
+    <overwriteQueuePolicyHeuristic>linear</overwriteQueuePolicyHeuristic>
 
     <enableTimeEstimator>true</enableTimeEstimator>
     <schedulerPolicy>minmin</schedulerPolicy>
@@ -147,7 +148,7 @@
 -->
 <useEC2>False</useEC2>
     <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
-	
+	<VM>simNWcache,fixedBandwidth,localhost,1000</VM>  <!-- unit = Mbps-->
 	
     <VM>sim,g2.2xlarge,localhost,5060</VM>
     <VM>sim,g2.2xlarge,localhost,5061</VM>

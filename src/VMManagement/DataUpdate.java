@@ -20,7 +20,7 @@ public class DataUpdate {
             try {
                 String prefix=(ServerConfig.taskmerge)?"merge_":"unmerge";
                 prefix+= (ServerConfig.sortedBatchQueue)?"_Sort":"_Unsort";
-                prefix+= (ServerConfig.smartmerge)?"":"always_merge";
+                prefix+= (ServerConfig.consideratemerge)?"":"always_merge";
                 prefix+= (ServerConfig.sortedBatchQueue)? ServerConfig.batchqueuesortpolicy:"";
                 prefix+="_";
                 FileWriter F1 = new FileWriter("./resultstat/full/" + prefix+ServerConfig.profileRequestsBenhmark);

@@ -1,20 +1,20 @@
 Filetest2000r_180000_10000_3000_s1920.txt
 Stat for Queuesort=false mergable=true
-Machine 0 time elapsed:212643 time actually spent:181100
-completed: 258(241) requests, missed 17(17)
-Machine 1 time elapsed:212643 time actually spent:177430
-completed: 243(232) requests, missed 15(15)
-Machine 2 time elapsed:212643 time actually spent:182631
-completed: 247(233) requests, missed 17(17)
-Machine 3 time elapsed:212643 time actually spent:190415
-completed: 258(244) requests, missed 26(26)
-Machine 4 time elapsed:212643 time actually spent:194221
-completed: 250(235) requests, missed 26(26)
-Machine 5 time elapsed:212643 time actually spent:181621
-completed: 250(233) requests, missed 31(31)
-Machine 6 time elapsed:212643 time actually spent:185341
-completed: 245(226) requests, missed 19(19)
-Machine 7 time elapsed:212643 time actually spent:183586
-completed: 260(248) requests, missed 41(41)
-total completed: 1892(2011) missed 192(192) type A merged:89
-avgspentTime 184543
+Machine 0 time elapsed:212569 time actually spent:179093
+completed: 265(243) requests, missed 28(28)
+Machine 1 time elapsed:212569 time actually spent:183709
+completed: 249(233) requests, missed 21(21)
+Machine 2 time elapsed:212569 time actually spent:182704
+completed: 239(222) requests, missed 16(16)
+Machine 3 time elapsed:212569 time actually spent:188398
+completed: 254(234) requests, missed 25(25)
+Machine 4 time elapsed:212569 time actually spent:186143
+completed: 253(236) requests, missed 21(21)
+Machine 5 time elapsed:212569 time actually spent:179593
+completed: 250(229) requests, missed 26(26)
+Machine 6 time elapsed:212569 time actually spent:187110
+completed: 239(226) requests, missed 28(28)
+Machine 7 time elapsed:212569 time actually spent:183407
+completed: 256(245) requests, missed 38(38)
+total completed: 1868(2005) missed 203(203) type A merged:95
+avgspentTime 183769

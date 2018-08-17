@@ -58,9 +58,9 @@ public class Test {
                 }
             }
             // Check point, enter any key to continue
-            System.out.println("enter any key to terminate the system");
-            scanner.next();
-
+            //System.out.println("enter any key to terminate the system");
+            //scanner.next();
+            sleep(300);
             //wind down process
             GTS.close();
             VMP.closeAll();

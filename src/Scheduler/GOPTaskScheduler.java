@@ -3,10 +3,7 @@ package Scheduler;
 import Streampkg.*;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
-import VMManagement.VMProvisioner;
-import VMManagement.VMinterface;
-import VMManagement.VMinterface_SimLocal;
-import VMManagement.VMinterface_SocketIO;
+import VMManagement.*;
 
 
 import java.util.*;
@@ -36,10 +33,12 @@ public class GOPTaskScheduler {
     //connect only
     public static boolean add_VM(String VM_type,String VM_class,String addr,int port,int id){
         VMinterface t;
-        if(!VM_type.equalsIgnoreCase("sim")) { //not a simulation, create socket
-            t = new VMinterface_SocketIO(VM_class, addr, port, id);
-        }else{
+        if(VM_type.equalsIgnoreCase("sim")) {
             t = new VMinterface_SimLocal(VM_class,id);
+        }else if(VM_type.equalsIgnoreCase("simNWcache")){
+            t = new VMinterface_SimNWcache(VM_class,id);
+        }else{ //not a simulation, create socket
+            t = new VMinterface_SocketIO(VM_class, addr, port, id);
         }
         maxpending+= ServerConfig.localqueuelengthperVM; //4?
         VMinterfaces.add(t);
@@ -67,13 +66,13 @@ public class GOPTaskScheduler {
             submitworks();
     }
 
-
+    //work properly on homogeneous only
     private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator,double SDcoefficient){
         if(VMinterfaces.size()>0) {
             VMinterface answer=VMinterfaces.get(0);
             long min;
             if(useTimeEstimator){
-                retStat chk= TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),x);
+                retStat chk= TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),ServerConfig.VM_ports.get(0),x);
                 x.estimatedExecutionTime = (long)(chk.mean+chk.SD*SDcoefficient);
                 min=answer.estimatedExecutionTime+x.estimatedExecutionTime;
                 if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
@@ -92,7 +91,7 @@ public class GOPTaskScheduler {
                     long savedmean=0;
                     //calculate new choice
                     if (useTimeEstimator) {
-                        retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i),x);
+                        retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i),ServerConfig.VM_ports.get(i),x);
                         savedmean=(long)(chk.mean+chk.SD*SDcoefficient);
                         estimatedT = aMachine.estimatedExecutionTime + savedmean;
                         if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
@@ -146,20 +145,18 @@ public class GOPTaskScheduler {
             working = 1;
             while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
                 StreamGOP X;
-                if(ServerConfig.sortedBatchQueue) {
-                    if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Priority")) {
-                        X=Batchqueue.removeHighestPrio();
-                    }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
-                        X = Batchqueue.removeEDL();
-                    }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
-                        X=Batchqueue.removeMaxUrgency(); //Homogeneous Only
-                    }else{
-                        System.out.println("unrecognize batchqueue policy");
-                        X = Batchqueue.removeEDL();
-                    }
-                }else{
+                if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) { //not sorting batch queue
                     //X= Batchqueue.poll();
-                    X= Batchqueue.remove();
+                    X=Batchqueue.remove();
+                }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Priority")) {
+                    X=Batchqueue.removeHighestPrio();
+                }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
+                    X=Batchqueue.removeEDL();
+                }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
+                    X=Batchqueue.removeMaxUrgency(); //Homogeneous Only
+                }else{
+                    System.out.println("unrecognize batchqueue policy");
+                    X = Batchqueue.removeEDL();
                 }
                 pendingqueue.add(X);
                 //
@@ -180,7 +177,7 @@ public class GOPTaskScheduler {
                 //it's dry mode, we need
 
                 if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
-                    retStat thestat=TimeEstimator.getHistoricProcessTime(chosenVM.VM_class,X);
+                    retStat thestat=TimeEstimator.getHistoricProcessTime(chosenVM.VM_class,0,X);
                     //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
                     X.estimatedExecutionTime=thestat.mean;
                     X.estimatedExecutionSD=thestat.SD;
@@ -193,7 +190,9 @@ public class GOPTaskScheduler {
                 //then it's ready to send out
 
                 chosenVM.sendJob(X);
-                mrg.removeStreamGOPfromTable(X);
+                if(ServerConfig.taskmerge) {
+                    mrg.removeStreamGOPfromTable(X);
+                }
                 System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());
                 //System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
                 //System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);

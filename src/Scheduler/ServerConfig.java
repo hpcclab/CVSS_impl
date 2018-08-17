@@ -23,12 +23,13 @@ public class ServerConfig {
     public static ArrayList<String> videoList=new ArrayList<>();
     public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
-    public static boolean sortedBatchQueue=true;
-    public static boolean smartmerge=true; ////set to false for testing dumb merge
+    public static boolean consideratemerge =true; ////set to false for testing dumb merge
     public static String batchqueuesortpolicy="Deadline";
     public static boolean taskmerge=false;
     public static boolean profiledRequests=false;
     public static String profileRequestsBenhmark;
+    public static boolean mergeOverwriteQueuePolicy=true;
+    public static String overwriteQueuePolicyHeuristic;
 
     public static String run_mode="real";
     public static int localqueuelengthperVM=4;
@@ -54,7 +55,7 @@ public class ServerConfig {
     public static String mapping_mechanism;// can be either MM,MSD,MMU
     public static boolean useEC2;
     public static String file_mode="S3"; //can be S3 or
-
+    //public static boolean mergeOverwriteQueuePolicy=true;
 
     //check for each parameters if there is any Invalid
     public static boolean isSettingValid(){
@@ -116,20 +117,12 @@ public class ServerConfig {
             ServerConfig.addProfiledDelay = false;
         }
     }
-    @XmlElement(name = "sortedBatchQueue")
-    public void setsortedBatchQueue(String check) {
+    @XmlElement(name = "consideratemerge")
+    public void setconsideratemerge(String check) {
         if(check.equalsIgnoreCase("True")) {
-            ServerConfig.sortedBatchQueue = true;
+            ServerConfig.consideratemerge = true;
         }else{
-            ServerConfig.sortedBatchQueue = false;
-        }
-    }
-    @XmlElement(name = "smartmerge")
-    public void setsmartmerge(String check) {
-        if(check.equalsIgnoreCase("True")) {
-            ServerConfig.smartmerge = true;
-        }else{
-            ServerConfig.smartmerge = false;
+            ServerConfig.consideratemerge = false;
         }
     }
     @XmlElement(name = "batchqueuesortpolicy")
@@ -231,7 +224,18 @@ public class ServerConfig {
             ServerConfig.enableVMscalingoutofInterval = false;
         }
     }
-
+    @XmlElement(name = "mergeOverwriteQueuePolicy")
+    public void setmergeOverwriteQueuePolicy(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.mergeOverwriteQueuePolicy = true;
+        }else{
+            ServerConfig.mergeOverwriteQueuePolicy = false;
+        }
+    }
+    @XmlElement(name = "overwriteQueuePolicyHeuristic")
+    public void setoverwriteQueuePolicyHeuristic(String value) {
+            ServerConfig.overwriteQueuePolicyHeuristic = value;
+    }
     @XmlElement(name = "maxVM")
     public void setMaxVM(int maxVM) {
         ServerConfig.maxVM = maxVM;
