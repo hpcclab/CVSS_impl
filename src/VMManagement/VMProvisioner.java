@@ -245,16 +245,16 @@ public class VMProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new vmi("thread","",TC));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("local simulated thread");
                     VMCollection.add(new vmi("sim",""));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                     TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
-                }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("simNW")){ //simulation mode, without socket
+                }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new vmi("simNWcache",""));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount);
+                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                     TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");

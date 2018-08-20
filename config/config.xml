@@ -10,7 +10,7 @@
     <lowscalingThreshold>0.1</lowscalingThreshold>
     <highscalingThreshold>0.5</highscalingThreshold>
     
-    <taskmerge>True</taskmerge>
+    <taskmerge>F</taskmerge>
     <batchqueuesortpolicy>Deadline</batchqueuesortpolicy> <!-- Priority or Deadline or Urgency or None -->
     <profileRequestsBenhmark>test2000r_180000_10000_3000_s699.txt</profileRequestsBenhmark>
     <consideratemerge>True</consideratemerge>
@@ -148,24 +148,26 @@
 -->
 <useEC2>False</useEC2>
     <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
-	<VM>simNWcache,fixedBandwidth,localhost,1000</VM>  <!-- unit = Mbps-->
 	
-    <VM>sim,g2.2xlarge,localhost,5060</VM>
-    <VM>sim,g2.2xlarge,localhost,5061</VM>
-    <VM>sim,g2.2xlarge,localhost,5062</VM>
-    <VM>sim,g2.2xlarge,localhost,5063</VM>
-    <VM>sim,g2.2xlarge,localhost,5064</VM>
-    <VM>sim,g2.2xlarge,localhost,5065</VM>
-    <VM>sim,g2.2xlarge,localhost,5066</VM>
-    <VM>sim,g2.2xlarge,localhost,5067</VM>
-    <VM>sim,g2.2xlarge,localhost,5068</VM>
+    <VM>sim,g2.2xlarge,localhost,5060,true</VM>
+    <VM>sim,g2.2xlarge,localhost,5061,true</VM>
+    <VM>sim,g2.2xlarge,localhost,5062,true</VM>
+    <VM>sim,g2.2xlarge,localhost,5063,true</VM>
+    <VM>sim,g2.2xlarge,localhost,5064,true</VM>
+    <VM>sim,g2.2xlarge,localhost,5065,true</VM>
+
+	<VM>simNWcache,fixedBandwidth,localhost,100,false</VM>  <!-- unit = Mbps-->
+
+    <VM>sim,g2.2xlarge,localhost,5066,true</VM>
+    <VM>sim,g2.2xlarge,localhost,5067,true</VM>
+    <VM>sim,g2.2xlarge,localhost,5068,true</VM>
 	
 
-	<VM>EC2,t2.micro,i-019a067d161b807d4,5061</VM> <!-- small -->
-	<VM>EC2,t2.micro,i-0c1ae764e54ca5fb8,5061</VM> <!-- small -->
-	<VM>EC2,t2.micro,i-03b97c46afcb2c749,5061</VM> <!-- medium -->
-	<VM>EC2,t2.micro,i-0cd0f305e1dc8aeb5,5061</VM> <!-- medium --> 
-    <VM>EC2,t2.micro,i-0bce5f77aa6e0f3a2,5061</VM> <!-- micro -->
+	<VM>EC2,t2.micro,i-019a067d161b807d4,5061,true</VM> <!-- small -->
+	<VM>EC2,t2.micro,i-0c1ae764e54ca5fb8,5061,true</VM> <!-- small -->
+	<VM>EC2,t2.micro,i-03b97c46afcb2c749,5061,true</VM> <!-- medium -->
+	<VM>EC2,t2.micro,i-0cd0f305e1dc8aeb5,5061,true</VM> <!-- medium --> 
+    <VM>EC2,t2.micro,i-0bce5f77aa6e0f3a2,5061,true</VM> <!-- micro -->
 	
 <!---->
 </serverConfig>

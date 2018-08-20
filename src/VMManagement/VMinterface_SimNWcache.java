@@ -33,12 +33,14 @@ public class VMinterface_SimNWcache extends VMinterface {
     public long getBandwidth() { //convert back to Megabits
         return bandwidth*8;
     }
-    public VMinterface_SimNWcache(String vclass, int inid) {
-        super(vclass,inid);
+    public VMinterface_SimNWcache(String vclass,int iport, int inid,boolean iautoschedule) {
+        super(vclass,iport,inid,iautoschedule);
         status=1;
     }
-    public VMinterface_SimNWcache(String vclass, int inid,long ibandwidth,int idelay_mean,double idelay_SD) {
-        super(vclass,inid);
+
+    //not used right now,
+    public VMinterface_SimNWcache(String vclass, int inid,boolean iautoschedule,int ibandwidth,int idelay_mean,double idelay_SD) {
+        super(vclass,ibandwidth,inid,iautoschedule);
         setBandwidth(ibandwidth);
         delay_mean=idelay_mean;
         delay_SD=idelay_SD;

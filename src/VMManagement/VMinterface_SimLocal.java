@@ -18,8 +18,8 @@ public class VMinterface_SimLocal extends VMinterface {
     private long realspentTime=0; //realspentTime is spentTime without Syncing
     private Random r=new Random();
 
-    public VMinterface_SimLocal(String vclass, int inid) {
-        super(vclass,inid);
+    public VMinterface_SimLocal(String vclass,int iport, int inid,boolean iautoschedule) {
+        super(vclass,iport,inid,iautoschedule);
         status=1;
     }
 

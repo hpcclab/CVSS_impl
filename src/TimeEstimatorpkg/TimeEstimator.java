@@ -34,8 +34,9 @@ public class TimeEstimator {
         if(VMclass.equalsIgnoreCase("fixedBandwidth")){
             long bandwidth= port;
             System.out.println("bandwidth="+bandwidth*8);
-            System.out.println("request HistoricProcessTime of a fixedBandwidth VM, data is not reliable at the moment, use with caution");
-            return new retStat(segment.videoSize/bandwidth, 0);
+            System.out.println("request HistoricProcessTime of a fixedBandwidth VM, data is not reliable at the moment, use with caution-- only return transferTIme, no transmission delay");
+            System.out.println("segment size="+segment.videoSize);
+            return new retStat(segment.videoSize/bandwidth+1, 1);
         }else {
             HashMap<String, histStat> polled1 = Table.get(VMclass);
             long ESTTime = 0;
@@ -73,7 +74,7 @@ public class TimeEstimator {
                         }
                     }
                 }
-
+                //System.out.println("Normal Estimation");
                 return new retStat(ESTTime, SD);
 
                 //System.out.println("No historic data1!");

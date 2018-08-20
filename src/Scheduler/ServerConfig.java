@@ -17,9 +17,10 @@ public class ServerConfig {
     public static String path;
     public static ArrayList<String> VM_type=new ArrayList<>();
     public static ArrayList<String> VM_class=new ArrayList<>();
-
+    public static ArrayList<Boolean> VM_autoschedule=new ArrayList<>();
     public static ArrayList<String> VM_address=new ArrayList<>();
     public static ArrayList<Integer> VM_ports=new ArrayList<>();
+
     public static ArrayList<String> videoList=new ArrayList<>();
     public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
@@ -145,11 +146,12 @@ public class ServerConfig {
     @XmlElement(name = "VM")
     public void setVM(String VM_Texts) {
         String s[]=VM_Texts.split(",");
-        if(s.length==4) {
+        if(s.length==5) {
             ServerConfig.VM_type.add(s[0]);
             ServerConfig.VM_class.add(s[1]);
             ServerConfig.VM_address.add(s[2]);
             ServerConfig.VM_ports.add(Integer.parseInt(s[3]));
+            ServerConfig.VM_autoschedule.add(Boolean.parseBoolean(s[4]));
             //System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" ");
 
         }else {

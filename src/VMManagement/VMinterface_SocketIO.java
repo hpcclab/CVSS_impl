@@ -16,8 +16,8 @@ public class VMinterface_SocketIO extends VMinterface {
     public ObjectInputStream ois=null;
     Thread connector;
 
-    public VMinterface_SocketIO(String vclass, String addr, int port, int inid){
-        super(vclass,inid);
+    public VMinterface_SocketIO(String vclass, String addr, int port, int inid,boolean iautoschedule){
+        super(vclass,port,inid,iautoschedule);
 
         while (status != 1) {
             System.out.println("connecting");

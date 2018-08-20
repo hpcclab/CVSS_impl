@@ -31,17 +31,20 @@ public class GOPTaskScheduler {
         }
     }
     //connect only
-    public static boolean add_VM(String VM_type,String VM_class,String addr,int port,int id){
+    public static boolean add_VM(String VM_type,String VM_class,String addr,int port,int id,boolean autoSchedule){
         VMinterface t;
         if(VM_type.equalsIgnoreCase("sim")) {
-            t = new VMinterface_SimLocal(VM_class,id);
+            t = new VMinterface_SimLocal(VM_class,port,id,autoSchedule);
         }else if(VM_type.equalsIgnoreCase("simNWcache")){
-            t = new VMinterface_SimNWcache(VM_class,id);
+            t = new VMinterface_SimNWcache(VM_class,port,id,autoSchedule);
         }else{ //not a simulation, create socket
-            t = new VMinterface_SocketIO(VM_class, addr, port, id);
+            t = new VMinterface_SocketIO(VM_class, addr, port, id,autoSchedule);
         }
-        maxpending+= ServerConfig.localqueuelengthperVM; //4?
+        if(autoSchedule) {
+            maxpending += ServerConfig.localqueuelengthperVM; //4?
+        }
         VMinterfaces.add(t);
+
         return true; //for success
     }
     public static boolean remove_VM(int which){
@@ -68,6 +71,7 @@ public class GOPTaskScheduler {
 
     //work properly on homogeneous only
     private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator,double SDcoefficient){
+        //currently machine 0 must be autoscheduleable
         if(VMinterfaces.size()>0) {
             VMinterface answer=VMinterfaces.get(0);
             long min;
@@ -87,32 +91,37 @@ public class GOPTaskScheduler {
             for (int i = 1; i < VMinterfaces.size(); i++) {
                 VMinterface aMachine = VMinterfaces.get(i);
                 if (aMachine.isWorking()) {
-                    long estimatedT;
-                    long savedmean=0;
-                    //calculate new choice
-                    if (useTimeEstimator) {
-                        retStat chk=TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i),ServerConfig.VM_ports.get(i),x);
-                        savedmean=(long)(chk.mean+chk.SD*SDcoefficient);
-                        estimatedT = aMachine.estimatedExecutionTime + savedmean;
-                        if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
-                            estimatedT+=answer.estimatedQueueLength;
+                    if(aMachine.autoschedule) {
+                        long estimatedT;
+                        long savedmean = 0;
+                        //calculate new choice
+                        if (useTimeEstimator) {
+                            retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), ServerConfig.VM_ports.get(i), x);
+                            savedmean = (long) (chk.mean + chk.SD * SDcoefficient);
+                            estimatedT = aMachine.estimatedExecutionTime + savedmean;
+                            if (ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+                                estimatedT += answer.estimatedQueueLength;
+                            }
+                        } else {
+                            estimatedT = aMachine.estimatedQueueLength;
                         }
-                    } else {
-                        estimatedT = aMachine.estimatedQueueLength;
-                    }
-                    //decide
-                    System.out.println("estimateT="+estimatedT);
-                    if (estimatedT < min) {
-                        if (useTimeEstimator){ //update estimatedExecutionTime
-                            x.estimatedExecutionTime = savedmean;
+                        //decide
+                        System.out.println("estimateT=" + estimatedT);
+                        if (estimatedT < min) {
+                            if (useTimeEstimator) { //update estimatedExecutionTime
+                                x.estimatedExecutionTime = savedmean;
+                            }
+                            answer = aMachine;
+                            min = estimatedT;
                         }
-                        answer = aMachine;
-                        min = estimatedT;
+                    }else{
+                        System.out.println("not considering non-auto assign machine");
                     }
                 }else{
                     System.out.println("warning, a machine is not ready");
                 }
             }
+            System.out.println("decided a machine "+answer.VM_class+" id= "+answer.id);
             return answer;
         }
         System.out.println("BUG: try to schedule to 0 VM");
@@ -177,10 +186,11 @@ public class GOPTaskScheduler {
                 //it's dry mode, we need
 
                 if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
-                    retStat thestat=TimeEstimator.getHistoricProcessTime(chosenVM.VM_class,0,X);
+                    retStat thestat=TimeEstimator.getHistoricProcessTime(chosenVM.VM_class,chosenVM.port,X);
                     //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
                     X.estimatedExecutionTime=thestat.mean;
                     X.estimatedExecutionSD=thestat.SD;
+                    //X.estimatedDelay
                 }
 
                 //change StreamGOP type to Dispatched

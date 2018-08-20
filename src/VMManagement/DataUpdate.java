@@ -19,9 +19,9 @@ public class DataUpdate {
             //file output
             try {
                 String prefix=(ServerConfig.taskmerge)?"merge_":"unmerge";
-                prefix+= (ServerConfig.sortedBatchQueue)?"_Sort":"_Unsort";
+                prefix+= (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None"))?"_Sort":"_Unsort";
                 prefix+= (ServerConfig.consideratemerge)?"":"always_merge";
-                prefix+= (ServerConfig.sortedBatchQueue)? ServerConfig.batchqueuesortpolicy:"";
+                prefix+= (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None"))? ServerConfig.batchqueuesortpolicy:"";
                 prefix+="_";
                 FileWriter F1 = new FileWriter("./resultstat/full/" + prefix+ServerConfig.profileRequestsBenhmark);
                 FileWriter F2 = new FileWriter("./resultstat/numbers/" + prefix+ServerConfig.profileRequestsBenhmark);
@@ -29,10 +29,10 @@ public class DataUpdate {
                 PrintWriter numberwriter = new PrintWriter(F2);
                 //to screen
                 Fullwriter.println("File" + ServerConfig.profileRequestsBenhmark);
-                if (ServerConfig.sortedBatchQueue) {
-                    Fullwriter.println("Stat for Queuesort=" + ServerConfig.sortedBatchQueue + " policy=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
+                if (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) {
+                    Fullwriter.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy  + " mergable=" + ServerConfig.taskmerge);
                 } else {
-                    Fullwriter.println("Stat for Queuesort=" + ServerConfig.sortedBatchQueue + " mergable=" + ServerConfig.taskmerge);
+                    Fullwriter.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy  + " mergable=" + ServerConfig.taskmerge);
                 }
                 for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
                     VMinterface vmi = GOPTaskScheduler.VMinterfaces.get(i);
@@ -64,10 +64,10 @@ public class DataUpdate {
         }else {
             //to screen
             System.out.println("File" + ServerConfig.profileRequestsBenhmark);
-            if (ServerConfig.sortedBatchQueue) {
-                System.out.println("Stat for Queuesort=" + ServerConfig.sortedBatchQueue + " policy=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
+            if (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) {
+                System.out.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
             } else {
-                System.out.println("Stat for Queuesort=" + ServerConfig.sortedBatchQueue + " mergable=" + ServerConfig.taskmerge);
+                System.out.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
             }
             for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
                 VMinterface vmi = GOPTaskScheduler.VMinterfaces.get(i);

@@ -17,13 +17,16 @@ public abstract class VMinterface {
     public double deadLineMissRate;
     public long workdone,Nworkdone;
     public long deadlinemiss,Ndeadlinemiss;
-
+    public int port;
+    public boolean autoschedule=false;
 
     public VMinterface(){}
 
-    public VMinterface(String vclass,int inid){
+    public VMinterface(String vclass,int iport,int inid,boolean iautoschedule){
             this.VM_class=vclass;
             id=inid;
+            port=iport;
+            autoschedule=iautoschedule;
     }
     public boolean isWorking(){
         return status==1;
