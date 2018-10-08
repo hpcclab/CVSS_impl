@@ -35,6 +35,7 @@ public class VMinterface_SimNWcache extends VMinterface {
     }
     public VMinterface_SimNWcache(String vclass,int iport, int inid,boolean iautoschedule) {
         super(vclass,iport,inid,iautoschedule);
+        setBandwidth(iport);
         status=1;
     }
 

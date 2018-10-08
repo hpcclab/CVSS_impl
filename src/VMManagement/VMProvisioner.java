@@ -23,8 +23,6 @@ import com.amazonaws.services.s3.S3ClientOptions;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -181,7 +179,7 @@ public class VMProvisioner {
             collectData(false);
         }
         //System.out.println("tick, submit work");
-        GTS.submitworks();
+        GTS.taskScheduling();
         x.release();
     }
     //this need to be call periodically somehow

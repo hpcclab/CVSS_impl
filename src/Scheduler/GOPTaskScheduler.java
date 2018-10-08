@@ -12,7 +12,7 @@ import java.util.*;
 public class GOPTaskScheduler {
     private miscTools.SortableList Batchqueue=new miscTools.SortableList();
     private miscTools.SortableList pendingqueue=new miscTools.SortableList();
-    private int working=0;
+    private int scheduler_working =0;
     public static Merger mrg;
     //private HashMap<request,List<StreamGOP>> LV2map_pending=new HashMap<request,List<StreamGOP>>(); //level2's request record skip resolution so more matches
 
@@ -66,53 +66,56 @@ public class GOPTaskScheduler {
             }
         }
             //assignwork thread start
-            submitworks();
+            taskScheduling();
     }
 
     //work properly on homogeneous only
-    private VMinterface shortestQueueFirst(StreamGOP x,boolean useTimeEstimator,double SDcoefficient){
+    //new update: use queue length from array
+    public static VMinterface shortestQueueFirst(StreamGOP x,int[] pending_queuelength,long[] pending_executiontime,boolean useTimeEstimator,double SDcoefficient,boolean realSchedule){
         //currently machine 0 must be autoscheduleable
+        long estimatedT;
         if(VMinterfaces.size()>0) {
             VMinterface answer=VMinterfaces.get(0);
             long min;
-            if(useTimeEstimator){
-                retStat chk= TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0),ServerConfig.VM_ports.get(0),x);
-                x.estimatedExecutionTime = (long)(chk.mean+chk.SD*SDcoefficient);
-                min=answer.estimatedExecutionTime+x.estimatedExecutionTime;
-                if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
-                    min+=answer.estimatedQueueLength;
-                }
 
+            //set initial value to machine 1
+            if((pending_queuelength[0] < ServerConfig.maxVMqueuelength) || !realSchedule){ //if not real assignment, we can violate queue length
+                if (useTimeEstimator) {
+                    retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), ServerConfig.VM_ports.get(0), x);
+                    estimatedT= (long) (chk.mean + chk.SD * SDcoefficient);
+                    min = pending_executiontime[0] + estimatedT;
+                } else {
+                    min = pending_queuelength[0];
+                }
             }else{
-                min = answer.estimatedQueueLength;
+                min=Integer.MAX_VALUE;   //don't select me, i'm full
             }
+
+
             System.out.println("first est time="+min);
             //System.out.println("VMINTERFACE SIZE="+VMinterfaces.size());
             for (int i = 1; i < VMinterfaces.size(); i++) {
                 VMinterface aMachine = VMinterfaces.get(i);
                 if (aMachine.isWorking()) {
-                    if(aMachine.autoschedule) {
-                        long estimatedT;
-                        long savedmean = 0;
-                        //calculate new choice
-                        if (useTimeEstimator) {
-                            retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), ServerConfig.VM_ports.get(i), x);
-                            savedmean = (long) (chk.mean + chk.SD * SDcoefficient);
-                            estimatedT = aMachine.estimatedExecutionTime + savedmean;
-                            if (ServerConfig.run_mode.equalsIgnoreCase("dry")) {
-                                estimatedT += answer.estimatedQueueLength;
+                    if (aMachine.autoschedule) {
+                        if((pending_queuelength[i] < ServerConfig.maxVMqueuelength) || !realSchedule) {
+
+                            long savedmean = 0;
+                            //calculate new choice
+                            if (useTimeEstimator) {
+                                retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), ServerConfig.VM_ports.get(i), x);
+                                savedmean = (long) (chk.mean + chk.SD * SDcoefficient);
+                                estimatedT = pending_executiontime[i] + savedmean;
+                            } else {
+                                estimatedT = pending_queuelength[i];
                             }
-                        } else {
-                            estimatedT = aMachine.estimatedQueueLength;
-                        }
-                        //decide
-                        System.out.println("estimateT=" + estimatedT);
-                        if (estimatedT < min) {
-                            if (useTimeEstimator) { //update estimatedExecutionTime
-                                x.estimatedExecutionTime = savedmean;
+                            //decide
+                            if (estimatedT < min) {
+                                answer = aMachine;
+                                min = estimatedT;
                             }
-                            answer = aMachine;
-                            min = estimatedT;
+                        }else{
+                            //System.out.println("queue is full");
                         }
                     }else{
                         System.out.println("not considering non-auto assign machine");
@@ -121,7 +124,10 @@ public class GOPTaskScheduler {
                     System.out.println("warning, a machine is not ready");
                 }
             }
-            System.out.println("decided a machine "+answer.VM_class+" id= "+answer.id);
+            System.out.println("decided a machine "+answer.VM_class+" id= "+answer.id+" queuelength="+answer.estimatedQueueLength+"/"+ServerConfig.maxVMqueuelength);
+            if (realSchedule && useTimeEstimator) { //update estimatedExecutionTime
+                x.estimatedExecutionTime = min;
+            }
             return answer;
         }
         System.out.println("BUG: try to schedule to 0 VM");
@@ -129,61 +135,44 @@ public class GOPTaskScheduler {
     }
 
     //will have more ways to assign works later
-    private VMinterface assignworks(StreamGOP x){
+    private VMinterface selectMachine(StreamGOP x){
         //System.out.println("assigning works");
+        int[] queuelength=new int[VMinterfaces.size()];
+        long[] executiontime=new long[VMinterfaces.size()];
+        for(int i=0;i<VMinterfaces.size();i++){
+            queuelength[i]=VMinterfaces.get(i).estimatedQueueLength;
+            executiontime[i]=VMinterfaces.get(i).estimatedExecutionTime;
+        }
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
-            return shortestQueueFirst(x,true,1);
+            return shortestQueueFirst(x,queuelength,executiontime,true,1,true);
         }else { //default way, shortestQueueFirst
-            return shortestQueueFirst(x,false,1); //false for not using TimeEstimator, not virtual assign
+            return shortestQueueFirst(x,queuelength,executiontime,false,1,true); //false for not using TimeEstimator
         }
     }
-    //function to test if virtually assign and nothing miss their deadline
-    private boolean virtualTest(){
-    //update Data, need updated Estimated ExecutionTime
-        //...
 
-        return false;
-    }
-    public void submitworks(){ //will be a thread
-        //read through list and assign to TranscodingVM
-        //now we only assign task in round robin
+    public void taskScheduling(){ // first function call to submit some works to other machine
+
         System.out.println("call submit work");
-        if(working!=1) {
-            System.out.println("working"+workpending+" "+maxpending);
-            working = 1;
+        if(scheduler_working !=1) {
+            scheduler_working = 1;
             while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
                 StreamGOP X;
-                if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) { //not sorting batch queue
-                    //X= Batchqueue.poll();
-                    X=Batchqueue.remove();
-                }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Priority")) {
-                    X=Batchqueue.removeHighestPrio();
-                }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
-                    X=Batchqueue.removeEDL();
-                }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
-                    X=Batchqueue.removeMaxUrgency(); //Homogeneous Only
-                }else{
-                    System.out.println("unrecognize batchqueue policy");
-                    X = Batchqueue.removeEDL();
-                }
+                //select a task by a criteria
+                X=Batchqueue.removeDefault();
+
                 pendingqueue.add(X);
-                //
-                //mapping_policy function
-                //
-                VMinterface chosenVM = assignworks(X);
+
+                VMinterface chosenVM = selectMachine(X);
                 if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.maxVMqueuelength)) {
                     //do reprovisioner, we need more VM!
-                    System.out.println("queue too long");
                     //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
-                    if (ServerConfig.enableVMscalingoutofInterval) {
-                        VMProvisioner.EvaluateClusterSize(-2);
-                    }
+                    System.out.println("queue too long, scale up!");
+                    VMProvisioner.EvaluateClusterSize(-2);
                     //re-assign works
-                    chosenVM = assignworks(X);
+                    chosenVM = selectMachine(X);
                     System.out.println("ChosenVM="+chosenVM);
                 }
-                //it's dry mode, we need
 
                 if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
                     retStat thestat=TimeEstimator.getHistoricProcessTime(chosenVM.VM_class,chosenVM.port,X);
@@ -213,7 +202,7 @@ public class GOPTaskScheduler {
                     VMProvisioner.collectData(false);
                 }
             }
-            working=0;
+            scheduler_working =0;
         }
     }
 

@@ -36,7 +36,9 @@ public class Stream {
         video =v;
 
         if(ST==0) { //ST==0, did not specified start time, make a new startTime
+            //normally dont fall in this case anyway in sim mode
             if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+
                 startTime= GOPTaskScheduler.maxElapsedTime+2000; //add a prelinary value
             }else{
                 startTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime

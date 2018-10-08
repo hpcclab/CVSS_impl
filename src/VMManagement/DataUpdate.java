@@ -46,7 +46,7 @@ public class DataUpdate {
                     totaldeadlinemiss += vmi.deadlinemiss;
                     ntotaldeadlinemiss += vmi.Ndeadlinemiss;
                 }
-                Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.typeAmerged);
+                Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.merged_tasklvl_count);
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
                 numberwriter.println(totalWorkDone+" , "+ntotalWorkDone+" , "+totaldeadlinemiss+" , "+ntotaldeadlinemiss+" , "+avgActualSpentTime / ServerConfig.maxVM);
 
@@ -79,7 +79,7 @@ public class DataUpdate {
                 totaldeadlinemiss += vmi.deadlinemiss;
                 ntotaldeadlinemiss += vmi.Ndeadlinemiss;
             }
-            System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.typeAmerged);
+            System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.merged_tasklvl_count);
             System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
         }
     }

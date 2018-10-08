@@ -1,14 +1,25 @@
 package miscTools;
 
 import Scheduler.GOPTaskScheduler;
+import Scheduler.ServerConfig;
+import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 //this List can be used as priority queue by take removeHighestPrio, instead of removeFirst.
 
 public class SortableList extends LinkedList<Streampkg.StreamGOP> {
+
+    public SortableList(Collection<? extends StreamGOP> collection) {
+        super(collection);
+    }
+    public SortableList() {
+        super();
+    }
+
     public Streampkg.StreamGOP pollHighestPrio() {
         Streampkg.StreamGOP highest = peekFirst();
         ListIterator<Streampkg.StreamGOP> it = listIterator(1);
@@ -60,5 +71,20 @@ public class SortableList extends LinkedList<Streampkg.StreamGOP> {
         Streampkg.StreamGOP earliest = pollMaxUrgency();
         removeFirstOccurrence(earliest);
         return earliest;
+    }
+    public Streampkg.StreamGOP removeDefault() {
+        if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) { //not sorting batch queue
+            //X= Batchqueue.poll();
+            return remove();
+        }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Priority")) {
+            return removeHighestPrio();
+        }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
+            return removeEDL();
+        }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
+            return removeMaxUrgency(); //Homogeneous Only
+        }else{
+            System.out.println("unrecognize batchqueue policy");
+            return removeEDL();
+        }
     }
 }
