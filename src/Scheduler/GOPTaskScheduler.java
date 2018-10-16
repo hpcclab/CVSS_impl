@@ -22,6 +22,7 @@ public class GOPTaskScheduler {
     public static ArrayList<VMinterface> VMinterfaces =new ArrayList<VMinterface>();
     private static int maxpending=0;
     public static int workpending=0;
+    public static double SDco=2;
     public GOPTaskScheduler(){
         if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
             //add server list to ShortestQueueFirst list too
@@ -59,7 +60,7 @@ public class GOPTaskScheduler {
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
             if(ServerConfig.taskmerge){
-                mrg.mergeifpossible(X);
+                mrg.mergeifpossible(X,SDco);
             }else{
                 //dont merge check
                 Batchqueue.add(X);
@@ -76,23 +77,27 @@ public class GOPTaskScheduler {
         long estimatedT;
         if(VMinterfaces.size()>0) {
             VMinterface answer=VMinterfaces.get(0);
-            long min;
+            long minFT;
+            long minET=0;
+            double minSD=0;
 
             //set initial value to machine 1
             if((pending_queuelength[0] < ServerConfig.maxVMqueuelength) || !realSchedule){ //if not real assignment, we can violate queue length
                 if (useTimeEstimator) {
                     retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), ServerConfig.VM_ports.get(0), x);
                     estimatedT= (long) (chk.mean + chk.SD * SDcoefficient);
-                    min = pending_executiontime[0] + estimatedT;
+                    minFT = pending_executiontime[0] + estimatedT;
+                    minET=chk.mean;
+                    minSD=chk.SD;
                 } else {
-                    min = pending_queuelength[0];
+                    minFT = pending_queuelength[0];
                 }
             }else{
-                min=Integer.MAX_VALUE;   //don't select me, i'm full
+                minFT=Integer.MAX_VALUE;   //don't select me, i'm full
             }
 
 
-            System.out.println("first est time="+min);
+            System.out.println("first est time="+minFT);
             //System.out.println("VMINTERFACE SIZE="+VMinterfaces.size());
             for (int i = 1; i < VMinterfaces.size(); i++) {
                 VMinterface aMachine = VMinterfaces.get(i);
@@ -100,20 +105,25 @@ public class GOPTaskScheduler {
                     if (aMachine.autoschedule) {
                         if((pending_queuelength[i] < ServerConfig.maxVMqueuelength) || !realSchedule) {
 
-                            long savedmean = 0;
                             //calculate new choice
                             if (useTimeEstimator) {
                                 retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), ServerConfig.VM_ports.get(i), x);
-                                savedmean = (long) (chk.mean + chk.SD * SDcoefficient);
-                                estimatedT = pending_executiontime[i] + savedmean;
+                                estimatedT = pending_executiontime[i] + (long)(chk.mean + chk.SD * SDcoefficient);
+                                if (estimatedT < minFT) {
+                                    answer = aMachine;
+                                    minFT = estimatedT;
+                                    minSD = chk.SD;
+                                    minET = chk.mean;
+                                }
+
                             } else {
                                 estimatedT = pending_queuelength[i];
+                                if (estimatedT < minFT) {
+                                    answer = aMachine;
+                                    minFT = estimatedT;
+                                }
                             }
-                            //decide
-                            if (estimatedT < min) {
-                                answer = aMachine;
-                                min = estimatedT;
-                            }
+
                         }else{
                             //System.out.println("queue is full");
                         }
@@ -126,7 +136,8 @@ public class GOPTaskScheduler {
             }
             System.out.println("decided a machine "+answer.VM_class+" id= "+answer.id+" queuelength="+answer.estimatedQueueLength+"/"+ServerConfig.maxVMqueuelength);
             if (realSchedule && useTimeEstimator) { //update estimatedExecutionTime
-                x.estimatedExecutionTime = min;
+                x.estimatedExecutionTime = minET;
+                x.estimatedExecutionSD=minSD;
             }
             return answer;
         }
@@ -145,9 +156,9 @@ public class GOPTaskScheduler {
         }
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
-            return shortestQueueFirst(x,queuelength,executiontime,true,1,true);
+            return shortestQueueFirst(x,queuelength,executiontime,true,2,true);
         }else { //default way, shortestQueueFirst
-            return shortestQueueFirst(x,queuelength,executiontime,false,1,true); //false for not using TimeEstimator
+            return shortestQueueFirst(x,queuelength,executiontime,false,2,true); //false for not using TimeEstimator
         }
     }
 

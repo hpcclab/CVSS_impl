@@ -47,6 +47,15 @@ public class Test {
                     RequestGenerator.ReadProfileRequests(opt);
                 }
                 RequestGenerator.contProfileRequestsGen(GTS);
+                while(!RequestGenerator.finished){
+                    sleep(300);
+                }
+                System.out.println("\nAll request have been released\n");
+                while(GTS.workpending>0){
+                    System.out.println("wait for pending work to finish");
+                    sleep(300);
+                }
+                System.out.println("All queue are emptied");
             }else {
                 while (rqn != 0) {
                     System.out.println("enter video request numbers to generate and their interval and how many times");

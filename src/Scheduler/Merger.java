@@ -35,8 +35,8 @@ public class Merger {
         while(newfirstpos<searchlimit-1){
             int tryposition=(searchlimit+newfirstpos)/2;
             newVQ.add(tryposition,merged);
-            int test=countDLMiss( newVQ,Integer.MAX_VALUE);
-            if(test==0){
+            int test=countDLMiss( newVQ,merged,Integer.MAX_VALUE,GOPTaskScheduler.SDco);
+            if(Math.abs(test)<originalmiss){
                 System.out.println("found a position");
                 return tryposition; //found perfect condition
             }
@@ -50,7 +50,7 @@ public class Merger {
             }
             newVQ.remove(tryposition); //it fail, so remove this
         }
-        return 0;
+        return -1;
     }
     public int linearsearch_trybetweenPositions(Streampkg.TaskRequest key,HashMap<Streampkg.TaskRequest,StreamGOP> thislvlmap,StreamGOP X,StreamGOP original,StreamGOP merged,int originalmiss) {
         miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
@@ -61,7 +61,7 @@ public class Merger {
         System.out.println("latestpos="+latestpos);
         //put merged to position that it'll not miss
         newVQ.add(latestpos,merged);
-        long check=countDLMiss( newVQ,Math.abs(originalmiss));
+        long check=countDLMiss( newVQ,Math.abs(originalmiss),GOPTaskScheduler.SDco);
         System.out.println(check +" vs "+originalmiss);
         if ( Math.abs(check)<= Math.abs(originalmiss)) {
             //make change to real queue
@@ -74,14 +74,7 @@ public class Merger {
         return -1;
     }
 
-    public int countOriginalMiss(StreamGOP X){
-        miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
-        newVQ.add(X);
-        //System.out.println("countOriginalMiss");
-        //System.out.println(newVQ.toArray()[0]);
-        return countDLMiss(newVQ,Integer.MAX_VALUE);
 
-    }
     private int virtualQueueCheckReplace(StreamGOP Original,StreamGOP merged,int threshold){
         miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
         int indexofOriginal=newVQ.indexOf(Original);
@@ -90,7 +83,7 @@ public class Merger {
             return -999;
         }else {
             newVQ.set(newVQ.indexOf(Original), merged); //can not find original???
-            return countDLMiss(newVQ, threshold);
+            return countDLMiss(newVQ, null,threshold,GOPTaskScheduler.SDco);
         }
     }
 
@@ -103,18 +96,28 @@ public class Merger {
             return GOPTaskScheduler.shortestQueueFirst(x,queuelength,executiontime,false,1,true); //false for not using TimeEstimator
         }
     }
+    public int countOriginalMiss(StreamGOP X,double SDco){
+        miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
+        newVQ.add(X);
+        //System.out.println("countOriginalMiss");
+        //System.out.println(newVQ.toArray()[0]);
+        return countDLMiss(newVQ,Integer.MAX_VALUE,SDco);
 
+    }
+    private int countDLMiss(miscTools.SortableList virtualQueue,int rthreshold,double SDco) {
+        return countDLMiss(virtualQueue,null,rthreshold,SDco);
+    }
     //return 0 for no miss, x for x missed deadline
-    private int countDLMiss(miscTools.SortableList virtualQueue,int rthreshold){
+    private int countDLMiss(miscTools.SortableList virtualQueue,StreamGOP target,int rthreshold,double SDco){
 
         // perform check
-        int missed=0;
+        int missed=0,targetmiss=0;
         int threshold=Math.abs(rthreshold);
         miscTools.SortableList virtualQueue_copy = new miscTools.SortableList(virtualQueue);
         //copy virtual queue
         int[] queuelength=new int[VMinterfaces.size()];
         long[] executiontime=new long[VMinterfaces.size()];
-        for(int i=0;i<VMinterfaces.size();i++){
+        for(int i=0;i<VMinterfaces.size();i++){ //this queuelength of already assigned tasks use SD=2
             queuelength[i]=VMinterfaces.get(i).estimatedQueueLength;
             executiontime[i]=VMinterfaces.get(i).estimatedExecutionTime;
         }
@@ -128,14 +131,17 @@ public class Merger {
             int machine_index=VMinterfaces.indexOf(machine);
             //update our queue
             retStat thestat=TimeEstimator.getHistoricProcessTime(machine.VM_class,machine.port,aGOP);
-            executiontime[machine_index]+=thestat.mean; //thestat.SD;
+            executiontime[machine_index]+=thestat.mean+thestat.SD*SDco; //thestat.SD;
             queuelength[machine_index]++;
             long finishTimeofX= executiontime[machine_index];
             if(finishTimeofX>aGOP.deadLine){
                 missed++;
+                if(aGOP==target){
+                    targetmiss=1;
+                }
                 if(missed>threshold){
                     //miss over the limit, no need to consider further
-                    return missed;
+                    return (1-targetmiss*2)*missed; //1 for no target miss, -1 for target miss
                 }
             }
         }
@@ -224,6 +230,7 @@ public class Merger {
                 */
                 if (Math.abs(checked) <= Math.abs(originalmiss)) { //worth it, merge!
                     itspair.getAllCMD(X); //reuse itspair object, add new parameters
+                    //don't update execution time yet, lets do that on dispatch event
                     /*
                     if(...){ //if task need to be reinsert to resort the queue
                         Batchqueue.remove(itspair);
@@ -260,7 +267,7 @@ public class Merger {
     }
 
 
-    public void mergeifpossible(StreamGOP X){
+    public void mergeifpossible(StreamGOP X,double SDco){
         //HOLD UP! check for duplication first
         Streampkg.TaskRequest aRequestlvl1 = new Streampkg.TaskRequest(X,1); //= ... derive from X
         System.out.println(X.getPath() +" "+X.videoname);
@@ -270,7 +277,7 @@ public class Merger {
             //don't even need to check if it is not null or state is not dispatched
         }else {
             //count how many miss would happen if not merging
-            int originalmiss = countOriginalMiss(X);
+            int originalmiss = countOriginalMiss(X,SDco);
             //System.out.println("Original miss=" + originalmiss);
 
             //create task signature, to check for matching

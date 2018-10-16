@@ -156,12 +156,12 @@
     <VM>sim,g2.2xlarge,localhost,5064,true</VM>
     <VM>sim,g2.2xlarge,localhost,5065,true</VM>
 
-	<VM>simNWcache,fixedBandwidth,localhost,100,false</VM>  <!-- unit = Mbps-->
 
     <VM>sim,g2.2xlarge,localhost,5066,true</VM>
     <VM>sim,g2.2xlarge,localhost,5067,true</VM>
     <VM>sim,g2.2xlarge,localhost,5068,true</VM>
 	
+	<VM>simNWcache,fixedBandwidth,localhost,100,false</VM>  <!-- unit = Mbps-->
 
 	<VM>EC2,t2.micro,i-019a067d161b807d4,5061,true</VM> <!-- small -->
 	<VM>EC2,t2.micro,i-0c1ae764e54ca5fb8,5061,true</VM> <!-- small -->
