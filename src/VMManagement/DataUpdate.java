@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import static java.lang.Thread.sleep;
 
 public class DataUpdate {
+
+
     public static void printstat(){
         //print stat!
         long avgActualSpentTime=0;

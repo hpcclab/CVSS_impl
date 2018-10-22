@@ -51,7 +51,8 @@ public class Test {
                     sleep(300);
                 }
                 System.out.println("\nAll request have been released\n");
-                while(GTS.workpending>0){
+
+                while(!GTS.emptyQueue()){
                     System.out.println("wait for pending work to finish");
                     sleep(300);
                 }

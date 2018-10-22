@@ -23,6 +23,7 @@ public class GOPTaskScheduler {
     private static int maxpending=0;
     public static int workpending=0;
     public static double SDco=2;
+    private static long oversubscriptionlevel;
     public GOPTaskScheduler(){
         if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
             //add server list to ShortestQueueFirst list too
@@ -69,7 +70,12 @@ public class GOPTaskScheduler {
             //assignwork thread start
             taskScheduling();
     }
-
+    public boolean emptyQueue(){
+        if(Batchqueue!=null&&pendingqueue!=null){
+            return (Batchqueue.isEmpty()&&pendingqueue.isEmpty());
+        }
+        return false;
+    }
     //work properly on homogeneous only
     //new update: use queue length from array
     public static VMinterface shortestQueueFirst(StreamGOP x,int[] pending_queuelength,long[] pending_executiontime,boolean useTimeEstimator,double SDcoefficient,boolean realSchedule){

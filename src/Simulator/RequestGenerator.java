@@ -32,11 +32,11 @@ public class RequestGenerator {
         String setting=x+"x"+y;
         long deadline=0; //did not specified deadline
         //setting.settingIdentifier=randomRes;
-        OneSpecificRequest(GTS,videoChoice,"Resolution",setting,deadline);
+        OneSpecificRequest(GTS,videoChoice,"Resolution",setting,deadline,0);
     }
 
-    public static void OneSpecificRequest(GOPTaskScheduler GTS,int videoChoice,String command,String setting,long deadline){
-        Stream ST=new Stream(VideoRepository.videos.get(videoChoice),command,setting,deadline); //admission control can work in constructor, or later?
+    public static void OneSpecificRequest(GOPTaskScheduler GTS,int videoChoice,String command,String setting,long deadline,long arrival){
+        Stream ST=new Stream(VideoRepository.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
         AdmissionControl.AssignStreamPriority(ST);
         GTS.addStream(ST);
         //System.out.println("test2");
@@ -89,11 +89,12 @@ public class RequestGenerator {
             while (rqe_arr.get(currentIndex).appearTime <= GOPTaskScheduler.maxElapsedTime) {
                 requestprofile arqe = rqe_arr.get(currentIndex);
                 currentIndex++;
-                OneSpecificRequest(GTS, arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline);
+                OneSpecificRequest(GTS, arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline,arqe.appearTime);
                 if (currentIndex >= rqe_arr.size()) {
                     finished=true;
                     break;
                 }
+                System.out.println("currentIndex="+currentIndex+" rqe_arr size="+rqe_arr.size());
             }
         }
     }

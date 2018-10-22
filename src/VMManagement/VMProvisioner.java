@@ -40,10 +40,12 @@ public class VMProvisioner {
     //private double lowscalingThreshold;
     private static Semaphore x=new Semaphore(1);
     private static ArrayList<vmi> VMCollection =new ArrayList<>();
-    //EC2 private static AmazonEC2 EC2instance;
+
     private static GOPTaskScheduler GTS;
-    //EC2 private static AmazonS3Client s3;
-    private static String s3BucketName;
+    //EC2 private static AmazonEC2 EC2instance;
+    // EC2 private static AmazonS3Client s3;
+    //private static String s3BucketName;
+
     public VMProvisioner(){
         this(0);
     }
@@ -111,6 +113,7 @@ public class VMProvisioner {
         GTS=X;
     }
     static int timeforced=0;
+
     public static void collectData(boolean full){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
@@ -128,10 +131,12 @@ public class VMProvisioner {
                 System.out.println("TelapsedTime update to "+T_maxElapsedTime);
             }
         }
-        //now update deadline miss rate
+        //now update deadline miss rate, and oversubscription level
         if(count!=0) {
             deadLineMissRate = sum / count;
+            /////???? how to calculate oversubscription level?
             //System.out.println("deadline miss rate="+deadLineMissRate);
+
         }
 
         //if time doesn't move,

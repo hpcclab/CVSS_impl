@@ -24,18 +24,18 @@ public class Stream {
         }
         streamGOPs= new ArrayList<StreamGOP>();
     }
-    public Stream(Video v,String command,String settings,long ST){
-        this(v,command,settings,0,v.repositoryGOPs.size(),ST);
+    public Stream(Video v,String command,String settings,long addedslackTime,long arrivalTime){
+        this(v,command,settings,0,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
     }
-    public Stream(Video v,String command, String settings, int startSegment,long ST){
-        this(v,command,settings,startSegment,v.repositoryGOPs.size(),ST);
+    public Stream(Video v,String command, String settings, int startSegment,long addedslackTime,long arrivalTime){
+        this(v,command,settings,startSegment,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
     }
 
-    public Stream(Video v,String command,String settings,int startSegment,int endSegment,long ST){
+    public Stream(Video v,String command,String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime){
         status=0;
         video =v;
 
-        if(ST==0) { //ST==0, did not specified start time, make a new startTime
+        if(addedslackTime==0) { //ST==0, did not specified start time, make a new startTime
             //normally dont fall in this case anyway in sim mode
             if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
 
@@ -44,7 +44,7 @@ public class Stream {
                 startTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
             }
         }else{
-            startTime=ST;
+            startTime=addedslackTime;
         }
 
         streamGOPs= new ArrayList<StreamGOP>();
@@ -57,7 +57,7 @@ public class Stream {
             }else{
                 designatedSettings=settings;
             }
-            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings,startTime);
+            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings,startTime,arrivalTime);
             //System.out.println("deadline of "+video.name+" "+(i+1)+"="+xcopy.getDeadLine());
             streamGOPs.add(xcopy);
         }

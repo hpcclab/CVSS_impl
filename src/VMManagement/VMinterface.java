@@ -17,6 +17,10 @@ public abstract class VMinterface {
     public double deadLineMissRate;
     public long workdone,Nworkdone;
     public long deadlinemiss,Ndeadlinemiss;
+    public long combined_overtime=0;
+    public long combined_undertime=0;
+    public double weighted_overtime=0;
+    public double weighted_undertime=0;
     public int port;
     public boolean autoschedule=false;
 

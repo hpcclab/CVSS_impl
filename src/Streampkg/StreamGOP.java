@@ -15,6 +15,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public long deadLine=0;
     public long videoSize=900; //900 kb, fixed at the moment
     public boolean dispatched=false;
+    public long arrivalTime=0;
     public long estimatedExecutionTime=0;
     public double estimatedExecutionSD=0;
     public int requestcount=0; //be 1 unless merged
@@ -68,16 +69,21 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         super();
         deadLine=presentationTime;
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x,long time){
+    public StreamGOP(long arrivaltime){
+        super();
+        deadLine=presentationTime;
+        arrivalTime=arrivaltime;
+    }
+    public StreamGOP(String name,Stream p,RepositoryGOP x,long slacktime,long arrivaltime){
         super(x);
         videoname=name;
         parentStream=p;
-        deadLine=presentationTime+time;
+        deadLine=presentationTime+slacktime;
         //System.out.println("X presentationTime="+x.presentationTime);
         //System.out.println("this deadline="+deadLine);
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long time){
-        this(name,p,x,time);
+    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long slacktime,long arrivaltime){
+        this(name,p,x,slacktime,arrivaltime);
         addCMD(Command, Setting,deadLine);
     }
     //deep clone
@@ -87,6 +93,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this.isTranscoded=X.getIsTranscoded();
         this.setting=X.setting;
         this.presentationTime=X.presentationTime;
+        this.arrivalTime=X.arrivalTime;
         //System.out.println("X presentationTime="+X.presentationTime);
         //
         this.videoname=X.videoname;
