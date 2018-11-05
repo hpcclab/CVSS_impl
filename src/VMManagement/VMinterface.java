@@ -14,15 +14,18 @@ public abstract class VMinterface {
     public long estimatedExecutionTime=0;
     public long elapsedTime=0;
     public long actualSpentTime=0;
-    public double deadLineMissRate;
-    public long workdone,Nworkdone;
-    public long deadlinemiss,Ndeadlinemiss;
-    public long combined_overtime=0;
-    public long combined_undertime=0;
-    public double weighted_overtime=0;
-    public double weighted_undertime=0;
     public int port;
     public boolean autoschedule=false;
+
+    //stats, new set
+    public long tmp_taskdone=0, total_taskdone =0, total_itemdone =0; //work done can be multiple task per item
+    public long tmp_taskmiss=0, total_taskmiss =0, total_itemmiss =0;
+    public long tmp_overtime =0; // no need for total
+    public long tmp_undertime =0;
+    public double tmp_weighted_overtime =0,tmp_weighted_undertime =0;
+
+    //stats, old
+    //public double deadLineMissRate; , it's either from tmp or total...
 
     public VMinterface(){}
 
@@ -37,7 +40,7 @@ public abstract class VMinterface {
     }
 
     public abstract boolean sendJob(StreamGOP segment);
-    public abstract double dataUpdate(boolean full);
+    public abstract void dataUpdate();
     public abstract boolean sendShutdownmessage();
     public void close(){}
 

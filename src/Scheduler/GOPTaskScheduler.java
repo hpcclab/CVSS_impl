@@ -216,7 +216,7 @@ public class GOPTaskScheduler {
                 //System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
                 if (workpending == maxpending) {
                     System.out.println("workpending==maxpending");
-                    VMProvisioner.collectData(false);
+                    VMProvisioner.collectData();
                 }
             }
             scheduler_working =0;

@@ -12,16 +12,32 @@ public class VMinterface_SimLocal extends VMinterface {
     //interface parameters are in VMinterface
 
     //pseudo thread's parameters
+    private Random r=new Random();
+    private long node_synctime =0; //spentTime+requiredTime is imaginary total time to clear the queue
+    private long node_realspentTime =0; //realspentTime is spentTime without Syncing
+    private long node_aftersync_itemdone=0,node_aftersync_itemmiss=0; //these need total sum
+    private long node_aftersync_taskdone=0,node_aftersync_taskmiss=0;
+
+
+    public int node_focus_task=10,node_statindex=0;
+    private long node_missArr[] =new long[50]; private long node_miss; //put 50 as current max
+    //use node_focus_task as N work done
+    private long node_undertimeArr[] =new long[50]; //negative num for overtime
+    private long node_sum_undertime;
+    private long node_sum_overtime;
+    private double node_wundertimeArr[] =new double[50]; //negative num for overtime
+    private double node_sum_wundertime;
+    private double node_sum_wovertime;
+
+    /*
     private int l_workDone; //count each work as one
     private int l_NworkDone; //count each work as suggested in StreamGOP.requestcount
     private int l_deadlineMiss,l_NdeadlineMiss;
-    private long l_synctime=0; //spentTime+requiredTime is imaginary total time to clear the queue
-    private long l_realspentTime=0; //realspentTime is spentTime without Syncing
     private long l_overtime=0;
     private double l_overtime_weighted=0;
     private long l_undertime=0;
     private double l_undertime_weighted=0;
-    private Random r=new Random();
+    */
 
     public VMinterface_SimLocal(String vclass,int iport, int inid,boolean iautoschedule) {
         super(vclass,iport,inid,iautoschedule);
@@ -42,86 +58,99 @@ public class VMinterface_SimLocal extends VMinterface {
             //System.out.println("est="+segment.estimatedExecutionTime+" sd:"+segment.estimatedExecutionSD);
             delay=(long) (segment.estimatedExecutionTime+segment.estimatedExecutionSD*r.nextGaussian());
         }
-        System.out.println("delay="+delay);
-        l_synctime+=delay;
-        l_realspentTime+=delay;
+        //System.out.println("delay="+delay);
+        node_synctime +=delay;
+        node_realspentTime +=delay;
         //System.out.println("synctime="+synctime);
         //System.out.println("realspentTime="+realspentTime);
         boolean missed=false;
         for (String cmd:segment.deadlineSet.keySet()){
-            double diff=segment.getdeadlineof(cmd)-l_synctime;
+            double slackleft=segment.getdeadlineof(cmd)- node_synctime;
             long slacktime=(segment.getdeadlineof(cmd)-segment.arrivalTime);
-            if(diff<0){
-                if(!missed) {
-                    l_deadlineMiss++;
+
+            node_miss-=node_missArr[node_statindex]; //desum old miss record, if missed
+            node_missArr[node_statindex]=0; //reset the miss record
+            //System.out.println("node_statindex="+node_statindex+" diff="+slackleft+" slacktime="+slacktime);
+            //desum undertime
+            if(node_undertimeArr[node_statindex]<0){// miss
+                node_sum_overtime-=node_undertimeArr[node_statindex];
+                node_sum_wovertime-=node_wundertimeArr[node_statindex];
+            }else{
+                node_sum_undertime-=node_undertimeArr[node_statindex]; //desum
+                node_sum_wundertime-=node_wundertimeArr[node_statindex];
+            }
+
+            if(slackleft<0){
+                if(!missed) { //havent miss before
+                    node_aftersync_taskmiss++;
                     missed=true;
                 }
-                l_NdeadlineMiss++;
-                l_overtime-=(long)diff;
+                node_missArr[node_statindex]++; //it miss, so count
+                node_aftersync_itemmiss++;
                 if(slacktime!=0) {
-                    l_overtime_weighted -= diff /slacktime;
+                    node_sum_overtime-=(long)slackleft;
+                    node_sum_wovertime-=slackleft/slacktime;
                 }else{
                     System.out.println("ERROR: Time since dispatch=0");
                 }
+                node_miss+=node_missArr[node_statindex];
             }else{
-                l_undertime+=diff;
                 if(slacktime!=0) {
-                    l_undertime_weighted -= diff /slacktime;
+                    node_sum_undertime+=(long)slackleft;
+                    node_sum_wundertime+=slackleft/slacktime;
                 }else{
                     System.out.println("ERROR: Time since dispatch=0");
                 }
             }
+            //System.out.println("node_sum_undertime="+node_sum_undertime+" node_sum_overtime="+node_sum_overtime);
+            //System.out.println("node_sum_wundertime="+node_sum_wundertime+" node_sum_wovertime="+node_sum_wovertime);
+            node_undertimeArr[node_statindex]=(long)slackleft; //set undertime
+            node_wundertimeArr[node_statindex]=slackleft/slacktime;
+            node_statindex=(node_statindex+1)%node_focus_task;
         }
-        l_workDone++;
-        l_NworkDone +=segment.requestcount;
+        node_aftersync_itemdone++;
+        //System.out.println("request count="+segment.requestcount);
+        node_aftersync_taskdone +=segment.requestcount;
         //
         return false;
     }
     //get back the runtime stat
-    public  double dataUpdate(boolean full){
+    public void dataUpdate(){
         //Sync time
-        if(GOPTaskScheduler.maxElapsedTime>l_synctime){
+        if(GOPTaskScheduler.maxElapsedTime> node_synctime){
             //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler.maxElapsedTime);
-            l_synctime=GOPTaskScheduler.maxElapsedTime;
+            node_synctime =GOPTaskScheduler.maxElapsedTime;
         }
-        //
-        double deadLineMiss=0;
-        if(full){
-            if(l_workDone !=0){
-                deadLineMiss=(1.0*l_deadlineMiss)/ l_workDone;
-            }
-                GOPTaskScheduler.VMinterfaces.get(id).deadLineMissRate=deadLineMiss;
-                System.out.println("got deadLineMissRate=" + deadLineMiss);
+        // change to using the circular, tmp
 
-        }else{
-            //not full runtime_report, don't update deadlineMiss, then what?
-        }
+
+
         //System.out.println("dataUpdate");
         GOPTaskScheduler.workpending-=(estimatedQueueLength);
 
          //we completed the scheduling and execution
         GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = 0;
         GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = 0;
-        GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=l_synctime;
-        GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime=l_realspentTime;
+        GOPTaskScheduler.VMinterfaces.get(id).elapsedTime= node_synctime;
+        GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime= node_realspentTime;
         //System.out.println("actualSpentTime="+GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        GOPTaskScheduler.VMinterfaces.get(id).deadlinemiss=l_deadlineMiss;
-        GOPTaskScheduler.VMinterfaces.get(id).workdone= l_workDone;
-        GOPTaskScheduler.VMinterfaces.get(id).Nworkdone= l_NworkDone;
-        GOPTaskScheduler.VMinterfaces.get(id).Ndeadlinemiss=l_NdeadlineMiss;
+        GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
+        GOPTaskScheduler.VMinterfaces.get(id).total_itemdone += node_aftersync_itemdone;
+        GOPTaskScheduler.VMinterfaces.get(id).total_taskdone += node_aftersync_taskdone;
+        GOPTaskScheduler.VMinterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
+        node_aftersync_itemmiss=node_aftersync_itemdone=node_aftersync_taskdone=node_aftersync_taskmiss=0;
 
-        GOPTaskScheduler.VMinterfaces.get(id).combined_overtime=l_overtime;
-        GOPTaskScheduler.VMinterfaces.get(id).combined_undertime=l_undertime;
 
-        GOPTaskScheduler.VMinterfaces.get(id).weighted_overtime=l_overtime_weighted;
-        GOPTaskScheduler.VMinterfaces.get(id).weighted_undertime=l_undertime_weighted;
-        /* //do we reset or not? and when do data expired?
-        l_overtime=0;        l_undertime=0;
-        l_overtime_weighted=0; l_undertime_weighted=0;
-        */
-        return deadLineMiss;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_overtime =node_sum_overtime;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_undertime =node_sum_undertime;
+
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime;
+        //data are self expired, no need to reset or resum
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){

@@ -113,18 +113,27 @@ public class VMProvisioner {
         GTS=X;
     }
     static int timeforced=0;
+    static double previous_wovertime,previous_wundertime;
 
-    public static void collectData(boolean full){
+    public static void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
-        double sum=0;
-        int count=0;
+        int sum_DLmiss=0,sum_taskdone=0;
+        long current_overtime=0,current_undertime=0;
+        double current_weighted_undertime=0,current_weighted_overtime=0;
         long T_maxElapsedTime=GOPTaskScheduler.maxElapsedTime;
         for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
-            double ret=GOPTaskScheduler.VMinterfaces.get(i).dataUpdate(full);
-            if(ret!=-1){
-                sum+=ret;
-                count++;
+            GOPTaskScheduler.VMinterfaces.get(i).dataUpdate();
+            System.out.println("tmp taskdone="+GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone);
+            if(GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone!=0){
+                sum_DLmiss+=GOPTaskScheduler.VMinterfaces.get(i).tmp_taskmiss;
+                sum_taskdone+=GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone;
+                current_overtime=GOPTaskScheduler.VMinterfaces.get(i).tmp_overtime;
+                current_undertime=GOPTaskScheduler.VMinterfaces.get(i).tmp_undertime;
+                current_weighted_overtime=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_overtime;
+                current_weighted_undertime=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_undertime;
+                System.out.println("in last 20 tasks overtime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_overtime+" undertime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_undertime
+                +" weighted_overtime"+GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_undertime);
             }
             if(GOPTaskScheduler.VMinterfaces.get(i).elapsedTime>T_maxElapsedTime){
                 T_maxElapsedTime=GOPTaskScheduler.VMinterfaces.get(i).elapsedTime;
@@ -132,11 +141,18 @@ public class VMProvisioner {
             }
         }
         //now update deadline miss rate, and oversubscription level
-        if(count!=0) {
-            deadLineMissRate = sum / count;
+        if(sum_taskdone!=0) {
+            deadLineMissRate = sum_DLmiss / sum_taskdone;
+            System.out.println("tmp DMR="+deadLineMissRate);
+            System.out.println("current over/undertime="+current_overtime+" "+current_undertime);
+            System.out.println("current weighted over/undertime="+current_weighted_overtime+" "+current_weighted_undertime);
             /////???? how to calculate oversubscription level?
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
+
+            //finally, update current time to previous time
+            previous_wovertime=current_weighted_overtime;
+            previous_wundertime=current_weighted_undertime;
         }
 
         //if time doesn't move,
@@ -176,12 +192,10 @@ public class VMProvisioner {
         }
         //System.out.println("Tick, col data");
         tcount++;
+        collectData();
         if(tcount%ServerConfig.VMscalingIntervalTick==0){
-            collectData(true);
+
             EvaluateClusterSize(20);
-        }else{
-            //System.out.println("tick, collect Data");
-            collectData(false);
         }
         //System.out.println("tick, submit work");
         GTS.taskScheduling();

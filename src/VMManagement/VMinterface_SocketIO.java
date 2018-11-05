@@ -75,19 +75,14 @@ public class VMinterface_SocketIO extends VMinterface {
         System.out.println("not working!");
         return false;
     }
-    public double dataUpdate(boolean full){
+    public void dataUpdate(){
         if(isWorking()) {
             try {
                 StreamGOP query = new StreamGOP();
-                if(full){
-                    query.cmdSet.put("fullstat", null);
-                    query.dispatched=true;
-                    query.deadLine=GOPTaskScheduler.maxElapsedTime;
-                }else {
+
                     query.cmdSet.put("query", null);
                     query.dispatched=true;
                     query.deadLine=GOPTaskScheduler.maxElapsedTime;
-                }
                 oos.writeObject(query); //they expect an object, thus we need to send object
                 runtime_report answer = (runtime_report) ois.readObject();
                 //System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
@@ -98,24 +93,19 @@ public class VMinterface_SocketIO extends VMinterface {
                 GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=answer.VMelapsedTime;
                 GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime=answer.VMspentTime;
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
-                GOPTaskScheduler.VMinterfaces.get(id).deadLineMissRate=answer.deadLineMissRate;
-                GOPTaskScheduler.VMinterfaces.get(id).deadlinemiss=answer.missed;
-                GOPTaskScheduler.VMinterfaces.get(id).workdone=answer.workdone;
-                GOPTaskScheduler.VMinterfaces.get(id).Nworkdone=answer.Nworkdone;
-                GOPTaskScheduler.VMinterfaces.get(id).Ndeadlinemiss=answer.Nmissed;
+                GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss =answer.missed;
+                GOPTaskScheduler.VMinterfaces.get(id).total_itemdone =answer.workdone;
+                GOPTaskScheduler.VMinterfaces.get(id).total_taskdone =answer.Nworkdone;
+                GOPTaskScheduler.VMinterfaces.get(id).total_taskmiss =answer.Nmissed;
 
                 //
-                if(full) { //so we don't print too much
+
                     System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);
-                }
-                return answer.deadLineMissRate;
+
             } catch (Exception e) {
                 System.out.println("data update error:"+e);
-                return -1;
             }
         }
-        return -1;
-        //return 0;
     }
     public boolean sendShutdownmessage(){
         if(isWorking()) {

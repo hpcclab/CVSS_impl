@@ -1,7 +1,6 @@
 package VMManagement;
 
         import Scheduler.GOPTaskScheduler;
-        import Scheduler.ServerConfig;
         import Streampkg.StreamGOP;
 
         import java.util.Random;
@@ -80,25 +79,13 @@ public class VMinterface_SimNWcache extends VMinterface {
         return true;
     }
     //get back the runtime stat
-    public  double dataUpdate(boolean full){
+    public  void dataUpdate(){
         //Sync time
         if(GOPTaskScheduler.maxElapsedTime>synctime){
             //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler.maxElapsedTime);
             synctime=GOPTaskScheduler.maxElapsedTime;
         }
         //
-        double deadLineMiss=0;
-        if(full){
-            System.out.println("report from Network cache with BW="+getBandwidth()+"delay (mean SD)="+this.delay_mean+" "+this.delay_SD);
-            if(workDone!=0){
-                deadLineMiss=(1.0*deadlineMiss)/workDone;
-            }
-            GOPTaskScheduler.VMinterfaces.get(id).deadLineMissRate=deadLineMiss;
-            System.out.println("got deadLineMissRate=" + deadLineMiss);
-
-        }else{
-            //not full runtime_report, don't update deadlineMiss, then what?
-        }
         //System.out.println("dataUpdate");
         GOPTaskScheduler.workpending-=(estimatedQueueLength);
         //we completed the scheduling and execution, reset values
@@ -109,11 +96,10 @@ public class VMinterface_SimNWcache extends VMinterface {
         //System.out.println("actualSpentTime="+GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        GOPTaskScheduler.VMinterfaces.get(id).deadlinemiss=deadlineMiss;
-        GOPTaskScheduler.VMinterfaces.get(id).workdone=workDone;
-        GOPTaskScheduler.VMinterfaces.get(id).Nworkdone=NworkDone;
-        GOPTaskScheduler.VMinterfaces.get(id).Ndeadlinemiss=NdeadlineMiss;
-        return deadLineMiss;
+        GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss =deadlineMiss;
+        GOPTaskScheduler.VMinterfaces.get(id).total_itemdone =workDone;
+        GOPTaskScheduler.VMinterfaces.get(id).total_taskdone =NworkDone;
+        GOPTaskScheduler.VMinterfaces.get(id).total_taskmiss =NdeadlineMiss;
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){

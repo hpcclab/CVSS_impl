@@ -39,14 +39,14 @@ public class DataUpdate {
                 for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
                     VMinterface vmi = GOPTaskScheduler.VMinterfaces.get(i);
                     Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
-                    Fullwriter.println("completed: " + vmi.Nworkdone + "(" + vmi.workdone + ") requests, missed " + vmi.deadlinemiss + "(" + vmi.Ndeadlinemiss + ")");
+                    Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
 
 
                     avgActualSpentTime += vmi.actualSpentTime;
-                    totalWorkDone += vmi.workdone;
-                    ntotalWorkDone += vmi.Nworkdone;
-                    totaldeadlinemiss += vmi.deadlinemiss;
-                    ntotaldeadlinemiss += vmi.Ndeadlinemiss;
+                    totalWorkDone += vmi.total_itemdone;
+                    ntotalWorkDone += vmi.total_taskdone;
+                    totaldeadlinemiss += vmi.total_itemmiss;
+                    ntotaldeadlinemiss += vmi.total_taskmiss;
                 }
                 Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.merged_tasklvl_count);
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
@@ -74,12 +74,12 @@ public class DataUpdate {
             for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
                 VMinterface vmi = GOPTaskScheduler.VMinterfaces.get(i);
                 System.out.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
-                System.out.println("completed: " + vmi.Nworkdone + "(" + vmi.workdone + ") requests, missed " + vmi.deadlinemiss + "(" + vmi.Ndeadlinemiss + ")");
+                System.out.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
                 avgActualSpentTime += vmi.actualSpentTime;
-                totalWorkDone += vmi.workdone;
-                ntotalWorkDone += vmi.Nworkdone;
-                totaldeadlinemiss += vmi.deadlinemiss;
-                ntotaldeadlinemiss += vmi.Ndeadlinemiss;
+                totalWorkDone += vmi.total_itemdone;
+                ntotalWorkDone += vmi.total_taskdone;
+                totaldeadlinemiss += vmi.total_itemmiss;
+                ntotaldeadlinemiss += vmi.total_taskmiss;
             }
             System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.merged_tasklvl_count);
             System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
