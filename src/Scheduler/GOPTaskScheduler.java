@@ -162,7 +162,7 @@ public class GOPTaskScheduler {
         }
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
-            return shortestQueueFirst(x,queuelength,executiontime,true,2,true);
+            return shortestQueueFirst(x,queuelength,executiontime,true,2,true); //use SDco or 2 ??
         }else { //default way, shortestQueueFirst
             return shortestQueueFirst(x,queuelength,executiontime,false,2,true); //false for not using TimeEstimator
         }

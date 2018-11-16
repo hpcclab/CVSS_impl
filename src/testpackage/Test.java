@@ -127,7 +127,7 @@ public class Test {
             }
         }else{
             //System.out.println(testbug(0));
-            System.out.println(test("config.xml","test2000r_180000_10000_3000_s1920.txt"));
+            System.out.println(test("config.xml","test3000r_180000_10000_3000_s1920.txt"));
         }
     }
 

@@ -122,16 +122,17 @@ public class VMProvisioner {
         long current_overtime=0,current_undertime=0;
         double current_weighted_undertime=0,current_weighted_overtime=0;
         long T_maxElapsedTime=GOPTaskScheduler.maxElapsedTime;
-        for (int i=0;i<GOPTaskScheduler.VMinterfaces.size();i++){
+        int clustersize=GOPTaskScheduler.VMinterfaces.size();
+        for (int i=0;i<clustersize;i++){
             GOPTaskScheduler.VMinterfaces.get(i).dataUpdate();
             System.out.println("tmp taskdone="+GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone);
             if(GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone!=0){
                 sum_DLmiss+=GOPTaskScheduler.VMinterfaces.get(i).tmp_taskmiss;
                 sum_taskdone+=GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone;
-                current_overtime=GOPTaskScheduler.VMinterfaces.get(i).tmp_overtime;
-                current_undertime=GOPTaskScheduler.VMinterfaces.get(i).tmp_undertime;
-                current_weighted_overtime=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_overtime;
-                current_weighted_undertime=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_undertime;
+                current_overtime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_overtime;
+                current_undertime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_undertime;
+                current_weighted_overtime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_overtime;
+                current_weighted_undertime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_undertime;
                 System.out.println("in last 20 tasks overtime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_overtime+" undertime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_undertime
                 +" weighted_overtime"+GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_undertime);
             }
@@ -143,13 +144,21 @@ public class VMProvisioner {
         //now update deadline miss rate, and oversubscription level
         if(sum_taskdone!=0) {
             deadLineMissRate = sum_DLmiss / sum_taskdone;
+            current_overtime/= clustersize;
+            current_undertime/= clustersize;
+            current_weighted_overtime/= clustersize;
+            current_weighted_undertime/= clustersize;
+
             System.out.println("tmp DMR="+deadLineMissRate);
             System.out.println("current over/undertime="+current_overtime+" "+current_undertime);
             System.out.println("current weighted over/undertime="+current_weighted_overtime+" "+current_weighted_undertime);
             /////???? how to calculate oversubscription level?
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
+            //primitive usage of SDco
 
+            GTS.SDco=2-4*Math.min(1,current_weighted_overtime);
+            System.out.println("change SDco to "+GTS.SDco);
             //finally, update current time to previous time
             previous_wovertime=current_weighted_overtime;
             previous_wundertime=current_weighted_undertime;

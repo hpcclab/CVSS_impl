@@ -53,14 +53,14 @@ public class VMinterface_SimLocal extends VMinterface {
         estimatedQueueLength++;
         estimatedExecutionTime += segment.estimatedExecutionTime;
         //simulate time
-        double delay=0;
+        double exetime=0;
         if(ServerConfig.addProfiledDelay) {
             //System.out.println("est="+segment.estimatedExecutionTime+" sd:"+segment.estimatedExecutionSD);
-            delay=(long) (segment.estimatedExecutionTime+segment.estimatedExecutionSD*r.nextGaussian());
+            exetime=(long) (segment.estimatedExecutionTime+segment.estimatedExecutionSD*r.nextGaussian());
         }
         //System.out.println("delay="+delay);
-        node_synctime +=delay;
-        node_realspentTime +=delay;
+        node_synctime +=exetime;
+        node_realspentTime +=exetime;
         //System.out.println("synctime="+synctime);
         //System.out.println("realspentTime="+realspentTime);
         boolean missed=false;
@@ -87,6 +87,7 @@ public class VMinterface_SimLocal extends VMinterface {
                 }
                 node_missArr[node_statindex]++; //it miss, so count
                 node_aftersync_itemmiss++;
+
                 if(slacktime!=0) {
                     node_sum_overtime-=(long)slackleft;
                     node_sum_wovertime-=slackleft/slacktime;
@@ -96,8 +97,9 @@ public class VMinterface_SimLocal extends VMinterface {
                 node_miss+=node_missArr[node_statindex];
             }else{
                 if(slacktime!=0) {
+                    double usefulslack=slacktime-exetime;
                     node_sum_undertime+=(long)slackleft;
-                    node_sum_wundertime+=slackleft/slacktime;
+                    node_sum_wundertime+=slackleft/usefulslack;
                 }else{
                     System.out.println("ERROR: Time since dispatch=0");
                 }
@@ -145,11 +147,11 @@ public class VMinterface_SimLocal extends VMinterface {
         node_aftersync_itemmiss=node_aftersync_itemdone=node_aftersync_taskdone=node_aftersync_taskmiss=0;
 
 
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_overtime =node_sum_overtime;
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_undertime =node_sum_undertime;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_undertime =node_sum_undertime/node_focus_task;
 
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime;
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
+        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
         //data are self expired, no need to reset or resum
     }
     //shut it down, do nothing
