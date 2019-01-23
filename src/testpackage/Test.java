@@ -7,6 +7,7 @@ import Repository.*;
 import VMManagement.VMProvisioner;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.Scanner;
@@ -115,7 +116,35 @@ public class Test {
         }
         return "done";
     }
-    //for test
+
+    private static void DirectoryTest() {
+        System.out.println("Directory Test");
+
+        File configfile = new File("config/config.xml");
+        JAXBContext ctx = null;
+        try {
+            ctx = JAXBContext.newInstance(ServerConfig.class);
+
+            Unmarshaller um = ctx.createUnmarshaller();
+            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
+
+            //load video repo so we know their v numbers
+            VideoRepository VR = new VideoRepository();
+            VR.addAllKnownVideos();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(ServerConfig.repository);
+
+        for (int i=0; i<VideoRepository.videos.size();i++)
+        {
+            System.out.println(VideoRepository.videos.get(i).name);
+        }
+    }
+
+
+        //for test
     public static void main(String[] args){
 
 
@@ -128,6 +157,7 @@ public class Test {
         }else{
             //System.out.println(testbug(0));
             System.out.println(test("config.xml","test3000r_180000_10000_3000_s1920.txt"));
+            //DirectoryTest();
         }
     }
 

@@ -38,6 +38,7 @@ public class ServerConfig {
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
     public static String videoRepository_mode="list.txt"; //either list.txt or scan
+    public static String repository="repositoryvideos";
     //public static int maximumResolution;
     public static boolean enableTimeEstimator=false; //if true, use Time estimator to do scheduling
     public static String schedulerPolicy;
@@ -143,6 +144,10 @@ public class ServerConfig {
         ServerConfig.profileRequestsBenhmark=input;
     }
 
+    @XmlElement(name = "repository")
+    public void setRepository(String repository) {
+        ServerConfig.repository = repository;
+    }
     @XmlElement(name = "VM")
     public void setVM(String VM_Texts) {
         String s[]=VM_Texts.split(",");

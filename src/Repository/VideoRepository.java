@@ -1,6 +1,7 @@
 package Repository;
 import Scheduler.ServerConfig;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,9 @@ public class VideoRepository {
 
     }
     public void addAllKnownVideos(){
-        for(int i=0;i< ServerConfig.videoList.size();i++){
-            videos.add(new Video(ServerConfig.videoList.get(i)));
+        File[] directories = new File(ServerConfig.repository).listFiles(File::isDirectory);
+        for(int i=0;i< directories.length;i++){
+            videos.add(new Video(directories[i].getPath()));
         }
     }
 }
