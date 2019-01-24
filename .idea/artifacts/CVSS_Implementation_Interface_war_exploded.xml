@@ -7,11 +7,8 @@
         <element id="directory" name="classes">
           <element id="module-output" name="CVSS" />
         </element>
-        <element id="directory" name="lib">
-          <element id="library" level="project" name="com.amazonaws:aws-java-sdk:1.11.236" />
-        </element>
+        <element id="directory" name="lib" />
       </element>
-      <element id="library" level="project" name="com.amazonaws:aws-java-sdk:1.11.236" />
     </root>
   </artifact>
 </component>

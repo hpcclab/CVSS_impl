@@ -1,0 +1,6 @@
+out/
+output/
+resultstat/full
+resultstat/numbers
+CVSS.jar
+.war

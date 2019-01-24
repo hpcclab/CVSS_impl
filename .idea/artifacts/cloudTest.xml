@@ -8,9 +8,6 @@
         </element>
         <element id="module-output" name="CVSS" />
       </element>
-      <element id="library" level="project" name="Jersey-2.2" />
-      <element id="library" level="project" name="com.amazonaws:aws-java-sdk:1.11.236" />
-      <element id="library" level="project" name="servlet-api" />
     </root>
   </artifact>
 </component>
