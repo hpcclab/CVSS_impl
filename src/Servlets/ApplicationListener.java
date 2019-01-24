@@ -2,7 +2,7 @@ package Servlets;
 
 import Controller.GlobalController;
 import Repository.VideoRepository;
-import Scheduler.GOPTaskScheduler;
+import Scheduler.GOPTaskScheduler_Mergable;
 import VMManagement.VMProvisioner;
 
 import javax.servlet.ServletContext;
@@ -17,7 +17,7 @@ public class ApplicationListener implements ServletContextListener {
 
     VideoRepository VR;
     VMProvisioner VMP;
-    GOPTaskScheduler GTS;
+    GOPTaskScheduler_Mergable GTS;
 
     public void contextInitialized(ServletContextEvent arg0) {
         this.sc = arg0.getServletContext();

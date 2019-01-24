@@ -35,7 +35,7 @@ public class Merger {
         while(newfirstpos<searchlimit-1){
             int tryposition=(searchlimit+newfirstpos)/2;
             newVQ.add(tryposition,merged);
-            int test=countDLMiss( newVQ,merged,Integer.MAX_VALUE,GOPTaskScheduler.SDco);
+            int test=countDLMiss( newVQ,merged,Integer.MAX_VALUE,GOPTaskScheduler_Mergable.SDco);
             if(Math.abs(test)<originalmiss){
                 System.out.println("found a position");
                 return tryposition; //found perfect condition
@@ -61,7 +61,7 @@ public class Merger {
         System.out.println("latestpos="+latestpos);
         //put merged to position that it'll not miss
         newVQ.add(latestpos,merged);
-        long check=countDLMiss( newVQ,Math.abs(originalmiss),GOPTaskScheduler.SDco);
+        long check=countDLMiss( newVQ,Math.abs(originalmiss),GOPTaskScheduler_Mergable.SDco);
         System.out.println(check +" vs "+originalmiss);
         if ( Math.abs(check)<= Math.abs(originalmiss)) {
             //make change to real queue
@@ -83,7 +83,7 @@ public class Merger {
             return -999;
         }else {
             newVQ.set(newVQ.indexOf(Original), merged); //can not find original???
-            return countDLMiss(newVQ, null,threshold,GOPTaskScheduler.SDco);
+            return countDLMiss(newVQ, null,threshold,GOPTaskScheduler_Mergable.SDco);
         }
     }
 
@@ -91,9 +91,9 @@ public class Merger {
         //System.out.println("assigning works");
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
-            return GOPTaskScheduler.shortestQueueFirst(x,queuelength,executiontime,true,1,true);
+            return GOPTaskScheduler_Mergable.shortestQueueFirst(x,queuelength,executiontime,true,1,true);
         }else { //default way, shortestQueueFirst
-            return GOPTaskScheduler.shortestQueueFirst(x,queuelength,executiontime,false,1,true); //false for not using TimeEstimator
+            return GOPTaskScheduler_Mergable.shortestQueueFirst(x,queuelength,executiontime,false,1,true); //false for not using TimeEstimator
         }
     }
     public int countOriginalMiss(StreamGOP X,double SDco){

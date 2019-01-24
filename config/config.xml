@@ -31,9 +31,9 @@
 	
     <path>./</path>
 	<run_mode>dry</run_mode>
-<!-- below are fake videos, not real and 27 videos are duplicated to 108-->
-<repository>repositoryvideos</repository>
-<!---
+<repository>repositoryvideos/videoData</repository>
+<repository>repositoryvideos/realVideo</repository>
+<!--- 
 <videoList>repositoryvideos/0_fantasticfour-riseofthesilversurfer-trailer01/</videoList>
 <videoList>repositoryvideos/0_big_buck_bunny_720p_h264_05/</videoList>
 <videoList>repositoryvideos/0_big_buck_bunny_720p_h264_03/</videoList>

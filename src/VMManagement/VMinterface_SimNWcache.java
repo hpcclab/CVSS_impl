@@ -82,7 +82,7 @@ public class VMinterface_SimNWcache extends VMinterface {
     public  void dataUpdate(){
         //Sync time
         if(GOPTaskScheduler.maxElapsedTime>synctime){
-            //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler.maxElapsedTime);
+            //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler_Mergable.maxElapsedTime);
             synctime=GOPTaskScheduler.maxElapsedTime;
         }
         //
@@ -93,7 +93,7 @@ public class VMinterface_SimNWcache extends VMinterface {
         GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = (long)(delay_mean+delay_SD);
         GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=synctime;
         GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime=realspentTime;
-        //System.out.println("actualSpentTime="+GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
+        //System.out.println("actualSpentTime="+GOPTaskScheduler_Mergable.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
         GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss =deadlineMiss;

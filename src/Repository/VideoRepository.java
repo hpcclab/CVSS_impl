@@ -4,6 +4,7 @@ import Scheduler.ServerConfig;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public class VideoRepository {
     public static ArrayList<Video> videos;
@@ -19,10 +20,13 @@ public class VideoRepository {
 
     }
     public void addAllKnownVideos(){
-        File[] directories = new File(ServerConfig.repository).listFiles(File::isDirectory);
-        for(int i=0;i< directories.length;i++){
-            System.out.println(directories[i].getPath()+"/");
-            videos.add(new Video(directories[i].getPath()+"/"));
+        for(int j=0;j<ServerConfig.repository.size();j++) {
+            File[] directories = new File(ServerConfig.repository.get(j)).listFiles(File::isDirectory);
+            Arrays.sort(directories);
+            for (int i = 0; i < directories.length; i++) {
+                System.out.println(directories[i].getPath() + "/");
+                videos.add(new Video(directories[i].getPath() + "/"));
+            }
         }
     }
 }

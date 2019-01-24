@@ -1,5 +1,6 @@
 package VMManagement;
 
+import Scheduler.GOPTaskScheduler_Mergable;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import TimeEstimatorpkg.TimeEstimator;
@@ -42,14 +43,11 @@ public class VMProvisioner {
     private static ArrayList<vmi> VMCollection =new ArrayList<>();
 
     private static GOPTaskScheduler GTS;
-    //EC2 private static AmazonEC2 EC2instance;
-    // EC2 private static AmazonS3Client s3;
-    //private static String s3BucketName;
+    //this need to set
 
-    public VMProvisioner(){
-        this(0);
-    }
-    public VMProvisioner(int minimumVMtomaintain){
+
+    public VMProvisioner(GOPTaskScheduler GTS,int minimumVMtomaintain) {
+        this.GTS=GTS;
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
             System.out.println("Before EC2 client, disabled for now");
@@ -109,8 +107,9 @@ public class VMProvisioner {
         }
         //
     }
-    public void setGTS(GOPTaskScheduler X){
+    public void setGTS(GOPTaskScheduler_Mergable X){
         GTS=X;
+        System.out.println("VMP got GTS Set");
     }
     static int timeforced=0;
     static double previous_wovertime,previous_wundertime;
@@ -156,18 +155,20 @@ public class VMProvisioner {
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
             //primitive usage of SDco
-
-            GTS.SDco=2-4*Math.min(1,current_weighted_overtime);
-            System.out.println("change SDco to "+GTS.SDco);
+            if(GTS instanceof GOPTaskScheduler_Mergable) {
+                GOPTaskScheduler_Mergable GTS_parse=(GOPTaskScheduler_Mergable)GTS;
+                GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime);
+                System.out.println("change SDco to " + GTS_parse.SDco);
+            }
             //finally, update current time to previous time
             previous_wovertime=current_weighted_overtime;
             previous_wundertime=current_weighted_undertime;
         }
 
-        //if time doesn't move,
+        //if time doesn't move,F
         if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
             if (GOPTaskScheduler.maxElapsedTime != T_maxElapsedTime) {
-                System.out.println("GOPTaskScheduler.maxElapsedTime="+GOPTaskScheduler.maxElapsedTime);
+                System.out.println("GOPTaskScheduler_Mergable.maxElapsedTime="+GOPTaskScheduler.maxElapsedTime);
                 System.out.println("reset timeforced count");
                 GOPTaskScheduler.maxElapsedTime = T_maxElapsedTime;
                 timeforced = 0;
@@ -271,16 +272,16 @@ public class VMProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new vmi("thread","",TC));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("local simulated thread");
                     VMCollection.add(new vmi("sim",""));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                     TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new vmi("simNWcache",""));
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                     TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
@@ -288,7 +289,7 @@ public class VMProvisioner {
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
                     EC2instance.startInstances(start);
                     VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount)));
-                    //get IP back and feed to GOPTaskScheduler.addVM
+                    //get IP back and feed to GOPTaskScheduler_Mergable.addVM
 
                     try {
                         sleep(6000);
@@ -339,7 +340,7 @@ public class VMProvisioner {
                     System.out.println("get IP:"+IP);
                     //System.out.println("Halt!, before connect");
                     //scanner.nextInt();
-                    GOPTaskScheduler.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
+                    GOPTaskScheduler_Mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
                     //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
@@ -364,7 +365,7 @@ public class VMProvisioner {
 
                 if (vmitoRemove.type.equalsIgnoreCase("thread")) {
                     System.out.println("Removing Thread " + (VMCollection.size() - 1));
-                    GOPTaskScheduler.remove_VM(VMCollection.size() - 1);
+                    GTS.remove_VM(VMCollection.size() - 1);
                     VMcount--;
                     vmitoRemove.TVM.close();
                 } else if (vmitoRemove.type.equalsIgnoreCase("EC2")) {

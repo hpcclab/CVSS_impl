@@ -1,16 +1,16 @@
 package Singletons;
 
-import Scheduler.GOPTaskScheduler;
+import Scheduler.GOPTaskScheduler_Mergable;
 
 /**
  * Created by pi on 11/1/17.
  */
 public class GTSSingleton {
     private static GTSSingleton instance = null;
-    public static GOPTaskScheduler GTS = null;
+    public static GOPTaskScheduler_Mergable GTS = null;
 
     private GTSSingleton(){
-        GTS = new GOPTaskScheduler();
+        GTS = new GOPTaskScheduler_Mergable();
     }
 
     public static GTSSingleton getInstance(){

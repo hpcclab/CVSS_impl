@@ -69,7 +69,7 @@ public class TimeEstimator {
 
 
                         } else {
-                            System.out.println("No historic data for this cmd!:" + cmd + param);
+                            System.out.println("No historic data for this cmd!:" + cmd +" param:"+ param);
                             System.out.println("keyset=" + polled1.keySet());
                         }
                     }

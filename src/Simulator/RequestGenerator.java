@@ -27,7 +27,7 @@ public class RequestGenerator {
         int randomRes=(int)(Math.random()*7)+1;
         int x=randomRes*80;
         int y=randomRes*60;
-        int videoChoice=(int)(Math.random()* ServerConfig.videoList.size());
+        int videoChoice=(int)(Math.random()* VideoRepository.videos.size());
         //Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
         String setting=x+"x"+y;
         long deadline=0; //did not specified deadline
@@ -35,14 +35,14 @@ public class RequestGenerator {
         OneSpecificRequest(GTS,videoChoice,"Resolution",setting,deadline,0);
     }
 
-    public static void OneSpecificRequest(GOPTaskScheduler GTS,int videoChoice,String command,String setting,long deadline,long arrival){
+    public static void OneSpecificRequest(GOPTaskScheduler GTS, int videoChoice, String command, String setting, long deadline, long arrival){
         Stream ST=new Stream(VideoRepository.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
         AdmissionControl.AssignStreamPriority(ST);
         GTS.addStream(ST);
         //System.out.println("test2");
     }
     //simple static RandomRequest Generator
-    public static void nRandomRequest(GOPTaskScheduler GTS,int Request_Numbers, int interval,int n){
+    public static void nRandomRequest(GOPTaskScheduler GTS, int Request_Numbers, int interval, int n){
         //interval =-1 for random delay
 
         int round = 1;

@@ -21,7 +21,7 @@ public class ServerConfig {
     public static ArrayList<String> VM_address=new ArrayList<>();
     public static ArrayList<Integer> VM_ports=new ArrayList<>();
 
-    public static ArrayList<String> videoList=new ArrayList<>();
+
     public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
     public static boolean consideratemerge =true; ////set to false for testing dumb merge
@@ -38,7 +38,7 @@ public class ServerConfig {
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
     public static String videoRepository_mode="list.txt"; //either list.txt or scan
-    public static String repository="repositoryvideos";
+    public static ArrayList<String> repository=new ArrayList<>();
     //public static int maximumResolution;
     public static boolean enableTimeEstimator=false; //if true, use Time estimator to do scheduling
     public static String schedulerPolicy;
@@ -143,11 +143,11 @@ public class ServerConfig {
     public void setprofileRequestsBenhmark(String input) {
         ServerConfig.profileRequestsBenhmark=input;
     }
-
     @XmlElement(name = "repository")
     public void setRepository(String repository) {
-        ServerConfig.repository = repository;
+        ServerConfig.repository.add(repository);
     }
+
     @XmlElement(name = "VM")
     public void setVM(String VM_Texts) {
         String s[]=VM_Texts.split(",");
@@ -170,10 +170,6 @@ public class ServerConfig {
     @XmlElement(name = "videoRepository_mode")
     public void setvideoRepository_mode(String repomode) {
         ServerConfig.videoRepository_mode = repomode;
-    }
-    @XmlElement(name = "videoList")
-    public void setvideoList(String videoList) {
-        ServerConfig.videoList.add(videoList);
     }
     @XmlElement(name = "enableTimeEstimator")
     public void setEnableTimeEstimator(String check) {

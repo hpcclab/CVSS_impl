@@ -1,6 +1,7 @@
 package VMManagement;
 
 import Scheduler.GOPTaskScheduler;
+import Scheduler.GOPTaskScheduler_Mergable;
 import Scheduler.ServerConfig;
 import Simulator.RequestGenerator;
 
@@ -48,7 +49,7 @@ public class DataUpdate {
                     totaldeadlinemiss += vmi.total_itemmiss;
                     ntotaldeadlinemiss += vmi.total_taskmiss;
                 }
-                Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.merged_tasklvl_count);
+                Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler_Mergable.mrg.merged_tasklvl_count);
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
                 numberwriter.println(totalWorkDone+" , "+ntotalWorkDone+" , "+totaldeadlinemiss+" , "+ntotaldeadlinemiss+" , "+avgActualSpentTime / ServerConfig.maxVM);
 
@@ -57,7 +58,7 @@ public class DataUpdate {
                 F1.close();
                 F2.close();
                 System.out.println("Benchmark finished");
-                System.out.println("Probe count="+GOPTaskScheduler.mrg.probecounter);
+                System.out.println("Probe count=" + GOPTaskScheduler_Mergable.mrg.probecounter); //check how it works after refactor
                 sleep(200);
                 System.exit(0);
             }catch(Exception e){
@@ -81,7 +82,7 @@ public class DataUpdate {
                 totaldeadlinemiss += vmi.total_itemmiss;
                 ntotaldeadlinemiss += vmi.total_taskmiss;
             }
-            System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler.mrg.merged_tasklvl_count);
+            System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ") type A merged:" + GOPTaskScheduler_Mergable.mrg.merged_tasklvl_count);
             System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
         }
     }
