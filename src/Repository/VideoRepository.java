@@ -21,7 +21,8 @@ public class VideoRepository {
     public void addAllKnownVideos(){
         File[] directories = new File(ServerConfig.repository).listFiles(File::isDirectory);
         for(int i=0;i< directories.length;i++){
-            videos.add(new Video(directories[i].getPath()));
+            System.out.println(directories[i].getPath()+"/");
+            videos.add(new Video(directories[i].getPath()+"/"));
         }
     }
 }
