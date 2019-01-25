@@ -1,7 +1,8 @@
 <component name="libraryTable">
   <library name="commonlangs">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../CVSS Things/commonlangs" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang3-3.3.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang3-3.7.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
