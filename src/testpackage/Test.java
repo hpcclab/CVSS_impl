@@ -1,6 +1,6 @@
 package testpackage;
 import Scheduler.GOPTaskScheduler;
-import Scheduler.GOPTaskScheduler_Mergable;
+import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
 import Simulator.RequestGenerator;
 import Repository.*;
@@ -31,7 +31,7 @@ public class Test {
 
             //Set things up
             VideoRepository VR=new VideoRepository();
-            GOPTaskScheduler GTS=new GOPTaskScheduler_Mergable();
+            GOPTaskScheduler GTS=new GOPTaskScheduler_mergable();
             System.out.println("test1");
             VMProvisioner VMP=new VMProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
             System.out.println("test2");

@@ -1,6 +1,6 @@
 package VMManagement;
 
-import Scheduler.GOPTaskScheduler_Mergable;
+import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import TimeEstimatorpkg.TimeEstimator;
@@ -107,7 +107,7 @@ public class VMProvisioner {
         }
         //
     }
-    public void setGTS(GOPTaskScheduler_Mergable X){
+    public void setGTS(GOPTaskScheduler_mergable X){
         GTS=X;
         System.out.println("VMP got GTS Set");
     }
@@ -155,8 +155,8 @@ public class VMProvisioner {
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
             //primitive usage of SDco
-            if(GTS instanceof GOPTaskScheduler_Mergable) {
-                GOPTaskScheduler_Mergable GTS_parse=(GOPTaskScheduler_Mergable)GTS;
+            if(GTS instanceof GOPTaskScheduler_mergable) {
+                GOPTaskScheduler_mergable GTS_parse=(GOPTaskScheduler_mergable)GTS;
                 GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime);
                 System.out.println("change SDco to " + GTS_parse.SDco);
             }
@@ -168,7 +168,7 @@ public class VMProvisioner {
         //if time doesn't move,F
         if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
             if (GOPTaskScheduler.maxElapsedTime != T_maxElapsedTime) {
-                System.out.println("GOPTaskScheduler_Mergable.maxElapsedTime="+GOPTaskScheduler.maxElapsedTime);
+                System.out.println("GOPTaskScheduler_mergable.maxElapsedTime="+GOPTaskScheduler.maxElapsedTime);
                 System.out.println("reset timeforced count");
                 GOPTaskScheduler.maxElapsedTime = T_maxElapsedTime;
                 timeforced = 0;
@@ -289,7 +289,7 @@ public class VMProvisioner {
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
                     EC2instance.startInstances(start);
                     VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount)));
-                    //get IP back and feed to GOPTaskScheduler_Mergable.addVM
+                    //get IP back and feed to GOPTaskScheduler_mergable.addVM
 
                     try {
                         sleep(6000);
@@ -340,7 +340,7 @@ public class VMProvisioner {
                     System.out.println("get IP:"+IP);
                     //System.out.println("Halt!, before connect");
                     //scanner.nextInt();
-                    GOPTaskScheduler_Mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
+                    GOPTaskScheduler_mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
                     //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));

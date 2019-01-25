@@ -6,10 +6,9 @@ import VMManagement.VMinterface;
 import VMManagement.VMinterface_SimLocal;
 
 import java.util.ArrayList;
-
+// base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.
 public abstract class GOPTaskScheduler {
     protected miscTools.SortableList Batchqueue = new miscTools.SortableList();
-    protected miscTools.SortableList pendingqueue = new miscTools.SortableList();
     public static ArrayList<VMinterface> VMinterfaces = new ArrayList<VMinterface>();
     protected int scheduler_working = 0;
     protected static int maxpending = 0;
@@ -46,14 +45,28 @@ public abstract class GOPTaskScheduler {
     }
 
     public boolean emptyQueue() {
-        if (Batchqueue != null && pendingqueue != null) {
-            return (Batchqueue.isEmpty() && pendingqueue.isEmpty());
+        if (Batchqueue != null ) {
+            return (Batchqueue.isEmpty());
         }
         return false;
     }
 
     public void taskScheduling() {
-        System.out.println("called empty non overwritten taskScheduling function");
+        System.out.println("called non overwritten taskScheduling function, doing FCFS assignment");
+        if(scheduler_working !=1) {
+            scheduler_working = 1;
+
+            for(int i=0;i<VMinterfaces.size();i++){ //get a free machine
+                int assignable=VMinterfaces.get(i).estimatedQueueLength - ServerConfig.localqueuelengthperVM; //get number of task can assign to this machine
+                while ((!Batchqueue.isEmpty()) && assignable>0) {
+                    StreamGOP X=Batchqueue.removeDefault();
+                    X.dispatched=true;
+                    VMinterfaces.get(i).sendJob(X);
+                    System.out.println("send job " + X.getPath() + " to " + VMinterfaces.get(i).toString());
+                    }
+            }
+            scheduler_working =0;
+        }
     }
     //turn off VMS socket connection sockets
     public void close(){

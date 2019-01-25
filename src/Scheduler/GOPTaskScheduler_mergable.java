@@ -6,25 +6,29 @@ import TimeEstimatorpkg.retStat;
 import VMManagement.*;
 
 
-
-public class GOPTaskScheduler_Mergable extends GOPTaskScheduler_common {
+// mergable GOPTaskScheduler, this is just mostly pairing merger class to GOPTaskScheduler.
+// currently pending queue is not really used
+public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     public static Merger mrg;
-    //private HashMap<request,List<StreamGOP>> LV2map_pending=new HashMap<request,List<StreamGOP>>(); //level2's request record skip resolution so more matches
-
+    protected miscTools.SortableList pendingqueue = new miscTools.SortableList(); //keep track of pending task (submitted, but didn't completed)
 
 
     public static double SDco=2;
     private static long oversubscriptionlevel;
-    public GOPTaskScheduler_Mergable(){
-        if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
-            //add server list to ShortestQueueFirst list too
-        }
+    public GOPTaskScheduler_mergable(){
+        super();
         if(ServerConfig.taskmerge){
             mrg= new Merger(Batchqueue,pendingqueue,VMinterfaces);
         }
     }
 
+    public boolean emptyQueue() {
+        if (Batchqueue != null && pendingqueue != null) {
+            return (Batchqueue.isEmpty() && pendingqueue.isEmpty());
+        }
+        return false;
+    }
 
     //bloated version of addStream, check duplication and similarity first
     public void addStream(Stream ST){
@@ -40,7 +44,10 @@ public class GOPTaskScheduler_Mergable extends GOPTaskScheduler_common {
             //assignwork thread start
             taskScheduling();
     }
-
+    //function that do something before task X get sent
+    protected void preschedulefn(StreamGOP X){
+        pendingqueue.add(X);
+    }
     //function that do something after task X get sent
     protected void postschedulefn(StreamGOP X){
         //System.out.println("overwritten postschedulefn is CALLED\n\n\n");

@@ -120,7 +120,7 @@ public class VMinterface_SimLocal extends VMinterface {
     public void dataUpdate(){
         //Sync time
         if(GOPTaskScheduler.maxElapsedTime> node_synctime){
-            //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler_Mergable.maxElapsedTime);
+            //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler_mergable.maxElapsedTime);
             node_synctime =GOPTaskScheduler.maxElapsedTime;
         }
         // change to using the circular, tmp
@@ -135,7 +135,7 @@ public class VMinterface_SimLocal extends VMinterface {
         GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = 0;
         GOPTaskScheduler.VMinterfaces.get(id).elapsedTime= node_synctime;
         GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime= node_realspentTime;
-        //System.out.println("actualSpentTime="+GOPTaskScheduler_Mergable.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
+        //System.out.println("actualSpentTime="+GOPTaskScheduler_mergable.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
         GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;

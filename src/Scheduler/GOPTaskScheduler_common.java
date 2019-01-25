@@ -4,9 +4,13 @@ import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
 import VMManagement.*;
-
+//extends GOPTaskScheduler, with more VM type support, more scheduling options
 public class GOPTaskScheduler_common extends GOPTaskScheduler {
-
+    public GOPTaskScheduler_common(){
+        //if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
+            //add server list to ShortestQueueFirst list too?
+        //}
+    }
     //overwrite with common VM types
     public boolean  add_VM(String VM_type,String VM_class,String addr,int port,int id,boolean autoSchedule){
         VMinterface t;
@@ -37,7 +41,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             double minSD=0;
 
             //set initial value to machine 1
-            if((pending_queuelength[0] < ServerConfig.maxVMqueuelength) || !realSchedule){ //if not real assignment, we can violate queue length
+            if((pending_queuelength[0] < ServerConfig.localqueuelengthperVM) || !realSchedule){ //if not real assignment, we can violate queue length
                 if (useTimeEstimator) {
                     retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), ServerConfig.VM_ports.get(0), x);
                     estimatedT= (long) (chk.mean + chk.SD * SDcoefficient);
@@ -58,7 +62,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 VMinterface aMachine = VMinterfaces.get(i);
                 if (aMachine.isWorking()) {
                     if (aMachine.autoschedule) {
-                        if((pending_queuelength[i] < ServerConfig.maxVMqueuelength) || !realSchedule) {
+                        if((pending_queuelength[i] < ServerConfig.localqueuelengthperVM) || !realSchedule) {
 
                             //calculate new choice
                             if (useTimeEstimator) {
@@ -89,7 +93,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                     System.out.println("warning, a machine is not ready");
                 }
             }
-            System.out.println("decided a machine "+answer.VM_class+" id= "+answer.id+" queuelength="+answer.estimatedQueueLength+"/"+ServerConfig.maxVMqueuelength);
+            System.out.println("decided a machine "+answer.VM_class+" id= "+answer.id+" queuelength="+answer.estimatedQueueLength+"/"+ServerConfig.localqueuelengthperVM);
             if (realSchedule && useTimeEstimator) { //update estimatedExecutionTime
                 x.estimatedExecutionTime = minET;
                 x.estimatedExecutionSD=minSD;
@@ -118,7 +122,10 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             return shortestQueueFirst(x,queuelength,executiontime,false,2,true); //false for not using TimeEstimator
         }
     }
+    //function that do something before task X get sent
+    protected void preschedulefn(StreamGOP X){
 
+    }
     public void taskScheduling(){ // first function call to submit some works to other machine
 
         System.out.println("call submit work");
@@ -129,10 +136,10 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 //select a task by a criteria
                 X=Batchqueue.removeDefault();
 
-                pendingqueue.add(X);
+                preschedulefn(X);
 
                 VMinterface chosenVM = selectMachine(X);
-                if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.maxVMqueuelength)) {
+                if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.localqueuelengthperVM)) {
                     //do reprovisioner, we need more VM!
                     //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
                     System.out.println("queue too long, scale up!");
@@ -155,7 +162,6 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 //X.parentStream=null;
 
                 //then it's ready to send out
-
                 chosenVM.sendJob(X);
                 postschedulefn(X);
                 System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());

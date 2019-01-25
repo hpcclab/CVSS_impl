@@ -26,7 +26,6 @@
     <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
     <minVM>8</minVM>
     <maxVM>8</maxVM>
-    <maxVMqueuelength>4</maxVMqueuelength>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
     <path>./</path>
