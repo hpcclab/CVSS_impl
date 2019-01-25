@@ -22,7 +22,12 @@ public class Video {
     }
     public Video(String path){
         //set name
-        String pathsplit[]=path.split("/");
+        String pathsplit[];
+        if(File.separatorChar=='\\'){
+         pathsplit=path.split("\\\\");
+        }else{
+        pathsplit=path.split(File.separator);
+    }
         name=pathsplit[pathsplit.length-1];
         if(ServerConfig.videoRepository_mode.equalsIgnoreCase("list.txt")){
             //list mode

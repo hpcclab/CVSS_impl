@@ -1,20 +1,20 @@
 Filetest3000r_180000_10000_3000_s1920.txt
 Stat for Queuesort=Deadline mergable=false
-Machine 0 time elapsed:329873 time actually spent:267680
-completed: 399(399) requests, missed 123(123)
-Machine 1 time elapsed:329873 time actually spent:259307
-completed: 399(399) requests, missed 117(117)
-Machine 2 time elapsed:329873 time actually spent:248833
-completed: 399(399) requests, missed 117(117)
-Machine 3 time elapsed:329873 time actually spent:258943
-completed: 397(397) requests, missed 119(119)
-Machine 4 time elapsed:329873 time actually spent:280314
-completed: 400(400) requests, missed 125(125)
-Machine 5 time elapsed:329873 time actually spent:270827
-completed: 398(398) requests, missed 129(129)
-Machine 6 time elapsed:329873 time actually spent:236296
-completed: 398(398) requests, missed 122(122)
-Machine 7 time elapsed:329873 time actually spent:252389
-completed: 397(397) requests, missed 125(125)
-total completed: 3187(3187) missed 977(977) type A merged:0
-avgspentTime 259323
+Machine 0 time elapsed:331136 time actually spent:282346
+completed: 399(399) requests, missed 136(136)
+Machine 1 time elapsed:331136 time actually spent:259459
+completed: 399(399) requests, missed 121(121)
+Machine 2 time elapsed:331136 time actually spent:237191
+completed: 399(399) requests, missed 124(124)
+Machine 3 time elapsed:331136 time actually spent:244142
+completed: 397(397) requests, missed 128(128)
+Machine 4 time elapsed:331136 time actually spent:281365
+completed: 400(400) requests, missed 130(130)
+Machine 5 time elapsed:331136 time actually spent:268183
+completed: 398(398) requests, missed 131(131)
+Machine 6 time elapsed:331136 time actually spent:251290
+completed: 398(398) requests, missed 126(126)
+Machine 7 time elapsed:331136 time actually spent:247622
+completed: 397(397) requests, missed 135(135)
+total completed: 3187(3187) missed 1031(1031) type A merged:0
+avgspentTime 258949

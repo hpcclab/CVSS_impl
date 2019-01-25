@@ -34,7 +34,6 @@ public class Stream {
     public Stream(Video v,String command,String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime){
         status=0;
         video =v;
-
         if(addedslackTime==0) { //ST==0, did not specified start time, make a new startTime
             //normally dont fall in this case anyway in sim mode
             if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
@@ -46,13 +45,13 @@ public class Stream {
         }else{
             startTime=addedslackTime;
         }
-
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){
         for(int i=startSegment;i<endSegment;i++){
             String designatedSettings;
             if(settings.equalsIgnoreCase("TBD")){ //change TBD to stream&gops specific
                 designatedSettings=(i+1)+"_"+v.name;
+                //designatedSettings=v.name;
                 //System.out.println("setting="+designatedSettings);
             }else{
                 designatedSettings=settings;

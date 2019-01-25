@@ -20,6 +20,7 @@ public class AdmissionControl {
     public static void AssignStreamPriority(Stream stream){
         for (StreamGOP x :stream.streamGOPs){
             double newPriority;
+            System.out.println(x.segment);
             int segment_number=Integer.parseInt(x.segment);
 
             //how we actually assign priority?

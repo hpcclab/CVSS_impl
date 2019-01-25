@@ -1,5 +1,7 @@
 package Repository;
 
+import java.io.File;
+
 /**
  * Created by pi on 5/21/17.
  */
@@ -20,7 +22,12 @@ public class RepositoryGOP implements java.io.Serializable {
         setPath(path);
         isTranscoded = false;
         //segment = path.substring(path.length()-7,path.length()-3);//gets last 4 characters of path before extension, a number between 0000 and 9999
-        String[] psplit=path.split("/");
+        String psplit[];
+        if(File.separatorChar=='\\'){
+            psplit=path.split("\\\\");
+        }else{
+            psplit=path.split(File.separator);
+        }
         presentationTime=presentTime;
         segment=psplit[psplit.length-1].split("\\.")[0];
     }

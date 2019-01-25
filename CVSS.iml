@@ -23,5 +23,6 @@
     <orderEntry type="library" name="servlet-api" level="project" />
     <orderEntry type="library" name="javax.servlet:javax.servlet-api:4.0.1" level="project" />
     <orderEntry type="library" name="commonlangs" level="project" />
+    <orderEntry type="library" name="commons-lang3-3.3.2" level="project" />
   </component>
 </module>
