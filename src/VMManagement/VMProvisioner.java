@@ -95,8 +95,12 @@ public class VMProvisioner {
             */
         }
         EvaluateClusterSize(-1);
-        //set up task for evaluate cluster size every ms
-        if(ServerConfig.dataUpdateInterval>0){
+
+        boolean autoSchedule = false;
+
+        if(autoSchedule){
+            //set up task for evaluate cluster size every ms
+            if(ServerConfig.dataUpdateInterval>0){
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     Tick();
@@ -104,6 +108,7 @@ public class VMProvisioner {
             };
             new Timer(ServerConfig.dataUpdateInterval, taskPerformer).start();
 
+            }
         }
         //
     }

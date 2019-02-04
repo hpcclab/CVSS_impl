@@ -160,7 +160,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 //change StreamGOP type to Dispatched
                 X.dispatched = true;
                 //X.parentStream=null;
-
+                System.out.println("Before chosenVM.sendJob in common GTS");
                 //then it's ready to send out
                 chosenVM.sendJob(X);
                 postschedulefn(X);

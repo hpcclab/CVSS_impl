@@ -4,7 +4,10 @@ import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
 import Simulator.RequestGenerator;
 import Repository.*;
+import Streampkg.Settings;
+import Streampkg.StreamManager;
 import VMManagement.VMProvisioner;
+import com.sun.security.ntlm.Server;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -32,9 +35,7 @@ public class Test {
             //Set things up
             VideoRepository VR=new VideoRepository();
             GOPTaskScheduler GTS=new GOPTaskScheduler_mergable();
-            System.out.println("test1");
             VMProvisioner VMP=new VMProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
-            System.out.println("test2");
             //VMP.setGTS(GTS);
             //load Videos into Repository
             VR.addAllKnownVideos();
@@ -119,8 +120,7 @@ public class Test {
         return "done";
     }
 
-    private static void DirectoryTest() {
-        System.out.println("Directory Test");
+    private static void RealLocalThreads() throws IOException {
 
         File configfile = new File("config/config.xml");
         JAXBContext ctx = null;
@@ -130,24 +130,76 @@ public class Test {
             Unmarshaller um = ctx.createUnmarshaller();
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
 
-            //load video repo so we know their v numbers
-            VideoRepository VR = new VideoRepository();
-            VR.addAllKnownVideos();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
 
-        System.out.println(ServerConfig.repository);
+        //Step 1: Retrieve Real Videos from Video Repository
 
-        for (int i=0; i<VideoRepository.videos.size();i++)
-        {
-            System.out.println(VideoRepository.videos.get(i).name);
+        StreamManager SM = new StreamManager();
+
+        VideoRepository VR = new VideoRepository();
+        VR.addAllRealVideos();
+
+        //Step 1a Create threads that wait for requests upon an entry of the index of a real video
+
+        //seems fine for tbe most part
+        GOPTaskScheduler GTS=new GOPTaskScheduler_mergable();
+
+        //checking...
+        VMProvisioner VMP=new VMProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
+
+        int num = Integer.MAX_VALUE;
+
+        //Step 2 Request a stream by requesting an index number
+        while (num != 0) {
+
+            Scanner scanner=new Scanner(System.in);
+
+            for (int i=0;i< VideoRepository.videos.size();i++){
+                System.out.println(VideoRepository.videos.get(i).name + ": " + i);
+            }
+            System.out.println("Enter the video that you would like to have streamed: ");
+            num = scanner.nextInt();
+
+            Settings newSettings = new Settings();
+
+            newSettings.resolution = true;
+            newSettings.resWidth = "1280";
+            newSettings.resHeight = "720";
+            newSettings.videoname = VideoRepository.videos.get(num).name;
+
+            SM.InitializeStream(num, newSettings, GTS);
+
         }
+
+        /*
+
+        while(!GTS.emptyQueue()){
+                System.out.println("wait for pending work to finish");
+                sleep(300);
+            }
+
+        System.out.println("All queue are emptied");
+
+        //*/
+
+        //wind down process
+        GTS.close();
+        VMP.closeAll();
+
+        //Step 6: remove all the folders and contents in the streams folder
+        try {
+            SM.RemoveProcessedStreams();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
         //for test
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
 
 
         if(args.length>1){
@@ -158,8 +210,8 @@ public class Test {
             }
         }else{
             //System.out.println(testbug(0));
-            System.out.println(test("config.xml","test3000r_180000_10000_3000_s1920.txt"));
-            //DirectoryTest();
+            //System.out.println(test("config.xml","test3000r_180000_10000_3000_s1920.txt"));
+            RealLocalThreads();
         }
     }
 

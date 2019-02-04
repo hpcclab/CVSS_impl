@@ -33,6 +33,7 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
     //bloated version of addStream, check duplication and similarity first
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
+        System.out.println("Add Stream in GTS before Batchqueue add");
         for(StreamGOP X:ST.streamGOPs) {
             if(ServerConfig.taskmerge){
                 mrg.mergeifpossible(X,SDco);

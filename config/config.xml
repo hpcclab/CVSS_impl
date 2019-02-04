@@ -4,7 +4,7 @@
     <defaultBatchScript>..\bash\testbash.sh</defaultBatchScript>
     <addFakeDelay>False</addFakeDelay>
 	<addProfiledDelay>True</addProfiledDelay>
-	<profiledRequests>True</profiledRequests>
+	<profiledRequests>False</profiledRequests>
     <localqueuelengthperVM>4</localqueuelengthperVM>
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
     <lowscalingThreshold>0.1</lowscalingThreshold>
@@ -151,17 +151,15 @@
 <useEC2>False</useEC2>
     <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
 	
-    <VM>sim,g2.2xlarge,localhost,5060,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5061,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5062,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5063,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5064,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5065,true</VM>
-
-
-    <VM>sim,g2.2xlarge,localhost,5066,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5067,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5068,true</VM>
+    <VM>thread,g2.2xlarge,localhost,5060,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5061,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5062,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5063,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5064,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5065,false</VM>        
+    <VM>thread,g2.2xlarge,localhost,5066,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5067,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5068,false</VM>
 	
 	<VM>simNWcache,fixedBandwidth,localhost,100,false</VM>  <!-- unit = Mbps-->
 
