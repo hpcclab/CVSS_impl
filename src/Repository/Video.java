@@ -79,7 +79,7 @@ public class Video {
                         String fileName = files[i].getName();
                         //check if extension is not m3u8
                         String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                        if (!extension.equalsIgnoreCase("m3u8") && extension.equalsIgnoreCase("txt")) {
+                        if (!extension.equalsIgnoreCase("m3u8") && !extension.equalsIgnoreCase("txt")) {
                             RepositoryGOP repositoryGop = new RepositoryGOP(files[i].getPath());
                             this.addGOP(repositoryGop);
                         }
