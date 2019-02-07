@@ -19,21 +19,25 @@ public class Video {
     public String name;
 
     public Video(){
+        //System.out.print("test\n\n");
     }
     public Video(String path){
+       // System.out.print("test test\n\n");
         //set name
         String pathsplit[];
         if(File.separatorChar=='\\'){
          pathsplit=path.split("\\\\");
         }else{
         pathsplit=path.split(File.separator);
-    }
+        }
         name=pathsplit[pathsplit.length-1];
-        if(ServerConfig.videoRepository_mode.equalsIgnoreCase("list.txt")){
+        File F=new File(path+"list.txt");
+        if(F.exists()){
             //list mode
             try {
+                System.out.print("list mode\n\n");
                 //System.out.println("look for path:"+path);
-                Scanner scanner=new Scanner(new File(path+"list.txt"));
+                Scanner scanner=new Scanner(F);
                 String[] sp=scanner.nextLine().split("\\s+");
                 //System.out.println("split size="+sp.length);
                 if(sp[0].equalsIgnoreCase("g")){ //auto generate mode
@@ -68,6 +72,7 @@ public class Video {
 
 
         }else{
+            System.out.print("scan mode\n\n");
             //scan mode
             File[]  files= new File(path).listFiles();
             if (files != null) {
@@ -78,7 +83,7 @@ public class Video {
                         String fileName = files[i].getName();
                         //check if extension is not m3u8
                         String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                        if (!extension.equalsIgnoreCase("m3u8") && extension.equalsIgnoreCase("txt")) {
+                        if (!extension.equalsIgnoreCase("m3u8") && !extension.equalsIgnoreCase("txt")) {
                             RepositoryGOP repositoryGop = new RepositoryGOP(files[i].getPath());
                             this.addGOP(repositoryGop);
                         }

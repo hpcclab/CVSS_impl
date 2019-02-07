@@ -87,6 +87,7 @@ public class StreamManager {
         for(StreamGOP x:ST.streamGOPs){
             System.out.println(x.getPriority());
         }
+        System.out.println("Number of Stream GOPs in stream: " + ST.streamGOPs.size());
         //Scheduler
         System.out.println("before stream");
         GTS.addStream(ST);
