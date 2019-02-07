@@ -165,8 +165,8 @@ public class Test {
             Settings newSettings = new Settings();
 
             newSettings.resolution = true;
-            newSettings.resWidth = "1280";
-            newSettings.resHeight = "720";
+            newSettings.resWidth = "640";
+            newSettings.resHeight = "480";
             newSettings.videoname = VideoRepository.videos.get(num).name;
 
             SM.InitializeStream(num, newSettings, GTS);
@@ -189,11 +189,13 @@ public class Test {
         VMP.closeAll();
 
         //Step 6: remove all the folders and contents in the streams folder
+        /*
         try {
             SM.RemoveProcessedStreams();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //*/
 
     }
 

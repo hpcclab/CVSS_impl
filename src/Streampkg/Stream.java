@@ -68,7 +68,7 @@ public class Stream {
         }
     }
 
-    public Stream(Video v,String command, String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime, Settings vidSettings){
+    public Stream(Video v,String command, String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime,Settings vidSettings){
         videoSettings = vidSettings;
         status=0;
         video =v;
@@ -95,7 +95,8 @@ public class Stream {
             else{
                 designatedSettings=settings;
             }
-            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings,startTime,arrivalTime);
+
+            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings,startTime,arrivalTime,vidSettings);
             //System.out.println("deadline of "+video.name+" "+(i+1)+"="+xcopy.getDeadLine());
             streamGOPs.add(xcopy);
         }

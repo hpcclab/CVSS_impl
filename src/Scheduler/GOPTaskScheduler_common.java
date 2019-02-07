@@ -128,15 +128,25 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
     }
     public void taskScheduling(){ // first function call to submit some works to other machine
 
-        System.out.println("call submit work");
+        System.out.println("call submit work in common");
+        System.out.println("scheduler_working " + scheduler_working );
+        System.out.println("workpending " + workpending);
+        System.out.println("maxpending " + maxpending);
+        System.out.println("Batchqueue size " + Batchqueue.size());
+        //TC
+        maxpending = 50;
         if(scheduler_working !=1) {
             scheduler_working = 1;
+            //TC while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
             while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
+                System.out.println("In taskscheduling while loop");
                 StreamGOP X;
                 //select a task by a criteria
                 X=Batchqueue.removeDefault();
 
+                System.out.println("Before preschedule in GTS taskscheduling");
                 preschedulefn(X);
+                System.out.println("After preschedule in GTS taskscheduling");
 
                 VMinterface chosenVM = selectMachine(X);
                 if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.localqueuelengthperVM)) {

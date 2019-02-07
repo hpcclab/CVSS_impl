@@ -10,18 +10,123 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb4b504f-ecd0-4b0b-810b-57fe08d8b3fa" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Streampkg/StreamManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/list.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/out.m3u8" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/list.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/out.m3u8" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/list.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/out.m3u8" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/1.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/10.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/11.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/12.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/13.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/14.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/15.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/16.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/2.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/3.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/4.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/5.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/6.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/7.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/8.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/9.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/1.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/2.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/3.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/4.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/5.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/6.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/7.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/8.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/9.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/1.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/10.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/11.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/12.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/13.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/14.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/15.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/16.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/17.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/18.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/19.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/2.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/20.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/21.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/22.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/3.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/4.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/5.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/6.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/7.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/8.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/9.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0000.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0000.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0001.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0001.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0002.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0002.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0003.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0003.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0004.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0004.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0005.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0005.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0006.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0006.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0007.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0007.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0008.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0008.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0009.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0009.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0010.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0010.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0011.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0011.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0012.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0012.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0013.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0013.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0014.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0014.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0015.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0015.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/0016.ts" afterPath="$PROJECT_DIR$/repobackup/bbb_trailer/0016.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0000.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0000.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0001.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0001.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0002.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0002.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0003.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0003.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0004.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0004.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0005.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0005.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0006.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0006.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0007.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0007.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0008.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0008.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part1/0009.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part1/0009.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0000.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0000.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0001.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0001.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0002.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0002.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0003.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0003.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0004.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0004.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0005.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0005.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0006.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0006.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0007.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0007.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0008.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0008.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0009.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0009.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0010.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0010.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0011.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0011.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0012.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0012.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0013.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0013.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0014.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0014.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0015.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0015.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0016.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0016.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0017.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0017.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0018.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0018.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0019.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0019.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0020.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0020.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0021.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0021.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/ff_trailer_part3/0022.ts" afterPath="$PROJECT_DIR$/repobackup/ff_trailer_part3/0022.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bash/createDir.sh" afterPath="$PROJECT_DIR$/bash/createDir.sh" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/config.xml" afterPath="$PROJECT_DIR$/config/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resultstat/full/unmerge_SortDeadline_test3000r_180000_10000_3000_s1920.txt" afterPath="$PROJECT_DIR$/resultstat/full/unmerge_SortDeadline_test3000r_180000_10000_3000_s1920.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resultstat/numbers/unmerge_SortDeadline_test3000r_180000_10000_3000_s1920.txt" afterPath="$PROJECT_DIR$/resultstat/numbers/unmerge_SortDeadline_test3000r_180000_10000_3000_s1920.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Repository/VideoRepository.java" afterPath="$PROJECT_DIR$/src/Repository/VideoRepository.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/profile/g2.2xlarge.txt" afterPath="$PROJECT_DIR$/profile/g2.2xlarge.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_common.java" afterPath="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_common.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_mergable.java" afterPath="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_mergable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Streampkg/Settings.java" afterPath="$PROJECT_DIR$/src/Streampkg/Settings.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Streampkg/Stream.java" afterPath="$PROJECT_DIR$/src/Streampkg/Stream.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Streampkg/StreamGOP.java" afterPath="$PROJECT_DIR$/src/Streampkg/StreamGOP.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Streampkg/StreamManager.java" afterPath="$PROJECT_DIR$/src/Streampkg/StreamManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java" afterPath="$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/VMManagement/VMProvisioner.java" afterPath="$PROJECT_DIR$/src/VMManagement/VMProvisioner.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/VMManagement/VMinterface_SimLocal.java" afterPath="$PROJECT_DIR$/src/VMManagement/VMinterface_SimLocal.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/VMManagement/VMinterface_SocketIO.java" afterPath="$PROJECT_DIR$/src/VMManagement/VMinterface_SocketIO.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/testpackage/Test.java" afterPath="$PROJECT_DIR$/src/testpackage/Test.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -38,11 +143,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Test.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Test.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/testpackage/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
-              <caret line="146" column="28" lean-forward="false" selection-start-line="146" selection-start-column="7" selection-end-line="146" selection-end-column="28" />
+            <state relative-caret-position="700">
+              <caret line="192" column="13" lean-forward="true" selection-start-line="192" selection-start-column="13" selection-end-line="192" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -51,9 +156,13 @@
       <file leaf-file-name="VMProvisioner.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/VMManagement/VMProvisioner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16">
-              <caret line="109" column="0" lean-forward="false" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="4080">
+              <caret line="269" column="77" lean-forward="false" selection-start-line="269" selection-start-column="77" selection-end-line="269" selection-end-column="77" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#3551#3552#0" expanded="false" />
+                <element signature="e#3597#3598#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -61,9 +170,46 @@
       <file leaf-file-name="VMinterface_SocketIO.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/VMManagement/VMinterface_SocketIO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="841">
-              <caret line="77" column="29" lean-forward="false" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
-              <folding />
+            <state relative-caret-position="850">
+              <caret line="59" column="76" lean-forward="false" selection-start-line="59" selection-start-column="76" selection-end-line="59" selection-end-column="76" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#1601#1602#0" expanded="false" />
+                <element signature="e#1633#1634#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TranscodingVM.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/TranscodingVM/TranscodingVM.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2380">
+              <caret line="147" column="18" lean-forward="false" selection-start-line="147" selection-start-column="18" selection-end-line="147" selection-end-column="18" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RepositoryGOP.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Repository/RepositoryGOP.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="11" column="32" lean-forward="false" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
+              <folding>
+                <element signature="e#381#382#0" expanded="false" />
+                <element signature="e#409#410#0" expanded="false" />
+                <element signature="e#1360#1361#0" expanded="false" />
+                <element signature="e#1390#1391#0" expanded="false" />
+                <element signature="e#1443#1444#0" expanded="false" />
+                <element signature="e#1481#1482#0" expanded="false" />
+                <element signature="e#1526#1527#0" expanded="false" />
+                <element signature="e#1561#1562#0" expanded="false" />
+                <element signature="e#1622#1623#0" expanded="false" />
+                <element signature="e#1670#1671#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -71,11 +217,26 @@
       <file leaf-file-name="Stream.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Streampkg/Stream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+            <state relative-caret-position="680">
+              <caret line="44" column="63" lean-forward="false" selection-start-line="44" selection-start-column="63" selection-end-line="44" selection-end-column="63" />
               <folding>
-                <element signature="e#4366#4367#0" expanded="true" />
-                <element signature="e#4395#4396#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#4378#4379#0" expanded="false" />
+                <element signature="e#4407#4408#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TranscodingThread.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2788">
+              <caret line="171" column="0" lean-forward="false" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#9284#9285#0" expanded="false" />
+                <element signature="e#9318#9319#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -84,30 +245,8 @@
       <file leaf-file-name="Settings.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Streampkg/Settings.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="729">
-              <caret line="64" column="81" lean-forward="true" selection-start-line="64" selection-start-column="81" selection-end-line="64" selection-end-column="81" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StreamManager.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Streampkg/StreamManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GOPTaskScheduler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-171">
-              <caret line="25" column="44" lean-forward="true" selection-start-line="25" selection-start-column="44" selection-end-line="25" selection-end-column="44" />
+            <state relative-caret-position="901">
+              <caret line="55" column="5" lean-forward="false" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -116,74 +255,66 @@
       <file leaf-file-name="GOPTaskScheduler_common.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_common.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="171" column="48" lean-forward="true" selection-start-line="171" selection-start-column="48" selection-end-line="171" selection-end-column="48" />
-              <folding />
+            <state relative-caret-position="2788">
+              <caret line="167" column="17" lean-forward="false" selection-start-line="167" selection-start-column="17" selection-end-line="167" selection-end-column="17" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GOPTaskScheduler_mergable.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_mergable.java">
+      <file leaf-file-name="StreamGOP.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Streampkg/StreamGOP.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="559">
-              <caret line="43" column="9" lean-forward="true" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GTSSingleton.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Singletons/GTSSingleton.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-              <folding />
+            <state relative-caret-position="1598">
+              <caret line="97" column="31" lean-forward="false" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#4853#4854#0" expanded="false" />
+                <element signature="e#4884#4885#0" expanded="false" />
+                <element signature="e#4935#4936#0" expanded="false" />
+                <element signature="e#4975#4976#0" expanded="false" />
+                <marker date="1549425720232" expanded="true" signature="5443:5449" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>dateUpdate()</find>
-      <find>dataUpdate()</find>
-      <find>c</find>
-      <find>co</find>
-      <find>col</find>
+      <find>getHistoricProcessTime</find>
+      <find>for</find>
+      <find>success</find>
+      <find>VMinterfaces</find>
+      <find>miss</find>
+      <find>countDLMiss</find>
+      <find>rqe</find>
+      <find>BenchmarkIn</find>
+      <find>finish</find>
       <find>collectData</find>
-      <find>collectData()</find>
-      <find>ta</find>
-      <find>tas</find>
-      <find>task</find>
-      <find>taskS</find>
-      <find>taskSc</find>
-      <find>taskSch</find>
-      <find>taskSche</find>
-      <find>taskSched</find>
-      <find>taskSchedu</find>
-      <find>taskSchedul</find>
-      <find>taskScheduling</find>
-      <find>taskScheduling()</find>
-      <find>Tci</find>
-      <find>Tc</find>
-      <find>T</find>
-      <find>Ti</find>
-      <find>Tic</find>
-      <find>Tick</find>
-      <find>Tick()</find>
-      <find>S</find>
-      <find>Stream()</find>
-      <find>Stream(</find>
-      <find>call submit</find>
+      <find>DataUp</find>
+      <find>currentIndex</find>
+      <find>TelapsedTime</find>
+      <find>tmp_taskdone</find>
+      <find>request cou</find>
+      <find>in las</find>
+      <find>diff=</find>
+      <find>diff</find>
+      <find>node</find>
+      <find>current over</find>
+      <find>node_aftersync_taskdone</find>
+      <find>merger</find>
+      <find>2</find>
+      <find>SDc</find>
+      <find>shortestQueueFirst</find>
+      <find>sdco</find>
+      <find>sdc</find>
+      <find>current</find>
+      <find>current weighted</find>
+      <find>localqueuelengthperVM</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -197,57 +328,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Servlets/ApplicationListener.java" />
-        <option value="$PROJECT_DIR$/src/miscTools/CmdList.java" />
-        <option value="$PROJECT_DIR$/src/Repository/RepositoryGOP.java" />
-        <option value="$PROJECT_DIR$/src/Stream/Stream.java" />
-        <option value="$PROJECT_DIR$/src/Stream/StreamGOP.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/AdmissionControl.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/VMinterface_RealLocal.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/VMinterface.java" />
-        <option value="$PROJECT_DIR$/src/miscTools/utils.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/TimeEstimator.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/VMinterface_SimLocal.java" />
-        <option value="$PROJECT_DIR$/src/testpackage/RequestGenerator.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/VMProvisioner.java" />
-        <option value="$PROJECT_DIR$/src/Stream/TaskRequest.java" />
-        <option value="$PROJECT_DIR$/src/Simulator/requestprofile.java" />
-        <option value="$PROJECT_DIR$/src/TimeEstimatorpkg/retStat.java" />
-        <option value="$PROJECT_DIR$/src/TimeEstimatorpkg/histStat.java" />
-        <option value="$PROJECT_DIR$/src/testpackage/S3Control.java" />
-        <option value="$PROJECT_DIR$/src/Repository/Video.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/cloudMain.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/TranscodingVMcloud.java" />
-        <option value="$PROJECT_DIR$/src/CloudTesting/s3Control.java" />
-        <option value="$PROJECT_DIR$/src/VMProvisionerpkg/VMProvisioner.java" />
-        <option value="$PROJECT_DIR$/src/VMProvisionerpkg/vmi.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/VMinterface_SocketIO.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/TranscodingVM.java" />
-        <option value="$PROJECT_DIR$/src/TranscodingVM/runtime_report.java" />
-        <option value="$PROJECT_DIR$/src/Streampkg/TaskRequest.java" />
-        <option value="$PROJECT_DIR$/src/TimeEstimatorpkg/TimeEstimator.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/Merger_backup.java" />
-        <option value="$PROJECT_DIR$/src/miscTools/SortableList.java" />
-        <option value="$PROJECT_DIR$/src/Streampkg/StreamGOP.java" />
-        <option value="$PROJECT_DIR$/src/Simulator/RequestGenerator.java" />
-        <option value="$PROJECT_DIR$/src/VMManagement/DataUpdate.java" />
-        <option value="$PROJECT_DIR$/src/VMManagement/VMinterface_SimNWcache.java" />
-        <option value="$PROJECT_DIR$/src/VMManagement/VMinterface_SocketIO.java" />
-        <option value="$PROJECT_DIR$/src/VMManagement/VMinterface.java" />
-        <option value="$PROJECT_DIR$/src/VMManagement/VMinterface_SimLocal.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/Merger.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/ServerConfig.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_Mergable.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler.java" />
-        <option value="$PROJECT_DIR$/src/Repository/VideoRepository.java" />
-        <option value="$PROJECT_DIR$/src/VMManagement/VMProvisioner.java" />
-        <option value="$PROJECT_DIR$/src/Streampkg/Stream.java" />
-        <option value="$PROJECT_DIR$/src/Streampkg/Settings.java" />
         <option value="$PROJECT_DIR$/src/testpackage/Test.java" />
-        <option value="$PROJECT_DIR$/src/Streampkg/StreamManager.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_mergable.java" />
-        <option value="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_common.java" />
       </list>
     </option>
   </component>
@@ -268,10 +349,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="67" />
+    <option name="y" value="25" />
+    <option name="width" value="2493" />
+    <option name="height" value="1415" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -312,60 +393,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CVSS_impl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CVSS_impl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="VMManagement" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CVSS_impl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CVSS_impl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="VideoMergeSplit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CVSS_impl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CVSS_impl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UserInterface" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -459,25 +486,36 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CVSS_impl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CVSS_impl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Repository" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="Downloaded.Files.Path.Enabled" value="true" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Libraries" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -509,61 +547,6 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <method />
     </configuration>
-    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
-      <module name="" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <Java />
-      <Profilers>
-        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
-        <option name="GAPID_ENABLED" value="false" />
-        <option name="GAPID_DISABLE_PCS" value="false" />
-        <option name="SUPPORT_LIB_ENABLED" value="true" />
-        <option name="INSTRUMENTATION_ENABLED" value="true" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <method />
-    </configuration>
-    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
-      <module name="" />
-      <option name="TESTING_TYPE" value="0" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="EXTRA_OPTIONS" value="" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <Java />
-      <Profilers>
-        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
-        <option name="GAPID_ENABLED" value="false" />
-        <option name="GAPID_DISABLE_PCS" value="false" />
-        <option name="SUPPORT_LIB_ENABLED" value="true" />
-        <option name="INSTRUMENTATION_ENABLED" value="true" />
-      </Profilers>
-      <method />
-    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HEIGHT" value="0" />
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
@@ -586,161 +569,6 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Cold Fusion runner description" factoryName="Cold Fusion" custom_browser="" web_path="">
-      <method />
-    </configuration>
-    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="myFilePath" />
-      <option name="GLUE" />
-      <option name="myNameFilter" />
-      <option name="myGeneratedName" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
-      <option name="BCName" value="" />
-      <option name="IOSSimulatorSdkPath" value="" />
-      <option name="adlOptions" value="" />
-      <option name="airProgramParameters" value="" />
-      <option name="appDescriptorForEmulator" value="Android" />
-      <option name="debugTransport" value="USB" />
-      <option name="debuggerSdkRaw" value="BC SDK" />
-      <option name="emulator" value="NexusOne" />
-      <option name="emulatorAdlOptions" value="" />
-      <option name="fastPackaging" value="true" />
-      <option name="fullScreenHeight" value="0" />
-      <option name="fullScreenWidth" value="0" />
-      <option name="launchUrl" value="false" />
-      <option name="launcherParameters">
-        <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="FlashPlayerDebugger.exe" />
-        </LauncherParameters>
-      </option>
-      <option name="mobileRunTarget" value="Emulator" />
-      <option name="moduleName" value="" />
-      <option name="overriddenMainClass" value="" />
-      <option name="overriddenOutputFileName" value="" />
-      <option name="overrideMainClass" value="false" />
-      <option name="runTrusted" value="true" />
-      <option name="screenDpi" value="0" />
-      <option name="screenHeight" value="0" />
-      <option name="screenWidth" value="0" />
-      <option name="url" value="http://" />
-      <option name="usbDebugPort" value="7936" />
-      <method />
-    </configuration>
-    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
-      <option name="BCName" value="" />
-      <option name="launcherParameters">
-        <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="FlashPlayerDebugger.exe" />
-        </LauncherParameters>
-      </option>
-      <option name="moduleName" value="" />
-      <option name="trusted" value="true" />
-      <method />
-    </configuration>
-    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list />
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
-      <setting name="vmparams" value="" />
-      <setting name="cmdLine" value="run-app" />
-      <setting name="passParentEnv" value="true" />
-      <setting name="launchBrowser" value="true" />
-      <setting name="launchBrowserUrl" value="" />
-      <setting name="depsClasspath" value="false" />
-      <method />
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -760,115 +588,6 @@
       </option>
       <envs />
       <patterns />
-      <method />
-    </configuration>
-    <configuration default="true" type="JarApplication" factoryName="JAR Application">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="Java Scratch" factoryName="Java Scratch">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="SCRATCH_FILE_ID" value="0" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerJest" factoryName="Jest">
-      <node-interpreter value="project" />
-      <working-dir value="" />
-      <envs />
-      <scope-kind value="ALL" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
-      <config-file value="" />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
-      <method />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="CVSS" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="filePath" />
-      <option name="vmParameters" />
-      <option name="alternativeJrePath" />
-      <option name="programParameters" />
-      <option name="passParentEnvs" value="true" />
-      <option name="workingDirectory" />
-      <option name="isAlternativeJrePathEnabled" value="false" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
-      <method />
-    </configuration>
-    <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
-      <setting name="showProgressMessages" value="true" />
-      <setting name="useSbt" value="false" />
-      <setting name="useUiWithSbt" value="false" />
-      <classRegexps />
-      <testRegexps />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="Specs2RunConfiguration" factoryName="Specs2">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
-      <setting name="showProgressMessages" value="true" />
-      <setting name="useSbt" value="false" />
-      <setting name="useUiWithSbt" value="false" />
-      <classRegexps />
-      <testRegexps />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <envs />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -897,60 +616,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
-      <node-interpreter>project</node-interpreter>
-      <node-options />
-      <gulpfile />
-      <tasks />
-      <arguments />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
-      <command value="run" />
-      <scripts />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
-      <node-interpreter>project</node-interpreter>
-      <node-options />
-      <working-directory />
-      <pass-parent-env>true</pass-parent-env>
-      <envs />
-      <ui />
-      <extra-mocha-options />
-      <test-kind>DIRECTORY</test-kind>
-      <test-directory />
-      <recursive>false</recursive>
-      <method />
-    </configuration>
-    <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
-      <method />
-    </configuration>
-    <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
-      <method />
-    </configuration>
-    <configuration default="true" type="uTestRunConfiguration" factoryName="utest">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
-      <setting name="showProgressMessages" value="true" />
-      <setting name="useSbt" value="false" />
-      <setting name="useUiWithSbt" value="false" />
-      <classRegexps />
-      <testRegexps />
-      <envs />
       <method />
     </configuration>
     <configuration default="false" name="Test" type="Application" factoryName="Application">
@@ -1077,94 +742,20 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="fb4b504f-ecd0-4b0b-810b-57fe08d8b3fa" name="Default" comment="" />
-      <created>1512349848886</created>
+      <created>1549474969402</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1512349848886</updated>
-      <workItem from="1512349852631" duration="3932000" />
-      <workItem from="1512354607166" duration="4874000" />
-      <workItem from="1512410324315" duration="64000" />
-      <workItem from="1512444400349" duration="2420000" />
-      <workItem from="1512459733267" duration="3144000" />
-      <workItem from="1514472113166" duration="6064000" />
-      <workItem from="1514902260203" duration="12189000" />
-      <workItem from="1515705818797" duration="1524000" />
-      <workItem from="1515786947514" duration="8159000" />
-      <workItem from="1516035123736" duration="4152000" />
-      <workItem from="1517856269874" duration="2674000" />
-      <workItem from="1517866017493" duration="12191000" />
-      <workItem from="1518216638733" duration="1615000" />
-      <workItem from="1518462462642" duration="2810000" />
-      <workItem from="1518471509679" duration="9900000" />
-      <workItem from="1518552401149" duration="8000" />
-      <workItem from="1518554251661" duration="18242000" />
-      <workItem from="1518635431892" duration="8316000" />
-      <workItem from="1518649593531" duration="648000" />
-      <workItem from="1519071101336" duration="13605000" />
-      <workItem from="1519865416690" duration="2958000" />
-      <workItem from="1519927790199" duration="2107000" />
-      <workItem from="1519936771589" duration="9508000" />
-      <workItem from="1519948035830" duration="6024000" />
-      <workItem from="1520287967865" duration="39526000" />
-      <workItem from="1520964548184" duration="107993000" />
-      <workItem from="1522550231946" duration="1723000" />
-      <workItem from="1522879479631" duration="1815000" />
-      <workItem from="1523038604680" duration="805000" />
-      <workItem from="1523904314991" duration="170000" />
-      <workItem from="1523998752834" duration="2375000" />
-      <workItem from="1524589491130" duration="2114000" />
-      <workItem from="1525800024633" duration="13925000" />
-      <workItem from="1525984862509" duration="141000" />
-      <workItem from="1525985032982" duration="142000" />
-      <workItem from="1525985335721" duration="8814000" />
-      <workItem from="1526066249623" duration="5930000" />
-      <workItem from="1526339573984" duration="729000" />
-      <workItem from="1526411665704" duration="8318000" />
-      <workItem from="1527188957877" duration="9000" />
-      <workItem from="1527192247399" duration="990000" />
-      <workItem from="1527796742501" duration="34000" />
-      <workItem from="1527796838977" duration="177000" />
-      <workItem from="1527797064239" duration="5663000" />
-      <workItem from="1527869081631" duration="1465000" />
-      <workItem from="1528403378599" duration="4595000" />
-      <workItem from="1529002703268" duration="2028000" />
-      <workItem from="1529436710152" duration="3016000" />
-      <workItem from="1534534979901" duration="27000" />
-      <workItem from="1534535575834" duration="15549000" />
-      <workItem from="1534797804073" duration="216000" />
-      <workItem from="1535056464419" duration="3632000" />
-      <workItem from="1538584358824" duration="605000" />
-      <workItem from="1539022445798" duration="17886000" />
-      <workItem from="1539197243652" duration="4969000" />
-      <workItem from="1539376005332" duration="604000" />
-      <workItem from="1539714731680" duration="7003000" />
-      <workItem from="1539809022316" duration="333000" />
-      <workItem from="1539982525577" duration="1212000" />
-      <workItem from="1540243719639" duration="4314000" />
-      <workItem from="1541109693849" duration="17457000" />
-      <workItem from="1542153664074" duration="862000" />
-      <workItem from="1542393060081" duration="6307000" />
-      <workItem from="1545333550074" duration="924000" />
-      <workItem from="1545688065009" duration="624000" />
-      <workItem from="1548196960051" duration="134000" />
-      <workItem from="1548199705851" duration="768000" />
-      <workItem from="1548383561420" duration="281000" />
-      <workItem from="1548384097895" duration="57000" />
-      <workItem from="1548444059081" duration="1996000" />
-      <workItem from="1548710496399" duration="830000" />
-      <workItem from="1548795060255" duration="939000" />
-      <workItem from="1548883700850" duration="1023000" />
-      <workItem from="1549051181962" duration="13475000" />
-      <workItem from="1549313238490" duration="407000" />
-      <workItem from="1549314037968" duration="2539000" />
+      <updated>1549474969402</updated>
+      <workItem from="1549474971411" duration="1370000" />
+      <workItem from="1549576428089" duration="453000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="454598000" />
+    <option name="totallyTimeSpent" value="2401000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="67" y="25" width="2493" height="1415" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1179,38 +770,69 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3997833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34019503" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29514417" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15724947" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15978749" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928678" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928678" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4969651" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928678" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12331564" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <ignored-roots>
-      <path value="$PROJECT_DIR$/.." />
-    </ignored-roots>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1231,18 +853,53 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Repository/RepositoryGOP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="27" column="33" lean-forward="false" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/VMManagement/VMinterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1152">
+          <caret line="84" column="13" lean-forward="false" selection-start-line="84" selection-start-column="13" selection-end-line="84" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Servlets/RequestController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="800">
+          <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/testpackage/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1120">
+          <caret line="70" column="9" lean-forward="true" selection-start-line="70" selection-start-column="9" selection-end-line="70" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bash/resize.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Servlets/RequestController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="800">
+          <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Stream/StreamGOPdispatched.java" />
     <entry file="file://$PROJECT_DIR$/src/miscTools/CmdList.java" />
     <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/util/ComparableTimSort.class" />
     <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/util/Arrays.class" />
     <entry file="jar:///usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/rt.jar!/java/util/ArrayList.class" />
-    <entry file="file://$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1542">
-          <caret line="161" column="9" lean-forward="true" selection-start-line="161" selection-start-column="9" selection-end-line="161" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/TimeEstimatorpkg/retStat.java" />
     <entry file="file://$PROJECT_DIR$/src/TimeEstimatorpkg/histStat.java" />
     <entry file="file://$PROJECT_DIR$/src/testpackage/S3Control.java" />
@@ -1284,8 +941,11 @@
     <entry file="file://$PROJECT_DIR$/src/TranscodingVM/runtime_report.java" />
     <entry file="file://$PROJECT_DIR$/src/TranscodingVM/TranscodingVM.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2225">
+        <state relative-caret-position="2380">
           <caret line="147" column="18" lean-forward="false" selection-start-line="147" selection-start-column="18" selection-end-line="147" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1296,7 +956,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Streampkg/Settings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="901">
+          <caret line="55" column="5" lean-forward="false" selection-start-line="55" selection-start-column="5" selection-end-line="55" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Scheduler/Merger_backup.java" />
+    <entry file="file://$PROJECT_DIR$/src/Streampkg/Stream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="680">
+          <caret line="44" column="63" lean-forward="false" selection-start-line="44" selection-start-column="63" selection-end-line="44" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#4378#4379#0" expanded="false" />
+            <element signature="e#4407#4408#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/VMManagement/vmi.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
@@ -1311,10 +991,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/VMManagement/VMinterface_SocketIO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="850">
+          <caret line="59" column="76" lean-forward="false" selection-start-line="59" selection-start-column="76" selection-end-line="59" selection-end-column="76" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1601#1602#0" expanded="false" />
+            <element signature="e#1633#1634#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/VMManagement/VMinterface.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="19" column="20" lean-forward="true" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Repository/VideoRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="22" column="9" lean-forward="true" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -1339,10 +1038,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/VMManagement/VMProvisioner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4080">
+          <caret line="269" column="77" lean-forward="false" selection-start-line="269" selection-start-column="77" selection-end-line="269" selection-end-column="77" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3551#3552#0" expanded="false" />
+            <element signature="e#3597#3598#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/TimeEstimatorpkg/TimeEstimator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="395">
           <caret line="30" column="34" lean-forward="false" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Simulator/RequestGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2767">
+          <caret line="40" column="21" lean-forward="false" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -1397,8 +1115,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Repository/RepositoryGOP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="11" column="32" lean-forward="true" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
+        <state relative-caret-position="187">
+          <caret line="11" column="32" lean-forward="false" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
+          <folding>
+            <element signature="e#381#382#0" expanded="false" />
+            <element signature="e#409#410#0" expanded="false" />
+            <element signature="e#1360#1361#0" expanded="false" />
+            <element signature="e#1390#1391#0" expanded="false" />
+            <element signature="e#1443#1444#0" expanded="false" />
+            <element signature="e#1481#1482#0" expanded="false" />
+            <element signature="e#1526#1527#0" expanded="false" />
+            <element signature="e#1561#1562#0" expanded="false" />
+            <element signature="e#1622#1623#0" expanded="false" />
+            <element signature="e#1670#1671#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1406,142 +1136,67 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="850">
           <caret line="50" column="24" lean-forward="true" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/index.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="114" column="8" lean-forward="true" selection-start-line="114" selection-start-column="8" selection-end-line="114" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files (x86)/Java/jdk1.8.0_112/src.zip!/java/io/FileFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/testpackage/testWithWeb.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resultstat/finished/merge_Deadline/full/merge__SortDeadline_test2000r_180000_10000_3000_s699.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Streampkg/StreamGOP.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="37" column="21" lean-forward="false" selection-start-line="37" selection-start-column="21" selection-end-line="37" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Simulator/RequestGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="38" column="22" lean-forward="false" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Repository/VideoRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="45" column="5" lean-forward="false" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/VMManagement/VMProvisioner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="109" column="0" lean-forward="false" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/VMManagement/VMinterface_SocketIO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="841">
-          <caret line="77" column="29" lean-forward="false" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Streampkg/Stream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
           <folding>
-            <element signature="e#4366#4367#0" expanded="true" />
-            <element signature="e#4395#4396#0" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Singletons/GTSSingleton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Streampkg/Settings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="729">
-          <caret line="64" column="81" lean-forward="true" selection-start-line="64" selection-start-column="81" selection-end-line="64" selection-end-column="81" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/testpackage/Test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="146" column="28" lean-forward="false" selection-start-line="146" selection-start-column="7" selection-end-line="146" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-171">
-          <caret line="25" column="44" lean-forward="true" selection-start-line="25" selection-start-column="44" selection-end-line="25" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_mergable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="43" column="9" lean-forward="true" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
-          <folding />
+        <state relative-caret-position="340">
+          <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_common.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="171" column="48" lean-forward="true" selection-start-line="171" selection-start-column="48" selection-end-line="171" selection-end-column="48" />
+        <state relative-caret-position="2788">
+          <caret line="167" column="17" lean-forward="false" selection-start-line="167" selection-start-column="17" selection-end-line="167" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="42" column="9" lean-forward="true" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2788">
+          <caret line="171" column="0" lean-forward="false" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#9284#9285#0" expanded="false" />
+            <element signature="e#9318#9319#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/testpackage/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="700">
+          <caret line="192" column="13" lean-forward="true" selection-start-line="192" selection-start-column="13" selection-end-line="192" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Streampkg/StreamManager.java">
+    <entry file="file://$PROJECT_DIR$/src/Streampkg/StreamGOP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+        <state relative-caret-position="1598">
+          <caret line="97" column="31" lean-forward="false" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#4853#4854#0" expanded="false" />
+            <element signature="e#4884#4885#0" expanded="false" />
+            <element signature="e#4935#4936#0" expanded="false" />
+            <element signature="e#4975#4976#0" expanded="false" />
+            <marker date="1549425720232" expanded="true" signature="5443:5449" ph="{...}" />
           </folding>
         </state>
       </provider>

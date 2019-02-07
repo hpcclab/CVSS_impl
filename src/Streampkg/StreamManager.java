@@ -46,10 +46,10 @@ public class StreamManager {
         });
     }
 
-    public boolean CreateDirectory(Settings userRequest){
+    public void CreateDirectory(Settings userRequest){
         File dir = new File(userRequest.outputDir());
         if (dir.exists()){
-            return false;
+            return;
         }
 
         String absPath = "/home/pi/Documents/VHPCC/workspace/CVSS_impl";
@@ -70,7 +70,6 @@ public class StreamManager {
         } catch (Exception e){
 
         }
-        return true;
     }
 
     public void InitializeStream(int videoIndex, Settings userRequest,  GOPTaskScheduler GTS){
@@ -89,9 +88,8 @@ public class StreamManager {
             System.out.println(x.getPriority());
         }
         //Scheduler
-        System.out.println("test1");
+        System.out.println("before stream");
         GTS.addStream(ST);
-        System.out.println("test2");
         System.out.println("after stream");
     }
 

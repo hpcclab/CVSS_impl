@@ -65,6 +65,7 @@ public class VMinterface_SocketIO extends VMinterface {
             estimatedQueueLength++;
             estimatedExecutionTime += segment.estimatedExecutionTime;
             try {
+                System.out.println("Before write object in send job of socketio");
                 oos.writeObject(segment);
             } catch (Exception e) {
                 System.out.println("sendJob fail:" + e);

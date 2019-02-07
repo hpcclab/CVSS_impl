@@ -118,6 +118,7 @@ public class VMinterface_SimLocal extends VMinterface {
     }
     //get back the runtime stat
     public void dataUpdate(){
+        System.out.println("In sim local dataUpdate");
         //Sync time
         if(GOPTaskScheduler.maxElapsedTime> node_synctime){
             //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler_mergable.maxElapsedTime);

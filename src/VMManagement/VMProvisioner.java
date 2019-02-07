@@ -96,7 +96,8 @@ public class VMProvisioner {
         }
         EvaluateClusterSize(-1);
 
-        boolean autoSchedule = false;
+        //TC
+        boolean autoSchedule = true;
 
         if(autoSchedule){
             //set up task for evaluate cluster size every ms

@@ -21,11 +21,11 @@
     <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
     <enableVMscaling>true</enableVMscaling>
-	<dataUpdateInterval>1000</dataUpdateInterval>
+	<dataUpdateInterval>60000</dataUpdateInterval>
     <VMscalingIntervalTick>30</VMscalingIntervalTick>
     <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
-    <minVM>8</minVM>
-    <maxVM>8</maxVM>
+    <minVM>1</minVM>
+    <maxVM>1</maxVM>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
     <path>./</path>
@@ -151,17 +151,17 @@
 <useEC2>False</useEC2>
     <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
 	
-    <VM>thread,g2.2xlarge,localhost,5060,false</VM>
-    <VM>thread,g2.2xlarge,localhost,5061,false</VM>
-    <VM>thread,g2.2xlarge,localhost,5062,false</VM>
-    <VM>thread,g2.2xlarge,localhost,5063,false</VM>
-    <VM>thread,g2.2xlarge,localhost,5064,false</VM>
-    <VM>thread,g2.2xlarge,localhost,5065,false</VM>        
-    <VM>thread,g2.2xlarge,localhost,5066,false</VM>
-    <VM>thread,g2.2xlarge,localhost,5067,false</VM>
-    <VM>thread,g2.2xlarge,localhost,5068,false</VM>
+    <VM>thread,g2.2xlarge,localhost,5061,true</VM>
+    <!--<VM>thread,g2.2xlarge,localhost,5062,true</VM>
+    <VM>thread,g2.2xlarge,localhost,5063,true</VM>
+    <VM>thread,g2.2xlarge,localhost,5064,true</VM>
+    <VM>thread,g2.2xlarge,localhost,5060,true</VM>
+    <VM>thread,g2.2xlarge,localhost,5065,true</VM>        
+    <VM>thread,g2.2xlarge,localhost,5066,true</VM>
+    <VM>thread,g2.2xlarge,localhost,5067,true</VM>
+    <VM>thread,g2.2xlarge,localhost,5068,true</VM>-->
 	
-	<VM>simNWcache,fixedBandwidth,localhost,100,false</VM>  <!-- unit = Mbps-->
+	<!--<VM>simNWcache,fixedBandwidth,localhost,100,false</VM>-->  <!--unit = Mbps-->
 
 	<VM>EC2,t2.micro,i-019a067d161b807d4,5061,true</VM> <!-- small -->
 	<VM>EC2,t2.micro,i-0c1ae764e54ca5fb8,5061,true</VM> <!-- small -->
