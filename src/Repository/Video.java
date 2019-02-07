@@ -29,7 +29,8 @@ public class Video {
         pathsplit=path.split(File.separator);
     }
         name=pathsplit[pathsplit.length-1];
-        if(ServerConfig.videoRepository_mode.equalsIgnoreCase("list.txt")){
+        File listfile = new File(path + "list.txt");
+        if(listfile.exists()){
             //list mode
             try {
                 //System.out.println("look for path:"+path);
@@ -86,6 +87,7 @@ public class Video {
                 }
             }
         }
+
     }
     public int getTotalSegments()
     {
