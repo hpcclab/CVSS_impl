@@ -34,7 +34,7 @@ public class Video {
             //list mode
             try {
                 //System.out.println("look for path:"+path);
-                Scanner scanner=new Scanner(new File(path+"list.txt"));
+                Scanner scanner=new Scanner(listfile);
                 String[] sp=scanner.nextLine().split("\\s+");
                 //System.out.println("split size="+sp.length);
                 if(sp[0].equalsIgnoreCase("g")){ //auto generate mode

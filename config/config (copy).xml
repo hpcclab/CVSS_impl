@@ -4,8 +4,7 @@
     <defaultBatchScript>..\bash\testbash.sh</defaultBatchScript>
     <addFakeDelay>False</addFakeDelay>
 	<addProfiledDelay>True</addProfiledDelay>
-	<profiledRequests>False</profiledRequests>
-    <openWebRequests>True</openWebRequests>
+	<profiledRequests>True</profiledRequests>
     <localqueuelengthperVM>4</localqueuelengthperVM>
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
     <lowscalingThreshold>0.1</lowscalingThreshold>
