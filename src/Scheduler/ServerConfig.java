@@ -28,6 +28,7 @@ public class ServerConfig {
     public static String batchqueuesortpolicy="Deadline";
     public static boolean taskmerge=false;
     public static boolean profiledRequests=false;
+    public static boolean openRequests=false;
     public static String profileRequestsBenhmark;
     public static boolean mergeOverwriteQueuePolicy=true;
     public static String overwriteQueuePolicyHeuristic;
@@ -135,6 +136,14 @@ public class ServerConfig {
             ServerConfig.profiledRequests = true;
         }else{
             ServerConfig.profiledRequests = false;
+        }
+    }
+    @XmlElement(name = "openWebRequests")
+    public void setopenRequests(String check) {
+        if(check.equalsIgnoreCase("True")) {
+            ServerConfig.openRequests = true;
+        }else{
+            ServerConfig.openRequests = false;
         }
     }
     @XmlElement(name = "profileRequestsBenhmark")
