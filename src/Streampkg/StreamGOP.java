@@ -140,7 +140,8 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         //need to re
     public String outputDir() {
         //return System.getProperty("user.dir") + "./webapps/CVSS_Implementation_war_exploded/repositoryvideos/" + videoname + "/out.m3u8";
-        return ServerConfig.path + "streams/" + videoname;
+        //return ServerConfig.path + "streams/" + videoname;
+        return "/var/www/html/2019WebDemo/streams/" + videoname;
     }
     public String toString()
     {

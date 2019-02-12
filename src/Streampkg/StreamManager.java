@@ -51,6 +51,7 @@ public class StreamManager {
         if (dir.exists()){
             return;
         }
+        System.out.println("User Request Output Directory: " + userRequest.outputDir());
 
         String absPath = "/home/pi/Documents/VHPCC/workspace/CVSS_impl";
 
@@ -93,7 +94,4 @@ public class StreamManager {
         GTS.addStream(ST);
         System.out.println("after stream");
     }
-
-
-
 }

@@ -62,7 +62,8 @@ public class Settings implements java.io.Serializable{
     public String outputDir() {
         //return "repositoryvideos/output";
         //return System.getProperty("user.dir") + "./webapps/CVSS_Implementation_war_exploded/repositoryvideos/" + videoname + "/out.m3u8";
-        return ServerConfig.path + "streams/" + videoname + resWidth + resHeight;
+        //return ServerConfig.path + "streams/" + videoname + resWidth + resHeight;
+        return "/var/www/html/2019WebDemo/streams/" + videoname + resWidth + resHeight;
         //return "output/" + videoname + resWidth + resHeight;
     }
 }

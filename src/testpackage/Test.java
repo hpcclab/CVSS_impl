@@ -278,7 +278,6 @@ public class Test {
     //for test
     public static void main(String[] args) throws IOException {
 
-
         if(args.length>1){
             if(args[0].equalsIgnoreCase("makeconfig")){
                 System.out.println(testbug(Integer.parseInt(args[1])));
