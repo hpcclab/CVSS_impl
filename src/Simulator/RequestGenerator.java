@@ -17,22 +17,23 @@ import static java.lang.Thread.sleep;
 
 
 public class RequestGenerator {
-   // static String videonameList[]={"bbb_trailer","ff_trailer_part1","ff_trailer_part3"}; //not using
+    // static String videonameList[]={"bbb_trailer","ff_trailer_part1","ff_trailer_part3"}; //not using
 
 
 
-    //only capable of generating Resolution Request
+    //can generate 1 of n possible operations, but currently only create resolution's parameters
     public static void OneRandomRequest(GOPTaskScheduler GTS){
         //random a resolution
         int randomRes=(int)(Math.random()*7)+1;
         int x=randomRes*80;
         int y=randomRes*60;
-        int videoChoice=(int)(Math.random()* VideoRepository.videos.size());
+        int videoChoice=(int)(Math.random()* ( VideoRepository.videos.size()));
+        int operation=(int)(Math.random()*(GOPTaskScheduler.possible_Operations.size()));
         //Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
         String setting=x+"x"+y;
         long deadline=0; //did not specified deadline
         //setting.settingIdentifier=randomRes;
-        OneSpecificRequest(GTS,videoChoice,"Resolution",setting,deadline,0);
+        OneSpecificRequest(GTS,videoChoice,GOPTaskScheduler.possible_Operations.get(operation).operationname,setting,deadline,0);
     }
 
     public static void OneSpecificRequest(GOPTaskScheduler GTS, int videoChoice, String command, String setting, long deadline, long arrival){
@@ -163,17 +164,17 @@ public class RequestGenerator {
             }else{
             */
         togo = TypeArate;
-            //}
-            altered = 0;
-            while (altered < togo * segmentcounts) {
-                //copy previous few
-                int pminus=Math.abs(r.nextInt(4))+1;
-                original_rqe[cloneindex].command = original_rqe[cloneindex - pminus].command;
-                original_rqe[cloneindex].setting = original_rqe[cloneindex - pminus].setting;
-                original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - pminus].videoChoice;
-                altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
-                cloneindex += 3; //so not too often happened, rather than cloneindex+=2
-            }
+        //}
+        altered = 0;
+        while (altered < togo * segmentcounts) {
+            //copy previous few
+            int pminus=Math.abs(r.nextInt(4))+1;
+            original_rqe[cloneindex].command = original_rqe[cloneindex - pminus].command;
+            original_rqe[cloneindex].setting = original_rqe[cloneindex - pminus].setting;
+            original_rqe[cloneindex].videoChoice = original_rqe[cloneindex - pminus].videoChoice;
+            altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            cloneindex += 3; //so not too often happened, rather than cloneindex+=2
+        }
         System.out.println("cloneindex="+cloneindex);
             /*
         }else{
@@ -201,7 +202,7 @@ public class RequestGenerator {
         PrintWriter writer = new PrintWriter(F);
 
         ArrayList<requestprofile> rqes=new ArrayList<>();
-        String commandList[]={"Framerate","Resolution","Bitrate","Codec"};
+        //String commandList[]={"Framerate","Resolution","Bitrate","Codec"};
         int fold=0; //each fold means there is at least one type C matchable, every 4 fold then a type A matched
         int positionMatchup[]=new int[totalVideos];
         long totalSegmentcount=0;
@@ -213,7 +214,7 @@ public class RequestGenerator {
             //create the request
             for(int q=0;q<totalVideos;q++) {
                 // video choice is in the positionMatchup
-                String acmd=commandList[(positionMatchup[q]+fold)%4];// ensure least command overlap as possible
+                String acmd=GOPTaskScheduler.possible_Operations.get((positionMatchup[q]+fold)%GOPTaskScheduler.possible_Operations.size()).operationname;// ensure least command overlap as possible
                 long appear=Math.abs(r.nextLong()%timeSpan);
                 long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
                 deadline+=appear;

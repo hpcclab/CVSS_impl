@@ -4,8 +4,9 @@ import Streampkg.Stream;
 import Streampkg.StreamGOP;
 import VMManagement.VMinterface;
 import VMManagement.VMinterface_SimLocal;
-
+import java.util.List;
 import java.util.ArrayList;
+
 // base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.
 public abstract class GOPTaskScheduler {
     protected miscTools.SortableList Batchqueue = new miscTools.SortableList();
@@ -14,6 +15,7 @@ public abstract class GOPTaskScheduler {
     protected static int maxpending = 0;
     public static int workpending = 0;
     public static long maxElapsedTime; //use for setting Deadline
+    public static List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
 
     public boolean add_VM(String VM_type, String VM_class, String addr, int port, int id, boolean autoSchedule)
       {
@@ -73,5 +75,15 @@ public abstract class GOPTaskScheduler {
         for(int i = 0; i< VMinterfaces.size(); i++){
             VMinterfaces.get(i).close();
         }
+    }
+    public void readcommonOperations() {
+
+        addOperations(new Operations.Framerate());
+        addOperations(new Operations.Resolution());
+        addOperations(new Operations.Bitrate());
+        addOperations(new Operations.Codec());
+    }
+    public void addOperations(Operations.simpleoperation op) {
+        possible_Operations.add(op);
     }
 }

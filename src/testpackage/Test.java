@@ -33,6 +33,7 @@ public class Test {
             //Set things up
             VideoRepository VR = new VideoRepository();
             GOPTaskScheduler GTS = new GOPTaskScheduler_mergable();
+            GTS.readcommonOperations();
             VMProvisioner VMP = new VMProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
             //VMP.setGTS(GTS);
             //load Videos into Repository
