@@ -2,5 +2,6 @@ out/*
 output/*
 resultstat/full/*
 resultstat/numbers/*
+streams/
 CVSS.jar
 .war

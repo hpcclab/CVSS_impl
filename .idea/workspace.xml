@@ -10,8 +10,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb4b504f-ecd0-4b0b-810b-57fe08d8b3fa" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/config_web.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/Streampkg/StreamManager.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/testpackage/RealModeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0000.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0001.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0002.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0003.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0004.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0005.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0006.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0007.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0008.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streams/ff_trailer_part1640480/0009.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/repositoryvideos/realVideo/bbb_trailer/list.txt" beforeDir="false" />
@@ -89,7 +101,7 @@
         <entry file="file://$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="425">
-              <caret line="32" column="36" lean-forward="true" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
+              <caret line="32" column="36" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
               <folding>
                 <element signature="e#373#384#0" expanded="true" />
                 <element signature="e#9285#9286#0" expanded="true" />
@@ -112,7 +124,7 @@
         <entry file="file://$PROJECT_DIR$/src/Streampkg/Settings.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="436">
-              <caret line="67" column="5" lean-forward="true" selection-start-line="67" selection-start-column="5" selection-end-line="67" selection-end-column="5" />
+              <caret line="67" column="5" selection-start-line="67" selection-start-column="5" selection-end-line="67" selection-end-column="5" />
               <folding>
                 <element signature="e#1686#1687#0" expanded="true" />
                 <element signature="e#1768#1769#0" expanded="true" />
@@ -121,20 +133,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Repository/Video.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="35" column="50" selection-start-line="35" selection-start-column="50" selection-end-line="35" selection-end-column="50" />
+            <state relative-caret-position="293">
+              <caret line="39" column="41" lean-forward="true" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/testpackage/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="179" column="30" lean-forward="true" selection-start-line="179" selection-start-column="30" selection-end-line="179" selection-end-column="30" />
+            <state relative-caret-position="442">
+              <caret line="181" column="14" selection-start-line="181" selection-start-column="14" selection-end-line="181" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -242,12 +254,12 @@
         <option value="$PROJECT_DIR$/src/Streampkg/StreamManager.java" />
         <option value="$PROJECT_DIR$/src/Streampkg/Stream.java" />
         <option value="$PROJECT_DIR$/src/Scheduler/GOPTaskScheduler_mergable.java" />
-        <option value="$PROJECT_DIR$/src/testpackage/Test.java" />
         <option value="$PROJECT_DIR$/src/testpackage/RealModeTest.java" />
         <option value="$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java" />
         <option value="$PROJECT_DIR$/src/Streampkg/StreamGOP.java" />
         <option value="$PROJECT_DIR$/src/Streampkg/Settings.java" />
         <option value="$PROJECT_DIR$/src/Repository/Video.java" />
+        <option value="$PROJECT_DIR$/src/testpackage/Test.java" />
       </list>
     </option>
   </component>
@@ -345,7 +357,7 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550192199956" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550192312243" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/commons-lang3-3.7.jar!/" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
@@ -584,12 +596,12 @@
       <workItem from="1548383561420" duration="281000" />
       <workItem from="1548384097895" duration="57000" />
       <workItem from="1548444059081" duration="1996000" />
-      <workItem from="1550188285965" duration="3828000" />
+      <workItem from="1550188285965" duration="4020000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="439213000" />
+    <option name="totallyTimeSpent" value="439405000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1680" y="10" width="1647" height="1040" extended-state="0" />
@@ -883,13 +895,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/testpackage/Test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="179" column="30" lean-forward="true" selection-start-line="179" selection-start-column="30" selection-end-line="179" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/testpackage/RealModeTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="157">
@@ -903,7 +908,7 @@
     <entry file="file://$PROJECT_DIR$/src/TranscodingVM/TranscodingThread.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
-          <caret line="32" column="36" lean-forward="true" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
+          <caret line="32" column="36" selection-start-line="32" selection-start-column="36" selection-end-line="32" selection-end-column="36" />
           <folding>
             <element signature="e#373#384#0" expanded="true" />
             <element signature="e#9285#9286#0" expanded="true" />
@@ -929,7 +934,7 @@
     <entry file="file://$PROJECT_DIR$/src/Streampkg/Settings.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="436">
-          <caret line="67" column="5" lean-forward="true" selection-start-line="67" selection-start-column="5" selection-end-line="67" selection-end-column="5" />
+          <caret line="67" column="5" selection-start-line="67" selection-start-column="5" selection-end-line="67" selection-end-column="5" />
           <folding>
             <element signature="e#1686#1687#0" expanded="true" />
             <element signature="e#1768#1769#0" expanded="true" />
@@ -939,8 +944,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Repository/Video.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="35" column="50" selection-start-line="35" selection-start-column="50" selection-end-line="35" selection-end-column="50" />
+        <state relative-caret-position="293">
+          <caret line="39" column="41" lean-forward="true" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/testpackage/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="181" column="14" selection-start-line="181" selection-start-column="14" selection-end-line="181" selection-end-column="14" />
         </state>
       </provider>
     </entry>
