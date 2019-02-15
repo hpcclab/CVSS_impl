@@ -10,6 +10,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public HashMap<String,LinkedList<String>> cmdSet=new HashMap<>();
     public HashMap<String,Long> deadlineSet=new HashMap<>();
     public transient Stream parentStream;
+    public Settings videoSetting = null;
 
     public String videoname = "";
     public long deadLine=0;
@@ -86,6 +87,11 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this(name,p,x,slacktime,arrivaltime);
         addCMD(Command, Setting,deadLine);
     }
+    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long slacktime,long arrivaltime,Settings vidSetting){
+        this(name,p,x,slacktime,arrivaltime);
+        videoSetting = vidSetting;
+        addCMD(Command, Setting,deadLine);
+    }
     //deep clone
     public StreamGOP(StreamGOP X){
         this.setPath(X.getPath());
@@ -134,11 +140,14 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         //need to re
     public String outputDir() {
         //return System.getProperty("user.dir") + "./webapps/CVSS_Implementation_war_exploded/repositoryvideos/" + videoname + "/out.m3u8";
-        return ServerConfig.path + "web/output/" + videoname;
+        return ServerConfig.path + "streams/" + videoname;
+        //return "/var/www/html/2019WebDemo/streams/" + videoname;
     }
     public String toString()
     {
         return "estimatedExeT: "+estimatedExecutionTime+"estimatedExeSD: "+estimatedExecutionSD+"deadline: "+deadLine+" "+cmdSet.toString();
     }
+    public void print(){
 
+    }
 }

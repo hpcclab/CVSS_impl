@@ -1,4 +1,5 @@
 package IOWindows;
+import Repository.VideoRepository;
 import Scheduler.GOPTaskScheduler;
 
 import java.io.IOException;
@@ -20,8 +21,8 @@ import javax.xml.ws.handler.MessageContext;
 
 import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.http.HTTPException;
-
-import Simulator.RequestGenerator;
+import Streampkg.Settings;
+import Streampkg.StreamManager;
 
 //// Trimmed code from:
 //https://www.javaworld.com/article/3222065/java-language/web-services-in-java-se-part-3-creating-restful-web-services.html
@@ -33,9 +34,10 @@ import Simulator.RequestGenerator;
 class handler implements Provider<Source> {
     @Resource
     private WebServiceContext wsContext;
+    StreamManager SM;
     GOPTaskScheduler GTS;
-    public handler(GOPTaskScheduler gts){
-        GTS=gts;
+    public handler(GOPTaskScheduler gts, StreamManager sm){
+        GTS=gts; SM=sm;
     }
 
     @Override
@@ -74,13 +76,33 @@ class handler implements Provider<Source> {
         {
             //internal usage, thus strict format
             String[] arg = qs.split("[=,]+");
+
+            for (int i=0;i<arg.length;i++){
+                System.out.println("Printing arguments: " + arg[i]);
+            }
+
             if (!arg[0].equalsIgnoreCase("videoid")&&!arg[2].equalsIgnoreCase("cmd")&&!arg[4].equalsIgnoreCase("setting"))
                 throw new HTTPException(400);
             int video = Integer.parseInt(arg[1]);
             int arrival=2000;
             String cmd=arg[3];
             String setting=arg[5];
-            RequestGenerator.OneSpecificRequest(GTS, video, cmd,setting, arrival+20000, arrival);
+
+
+            Settings newSettings = new Settings();
+
+            newSettings.resolution = true;
+            newSettings.resWidth = "640";
+            newSettings.resHeight = "480";
+            newSettings.videoname = VideoRepository.videos.get(video).name;
+
+            System.out.println("SM: " + SM);
+            System.out.println("GTS: " + GTS);
+            System.out.println();
+
+            SM.InitializeStream(video, newSettings, GTS);
+
+            //RequestGenerator.OneSpecificRequest(GTS, video, cmd,setting, arrival+20000, arrival);
 
             /*
             if (pair[2].equalsIgnoreCase("dl"))
@@ -88,6 +110,7 @@ class handler implements Provider<Source> {
             */
             StringBuilder xml = new StringBuilder("<?xml version=\"1.0\"?>");
             xml.append("<response> video request "+ arg[1]+" "+arg[3]+" "+arg[5] +" accepted</response>");
+            //xml.append(newSettings.videoDir());
             return new StreamSource(new StringReader(xml.toString()));
         }
     }
@@ -107,12 +130,13 @@ class handler implements Provider<Source> {
 }
 
 public class Webservicegate {
-    public String addr="http://localhost:9902/transcoderequest";
+    public String addr="http://localhost:9901/transcoderequest";
     public GOPTaskScheduler GTS;
+    public StreamManager SM;
     Endpoint ep;
     public void startListener() throws IOException
     {
-        ep=Endpoint.publish(addr, new handler(GTS));
+        ep=Endpoint.publish(addr, new handler(GTS, SM));
     }
     public void stopListener() throws IOException
     {

@@ -23,7 +23,7 @@ public class TranscodingThread extends Thread{
     long synctime=0; //spentTime+requiredTime is imaginary total time to clear the queue
     long realspentTime=0; //realspentTime is spentTime without Syncing
     private Boolean useS3=false;
-   //EC2 public AmazonS3 s3;
+    //EC2 public AmazonS3 s3;
     public String VM_class;
     private Random r=new Random();
     /* //EC2
@@ -41,7 +41,7 @@ public class TranscodingThread extends Thread{
         long elapsedTime;
         while(true) {
             long savedTime=System.nanoTime()/1000000;
-            try {
+            try{
                 StreamGOP aStreamGOP = jobs.poll(1, TimeUnit.MINUTES);
                 if(aStreamGOP!=null) {
                     if (aStreamGOP.cmdSet.containsKey("shutdown")) {
@@ -50,10 +50,12 @@ public class TranscodingThread extends Thread{
                         break;
                     }
 
+                    System.out.println("In TranscodeSegment of transcoding thread");
+
                     //random delay, BROKEN for now, userSetting does not exist.
 
                     if (ServerConfig.addFakeDelay) {
-                        int identifier =0; //was aStreamGOP.userSetting.settingIdentifier;
+                        int identifier = 0; //was aStreamGOP.userSetting.settingIdentifier;
                         if (FakeDelay.containsKey(identifier)) //if we already have delay for this setting randomized,
                             delay = FakeDelay.get(identifier); //use that value
                         else {
@@ -61,18 +63,20 @@ public class TranscodingThread extends Thread{
                             FakeDelay.put(identifier, delay);
                         }
 
-                    }else if(ServerConfig.addProfiledDelay) {
+                    } else if (ServerConfig.addProfiledDelay) {
                         //System.out.println("est="+aStreamGOP.estimatedExecutionTime+" sd:"+aStreamGOP.estimatedExecutionSD);
-                        delay=(long) (aStreamGOP.estimatedExecutionTime+aStreamGOP.estimatedExecutionSD*r.nextGaussian());
+                        delay = (long) (aStreamGOP.estimatedExecutionTime + aStreamGOP.estimatedExecutionSD * r.nextGaussian());
                     }
 
+                    //aStreamGOP.
 
 
                     //System.out.println(aStreamGOP.getPath());
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
                     //extra line for windows below, need test if work with linux
                     filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.length());
-                    String outputdir=aStreamGOP.outputDir();;
+                    String outputdir = aStreamGOP.outputDir();
+                    ;
                     /*
                     if(type.equalsIgnoreCase("EC2")){
                         aStreamGOP.setPath("/home/ec2-user/"+aStreamGOP.getPath());
@@ -83,10 +87,30 @@ public class TranscodingThread extends Thread{
                     */
                     //System.out.println(filename);
 
-                     //don't process, always do dry mode
-                    // String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.userSetting.resWidth, aStreamGOP.userSetting.resHeight, outputdir, filename};
+                    System.out.println("Segment name: " + aStreamGOP.segment);
+
+                    System.out.println("Segment output directory: " + aStreamGOP.videoSetting.outputDir());
+
+                    //don't process, always do dry mode
+                    String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+
+                    ProcessBuilder pb = new ProcessBuilder(command);
+                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                    pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+
+                    try {
+                        Process p = pb.start();
+                        p.waitFor();
+
+                    } catch (Exception e) {
+                        System.out.println("Did not execute bashfile :(");
+                    }
+
 
                     //ideally, we should be able to pull setting out from StreamGOP but now use fixed
+
+                    //TC
+                    /*
 
                     //if not dryMode
                     if(!ServerConfig.run_mode.equalsIgnoreCase("dry")) {
@@ -100,8 +124,8 @@ public class TranscodingThread extends Thread{
 
                         */
 
-                        System.out.println("finished a segment");
-                        //put to S3
+                    System.out.println("finished a segment");
+                    //put to S3
                         /* //EC2
                         if (useS3) {
                             File file = new File(aStreamGOP.userSetting.outputDir() + "/" + filename);
@@ -114,7 +138,8 @@ public class TranscodingThread extends Thread{
                             }
                             file.delete();
                         }
-                        */
+                        ///*/
+                    /*  //TC
                         if (delay != 0) {
                             sleep(delay);
                         }
@@ -126,7 +151,9 @@ public class TranscodingThread extends Thread{
                         elapsedTime = System.nanoTime()/1000000 - savedTime;
                         synctime+=elapsedTime;
                         realspentTime+=elapsedTime;
-                    }else{
+
+
+                }else{
                         elapsedTime=delay;
                         //System.out.println("delay="+delay);
                         synctime+=elapsedTime;
@@ -149,6 +176,11 @@ public class TranscodingThread extends Thread{
                     workDone++;
                     NworkDone+=aStreamGOP.requestcount;
                     //runtime_report ?
+                } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            */
                 }else{
                     System.out.println("A thread wait 1 minute without getting any works!");
                     System.out.println("total spentTime= "+realspentTime);

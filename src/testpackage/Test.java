@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
+import static testpackage.RealModeTest.WebRequestTest;
 
 /**
  * Created by pi on 6/29/17.
@@ -171,7 +172,14 @@ public class Test {
         } else {
             //System.out.println(testbug(0));
             System.out.println(test("config.xml", "test3000r_180000_10000_3000_s1920.txt"));
+            /*
+    try {
+        RealModeTest.RealLocalThreads();
+    }catch(Exception e){
+        System.out.println("main fn error "+e);
+    }
             //DirectoryTest();
+            */
         }
     }
 

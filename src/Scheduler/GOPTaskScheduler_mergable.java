@@ -25,9 +25,9 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     public boolean emptyQueue() {
         if (Batchqueue != null && pendingqueue != null) {
-            return (Batchqueue.isEmpty() && pendingqueue.isEmpty());
+            return (Batchqueue.isEmpty() || pendingqueue.isEmpty());
         }
-        return false;
+        return true;
     }
 
     //bloated version of addStream, check duplication and similarity first

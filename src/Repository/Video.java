@@ -33,6 +33,7 @@ public class Video {
         if(listfile.exists()){
             //list mode
             try {
+                System.out.print("list mode\n\n");
                 //System.out.println("look for path:"+path);
                 Scanner scanner=new Scanner(listfile);
                 String[] sp=scanner.nextLine().split("\\s+");
@@ -69,6 +70,7 @@ public class Video {
 
 
         }else{
+            System.out.print("scan mode\n\n");
             //scan mode
             File[]  files= new File(path).listFiles();
             if (files != null) {
