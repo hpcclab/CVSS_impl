@@ -50,7 +50,9 @@ public class Test {
                     ServerConfig.profileRequestsBenhmark = opt;
                     RequestGenerator.ReadProfileRequests(opt);
                 }
+                System.out.println("test");
                 RequestGenerator.contProfileRequestsGen(GTS);
+                System.out.println("bug");
                 while (!RequestGenerator.finished) {
                     sleep(300);
                 }
@@ -133,30 +135,7 @@ public class Test {
         return "done";
     }
 
-    private static void DirectoryTest() {
-        System.out.println("Directory Test");
 
-        File configfile = new File("config/config.xml");
-        JAXBContext ctx = null;
-        try {
-            ctx = JAXBContext.newInstance(ServerConfig.class);
-
-            Unmarshaller um = ctx.createUnmarshaller();
-            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
-            //load video repo so we know their v numbers
-            VideoRepository VR = new VideoRepository();
-            VR.addAllKnownVideos();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(ServerConfig.repository);
-
-        for (int i = 0; i < VideoRepository.videos.size(); i++) {
-            System.out.println(VideoRepository.videos.get(i).name);
-        }
-    }
 
 
     //for test

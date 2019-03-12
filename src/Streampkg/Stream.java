@@ -85,17 +85,7 @@ public class Stream {
         streamGOPs= new ArrayList<StreamGOP>();
 
         for(int i=startSegment;i<endSegment;i++){
-            String designatedSettings;
-            if(settings.equalsIgnoreCase("TBD")){ //change TBD to stream&gops specific
-                designatedSettings=(i+1)+"_"+v.name;
-                //designatedSettings=v.name;
-                //System.out.println("setting="+designatedSettings);
-            }
-            else{
-                designatedSettings=settings;
-            }
-
-            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings,startTime,arrivalTime,vidSettings);
+            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,settings,startTime,arrivalTime,vidSettings);
             //System.out.println("deadline of "+video.name+" "+(i+1)+"="+xcopy.getDeadLine());
             streamGOPs.add(xcopy);
         }

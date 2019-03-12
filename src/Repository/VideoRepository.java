@@ -29,6 +29,7 @@ public class VideoRepository {
                 videos.add(new Video(directories[i].getPath() + File.separatorChar));
             }
         }
+        System.out.println("added "+ videos.size()+" known videos");
     }
     //only add real video
     public void addAllRealVideos(){

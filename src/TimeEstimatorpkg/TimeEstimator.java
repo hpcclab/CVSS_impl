@@ -1,5 +1,6 @@
 package TimeEstimatorpkg;
 
+import Scheduler.ServerConfig;
 import Streampkg.*;
 import miscTools.Tuple;
 
@@ -38,24 +39,30 @@ public class TimeEstimator {
             System.out.println("segment size="+segment.videoSize);
             return new retStat(segment.videoSize/bandwidth+1, 1);
         }else {
+            //poll machine type
             HashMap<String, histStat> polled1 = Table.get(VMclass);
             long ESTTime = 0;
             double SD = 0;
             if (polled1 != null) { //have the machine type data
-
-                boolean firstOne = true;
+                boolean firstCmd = true;
                 for (String cmd : segment.cmdSet.keySet()) {
                     //System.out.println("cmd="+cmd);
                     boolean newcmd = true;
                     for (String param : segment.cmdSet.get(cmd)) {
-                        histStat polled2 = polled1.get(cmd + param);
+                        String pollstr;
+                        if(ServerConfig.timeEstimatorMode.equalsIgnoreCase("profiled")) {
 
+                            pollstr=cmd + param + "_"+segment.segment+"_"+segment.videoname;
+                        }else{
+                            pollstr= cmd + param;
+                        }
+                        histStat polled2 = polled1.get(pollstr);
                         if (polled2 != null) {
-                            if (firstOne) { //first base cmd
+                            if (firstCmd) { //first base cmd
                                 //System.out.println("Historically, this task takes " + polled2.mean + " SD:" + polled2.SD + " on class:" + VMclass);
                                 ESTTime += polled2.mean;
                                 SD += polled2.SD;
-                                firstOne = false;
+                                firstCmd = false;
                                 newcmd = false;
                             } else if (newcmd) { //new command, count as case C merged
                                 ESTTime += polled2.plusC * polled2.mean;
@@ -69,8 +76,9 @@ public class TimeEstimator {
 
 
                         } else {
-                            System.out.println("No historic data for this cmd!:" + cmd +" param:"+ param);
+                            System.out.println("No historic data for this cmd!:" + cmd +" param:"+ param+" pollstr="+pollstr);
                             System.out.println("keyset=" + polled1.keySet());
+
                         }
                     }
                 }
@@ -116,13 +124,13 @@ public class TimeEstimator {
                 String fullline = scanner.nextLine();
                 //System.out.println(fullline);
                 String[] line = fullline.split(",");
-                if (line.length == 6) {
+                if (line.length == 7) {
                     command = line[0];
-                    setting = line[1];
-                    mean = Long.parseLong(line[2]);
-                    SD = Double.parseDouble(line[3]);
-                    plusB = Double.parseDouble(line[4]) / 100;
-                    plusC = Double.parseDouble(line[5]) / 100;
+                    setting = line[1]+"_"+line[2];
+                    mean = (long)Double.parseDouble(line[3]);
+                    SD = Double.parseDouble(line[4]);
+                    plusB = Double.parseDouble(line[5]) / 100;
+                    plusC = Double.parseDouble(line[6]) / 100;
                     histStat S = new histStat(mean, SD, plusB, plusC);
                     X.put(command + setting, S);
                     //System.out.println(line[1]);

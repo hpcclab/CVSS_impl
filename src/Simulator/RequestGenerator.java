@@ -31,12 +31,14 @@ public class RequestGenerator {
         int operation=(int)(Math.random()*(GOPTaskScheduler.possible_Operations.size()));
         //Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
         String setting=x+"x"+y;
+
         long deadline=0; //did not specified deadline
         //setting.settingIdentifier=randomRes;
         OneSpecificRequest(GTS,videoChoice,GOPTaskScheduler.possible_Operations.get(operation).operationname,setting,deadline,0);
     }
 
     public static void OneSpecificRequest(GOPTaskScheduler GTS, int videoChoice, String command, String setting, long deadline, long arrival){
+        System.out.println("create one specific request");
         Stream ST=new Stream(VideoRepository.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
         AdmissionControl.AssignStreamPriority(ST);
         GTS.addStream(ST);
@@ -92,6 +94,7 @@ public class RequestGenerator {
                 currentIndex++;
                 OneSpecificRequest(GTS, arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline,arqe.appearTime);
                 if (currentIndex >= rqe_arr.size()) {
+                    System.out.println("sim finished");
                     finished=true;
                     break;
                 }
@@ -218,8 +221,9 @@ public class RequestGenerator {
                 long appear=Math.abs(r.nextLong()%timeSpan);
                 long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
                 deadline+=appear;
+                int settingnum=(q+fold)%2;
                 //System.out.println("rqe[]="+(randomDone+q)+" positionMatup[]="+q);
-                rqes.add(new requestprofile(totalVideos*fold+positionMatchup[q],acmd,"TBD",appear,deadline)); //setting ToBeDetermined
+                rqes.add(new requestprofile(totalVideos*fold+positionMatchup[q],acmd,""+settingnum,appear,deadline)); //setting ToBeDetermined
                 totalSegmentcount+=VideoRepository.videos.get(totalVideos*fold+positionMatchup[q]).getTotalSegments();
 
                 if(totalSegmentcount-totalRequest>=0){

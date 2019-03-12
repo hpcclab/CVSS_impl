@@ -15,7 +15,7 @@ class requestprofile implements Comparable<requestprofile> {
         this.deadline = deadline;
     }
 
-    @Override
+    @Override // (compare by appearTime )
     public int compareTo(requestprofile requestprofile) {
         if (requestprofile != null) {
             if (this.appearTime > requestprofile.appearTime) {
