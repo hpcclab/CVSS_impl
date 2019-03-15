@@ -34,7 +34,7 @@ public class Test {
             //Set things up
             VideoRepository VR = new VideoRepository();
             GOPTaskScheduler GTS = new GOPTaskScheduler_mergable();
-            GTS.readcommonOperations();
+            GTS.readlistedOperations();
             VMProvisioner VMP = new VMProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
             //VMP.setGTS(GTS);
             //load Videos into Repository
@@ -50,6 +50,7 @@ public class Test {
                     ServerConfig.profileRequestsBenhmark = opt;
                     RequestGenerator.ReadProfileRequests(opt);
                 }
+                //sleep(3000);
                 System.out.println("test");
                 RequestGenerator.contProfileRequestsGen(GTS);
                 System.out.println("bug");
@@ -101,36 +102,39 @@ public class Test {
 
     //sandbox testing something strange, not really doing the program code
     private static String testbug(int seed) {
+        try {
         Scanner scanner = new Scanner(System.in);
         //read config file
-
         File configfile = new File("config/config.xml");
-        JAXBContext ctx = null;
-        try {
-            ctx = JAXBContext.newInstance(ServerConfig.class);
+        JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
+        Unmarshaller um = ctx.createUnmarshaller();
+        ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
 
-            Unmarshaller um = ctx.createUnmarshaller();
-            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
+        //Set things up
+        VideoRepository VR = new VideoRepository();
+        GOPTaskScheduler GTS = new GOPTaskScheduler_mergable();
+        GTS.readlistedOperations();
+        VMProvisioner VMP = new VMProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
+        //VMP.setGTS(GTS);
+        //load Videos into Repository
+        VR.addAllKnownVideos();
 
-            //load video repo so we know their v numbers
-            VideoRepository VR = new VideoRepository();
-            VR.addAllKnownVideos();
             //sweep create many requests
             if (seed == 0) {
                 //int[] sr={699,1911,16384,9999,555,687,9199,104857,212223,777}; // first 10
                 int[] sr = {1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
                 for (int j = 0; j < sr.length; j++) {
                     for (int i = 2000; i <= 3400; i += 200) {
-                        RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 27, 4, i, 180000, 10000, 3000);
+                        RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 88, i, 180000, 10000, 3000);
                     }
                 }
             } else {
                 for (int i = 2000; i <= 3400; i += 200) {
-                    RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + seed, seed, 27, 4, i, 180000, 10000, 3000);
+                    RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + seed, seed, 88, i, 180000, 10000, 3000);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            return "Failed: " + e;
         }
         return "done";
     }

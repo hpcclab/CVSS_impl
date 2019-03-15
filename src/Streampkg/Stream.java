@@ -51,6 +51,7 @@ public class Stream {
         for(int i=startSegment;i<endSegment;i++){
             String designatedSettings;
             if(settings.equalsIgnoreCase("TBD")){ //change TBD to stream&gops specific
+                System.out.println("this Stream using TBD translating");
                 designatedSettings=(i+1)+"_"+v.name;
                 //designatedSettings=v.name;
                 //System.out.println("setting="+designatedSettings);

@@ -32,7 +32,6 @@ public class VMinterface_SocketIO extends VMinterface {
                 oos.flush();
                 oos.reset();
                 sleep(2000);
-                System.out.println("2");
                 ois = new ObjectInputStream(s.getInputStream());
                 status = 1;
                 System.out.println("succesfully set status=1");
@@ -115,7 +114,7 @@ public class VMinterface_SocketIO extends VMinterface {
                 poison.setPriority(0);
                 oos.writeObject(poison);
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.println("SocketIO error"+ e);
                 return false;
             }
             return true;

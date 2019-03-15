@@ -4,8 +4,12 @@ import Streampkg.Stream;
 import Streampkg.StreamGOP;
 import VMManagement.VMinterface;
 import VMManagement.VMinterface_SimLocal;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 // base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.
 public abstract class GOPTaskScheduler {
@@ -76,14 +80,35 @@ public abstract class GOPTaskScheduler {
             VMinterfaces.get(i).close();
         }
     }
-    public void readcommonOperations() {
-
-        addOperations(new Operations.Framerate());
-        addOperations(new Operations.Resolution());
-        addOperations(new Operations.Bitrate());
-        addOperations(new Operations.Codec());
+    public void readlistedOperations() {
+        File listfile = new File("profile/operations.txt");
+        if(!listfile.exists()){
+            System.out.println("\n\nWarning profile/operations.txt does not exist \n\n");
+        }else{
+            try {
+                Scanner scanner=new Scanner(listfile);
+                while(scanner.hasNext()){
+                    String line[]=scanner.nextLine().split(",");
+                    if(line.length==2){
+                        addOperation(line[0],line[1]);
+                    }else{
+                        System.out.println("ill formed line?");
+                    }
+                }
+                scanner.close();
+            } catch (FileNotFoundException e) {
+            System.out.println("videorepository can not find list.txt or read fail");
+            //e.printStackTrace();
+        }
+        }
+        //operations as file
     }
-    public void addOperations(Operations.simpleoperation op) {
+    //provide operation name and batchscript, and it'll be added
+    public void addOperation(String name,String batchscript) {
+        addOperation(new Operations.simpleoperation(name,batchscript));
+    }
+    public void addOperation(Operations.simpleoperation op) {
+        System.out.println("operation: "+op.operationname+" is added to the system");
         possible_Operations.add(op);
     }
 }
