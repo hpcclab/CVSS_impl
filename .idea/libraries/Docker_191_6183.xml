@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Docker-191.6183">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/Docker-191.6183.20" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/Docker-191.6183.20" recursive="false" />
+  </library>
+</component>

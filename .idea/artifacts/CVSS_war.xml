@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="CVSS:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="CVSS.war">
+      <element id="artifact" artifact-name="CVSS:war exploded" />
+    </root>
+  </artifact>
+</component>
