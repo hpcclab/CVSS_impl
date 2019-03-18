@@ -108,10 +108,15 @@ class handler implements Provider<Source> {
             if (pair[2].equalsIgnoreCase("dl"))
                 String d = pair[1].trim();
             */
+
+            String response = newSettings.videoDir();
+
+
             StringBuilder xml = new StringBuilder("<?xml version=\"1.0\"?>");
             xml.append("<response> video request "+ arg[1]+" "+arg[3]+" "+arg[5] +" accepted</response>");
             //xml.append(newSettings.videoDir());
-            return new StreamSource(new StringReader(xml.toString()));
+           // return new StreamSource(new StringReader(xml.toString()));
+            return new StreamSource(response);
         }
     }
 

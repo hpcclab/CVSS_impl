@@ -6,5 +6,5 @@ videoname=$3
 
 mkdir $outdir
 chmod 755 $outdir
-cp $absPath/repositoryvideos/$videoname/out.m3u8 $outdir
+cp $absPath/repositoryvideos/realVideo/$videoname/out.m3u8 $outdir
 chmod 755 $outdir/out.m3u8

@@ -22,11 +22,11 @@
     <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
     <enableVMscaling>true</enableVMscaling>
-	<dataUpdateInterval>60000</dataUpdateInterval>
+	<dataUpdateInterval>1000</dataUpdateInterval>
     <VMscalingIntervalTick>30</VMscalingIntervalTick>
     <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
-    <minVM>2</minVM>
-    <maxVM>2</maxVM>
+    <minVM>8</minVM>
+    <maxVM>8</maxVM>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
     <path>./</path>

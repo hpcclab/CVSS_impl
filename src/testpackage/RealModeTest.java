@@ -1,5 +1,6 @@
 package testpackage;
 
+import DockerManagement.DockerManager;
 import Repository.VideoRepository;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
@@ -7,6 +8,8 @@ import Scheduler.ServerConfig;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
 import VMManagement.VMProvisioner;
+import com.spotify.docker.client.DockerCertificateException;
+import com.spotify.docker.client.DockerException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -208,5 +211,15 @@ public class RealModeTest {
         for (int i = 0; i < VideoRepository.videos.size(); i++) {
             System.out.println(VideoRepository.videos.get(i).name);
         }
+    }
+
+    private static void CreateContainerTest() throws InterruptedException, DockerException, DockerCertificateException {
+        DockerManager.CreateDockerClient();
+    }
+
+
+    public static void main(String[] args) throws IOException, InterruptedException, DockerException, DockerCertificateException {
+        //WebRequestTest();
+        CreateContainerTest();
     }
 }
