@@ -26,8 +26,8 @@
 	<dataUpdateInterval>1000</dataUpdateInterval>
     <VMscalingIntervalTick>30</VMscalingIntervalTick>
     <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
-    <minVM>1</minVM>
-    <maxVM>1</maxVM>
+    <minVM>8</minVM>
+    <maxVM>8</maxVM>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
     <path>./</path>

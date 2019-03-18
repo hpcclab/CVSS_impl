@@ -1,5 +1,6 @@
 package Scheduler;
 
+import Cache.Caching;
 import Streampkg.Stream;
 import Streampkg.StreamGOP;
 import VMManagement.VMinterface;
@@ -20,6 +21,11 @@ public abstract class GOPTaskScheduler {
     public static int workpending = 0;
     public static long maxElapsedTime; //use for setting Deadline
     public static List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
+    public static Caching cache;
+
+    public GOPTaskScheduler(Caching c){
+        cache=c;
+    }
 
     public boolean add_VM(String VM_type, String VM_class, String addr, int port, int id, boolean autoSchedule)
       {
@@ -43,9 +49,12 @@ public abstract class GOPTaskScheduler {
     }
 
     public void addStream(Stream ST) {
-
         for (StreamGOP X : ST.streamGOPs) {
-            Batchqueue.add(X);
+            if(!cache.checkExistence(X)) {
+                Batchqueue.add(X);
+            }else{
+                System.out.println("GOP cached, no reprocess");
+            }
         }
         taskScheduling();
     }

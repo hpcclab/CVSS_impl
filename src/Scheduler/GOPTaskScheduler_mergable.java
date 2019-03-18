@@ -1,9 +1,7 @@
 package Scheduler;
 
+import Cache.Caching;
 import Streampkg.*;
-import TimeEstimatorpkg.TimeEstimator;
-import TimeEstimatorpkg.retStat;
-import VMManagement.*;
 
 
 // mergable GOPTaskScheduler, this is just mostly pairing merger class to GOPTaskScheduler.
@@ -16,8 +14,8 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     public static double SDco=2;
     private static long oversubscriptionlevel;
-    public GOPTaskScheduler_mergable(){
-        super();
+    public GOPTaskScheduler_mergable(Caching c){
+        super(c);
         if(ServerConfig.taskmerge){
             mrg= new Merger(Batchqueue,pendingqueue,VMinterfaces);
         }
@@ -34,11 +32,15 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
     public void addStream(Stream ST){
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
-            if(ServerConfig.taskmerge){
-                mrg.mergeifpossible(X,SDco);
+            if (!cache.checkExistence(X)) {
+                if (ServerConfig.taskmerge) {
+                    mrg.mergeifpossible(X, SDco);
+                } else {
+                    //dont merge check
+                    Batchqueue.add(X);
+                }
             }else{
-                //dont merge check
-                Batchqueue.add(X);
+                System.out.println("GOP cached, no reprocess");
             }
         }
             //assignwork thread start

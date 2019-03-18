@@ -4,9 +4,11 @@ import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
 import VMManagement.*;
+import Cache.Caching;
 //extends GOPTaskScheduler, with more VM type support, more scheduling options
 public class GOPTaskScheduler_common extends GOPTaskScheduler {
-    public GOPTaskScheduler_common(){
+    public GOPTaskScheduler_common(Caching c){
+        super(c);
         //if(ServerConfig.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
             //add server list to ShortestQueueFirst list too?
         //}

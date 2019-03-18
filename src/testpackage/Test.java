@@ -1,5 +1,6 @@
 package testpackage;
 
+import Cache.Caching;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
@@ -33,7 +34,8 @@ public class Test {
 
             //Set things up
             VideoRepository VR = new VideoRepository();
-            GOPTaskScheduler GTS = new GOPTaskScheduler_mergable();
+            Caching C = new Caching(); //change to other type if need something that work
+            GOPTaskScheduler GTS = new GOPTaskScheduler_mergable(C);
             GTS.readlistedOperations();
             VMProvisioner VMP = new VMProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
             //VMP.setGTS(GTS);
@@ -112,7 +114,10 @@ public class Test {
 
         //Set things up
         VideoRepository VR = new VideoRepository();
-        GOPTaskScheduler GTS = new GOPTaskScheduler_mergable();
+
+        Caching C = new Caching(); //change to other type if need something that work
+
+        GOPTaskScheduler GTS = new GOPTaskScheduler_mergable(C);
         GTS.readlistedOperations();
         VMProvisioner VMP = new VMProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
         //VMP.setGTS(GTS);
