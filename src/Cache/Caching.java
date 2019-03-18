@@ -10,7 +10,7 @@ public class Caching {
         return false;
     }
     // if cached, return Path String for cached video
-    public String getChachedPath(StreamGOP x)
+    public String getCachedPath(StreamGOP x)
     {
         return "";
     }

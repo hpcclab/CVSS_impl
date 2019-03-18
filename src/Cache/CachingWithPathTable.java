@@ -21,12 +21,12 @@ public class CachingWithPathTable extends Caching {
         return checkExistence(convertStreamGopToString(x));
     }
     //modify path if it is not the same
-    public String getChachedPath(StreamGOP x)
+    public String getCachedPath(StreamGOP x)
     {
         return "streams/"+x.videoname+"/"+String.format("%04d",x.segment)+".ts";
     }
 
     public void addCached(StreamGOP x){
-        Table.put(convertStreamGopToString(x),getChachedPath(x));
+        Table.put(convertStreamGopToString(x),getCachedPath(x));
     }
 }
