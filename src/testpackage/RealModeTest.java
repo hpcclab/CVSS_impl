@@ -1,6 +1,7 @@
 package testpackage;
 
 import DockerManagement.DockerManager;
+import Cache.Caching;
 import Repository.VideoRepository;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
@@ -41,9 +42,9 @@ public class RealModeTest {
         VR.addAllRealVideos();
 
         //Step 1a Create threads that wait for requests upon an entry of the index of a real video
-
+        Caching C = new Caching(); //change to other type if need something that work
         //seems fine for tbe most part
-        GOPTaskScheduler GTS=new GOPTaskScheduler_mergable();
+        GOPTaskScheduler GTS=new GOPTaskScheduler_mergable(C);
 
         //checking...
         VMProvisioner VMP=new VMProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
@@ -121,9 +122,9 @@ public class RealModeTest {
         VR.addAllRealVideos();
 
         //Step 1a Create threads that wait for requests upon an entry of the index of a real video
-
+        Caching C = new Caching(); //change to other type if need something that work
         //seems fine for tbe most part
-        GOPTaskScheduler GTS=new GOPTaskScheduler_mergable();
+        GOPTaskScheduler GTS=new GOPTaskScheduler_mergable(C);
 
         //checking...
         VMProvisioner VMP=new VMProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines

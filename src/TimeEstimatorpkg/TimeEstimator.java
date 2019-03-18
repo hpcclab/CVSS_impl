@@ -51,12 +51,13 @@ public class TimeEstimator {
                     for (String param : segment.cmdSet.get(cmd)) {
                         String pollstr;
                         if(ServerConfig.timeEstimatorMode.equalsIgnoreCase("profiled")) {
-
+                            System.out.println("cmd="+cmd+" segment="+segment.segment+" vname="+segment.videoname);
                             pollstr=cmd + param + "_"+segment.segment+"_"+segment.videoname;
                         }else{
                             pollstr= cmd + param;
                         }
                         histStat polled2 = polled1.get(pollstr);
+                        //System.out.println("keyset=" + polled1.keySet());
                         if (polled2 != null) {
                             if (firstCmd) { //first base cmd
                                 //System.out.println("Historically, this task takes " + polled2.mean + " SD:" + polled2.SD + " on class:" + VMclass);
@@ -76,8 +77,9 @@ public class TimeEstimator {
 
 
                         } else {
-                            System.out.println("No historic data for this cmd!:" + cmd +" param:"+ param+" pollstr="+pollstr);
-                            System.out.println("keyset=" + polled1.keySet());
+                            System.out.println("No historic data for this cmd!:" + cmd +" param:"+ param+" segment id="+segment.segment+" pollstr="+pollstr);
+                            System.out.println("key size="+polled1.keySet().size());
+                            //System.out.println("keyset=" + polled1.keySet());
 
                         }
                     }
@@ -111,7 +113,7 @@ public class TimeEstimator {
             try {
                 scanner = new Scanner(F);
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.println("Time estimator error"+e);
             }
 
             HashMap<String, histStat> X = new HashMap<>();
