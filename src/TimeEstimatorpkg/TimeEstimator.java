@@ -51,7 +51,7 @@ public class TimeEstimator {
                     for (String param : segment.cmdSet.get(cmd)) {
                         String pollstr;
                         if(ServerConfig.timeEstimatorMode.equalsIgnoreCase("profiled")) {
-                            System.out.println("cmd="+cmd+" segment="+segment.segment+" vname="+segment.videoname);
+                            //System.out.println("Time Estimator for cmd="+cmd+" param="+param+" segment="+segment.segment+" vname="+segment.videoname);
                             pollstr=cmd + param + "_"+segment.segment+"_"+segment.videoname;
                         }else{
                             pollstr= cmd + param;
@@ -70,7 +70,7 @@ public class TimeEstimator {
                                 SD += polled2.plusC * polled2.SD;
                                 newcmd = false;
                             } else {
-                                System.out.println("case B time estimate");
+                                //System.out.println("case C time estimate");
                                 ESTTime += polled2.plusB * polled2.mean;
                                 SD += polled2.plusB * polled2.SD;
                             }

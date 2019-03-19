@@ -14,7 +14,7 @@ public class runtime_report implements Serializable {
     public HashMap<String, Tuple<Long,Integer>> runtime_report=new HashMap<>();
 
 
-    public runtime_report(int queue_size, long time, long timeElapsed, long timeSpent, long ncmp, long cmp, long miss, long nmiss, double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
+    public runtime_report(int queue_size, long time, long timeElapsed, long timeSpent, long ncmp, long cmp, long nmiss, long miss, double deadLineMissRate, ConcurrentHashMap<String, Tuple<Long, Integer>> runtime_report) {
         this.runtime_report.putAll(runtime_report);
         this.queue_executionTime=time;
         this.VMelapsedTime=timeElapsed;

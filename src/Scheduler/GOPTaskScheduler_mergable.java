@@ -53,8 +53,10 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
     //function that do something after task X get sent
     protected void postschedulefn(StreamGOP X){
         //System.out.println("overwritten postschedulefn is CALLED\n\n\n");
+        /*
         if(ServerConfig.taskmerge) {
             mrg.removeStreamGOPfromTable(X);
         }
+        */
     }
 }

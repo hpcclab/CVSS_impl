@@ -88,15 +88,15 @@ public class Merger {
     }
 
     private VMinterface v_selectMachine(StreamGOP x,int[] queuelength,long[] executiontime){
-        //System.out.println("assigning works");
+        //System.out.println("virtual estimation");
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
-            return GOPTaskScheduler_mergable.shortestQueueFirst(x,queuelength,executiontime,true,1,true);
+            return GOPTaskScheduler_mergable.shortestQueueFirst(x,queuelength,executiontime,true,1,false);
         }else { //default way, shortestQueueFirst
-            return GOPTaskScheduler_mergable.shortestQueueFirst(x,queuelength,executiontime,false,1,true); //false for not using TimeEstimator
+            return GOPTaskScheduler_mergable.shortestQueueFirst(x,queuelength,executiontime,false,1,false); //false for not using TimeEstimator
         }
     }
-    public int countOriginalMiss(StreamGOP X,double SDco){
+    private int countOriginalMiss(StreamGOP X,double SDco){
         miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
         newVQ.add(X);
         //System.out.println("countOriginalMiss");
@@ -106,6 +106,13 @@ public class Merger {
     }
     private int countDLMiss(miscTools.SortableList virtualQueue,int rthreshold,double SDco) {
         return countDLMiss(virtualQueue,null,rthreshold,SDco);
+    }
+
+    private void fillEstimatorArray(int[] ql,long[] et){
+        for(int i=0;i<VMinterfaces.size();i++){ //this queuelength of already assigned tasks use SD=2
+            ql[i]=VMinterfaces.get(i).estimatedQueueLength;
+            et[i]=VMinterfaces.get(i).estimatedExecutionTime;
+        }
     }
     //return 0 for no miss, x for x missed deadline
     private int countDLMiss(miscTools.SortableList virtualQueue,StreamGOP target,int rthreshold,double SDco){
@@ -117,10 +124,7 @@ public class Merger {
         //copy virtual queue
         int[] queuelength=new int[VMinterfaces.size()];
         long[] executiontime=new long[VMinterfaces.size()];
-        for(int i=0;i<VMinterfaces.size();i++){ //this queuelength of already assigned tasks use SD=2
-            queuelength[i]=VMinterfaces.get(i).estimatedQueueLength;
-            executiontime[i]=VMinterfaces.get(i).estimatedExecutionTime;
-        }
+        fillEstimatorArray(queuelength,executiontime);
 
         for(int i=0;i<virtualQueue_copy.size();i++){
             probecounter++;
@@ -156,10 +160,7 @@ public class Merger {
         //copy virtual queue
         int[] queuelength=new int[VMinterfaces.size()];
         long[] executiontime=new long[VMinterfaces.size()];
-        for(int i=0;i<VMinterfaces.size();i++){
-            queuelength[i]=VMinterfaces.get(i).estimatedQueueLength;
-            executiontime[i]=VMinterfaces.get(i).estimatedExecutionTime;
-        }
+        fillEstimatorArray(queuelength,executiontime);
 
         for(int i=0;i<virtualQueue_copy.size();i++) {
             probecounter++;
@@ -230,6 +231,7 @@ public class Merger {
                 */
                 if (Math.abs(checked) <= Math.abs(originalmiss)) { //worth it, merge!
                     itspair.getAllCMD(X); //reuse itspair object, add new parameters
+                    System.out.println("Merge");
                     //don't update execution time yet, lets do that on dispatch event
                     /*
                     if(...){ //if task need to be reinsert to resort the queue
@@ -239,6 +241,7 @@ public class Merger {
                     */
                     return true;
                 }else{
+                    System.out.println("no Merge");
                     return false;
                 }
             }else{
@@ -258,7 +261,8 @@ public class Merger {
                         }
                     }
                 }else{
-                    //do merge
+                    System.out.println("merge");
+                    itspair.getAllCMD(X);
                     return true;
                 }
             }
@@ -270,12 +274,13 @@ public class Merger {
     public void mergeifpossible(StreamGOP X,double SDco){
         //HOLD UP! check for duplication first
         Streampkg.TaskRequest aRequestlvl1 = new Streampkg.TaskRequest(X,1); //= ... derive from X
-        System.out.println(X.getPath() +" "+X.videoname);
+        System.out.println(X.videoname+" ");
         if (mergePending_tasklvl.containsKey(aRequestlvl1)) {
             merged_tasklvl_count++;
             System.out.println("match Task lvl (exactly the same request) -> dropping this request");
             //don't even need to check if it is not null or state is not dispatched
         }else {
+            System.out.println("not duplicated");
             //count how many miss would happen if not merging
             int originalmiss = countOriginalMiss(X,SDco);
             //System.out.println("Original miss=" + originalmiss);
@@ -287,21 +292,21 @@ public class Merger {
             //check level 2
             if (mergePending_operationlvl.containsKey(aRequestlvl2)) {
                 if (trymerge(X, originalmiss, aRequestlvl2, mergePending_operationlvl)) {
-                    //System.out.println("Merged in lvl2");
+                    System.out.println("Merged in lvl2");
                     return;
                 }
             }
             if (mergePending_datalvl.containsKey(aRequestlvl3)) {
                 if (trymerge(X, originalmiss, aRequestlvl3, mergePending_datalvl)) {
-                    //System.out.println("Merged in lvl3");
+                    System.out.println("Merged in lvl3");
                     return;
                 }
             }
             System.out.println("add to queue directly, not matching anything");
-            Batchqueue.add(X);
             mergePending_tasklvl.put(aRequestlvl1, X); //or replace???
             mergePending_operationlvl.put(aRequestlvl2, X);
             mergePending_operationlvl.put(aRequestlvl3, X);
+            Batchqueue.add(X);
         }
     }
 

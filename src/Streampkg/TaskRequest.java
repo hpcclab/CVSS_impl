@@ -38,8 +38,10 @@ public class TaskRequest{ //fill every thing for lvl1 mapping constructor, skip 
 
     }
     public int hashCode() {
+        //System.out.println("building hashcode cmd="+command+" param="+param+" path="+Path);
         return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
                 // if deriving: appendSuper(super.hashCode()).
+
                         append(command).
                         append(param).
                         append(Path).

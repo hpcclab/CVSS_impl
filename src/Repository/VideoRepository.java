@@ -25,11 +25,11 @@ public class VideoRepository {
             File[] directories = new File(ServerConfig.repository.get(j)).listFiles(File::isDirectory);
             Arrays.sort(directories);
             for (int i = 0; i < directories.length; i++) {
-                System.out.println(directories[i].getPath() + File.separatorChar);
+                //System.out.println(directories[i].getPath() + File.separatorChar);
                 videos.add(new Video(directories[i].getPath() + File.separatorChar));
             }
         }
-        System.out.println("added "+ videos.size()+" known videos");
+        //System.out.println("added "+ videos.size()+" known videos");
     }
     //only add real video
     public void addAllRealVideos(){
@@ -40,7 +40,7 @@ public class VideoRepository {
                 for (int i = 0; i < directories.length; i++) {
                     Video v = new Video(directories[i].getPath() + File.separatorChar);
                     videos.add(new Video(directories[i].getPath() + File.separatorChar));
-                    System.out.println("Video number " + i + " GOP count: " + v.repositoryGOPs.size());
+                    //System.out.println("Video number " + i + " GOP count: " + v.repositoryGOPs.size());
                 }
 
             }

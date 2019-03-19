@@ -16,7 +16,7 @@ import java.util.Scanner;
 public abstract class GOPTaskScheduler {
     protected miscTools.SortableList Batchqueue = new miscTools.SortableList();
     public static ArrayList<VMinterface> VMinterfaces = new ArrayList<VMinterface>();
-    protected int scheduler_working = 0;
+    public int scheduler_working = 0;
     protected static int maxpending = 0;
     public static int workpending = 0;
     public static long maxElapsedTime; //use for setting Deadline
@@ -73,11 +73,12 @@ public abstract class GOPTaskScheduler {
 
             for(int i=0;i<VMinterfaces.size();i++){ //get a free machine
                 int assignable=VMinterfaces.get(i).estimatedQueueLength - ServerConfig.localqueuelengthperVM; //get number of task can assign to this machine
+                System.out.println("basic scheduler");
                 while ((!Batchqueue.isEmpty()) && assignable>0) {
                     StreamGOP X=Batchqueue.removeDefault();
                     X.dispatched=true;
                     VMinterfaces.get(i).sendJob(X);
-                    System.out.println("send job " + X.getPath() + " to " + VMinterfaces.get(i).toString());
+                    System.out.println("basic scheduler send job " + X.getPath() + " to " + VMinterfaces.get(i).toString());
                     }
             }
             scheduler_working =0;

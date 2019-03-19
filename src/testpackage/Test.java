@@ -53,7 +53,7 @@ public class Test {
                     RequestGenerator.ReadProfileRequests(opt);
                 }
                 //sleep(3000);
-                System.out.println("test");
+                System.out.println("start sim");
                 RequestGenerator.contProfileRequestsGen(GTS);
                 System.out.println("bug");
                 while (!RequestGenerator.finished) {
@@ -159,7 +159,7 @@ public class Test {
             }
         } else {
             //System.out.println(testbug(0));
-            System.out.println(test("config.xml", "test3000r_180000_10000_3000_s1920.txt"));
+            System.out.println(test("config.xml", "config"));
             /*
     try {
         RealModeTest.RealLocalThreads();

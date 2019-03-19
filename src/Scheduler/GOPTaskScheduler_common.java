@@ -46,6 +46,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             if((pending_queuelength[0] < ServerConfig.localqueuelengthperVM) || !realSchedule){ //if not real assignment, we can violate queue length
                 if (useTimeEstimator) {
                     retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), ServerConfig.VM_ports.get(0), x);
+                    //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
                     estimatedT= (long) (chk.mean + chk.SD * SDcoefficient);
                     minFT = pending_executiontime[0] + estimatedT;
                     minET=chk.mean;
@@ -58,7 +59,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             }
 
 
-            System.out.println("first est time="+minFT);
+            //System.out.println("first est time="+minFT);
             //System.out.println("VMINTERFACE SIZE="+VMinterfaces.size());
             for (int i = 1; i < VMinterfaces.size(); i++) {
                 VMinterface aMachine = VMinterfaces.get(i);
@@ -69,6 +70,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                             //calculate new choice
                             if (useTimeEstimator) {
                                 retStat chk = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(i), ServerConfig.VM_ports.get(i), x);
+                                //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
                                 estimatedT = pending_executiontime[i] + (long)(chk.mean + chk.SD * SDcoefficient);
                                 if (estimatedT < minFT) {
                                     answer = aMachine;
@@ -95,7 +97,9 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                     System.out.println("warning, a machine is not ready");
                 }
             }
-            System.out.println("decided a machine "+answer.VM_class+" id= "+answer.id+" queuelength="+answer.estimatedQueueLength+"/"+ServerConfig.localqueuelengthperVM);
+            if(realSchedule) {
+                System.out.println("decided to place on machine " + answer.VM_class + " id= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + ServerConfig.localqueuelengthperVM);
+            }
             if (realSchedule && useTimeEstimator) { //update estimatedExecutionTime
                 x.estimatedExecutionTime = minET;
                 x.estimatedExecutionSD=minSD;
@@ -141,6 +145,8 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 preschedulefn(X);
 
                 VMinterface chosenVM = selectMachine(X);
+                System.out.println("ChosenVM="+chosenVM);
+
                 if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.localqueuelengthperVM)) {
                     //do reprovisioner, we need more VM!
                     //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
@@ -158,6 +164,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                     X.estimatedExecutionSD=thestat.SD;
                     //X.estimatedDelay
                 }
+                System.out.println("before dispatch");
 
                 //change StreamGOP type to Dispatched
                 X.dispatched = true;
@@ -170,7 +177,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 //System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
                 //System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);
                 workpending++;
-                //System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
+                System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
                 if (workpending == maxpending) {
                     System.out.println("workpending==maxpending");
                     VMProvisioner.collectData();

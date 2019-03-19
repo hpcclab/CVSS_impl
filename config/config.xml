@@ -6,19 +6,20 @@
 	<addProfiledDelay>True</addProfiledDelay>
 	<profiledRequests>True</profiledRequests>
     <openWebRequests>False</openWebRequests>
+	<run_mode>dry</run_mode>
+    <profileRequestsBenhmark>test2000r_180000_10000_3000_s1.txt</profileRequestsBenhmark>
+
+    <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
+    <batchqueuesortpolicy>Deadline</batchqueuesortpolicy> <!-- Priority or Deadline or Urgency or None -->
     <localqueuelengthperVM>4</localqueuelengthperVM>
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
-    <lowscalingThreshold>0.1</lowscalingThreshold>
-    <highscalingThreshold>0.5</highscalingThreshold>
-    
-    <taskmerge>False</taskmerge>
-    <batchqueuesortpolicy>Deadline</batchqueuesortpolicy> <!-- Priority or Deadline or Urgency or None -->
-    <profileRequestsBenhmark>test2000r_180000_10000_3000_s699.txt</profileRequestsBenhmark>
-    <consideratemerge>True</consideratemerge>
-    <mergeOverwriteQueuePolicy>True</mergeOverwriteQueuePolicy>
+
+    <taskmerge>True</taskmerge>
+    <consideratemerge>False</consideratemerge>
+    <mergeOverwriteQueuePolicy>False</mergeOverwriteQueuePolicy>
     <overwriteQueuePolicyHeuristic>linear</overwriteQueuePolicyHeuristic>
 
-    <enableTimeEstimator>true</enableTimeEstimator>
+    <enableTimeEstimator>True</enableTimeEstimator>
     <timeEstimatorMode>profiled</timeEstimatorMode>
     <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
@@ -26,19 +27,20 @@
 	<dataUpdateInterval>1000</dataUpdateInterval>
     <VMscalingIntervalTick>30</VMscalingIntervalTick>
     <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
+    <lowscalingThreshold>0.1</lowscalingThreshold>
+    <highscalingThreshold>0.5</highscalingThreshold>
     <minVM>8</minVM>
     <maxVM>8</maxVM>
-    <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
     <path>./</path>
-	<run_mode>dry</run_mode>
-<repository>repositoryvideos/videoData</repository>
+<useEC2>False</useEC2>
+<file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
 
+<repository>repositoryvideos/videoData</repository>
 <!--- 
 <repository>repositoryvideos/realVideo</repository>
 -->
-<useEC2>False</useEC2>
-    <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
+
 	
     <VM>sim,chameleonVM,localhost,5060,true</VM>
     <VM>sim,chameleonVM,localhost,5061,true</VM>
