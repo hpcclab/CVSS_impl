@@ -6,16 +6,14 @@ import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
 import Simulator.RequestGenerator;
 import Repository.*;
-import VMManagement.VMProvisioner;
+import ResourceManagement.ResourceProvisioner;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
-import static testpackage.RealModeTest.WebRequestTest;
 
 /**
  * Created by pi on 6/29/17.
@@ -37,7 +35,7 @@ public class Test {
             Caching C = new Caching(); //change to other type if need something that work
             GOPTaskScheduler GTS = new GOPTaskScheduler_mergable(C);
             GTS.readlistedOperations();
-            VMProvisioner VMP = new VMProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
+            ResourceProvisioner VMP = new ResourceProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
             //VMP.setGTS(GTS);
             //load Videos into Repository
             VR.addAllKnownVideos();
@@ -119,7 +117,7 @@ public class Test {
 
         GOPTaskScheduler GTS = new GOPTaskScheduler_mergable(C);
         GTS.readlistedOperations();
-        VMProvisioner VMP = new VMProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
+        ResourceProvisioner VMP = new ResourceProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
         //VMP.setGTS(GTS);
         //load Videos into Repository
         VR.addAllKnownVideos();

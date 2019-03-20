@@ -1,9 +1,9 @@
 package Scheduler;
 
+import ResourceManagement.MachineInterface;
 import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
-import VMManagement.VMinterface;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,11 +18,11 @@ public class Merger {
     public static long probecounter=0;
     private miscTools.SortableList pendingqueue;
     private miscTools.SortableList Batchqueue;
-    public static ArrayList<VMinterface> VMinterfaces;
-    public Merger(miscTools.SortableList bq,miscTools.SortableList pq,ArrayList<VMinterface> vi) {
+    public static ArrayList<MachineInterface> machineInterfaces;
+    public Merger(miscTools.SortableList bq,miscTools.SortableList pq,ArrayList<MachineInterface> vi) {
         Batchqueue=bq;
         pendingqueue=pq;
-        VMinterfaces =vi;
+        machineInterfaces =vi;
     }
 
     //binary search version, only work if original miss ==0
@@ -87,7 +87,7 @@ public class Merger {
         }
     }
 
-    private VMinterface v_selectMachine(StreamGOP x,int[] queuelength,long[] executiontime){
+    private MachineInterface v_selectMachine(StreamGOP x, int[] queuelength, long[] executiontime){
         //System.out.println("virtual estimation");
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
@@ -109,9 +109,9 @@ public class Merger {
     }
 
     private void fillEstimatorArray(int[] ql,long[] et){
-        for(int i=0;i<VMinterfaces.size();i++){ //this queuelength of already assigned tasks use SD=2
-            ql[i]=VMinterfaces.get(i).estimatedQueueLength;
-            et[i]=VMinterfaces.get(i).estimatedExecutionTime;
+        for(int i = 0; i< machineInterfaces.size(); i++){ //this queuelength of already assigned tasks use SD=2
+            ql[i]= machineInterfaces.get(i).estimatedQueueLength;
+            et[i]= machineInterfaces.get(i).estimatedExecutionTime;
         }
     }
     //return 0 for no miss, x for x missed deadline
@@ -122,8 +122,8 @@ public class Merger {
         int threshold=Math.abs(rthreshold);
         miscTools.SortableList virtualQueue_copy = new miscTools.SortableList(virtualQueue);
         //copy virtual queue
-        int[] queuelength=new int[VMinterfaces.size()];
-        long[] executiontime=new long[VMinterfaces.size()];
+        int[] queuelength=new int[machineInterfaces.size()];
+        long[] executiontime=new long[machineInterfaces.size()];
         fillEstimatorArray(queuelength,executiontime);
 
         for(int i=0;i<virtualQueue_copy.size();i++){
@@ -131,8 +131,8 @@ public class Merger {
             //get a GOP
             StreamGOP aGOP=virtualQueue_copy.removeDefault();
             //get a machine
-            VMinterface machine= v_selectMachine(aGOP,queuelength,executiontime);
-            int machine_index=VMinterfaces.indexOf(machine);
+            MachineInterface machine= v_selectMachine(aGOP,queuelength,executiontime);
+            int machine_index= machineInterfaces.indexOf(machine);
             //update our queue
             retStat thestat=TimeEstimator.getHistoricProcessTime(machine.VM_class,machine.port,aGOP);
             executiontime[machine_index]+=thestat.mean+thestat.SD*SDco; //thestat.SD;
@@ -158,15 +158,15 @@ public class Merger {
         // perform check
         miscTools.SortableList virtualQueue_copy = new miscTools.SortableList(virtualQueue);
         //copy virtual queue
-        int[] queuelength=new int[VMinterfaces.size()];
-        long[] executiontime=new long[VMinterfaces.size()];
+        int[] queuelength=new int[machineInterfaces.size()];
+        long[] executiontime=new long[machineInterfaces.size()];
         fillEstimatorArray(queuelength,executiontime);
 
         for(int i=0;i<virtualQueue_copy.size();i++) {
             probecounter++;
             // try themergedtask first, if fail then return
-            VMinterface machine = v_selectMachine(themergedtask, queuelength, executiontime);
-            int machine_index = VMinterfaces.indexOf(machine);
+            MachineInterface machine = v_selectMachine(themergedtask, queuelength, executiontime);
+            int machine_index = machineInterfaces.indexOf(machine);
             retStat thestat=TimeEstimator.getHistoricProcessTime(machine.VM_class, machine.port, themergedtask);
             if(executiontime[machine_index]+thestat.mean>themergedtask.deadLine){
                 return i-1;
@@ -177,7 +177,7 @@ public class Merger {
             StreamGOP aGOP = virtualQueue_copy.removeDefault();
             //get a machine
             machine = v_selectMachine(aGOP, queuelength, executiontime);
-            machine_index = VMinterfaces.indexOf(machine);
+            machine_index = machineInterfaces.indexOf(machine);
             //update our queue
             thestat = TimeEstimator.getHistoricProcessTime(machine.VM_class, machine.port, aGOP);
             executiontime[machine_index] += thestat.mean; //thestat.SD;

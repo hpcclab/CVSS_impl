@@ -1,10 +1,10 @@
 package Scheduler;
 
 import Cache.Caching;
+import ResourceManagement.MachineInterface;
+import ResourceManagement.MachineInterface_SimLocal;
 import Streampkg.Stream;
 import Streampkg.StreamGOP;
-import VMManagement.VMinterface;
-import VMManagement.VMinterface_SimLocal;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +15,7 @@ import java.util.Scanner;
 // base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.
 public abstract class GOPTaskScheduler {
     protected miscTools.SortableList Batchqueue = new miscTools.SortableList();
-    public static ArrayList<VMinterface> VMinterfaces = new ArrayList<VMinterface>();
+    public static ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
     public int scheduler_working = 0;
     protected static int maxpending = 0;
     public static int workpending = 0;
@@ -37,18 +37,19 @@ public abstract class GOPTaskScheduler {
         }catch(Exception e){
             System.out.println("sleep bug");
         }
-        VMinterface t = t = new VMinterface_SimLocal(VM_class, port, id, autoSchedule); //only support simlocal in this minimal version
-        VMinterfaces.add(t);
+        MachineInterface t = t = new MachineInterface_SimLocal(VM_class, port, id, autoSchedule); //only support simlocal in this minimal version
+        machineInterfaces.add(t);
         return false;
     }
 
     public boolean remove_VM(int which) {
-        VMinterfaces.remove(which);
+        machineInterfaces.remove(which);
         maxpending -= ServerConfig.localqueuelengthperVM; //4?
         return true;
     }
 
     public void addStream(Stream ST) {
+        AdmissionControl.AssignStreamPriority(ST);
         for (StreamGOP X : ST.streamGOPs) {
             if(!cache.checkExistence(X)) {
                 Batchqueue.add(X);
@@ -71,14 +72,14 @@ public abstract class GOPTaskScheduler {
         if(scheduler_working !=1) {
             scheduler_working = 1;
 
-            for(int i=0;i<VMinterfaces.size();i++){ //get a free machine
-                int assignable=VMinterfaces.get(i).estimatedQueueLength - ServerConfig.localqueuelengthperVM; //get number of task can assign to this machine
+            for(int i = 0; i< machineInterfaces.size(); i++){ //get a free machine
+                int assignable= machineInterfaces.get(i).estimatedQueueLength - ServerConfig.localqueuelengthperVM; //get number of task can assign to this machine
                 System.out.println("basic scheduler");
                 while ((!Batchqueue.isEmpty()) && assignable>0) {
                     StreamGOP X=Batchqueue.removeDefault();
                     X.dispatched=true;
-                    VMinterfaces.get(i).sendJob(X);
-                    System.out.println("basic scheduler send job " + X.getPath() + " to " + VMinterfaces.get(i).toString());
+                    machineInterfaces.get(i).sendJob(X);
+                    System.out.println("basic scheduler send job " + X.getPath() + " to " + machineInterfaces.get(i).toString());
                     }
             }
             scheduler_working =0;
@@ -86,8 +87,8 @@ public abstract class GOPTaskScheduler {
     }
     //turn off VMS socket connection sockets
     public void close(){
-        for(int i = 0; i< VMinterfaces.size(); i++){
-            VMinterfaces.get(i).close();
+        for(int i = 0; i< machineInterfaces.size(); i++){
+            machineInterfaces.get(i).close();
         }
     }
     public void readlistedOperations() {

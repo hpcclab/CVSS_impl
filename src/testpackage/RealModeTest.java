@@ -8,7 +8,7 @@ import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
-import VMManagement.VMProvisioner;
+import ResourceManagement.ResourceProvisioner;
 import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
 
@@ -47,7 +47,7 @@ public class RealModeTest {
         GOPTaskScheduler GTS=new GOPTaskScheduler_mergable(C);
 
         //checking...
-        VMProvisioner VMP=new VMProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
+        ResourceProvisioner VMP=new ResourceProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
 
         int num = Integer.MAX_VALUE;
 
@@ -127,7 +127,7 @@ public class RealModeTest {
         GOPTaskScheduler GTS=new GOPTaskScheduler_mergable(C);
 
         //checking...
-        VMProvisioner VMP=new VMProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
+        ResourceProvisioner VMP=new ResourceProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
 
         ////create open socket, receive new profile request then do similar to profiledRequests
         IOWindows.Webservicegate webrqgate=new IOWindows.Webservicegate();

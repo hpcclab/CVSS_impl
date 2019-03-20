@@ -3,7 +3,7 @@ package Scheduler;
 import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
-import VMManagement.*;
+import ResourceManagement.*;
 import Cache.Caching;
 //extends GOPTaskScheduler, with more VM type support, more scheduling options
 public class GOPTaskScheduler_common extends GOPTaskScheduler {
@@ -15,29 +15,29 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
     }
     //overwrite with common VM types
     public boolean  add_VM(String VM_type,String VM_class,String addr,int port,int id,boolean autoSchedule){
-        VMinterface t;
+        MachineInterface t;
         if(VM_type.equalsIgnoreCase("sim")) {
-            t = new VMinterface_SimLocal(VM_class,port,id,autoSchedule);
+            t = new MachineInterface_SimLocal(VM_class,port,id,autoSchedule);
         }else if(VM_type.equalsIgnoreCase("simNWcache")){
-            t = new VMinterface_SimNWcache(VM_class,port,id,autoSchedule);
+            t = new MachineInterface_SimNWcache(VM_class,port,id,autoSchedule);
         }else{ //not a simulation, create socket
-            t = new VMinterface_SocketIO(VM_class, addr, port, id,autoSchedule);
+            t = new MachineInterface_SocketIO(VM_class, addr, port, id,autoSchedule);
         }
         if(autoSchedule) {
             maxpending += ServerConfig.localqueuelengthperVM; //4?
         }
-        VMinterfaces.add(t);
+        machineInterfaces.add(t);
 
         return true; //for success
     }
 
     //work properly on homogeneous only
     //new update: use queue length from array
-    protected static VMinterface shortestQueueFirst(StreamGOP x, int[] pending_queuelength, long[] pending_executiontime, boolean useTimeEstimator, double SDcoefficient, boolean realSchedule){
+    protected static MachineInterface shortestQueueFirst(StreamGOP x, int[] pending_queuelength, long[] pending_executiontime, boolean useTimeEstimator, double SDcoefficient, boolean realSchedule){
         //currently machine 0 must be autoscheduleable
         long estimatedT;
-        if(VMinterfaces.size()>0) {
-            VMinterface answer=VMinterfaces.get(0);
+        if(machineInterfaces.size()>0) {
+            MachineInterface answer= machineInterfaces.get(0);
             long minFT;
             long minET=0;
             double minSD=0;
@@ -60,9 +60,9 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
 
 
             //System.out.println("first est time="+minFT);
-            //System.out.println("VMINTERFACE SIZE="+VMinterfaces.size());
-            for (int i = 1; i < VMinterfaces.size(); i++) {
-                VMinterface aMachine = VMinterfaces.get(i);
+            //System.out.println("VMINTERFACE SIZE="+machineInterfaces.size());
+            for (int i = 1; i < machineInterfaces.size(); i++) {
+                MachineInterface aMachine = machineInterfaces.get(i);
                 if (aMachine.isWorking()) {
                     if (aMachine.autoschedule) {
                         if((pending_queuelength[i] < ServerConfig.localqueuelengthperVM) || !realSchedule) {
@@ -113,13 +113,13 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
 
 
     //will have more ways to assign works later
-    protected VMinterface selectMachine(StreamGOP x){
+    protected MachineInterface selectMachine(StreamGOP x){
         //System.out.println("assigning works");
-        int[] queuelength=new int[VMinterfaces.size()];
-        long[] executiontime=new long[VMinterfaces.size()];
-        for(int i=0;i<VMinterfaces.size();i++){
-            queuelength[i]=VMinterfaces.get(i).estimatedQueueLength;
-            executiontime[i]=VMinterfaces.get(i).estimatedExecutionTime;
+        int[] queuelength=new int[machineInterfaces.size()];
+        long[] executiontime=new long[machineInterfaces.size()];
+        for(int i = 0; i< machineInterfaces.size(); i++){
+            queuelength[i]= machineInterfaces.get(i).estimatedQueueLength;
+            executiontime[i]= machineInterfaces.get(i).estimatedExecutionTime;
         }
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
@@ -144,14 +144,14 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
 
                 preschedulefn(X);
 
-                VMinterface chosenVM = selectMachine(X);
+                MachineInterface chosenVM = selectMachine(X);
                 System.out.println("ChosenVM="+chosenVM);
 
                 if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.localqueuelengthperVM)) {
                     //do reprovisioner, we need more VM!
-                    //VMProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
+                    //ResourceProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
                     System.out.println("queue too long, scale up!");
-                    VMProvisioner.EvaluateClusterSize(-2);
+                    ResourceProvisioner.EvaluateClusterSize(-2);
                     //re-assign works
                     chosenVM = selectMachine(X);
                     System.out.println("ChosenVM="+chosenVM);
@@ -180,7 +180,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
                 if (workpending == maxpending) {
                     System.out.println("workpending==maxpending");
-                    VMProvisioner.collectData();
+                    ResourceProvisioner.collectData();
                 }
             }
             scheduler_working =0;

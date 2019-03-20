@@ -45,11 +45,11 @@ public class SortableList extends LinkedList<Streampkg.StreamGOP> {
     }
     public Streampkg.StreamGOP pollMaxUrgency(){ //Homogeneous Only
         Streampkg.StreamGOP earliest = peekFirst();
-        long earliestvalue=earliest.deadLine-TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.VMinterfaces.get(0).VM_class,GOPTaskScheduler.VMinterfaces.get(0).port, earliest,1);
+        long earliestvalue=earliest.deadLine-TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.machineInterfaces.get(0).VM_class,GOPTaskScheduler.machineInterfaces.get(0).port, earliest,1);
         ListIterator<Streampkg.StreamGOP> it = listIterator(1);
         while (it.hasNext()) {
             Streampkg.StreamGOP t = it.next();
-            long checkvalue=t.deadLine- TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.VMinterfaces.get(0).VM_class,GOPTaskScheduler.VMinterfaces.get(0).port, t,1);
+            long checkvalue=t.deadLine- TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.machineInterfaces.get(0).VM_class,GOPTaskScheduler.machineInterfaces.get(0).port, t,1);
             if ( checkvalue<earliestvalue) {
                 earliest = t;
                 earliestvalue=checkvalue;

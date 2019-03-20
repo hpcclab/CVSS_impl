@@ -39,7 +39,6 @@ public class RequestGenerator {
     public static void OneSpecificRequest(GOPTaskScheduler GTS, int videoChoice, String command, String setting, long deadline, long arrival){
         //System.out.println("create one specific request");
         Stream ST=new Stream(VideoRepository.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
-        AdmissionControl.AssignStreamPriority(ST);
         GTS.addStream(ST);
         //System.out.println("test2");
     }

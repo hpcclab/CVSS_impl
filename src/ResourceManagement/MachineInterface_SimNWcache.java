@@ -1,4 +1,4 @@
-package VMManagement;
+package ResourceManagement;
 
         import Scheduler.GOPTaskScheduler;
         import Streampkg.StreamGOP;
@@ -7,7 +7,7 @@ package VMManagement;
 
 //does not actually have a socket, this code is simulating caching through Network, it has bandwidth and latency
 //currently each file have fixed size, rather than having a transfer size per GOP
-public class VMinterface_SimNWcache extends VMinterface {
+public class MachineInterface_SimNWcache extends MachineInterface {
     //interface's parameters
     //pseudo thread's parameters
     private int workDone; //count each work as one
@@ -32,14 +32,14 @@ public class VMinterface_SimNWcache extends VMinterface {
     public long getBandwidth() { //convert back to Megabits
         return bandwidth*8;
     }
-    public VMinterface_SimNWcache(String vclass,int iport, int inid,boolean iautoschedule) {
+    public MachineInterface_SimNWcache(String vclass, int iport, int inid, boolean iautoschedule) {
         super(vclass,iport,inid,iautoschedule);
         setBandwidth(iport);
         status=1;
     }
 
     //not used right now,
-    public VMinterface_SimNWcache(String vclass, int inid,boolean iautoschedule,int ibandwidth,int idelay_mean,double idelay_SD) {
+    public MachineInterface_SimNWcache(String vclass, int inid, boolean iautoschedule, int ibandwidth, int idelay_mean, double idelay_SD) {
         super(vclass,ibandwidth,inid,iautoschedule);
         setBandwidth(ibandwidth);
         delay_mean=idelay_mean;
@@ -52,7 +52,7 @@ public class VMinterface_SimNWcache extends VMinterface {
     //push in the data
     public  boolean sendJob(StreamGOP segment){
         double sampleddelay=(long) (delay_mean+delay_SD*r.nextGaussian());
-        double transfertime=(long)bandwidth/segment.videoSize;
+        double transfertime=(long)bandwidth/segment.fileSize;
         segment.setPath(segment.getPath().replaceAll("\\\\","/"));
         estimatedQueueLength++;
         estimatedExecutionTime += transfertime;
@@ -89,17 +89,17 @@ public class VMinterface_SimNWcache extends VMinterface {
         //System.out.println("dataUpdate");
         GOPTaskScheduler.workpending-=(estimatedQueueLength);
         //we completed the scheduling and execution, reset values
-        GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = 0;
-        GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = (long)(delay_mean+delay_SD);
-        GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=synctime;
-        GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime=realspentTime;
-        //System.out.println("actualSpentTime="+GOPTaskScheduler_mergable.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
+        GOPTaskScheduler.machineInterfaces.get(id).estimatedQueueLength = 0;
+        GOPTaskScheduler.machineInterfaces.get(id).estimatedExecutionTime = (long)(delay_mean+delay_SD);
+        GOPTaskScheduler.machineInterfaces.get(id).elapsedTime=synctime;
+        GOPTaskScheduler.machineInterfaces.get(id).actualSpentTime=realspentTime;
+        //System.out.println("actualSpentTime="+GOPTaskScheduler_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss =deadlineMiss;
-        GOPTaskScheduler.VMinterfaces.get(id).total_itemdone =workDone;
-        GOPTaskScheduler.VMinterfaces.get(id).total_taskdone =NworkDone;
-        GOPTaskScheduler.VMinterfaces.get(id).total_taskmiss =NdeadlineMiss;
+        GOPTaskScheduler.machineInterfaces.get(id).total_itemmiss =deadlineMiss;
+        GOPTaskScheduler.machineInterfaces.get(id).total_itemdone =workDone;
+        GOPTaskScheduler.machineInterfaces.get(id).total_taskdone =NworkDone;
+        GOPTaskScheduler.machineInterfaces.get(id).total_taskmiss =NdeadlineMiss;
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){

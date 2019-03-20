@@ -6,6 +6,8 @@ import Streampkg.StreamGOP;
 import miscTools.Tuple;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
 
@@ -22,6 +24,7 @@ public class TranscodingThread extends Thread{
     long requiredTime; //TODO: make sure all these are thread safe, maybe block when add new item to the queue
     long synctime=0; //spentTime+requiredTime is imaginary total time to clear the queue
     long realspentTime=0; //realspentTime is spentTime without Syncing
+    public List<StreamGOP> completedTask=new LinkedList<StreamGOP>();
     private Boolean useS3=false;
     //EC2 public AmazonS3 s3;
     public String VM_class;
@@ -125,6 +128,7 @@ public class TranscodingThread extends Thread{
                         */
 
                     System.out.println("finished a segment");
+                    completedTask.add(aStreamGOP); //mark task as finished
                     //put to S3
                         /* //EC2
                         if (useS3) {

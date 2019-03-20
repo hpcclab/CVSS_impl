@@ -17,7 +17,7 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
     public GOPTaskScheduler_mergable(Caching c){
         super(c);
         if(ServerConfig.taskmerge){
-            mrg= new Merger(Batchqueue,pendingqueue,VMinterfaces);
+            mrg= new Merger(Batchqueue,pendingqueue, machineInterfaces);
         }
     }
 
@@ -30,6 +30,7 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     //bloated version of addStream, check duplication and similarity first
     public void addStream(Stream ST){
+        AdmissionControl.AssignStreamPriority(ST);
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
             if (!cache.checkExistence(X)) {

@@ -1,5 +1,6 @@
-package VMManagement;
+package ResourceManagement;
 
+import IOWindows.OutputWindow;
 import Scheduler.GOPTaskScheduler;
 import Streampkg.StreamGOP;
 import TranscodingVM.runtime_report;
@@ -9,14 +10,14 @@ import java.net.Socket;
 
 import static java.lang.Thread.sleep;
 
-public class VMinterface_SocketIO extends VMinterface {
+public class MachineInterface_SocketIO extends MachineInterface {
     private Socket s;
     //private ServerSocket ss;
     public ObjectOutputStream oos=null;
     public ObjectInputStream ois=null;
     Thread connector;
 
-    public VMinterface_SocketIO(String vclass, String addr, int port, int inid,boolean iautoschedule){
+    public MachineInterface_SocketIO(String vclass, String addr, int port, int inid, boolean iautoschedule){
         super(vclass,port,inid,iautoschedule);
 
         while (status != 1) {
@@ -87,16 +88,17 @@ public class VMinterface_SocketIO extends VMinterface {
                 //System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
                 //System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
                 GOPTaskScheduler.workpending-=(estimatedQueueLength-answer.queue_size);
-                GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = answer.queue_size;
-                GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
-                GOPTaskScheduler.VMinterfaces.get(id).elapsedTime=answer.VMelapsedTime;
-                GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime=answer.VMspentTime;
+                GOPTaskScheduler.machineInterfaces.get(id).estimatedQueueLength = answer.queue_size;
+                GOPTaskScheduler.machineInterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
+                GOPTaskScheduler.machineInterfaces.get(id).elapsedTime=answer.VMelapsedTime;
+                GOPTaskScheduler.machineInterfaces.get(id).actualSpentTime=answer.VMspentTime;
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
-                GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss =answer.missed;
-                GOPTaskScheduler.VMinterfaces.get(id).total_itemdone =answer.workdone;
-                GOPTaskScheduler.VMinterfaces.get(id).total_taskdone =answer.Nworkdone;
-                GOPTaskScheduler.VMinterfaces.get(id).total_taskmiss =answer.Nmissed;
-
+                GOPTaskScheduler.machineInterfaces.get(id).total_itemmiss =answer.missed;
+                GOPTaskScheduler.machineInterfaces.get(id).total_itemdone =answer.workdone;
+                GOPTaskScheduler.machineInterfaces.get(id).total_taskdone =answer.Nworkdone;
+                GOPTaskScheduler.machineInterfaces.get(id).total_taskmiss =answer.Nmissed;
+                OutputWindow.ackCompletedVideo(answer.completedTask);
+                //completedTask.clear();
                 //
 
                     System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);

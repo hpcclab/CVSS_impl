@@ -14,7 +14,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
 
     public String videoname = "";
     public long deadLine=0;
-    public long videoSize=900; //900 kb, fixed at the moment
+    public long fileSize =900; //deprecated, use parameter of cmdSet instead
     public boolean dispatched=false;
     public long arrivalTime=0;
     public long estimatedExecutionTime=0;

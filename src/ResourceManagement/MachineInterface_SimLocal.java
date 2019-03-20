@@ -1,15 +1,18 @@
-package VMManagement;
+package ResourceManagement;
 
+import IOWindows.OutputWindow;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import Streampkg.StreamGOP;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 //does not actually have a socket, this code is the combination of transcodingVM, transcodingthread and interface
 //Warning: this mode is immediate complete but the estimatedQueuelength and estimatedExecutionTime still needs to be there for compatibility
-public class VMinterface_SimLocal extends VMinterface {
-    //interface parameters are in VMinterface
+public class MachineInterface_SimLocal extends MachineInterface {
+    //interface parameters are in MachineInterface
 
     //pseudo thread's parameters
     private Random r=new Random();
@@ -28,7 +31,7 @@ public class VMinterface_SimLocal extends VMinterface {
     private double node_wundertimeArr[] =new double[50]; //negative num for overtime
     private double node_sum_wundertime;
     private double node_sum_wovertime;
-
+    public List<StreamGOP> completedTask=new LinkedList<StreamGOP>();
     /*
     private int l_workDone; //count each work as one
     private int l_NworkDone; //count each work as suggested in StreamGOP.requestcount
@@ -39,7 +42,7 @@ public class VMinterface_SimLocal extends VMinterface {
     private double l_undertime_weighted=0;
     */
 
-    public VMinterface_SimLocal(String vclass,int iport, int inid,boolean iautoschedule) {
+    public MachineInterface_SimLocal(String vclass, int iport, int inid, boolean iautoschedule) {
         super(vclass,iport,inid,iautoschedule);
         status=1;
     }
@@ -113,6 +116,7 @@ public class VMinterface_SimLocal extends VMinterface {
         node_aftersync_itemdone++;
         //System.out.println("request count="+segment.requestcount);
         node_aftersync_taskdone +=segment.requestcount;
+        completedTask.add(segment);
         //
         return false;
     }
@@ -131,27 +135,30 @@ public class VMinterface_SimLocal extends VMinterface {
         GOPTaskScheduler.workpending-=(estimatedQueueLength);
 
          //we completed the scheduling and execution
-        GOPTaskScheduler.VMinterfaces.get(id).estimatedQueueLength = 0;
-        GOPTaskScheduler.VMinterfaces.get(id).estimatedExecutionTime = 0;
-        GOPTaskScheduler.VMinterfaces.get(id).elapsedTime= node_synctime;
-        GOPTaskScheduler.VMinterfaces.get(id).actualSpentTime= node_realspentTime;
-        //System.out.println("actualSpentTime="+GOPTaskScheduler_mergable.VMinterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
+        GOPTaskScheduler.machineInterfaces.get(id).estimatedQueueLength = 0;
+        GOPTaskScheduler.machineInterfaces.get(id).estimatedExecutionTime = 0;
+        GOPTaskScheduler.machineInterfaces.get(id).elapsedTime= node_synctime;
+        GOPTaskScheduler.machineInterfaces.get(id).actualSpentTime= node_realspentTime;
+        //System.out.println("actualSpentTime="+GOPTaskScheduler_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        GOPTaskScheduler.VMinterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
-        GOPTaskScheduler.VMinterfaces.get(id).total_itemdone += node_aftersync_itemdone;
-        GOPTaskScheduler.VMinterfaces.get(id).total_taskdone += node_aftersync_taskdone;
-        GOPTaskScheduler.VMinterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
+        GOPTaskScheduler.machineInterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
+        GOPTaskScheduler.machineInterfaces.get(id).total_itemdone += node_aftersync_itemdone;
+        GOPTaskScheduler.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
+        GOPTaskScheduler.machineInterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
+        GOPTaskScheduler.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
+        GOPTaskScheduler.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
         node_aftersync_itemmiss=node_aftersync_itemdone=node_aftersync_taskdone=node_aftersync_taskmiss=0;
 
 
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_undertime =node_sum_undertime/node_focus_task;
+        GOPTaskScheduler.machineInterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
+        GOPTaskScheduler.machineInterfaces.get(id).tmp_undertime =node_sum_undertime/node_focus_task;
 
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
-        GOPTaskScheduler.VMinterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
+        GOPTaskScheduler.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
+        GOPTaskScheduler.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
+
+        OutputWindow.ackCompletedVideo(completedTask);
+        completedTask.clear();
         //data are self expired, no need to reset or resum
     }
     //shut it down, do nothing

@@ -7,6 +7,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 //import com.amazonaws.services.ec2.model.Instance;
 
@@ -97,8 +99,8 @@ public class TranscodingVM extends Thread{
                     if(objectX.deadLine>TT.synctime){ //syncTime
                         TT.synctime=objectX.deadLine;
                     }
-                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
-
+                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.completedTask,TT.runtime_report));
+                    TT.completedTask.clear(); //got asked so clear it out
                 }else if (objectX.cmdSet.containsKey("fullstat")){
                     if(!TT.runtime_report.isEmpty()) {
                         //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
@@ -111,7 +113,8 @@ public class TranscodingVM extends Thread{
                         TT.synctime=objectX.deadLine;
                     }
                     //System.out.println("real spent Time="+TT.realspentTime); //good
-                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.runtime_report));
+                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.completedTask,TT.runtime_report));
+                    TT.completedTask.clear(); //got asked so clear it out
                     //don't remove old stat, maybe reset stat later if keep full stat too!
                     //TT.deadlineMiss=0;
                     //TT.workDone=0;

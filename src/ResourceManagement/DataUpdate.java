@@ -1,4 +1,4 @@
-package VMManagement;
+package ResourceManagement;
 
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
@@ -37,8 +37,8 @@ public class DataUpdate {
                 } else {
                     Fullwriter.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy  + " mergable=" + ServerConfig.taskmerge);
                 }
-                for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
-                    VMinterface vmi = GOPTaskScheduler.VMinterfaces.get(i);
+                for (int i = 0; i < GOPTaskScheduler.machineInterfaces.size(); i++) {
+                    MachineInterface vmi = GOPTaskScheduler.machineInterfaces.get(i);
                     Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
                     Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
 
@@ -72,8 +72,8 @@ public class DataUpdate {
             } else {
                 System.out.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
             }
-            for (int i = 0; i < GOPTaskScheduler.VMinterfaces.size(); i++) {
-                VMinterface vmi = GOPTaskScheduler.VMinterfaces.get(i);
+            for (int i = 0; i < GOPTaskScheduler.machineInterfaces.size(); i++) {
+                MachineInterface vmi = GOPTaskScheduler.machineInterfaces.get(i);
                 System.out.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
                 System.out.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
                 avgActualSpentTime += vmi.actualSpentTime;

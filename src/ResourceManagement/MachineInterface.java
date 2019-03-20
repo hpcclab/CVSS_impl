@@ -1,14 +1,17 @@
-package VMManagement;
+package ResourceManagement;
 
 import Streampkg.StreamGOP;
 
+import java.util.HashMap;
+
 import static java.lang.Thread.sleep;
 
-public abstract class VMinterface {
+public abstract class MachineInterface {
 
 
     public int id;
     public String VM_class;
+    public HashMap<String,String> properties;
     protected int status;
     public int estimatedQueueLength=0;
     public long estimatedExecutionTime=0;
@@ -17,19 +20,17 @@ public abstract class VMinterface {
     public int port;
     public boolean autoschedule=false;
 
-    //stats, new set
+
+    //stats
     public long tmp_taskdone=0, total_taskdone =0, total_itemdone =0; //work done can be multiple task per item
     public long tmp_taskmiss=0, total_taskmiss =0, total_itemmiss =0;
     public long tmp_overtime =0; // no need for total
     public long tmp_undertime =0;
     public double tmp_weighted_overtime =0,tmp_weighted_undertime =0;
 
-    //stats, old
-    //public double deadLineMissRate; , it's either from tmp or total...
+    public MachineInterface(){}
 
-    public VMinterface(){}
-
-    public VMinterface(String vclass,int iport,int inid,boolean iautoschedule){
+    public MachineInterface(String vclass, int iport, int inid, boolean iautoschedule){
             this.VM_class=vclass;
             id=inid;
             port=iport;

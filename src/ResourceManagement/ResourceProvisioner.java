@@ -1,4 +1,4 @@
-package VMManagement;
+package ResourceManagement;
 
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.GOPTaskScheduler;
@@ -29,7 +29,7 @@ import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
 
-public class VMProvisioner {
+public class ResourceProvisioner {
 
     private int numberOfinstances=0;
 
@@ -40,13 +40,13 @@ public class VMProvisioner {
     //private double highscalingThreshold; //get from ServerConfig
     //private double lowscalingThreshold;
     private static Semaphore x=new Semaphore(1);
-    private static ArrayList<vmi> VMCollection =new ArrayList<>();
+    private static ArrayList<machineinfo> VMCollection =new ArrayList<>();
 
     private static GOPTaskScheduler GTS;
     //this need to set
 
 
-    public VMProvisioner(GOPTaskScheduler GTS,int minimumVMtomaintain) {
+    public ResourceProvisioner(GOPTaskScheduler GTS, int minimumVMtomaintain) {
         this.GTS=GTS;
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
@@ -121,22 +121,22 @@ public class VMProvisioner {
         long current_overtime=0,current_undertime=0;
         double current_weighted_undertime=0,current_weighted_overtime=0;
         long T_maxElapsedTime=GOPTaskScheduler.maxElapsedTime;
-        int clustersize=GOPTaskScheduler.VMinterfaces.size();
+        int clustersize=GOPTaskScheduler.machineInterfaces.size();
         for (int i=0;i<clustersize;i++){
-            GOPTaskScheduler.VMinterfaces.get(i).dataUpdate();
-            System.out.println("tmp taskdone="+GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone);
-            if(GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone!=0){
-                sum_DLmiss+=GOPTaskScheduler.VMinterfaces.get(i).tmp_taskmiss;
-                sum_taskdone+=GOPTaskScheduler.VMinterfaces.get(i).tmp_taskdone;
-                current_overtime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_overtime;
-                current_undertime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_undertime;
-                current_weighted_overtime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_overtime;
-                current_weighted_undertime+=GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_undertime;
-                System.out.println("in last 20 tasks overtime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_overtime+" undertime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_undertime
-                +" weighted_overtime"+GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+GOPTaskScheduler.VMinterfaces.get(i).tmp_weighted_undertime);
+            GOPTaskScheduler.machineInterfaces.get(i).dataUpdate();
+            System.out.println("tmp taskdone="+GOPTaskScheduler.machineInterfaces.get(i).tmp_taskdone);
+            if(GOPTaskScheduler.machineInterfaces.get(i).tmp_taskdone!=0){
+                sum_DLmiss+=GOPTaskScheduler.machineInterfaces.get(i).tmp_taskmiss;
+                sum_taskdone+=GOPTaskScheduler.machineInterfaces.get(i).tmp_taskdone;
+                current_overtime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_overtime;
+                current_undertime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_undertime;
+                current_weighted_overtime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_overtime;
+                current_weighted_undertime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_undertime;
+                System.out.println("in last 20 tasks overtime:"+GOPTaskScheduler.machineInterfaces.get(i).tmp_overtime+" undertime:"+GOPTaskScheduler.machineInterfaces.get(i).tmp_undertime
+                +" weighted_overtime"+GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_undertime);
             }
-            if(GOPTaskScheduler.VMinterfaces.get(i).elapsedTime>T_maxElapsedTime){
-                T_maxElapsedTime=GOPTaskScheduler.VMinterfaces.get(i).elapsedTime;
+            if(GOPTaskScheduler.machineInterfaces.get(i).elapsedTime>T_maxElapsedTime){
+                T_maxElapsedTime=GOPTaskScheduler.machineInterfaces.get(i).elapsedTime;
                 System.out.println("TelapsedTime update to "+T_maxElapsedTime);
             }
         }
@@ -271,16 +271,16 @@ public class VMProvisioner {
                     }catch(Exception e){
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
-                    VMCollection.add(new vmi("thread","",TC));
+                    VMCollection.add(new machineinfo("thread","",TC));
                     GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("local simulated thread");
-                    VMCollection.add(new vmi("sim",""));
+                    VMCollection.add(new machineinfo("sim",""));
                     GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                     TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
-                    VMCollection.add(new vmi("simNWcache",""));
+                    VMCollection.add(new machineinfo("simNWcache",""));
                     GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                     TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
@@ -288,7 +288,7 @@ public class VMProvisioner {
                     /* //EC2
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
                     EC2instance.startInstances(start);
-                    VMCollection.add(new vmi("EC2",ServerConfig.VM_address.get(VMcount)));
+                    VMCollection.add(new machineinfo("EC2",ServerConfig.VM_address.get(VMcount)));
                     //get IP back and feed to GOPTaskScheduler_mergable.addVM
 
                     try {
@@ -361,7 +361,7 @@ public class VMProvisioner {
         diff*=-1; //change to positive numbers
         for(int i=0;i<diff;i++) {
             if(VMcount >ServerConfig.minVM) {
-                vmi vmitoRemove = VMCollection.remove(VMCollection.size() - 1);
+                machineinfo vmitoRemove = VMCollection.remove(VMCollection.size() - 1);
 
                 if (vmitoRemove.type.equalsIgnoreCase("thread")) {
                     System.out.println("Removing Thread " + (VMCollection.size() - 1));
@@ -387,7 +387,7 @@ public class VMProvisioner {
         return VMcount;
     }
     public static void closeAll(){
-        for(vmi vm : VMCollection){
+        for(machineinfo vm : VMCollection){
             if (vm.type.equalsIgnoreCase("thread")) {
                 vm.TVM.close();
             }else if(vm.type.equalsIgnoreCase("EC2, disabled")){
