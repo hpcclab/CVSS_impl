@@ -1,10 +1,10 @@
 package Scheduler;
 
-import Cache.Caching;
 import ResourceManagement.MachineInterface;
 import ResourceManagement.MachineInterface_SimLocal;
 import Streampkg.Stream;
 import Streampkg.StreamGOP;
+import mainPackage.CVSE;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,17 +14,19 @@ import java.util.Scanner;
 
 // base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.
 public abstract class GOPTaskScheduler {
-    protected miscTools.SortableList Batchqueue = new miscTools.SortableList();
-    public static ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
+    protected miscTools.SortableList Batchqueue;
+    public  ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
     public int scheduler_working = 0;
-    protected static int maxpending = 0;
-    public static int workpending = 0;
-    public static long maxElapsedTime; //use for setting Deadline
-    public static List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
-    public static Caching cache;
+    protected  int maxpending = 0;
+    public  int workpending = 0;
+    public  long maxElapsedTime; //use for setting Deadline
+    public  List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
+    CVSE _CVSE;
 
-    public GOPTaskScheduler(Caching c){
-        cache=c;
+    public GOPTaskScheduler(CVSE cvse){
+
+        _CVSE=cvse;
+        Batchqueue= new miscTools.SortableList(_CVSE);
     }
 
     public boolean add_VM(String VM_type, String VM_class, String addr, int port, int id, boolean autoSchedule)
@@ -37,7 +39,7 @@ public abstract class GOPTaskScheduler {
         }catch(Exception e){
             System.out.println("sleep bug");
         }
-        MachineInterface t = t = new MachineInterface_SimLocal(VM_class, port, id, autoSchedule); //only support simlocal in this minimal version
+        MachineInterface t = t = new MachineInterface_SimLocal(_CVSE,VM_class, port, id, autoSchedule); //only support simlocal in this minimal version
         machineInterfaces.add(t);
         return false;
     }
@@ -51,7 +53,7 @@ public abstract class GOPTaskScheduler {
     public void addStream(Stream ST) {
         AdmissionControl.AssignStreamPriority(ST);
         for (StreamGOP X : ST.streamGOPs) {
-            if(!cache.checkExistence(X)) {
+            if(!_CVSE.CACHING.checkExistence(X)) {
                 Batchqueue.add(X);
             }else{
                 System.out.println("GOP cached, no reprocess");

@@ -1,30 +1,15 @@
 package ResourceManagement;
 
 import Scheduler.GOPTaskScheduler_mergable;
-import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
-import TimeEstimatorpkg.TimeEstimator;
-import Simulator.RequestGenerator;
+import Streampkg.StreamGOP;
 import TranscodingVM.TranscodingVM;
-/*
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
-import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
-import com.amazonaws.services.ec2.model.*;
-import com.amazonaws.services.opsworkscm.model.Server;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.S3ClientOptions;
-*/
-
+import mainPackage.CVSE;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
@@ -41,13 +26,14 @@ public class ResourceProvisioner {
     //private double lowscalingThreshold;
     private static Semaphore x=new Semaphore(1);
     private static ArrayList<machineinfo> VMCollection =new ArrayList<>();
-
-    private static GOPTaskScheduler GTS;
+    CVSE _CVSE;
+    DataUpdate DU;
     //this need to set
 
 
-    public ResourceProvisioner(GOPTaskScheduler GTS, int minimumVMtomaintain) {
-        this.GTS=GTS;
+    public ResourceProvisioner(CVSE cvse, int minimumVMtomaintain) {
+        _CVSE=cvse;
+        DataUpdate DU=new DataUpdate(cvse);
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
             System.out.println("Before EC2 client, disabled for now");
@@ -107,36 +93,32 @@ public class ResourceProvisioner {
         }
         //
     }
-    public void setGTS(GOPTaskScheduler_mergable X){
-        GTS=X;
-        System.out.println("VMP got GTS Set");
-    }
     static int timeforced=0;
     static double previous_wovertime,previous_wundertime;
 
-    public static void collectData(){
+    public void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
         int sum_DLmiss=0,sum_taskdone=0;
         long current_overtime=0,current_undertime=0;
         double current_weighted_undertime=0,current_weighted_overtime=0;
-        long T_maxElapsedTime=GOPTaskScheduler.maxElapsedTime;
-        int clustersize=GOPTaskScheduler.machineInterfaces.size();
+        long T_maxElapsedTime=_CVSE.GTS.maxElapsedTime;
+        int clustersize=_CVSE.GTS.machineInterfaces.size();
         for (int i=0;i<clustersize;i++){
-            GOPTaskScheduler.machineInterfaces.get(i).dataUpdate();
-            System.out.println("tmp taskdone="+GOPTaskScheduler.machineInterfaces.get(i).tmp_taskdone);
-            if(GOPTaskScheduler.machineInterfaces.get(i).tmp_taskdone!=0){
-                sum_DLmiss+=GOPTaskScheduler.machineInterfaces.get(i).tmp_taskmiss;
-                sum_taskdone+=GOPTaskScheduler.machineInterfaces.get(i).tmp_taskdone;
-                current_overtime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_overtime;
-                current_undertime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_undertime;
-                current_weighted_overtime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_overtime;
-                current_weighted_undertime+=GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_undertime;
-                System.out.println("in last 20 tasks overtime:"+GOPTaskScheduler.machineInterfaces.get(i).tmp_overtime+" undertime:"+GOPTaskScheduler.machineInterfaces.get(i).tmp_undertime
-                +" weighted_overtime"+GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+GOPTaskScheduler.machineInterfaces.get(i).tmp_weighted_undertime);
+            _CVSE.GTS.machineInterfaces.get(i).dataUpdate();
+            System.out.println("tmp taskdone="+_CVSE.GTS.machineInterfaces.get(i).tmp_taskdone);
+            if(_CVSE.GTS.machineInterfaces.get(i).tmp_taskdone!=0){
+                sum_DLmiss+=_CVSE.GTS.machineInterfaces.get(i).tmp_taskmiss;
+                sum_taskdone+=_CVSE.GTS.machineInterfaces.get(i).tmp_taskdone;
+                current_overtime+=_CVSE.GTS.machineInterfaces.get(i).tmp_overtime;
+                current_undertime+=_CVSE.GTS.machineInterfaces.get(i).tmp_undertime;
+                current_weighted_overtime+=_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime;
+                current_weighted_undertime+=_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime;
+                System.out.println("in last 20 tasks overtime:"+_CVSE.GTS.machineInterfaces.get(i).tmp_overtime+" undertime:"+_CVSE.GTS.machineInterfaces.get(i).tmp_undertime
+                +" weighted_overtime"+_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime);
             }
-            if(GOPTaskScheduler.machineInterfaces.get(i).elapsedTime>T_maxElapsedTime){
-                T_maxElapsedTime=GOPTaskScheduler.machineInterfaces.get(i).elapsedTime;
+            if(_CVSE.GTS.machineInterfaces.get(i).elapsedTime>T_maxElapsedTime){
+                T_maxElapsedTime=_CVSE.GTS.machineInterfaces.get(i).elapsedTime;
                 System.out.println("TelapsedTime update to "+T_maxElapsedTime);
             }
         }
@@ -155,8 +137,8 @@ public class ResourceProvisioner {
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
             //primitive usage of SDco
-            if(GTS instanceof GOPTaskScheduler_mergable) {
-                GOPTaskScheduler_mergable GTS_parse=(GOPTaskScheduler_mergable)GTS;
+            if(_CVSE.GTS instanceof GOPTaskScheduler_mergable) {
+                GOPTaskScheduler_mergable GTS_parse=(GOPTaskScheduler_mergable)_CVSE.GTS ;
                 GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime);
                 System.out.println("change SDco to " + GTS_parse.SDco);
             }
@@ -167,34 +149,34 @@ public class ResourceProvisioner {
 
         //if time doesn't move,F
         if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
-            if (GOPTaskScheduler.maxElapsedTime != T_maxElapsedTime) {
-                System.out.println("GOPTaskScheduler_mergable.maxElapsedTime="+GOPTaskScheduler.maxElapsedTime);
+            if (_CVSE.GTS.maxElapsedTime != T_maxElapsedTime) {
+                System.out.println("_CVSE.GTS_mergable.maxElapsedTime="+_CVSE.GTS.maxElapsedTime);
                 System.out.println("reset timeforced count");
-                GOPTaskScheduler.maxElapsedTime = T_maxElapsedTime;
+                _CVSE.GTS.maxElapsedTime = T_maxElapsedTime;
                 timeforced = 0;
             } else {
-                long t=RequestGenerator.nextappearTime();
+                long t=_CVSE.RG.nextappearTime();
                 if(t!=-1){ //force time move, to next arrival time
-                    GOPTaskScheduler.maxElapsedTime=t;
-                    System.out.println("force time move to" + GOPTaskScheduler.maxElapsedTime);
+                    _CVSE.GTS.maxElapsedTime=t;
+                    System.out.println("force time move to" + _CVSE.GTS.maxElapsedTime);
                 } else{ //force time to move, by 200 at final burst
                     System.out.println("force time move+200 " + timeforced);
-                    GOPTaskScheduler.maxElapsedTime += 200;
+                    _CVSE.GTS.maxElapsedTime += 200;
                 }
                 timeforced++;
                 if (timeforced >= 3) {
-                    DataUpdate.printstat();
+                    DU.printstat();
                     //timeforced=0;
                 }
             }
         }
         if(ServerConfig.profiledRequests){
-            RequestGenerator.contProfileRequestsGen(GTS);
+            _CVSE.RG.contProfileRequestsGen();
         }
     }
 
     private static int tcount=0;
-    public static void Tick(){
+    public void Tick(){
         try {
             x.acquire();
         }catch(Exception e){
@@ -208,11 +190,11 @@ public class ResourceProvisioner {
             EvaluateClusterSize(20);
         }
         //System.out.println("tick, submit work");
-        GTS.taskScheduling();
+        _CVSE.GTS.taskScheduling();
         x.release();
     }
     //this need to be call periodically somehow
-    public static void EvaluateClusterSize(int virtual_queuelength){
+    public void EvaluateClusterSize(int virtual_queuelength){
 
         int diff = 0;
         System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
@@ -250,7 +232,7 @@ public class ResourceProvisioner {
         } //do nothing if diff==0
     }
     //pull VM data from setting file
-    public static int AddInstances(int diff){
+    public int AddInstances(int diff){
 
         for(int i=0;i<diff;i++){
             System.out.println("VMcount="+VMcount);
@@ -264,7 +246,7 @@ public class ResourceProvisioner {
                     //System.out.println(ServerConfig.VM_ports.get(VMcount));
 
                     TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
-                    TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
+                    _CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                     TC.start();
                     try {
                         sleep(200);
@@ -272,24 +254,24 @@ public class ResourceProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new machineinfo("thread","",TC));
-                    GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    _CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("local simulated thread");
                     VMCollection.add(new machineinfo("sim",""));
-                    GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
-                    TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
+                    _CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    _CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new machineinfo("simNWcache",""));
-                    GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
-                    TimeEstimator.populate(ServerConfig.VM_class.get(VMcount));
+                    _CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    _CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
                     /* //EC2
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
                     EC2instance.startInstances(start);
                     VMCollection.add(new machineinfo("EC2",ServerConfig.VM_address.get(VMcount)));
-                    //get IP back and feed to GOPTaskScheduler_mergable.addVM
+                    //get IP back and feed to _CVSE.GTS_mergable.addVM
 
                     try {
                         sleep(6000);
@@ -340,7 +322,7 @@ public class ResourceProvisioner {
                     System.out.println("get IP:"+IP);
                     //System.out.println("Halt!, before connect");
                     //scanner.nextInt();
-                    GOPTaskScheduler_mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
+                    _CVSE.GTS_mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
                     //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
@@ -357,7 +339,7 @@ public class ResourceProvisioner {
         System.out.println("VMCount="+VMcount);
         return VMcount;
     }
-    public static int DeleteInstances(int diff){
+    public int DeleteInstances(int diff){
         diff*=-1; //change to positive numbers
         for(int i=0;i<diff;i++) {
             if(VMcount >ServerConfig.minVM) {
@@ -365,7 +347,7 @@ public class ResourceProvisioner {
 
                 if (vmitoRemove.type.equalsIgnoreCase("thread")) {
                     System.out.println("Removing Thread " + (VMCollection.size() - 1));
-                    GTS.remove_VM(VMCollection.size() - 1);
+                    _CVSE.GTS.remove_VM(VMCollection.size() - 1);
                     VMcount--;
                     vmitoRemove.TVM.close();
                 } else if (vmitoRemove.type.equalsIgnoreCase("EC2")) {
@@ -386,7 +368,13 @@ public class ResourceProvisioner {
         ///
         return VMcount;
     }
-    public static void closeAll(){
+    //relay function to outputwindoe
+    public void ackCompletedVideo(List<StreamGOP> completedTasks){
+        _CVSE.OW.ackCompletedVideo(completedTasks);
+    }
+
+
+    public void closeAll(){
         for(machineinfo vm : VMCollection){
             if (vm.type.equalsIgnoreCase("thread")) {
                 vm.TVM.close();

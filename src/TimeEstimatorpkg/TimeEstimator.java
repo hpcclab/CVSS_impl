@@ -2,6 +2,7 @@ package TimeEstimatorpkg;
 
 import Scheduler.ServerConfig;
 import Streampkg.*;
+import mainPackage.CVSE;
 import miscTools.Tuple;
 
 import java.io.File;
@@ -15,12 +16,14 @@ import java.util.Scanner;
 
 public class TimeEstimator {
     //HashMap<(str)machinetype,  Hashmap<str(command+paramID),class stat >    >
-    static HashMap<String,HashMap<String,histStat>> Table=new HashMap<>();
-
-
+    HashMap<String,HashMap<String,histStat>> Table=new HashMap<>();
+    CVSE _CVSE;
+    public TimeEstimator(CVSE cvse){
+        _CVSE=cvse;
+    }
 
     //updateTable is BROKEN
-    public static void updateTable(String VMclass,HashMap<Integer, Tuple<Long,Integer>> runtime_report){
+    public void updateTable(String VMclass,HashMap<Integer, Tuple<Long,Integer>> runtime_report){
         System.out.println("this function is now broken, need fix later");
     //    Table.put(VMclass,runtime_report);
         System.out.println("Update TimeEstimator table of VM "+VMclass+" to "+runtime_report);
@@ -30,7 +33,7 @@ public class TimeEstimator {
     //select do it all in here!
 
     //get port data just because fixedBandwidth machine store Bandwidth in their port
-    public static retStat getHistoricProcessTime(String VMclass,Integer port,StreamGOP segment){
+    public retStat getHistoricProcessTime(String VMclass,Integer port,StreamGOP segment){
         //SDcoefficient=1 is Worst case, -1 is BestCase,
         if(VMclass.equalsIgnoreCase("fixedBandwidth")){
             long bandwidth= port;
@@ -97,12 +100,12 @@ public class TimeEstimator {
 
     //work with fixedBandwidth too
     //get port data just because fixedBandwidth machine store Bandwidth in their port
-    public static long getHistoricProcessTimeLong(String VMclass,Integer port,StreamGOP segment,double SDr) {
+    public long getHistoricProcessTimeLong(String VMclass,Integer port,StreamGOP segment,double SDr) {
     retStat rS=getHistoricProcessTime(VMclass,port,segment);
     return rS.mean+ (long)(rS.SD*SDr);
     }
     //function called at the beginning of running to populate data
-    public static void populate(String VMclass){
+    public void populate(String VMclass){
         if(VMclass.equalsIgnoreCase("fixedBandwidth")){
             System.out.println("fixed bandwidth machine, no need to populate TimeEstimator table");
             //doNothing
@@ -144,7 +147,7 @@ public class TimeEstimator {
             Table.put(VMclass, X);
         }
     }
-    public static void SetSegmentProcessingTime(StreamGOP segment)
+    public void SetSegmentProcessingTime(StreamGOP segment)
     {
         // set deadline Time to System.currentTime() +getHistoricProcessTime(segment)+ constant ?
         // don't use System.nanoTime Across the machine

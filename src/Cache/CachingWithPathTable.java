@@ -1,6 +1,7 @@
 package Cache;
 
 import Streampkg.StreamGOP;
+import mainPackage.CVSE;
 
 import java.util.HashMap;
 
@@ -8,6 +9,9 @@ public class CachingWithPathTable extends Caching {
 
     private static HashMap<String,String> Table =new HashMap<String,String>();;
 
+    public CachingWithPathTable(CVSE cvse){
+        super(cvse);
+    }
     //don't forget to implement this with something to notify settings, currently it count all settings the same
     public String convertStreamGopToString(StreamGOP x){
         return x.videoname+"/"+String.format("%04d",x.segment); //simple version

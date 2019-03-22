@@ -1,12 +1,15 @@
-package testpackage;
+package mainPackage;
 
 import Cache.Caching;
+import IOWindows.OutputWindow;
+import IOWindows.WebserviceRequestGate;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
 import Simulator.RequestGenerator;
 import Repository.*;
 import ResourceManagement.ResourceProvisioner;
+import TimeEstimatorpkg.TimeEstimator;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -19,6 +22,23 @@ import static java.lang.Thread.sleep;
  * Created by pi on 6/29/17.
  */
 public class Test {
+    private static void setUpCVSE_forsim(CVSE _CVSE){
+        //Set things up
+        _CVSE.VR = new VideoRepository(_CVSE);
+        _CVSE.CACHING = new Caching(_CVSE); //change to other type if need something that work
+        _CVSE.GTS = new GOPTaskScheduler_mergable(_CVSE);
+        _CVSE.GTS.readlistedOperations();
+            System.out.println("BUG");
+        _CVSE.VMP= new ResourceProvisioner(_CVSE, ServerConfig.minVM); //says we need at least two machines
+        System.out.println("BUG2");
+        _CVSE.OW=new OutputWindow(_CVSE); //todo, actually call its function from VMP
+        System.out.println("BUG3");
+        _CVSE.TE=new TimeEstimator(_CVSE);
+        //VMP.setGTS(GTS);
+        //load Videos into Repository
+        _CVSE.VR.addAllKnownVideos();
+        _CVSE.RG= new RequestGenerator(_CVSE);
+    }
 
     public static String test(String confFile, String opt) {
         try {
@@ -29,51 +49,42 @@ public class Test {
             JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
             Unmarshaller um = ctx.createUnmarshaller();
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
-            //Set things up
-            VideoRepository VR = new VideoRepository();
-            Caching C = new Caching(); //change to other type if need something that work
-            GOPTaskScheduler GTS = new GOPTaskScheduler_mergable(C);
-            GTS.readlistedOperations();
-            ResourceProvisioner VMP = new ResourceProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
-            //VMP.setGTS(GTS);
-            //load Videos into Repository
-            VR.addAllKnownVideos();
-
+            CVSE _CVSE=new CVSE();
+            setUpCVSE_forsim(_CVSE);
 
             int rqn = 1, interval, n;
             if (ServerConfig.profiledRequests) {
                 if (opt.equalsIgnoreCase("config")) {
-                    RequestGenerator.ReadProfileRequests(ServerConfig.profileRequestsBenhmark);
+                    _CVSE.RG.ReadProfileRequests(ServerConfig.profileRequestsBenhmark);
                 } else {
                     System.out.println("overwrite profileRequestBenhmark with " + opt);
                     ServerConfig.profileRequestsBenhmark = opt;
-                    RequestGenerator.ReadProfileRequests(opt);
+                    _CVSE.RG.ReadProfileRequests(opt);
                 }
                 //sleep(3000);
                 System.out.println("start sim");
-                RequestGenerator.contProfileRequestsGen(GTS);
+                _CVSE.RG.contProfileRequestsGen();
                 System.out.println("bug");
-                while (!RequestGenerator.finished) {
+                while (!_CVSE.RG.finished) {
                     sleep(300);
                 }
                 System.out.println("\nAll request have been released\n");
 
-                while (!GTS.emptyQueue()) {
+                while (!_CVSE.GTS.emptyQueue()) {
                     System.out.println("wait for pending work to finish");
                     sleep(300);
                 }
                 System.out.println("All queue are emptied");
             } else if (ServerConfig.openRequests) {
                 ////create open socket, receive new profile request then do similar to profiledRequests
-                IOWindows.Webservicegate webrqgate=new IOWindows.Webservicegate();
-                webrqgate.addr="http://localhost:9902/transcoderequest";
-                webrqgate.GTS=GTS;
+                _CVSE.WG=new WebserviceRequestGate();
+                _CVSE.WG.addr="http://localhost:9902/transcoderequest";
+                _CVSE.WG.GTS=_CVSE.GTS;
 
                 // example of actual request: http://localhost:9902/transcoderequest/?videoid=1,cmd=resolution,setting=180
                 // (assume 10 is id of bigbugbunny
                 // TODO: figure about timing of the request, both deadline and arrival (in webservicegate class)
-                webrqgate.startListener();
+                _CVSE.WG.startListener();
                 System.out.println("webservice enabled");
             } else {
                 while (rqn != 0) {
@@ -82,7 +93,7 @@ public class Test {
                     interval = scanner.nextInt();
                     n = scanner.nextInt();
                     //create a lot of request to test out
-                    RequestGenerator.nRandomRequest(GTS, rqn, interval, n);
+                    _CVSE.RG.nRandomRequest(rqn, interval, n);
                 }
             }
             // Check point, enter any key to continue
@@ -90,8 +101,8 @@ public class Test {
             //scanner.next();
             sleep(300);
             //wind down process
-            GTS.close();
-            VMP.closeAll();
+            _CVSE.GTS.close();
+            _CVSE.VMP.closeAll();
             return "success";
 
         } catch (Exception e) {
@@ -109,18 +120,8 @@ public class Test {
         JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
         Unmarshaller um = ctx.createUnmarshaller();
         ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
-        //Set things up
-        VideoRepository VR = new VideoRepository();
-
-        Caching C = new Caching(); //change to other type if need something that work
-
-        GOPTaskScheduler GTS = new GOPTaskScheduler_mergable(C);
-        GTS.readlistedOperations();
-        ResourceProvisioner VMP = new ResourceProvisioner(GTS, ServerConfig.minVM); //says we need at least two machines
-        //VMP.setGTS(GTS);
-        //load Videos into Repository
-        VR.addAllKnownVideos();
+        CVSE _CVSE=new CVSE();
+            setUpCVSE_forsim(_CVSE);
 
             //sweep create many requests
             if (seed == 0) {
@@ -128,12 +129,12 @@ public class Test {
                 int[] sr = {1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
                 for (int j = 0; j < sr.length; j++) {
                     for (int i = 2000; i <= 3400; i += 200) {
-                        RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 88, i, 180000, 10000, 3000);
+                        _CVSE.RG.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 88, i, 180000, 10000, 3000);
                     }
                 }
             } else {
                 for (int i = 2000; i <= 3400; i += 200) {
-                    RequestGenerator.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + seed, seed, 88, i, 180000, 10000, 3000);
+                    _CVSE.RG.generateProfiledRandomRequests("test" + i + "r_180000_10000_3000_s" + seed, seed, 88, i, 180000, 10000, 3000);
                 }
             }
         } catch (Exception e) {

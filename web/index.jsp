@@ -1,4 +1,4 @@
-<%@page import="testpackage.Test" %>
+<%@page import="mainPackage.Test" %>
 <%--
   Created by IntelliJ IDEA.
   User: pi

@@ -2,6 +2,7 @@ package Streampkg;
 import Repository.*;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
+import mainPackage.CVSE;
 
 import java.util.ArrayList;
 
@@ -12,10 +13,13 @@ public class Stream {
     public ArrayList<StreamGOP> streamGOPs;
     public long startTime;
     public Settings videoSettings = null;
+    CVSE _CVSE;
+
     public void ScheduleVideoSegments(){
 
     }
-    public Stream(){
+    public Stream(CVSE cvse){
+        _CVSE=cvse;
         status=0;
         video =new Video();
         if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
@@ -25,21 +29,22 @@ public class Stream {
         }
         streamGOPs= new ArrayList<StreamGOP>();
     }
-    public Stream(Video v,String command,String settings,long addedslackTime,long arrivalTime){
-        this(v,command,settings,0,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
+    public Stream(CVSE cvse,Video v,String command,String settings,long addedslackTime,long arrivalTime){
+        this(cvse,v,command,settings,0,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
     }
-    public Stream(Video v,String command, String settings, int startSegment,long addedslackTime,long arrivalTime){
-        this(v,command,settings,startSegment,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
+    public Stream(CVSE cvse,Video v,String command, String settings, int startSegment,long addedslackTime,long arrivalTime){
+        this(cvse,v,command,settings,startSegment,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
     }
 
-    public Stream(Video v,String command,String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime){
+    public Stream(CVSE cvse,Video v,String command,String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime){
+        _CVSE=cvse;
         status=0;
         video =v;
         if(addedslackTime==0) { //ST==0, did not specified start time, make a new startTime
             //normally dont fall in this case anyway in sim mode
             if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
 
-                startTime= GOPTaskScheduler.maxElapsedTime+2000; //add a prelinary value
+                startTime= _CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
             }else{
                 startTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
             }
@@ -76,7 +81,7 @@ public class Stream {
             //normally dont fall in this case anyway in sim mode
             if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
 
-                startTime= GOPTaskScheduler.maxElapsedTime+2000; //add a prelinary value
+                startTime= _CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
             }else{
                 startTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
             }

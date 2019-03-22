@@ -1,9 +1,8 @@
 package ResourceManagement;
 
-import IOWindows.OutputWindow;
-import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import Streampkg.StreamGOP;
+import mainPackage.CVSE;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,8 +41,8 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private double l_undertime_weighted=0;
     */
 
-    public MachineInterface_SimLocal(String vclass, int iport, int inid, boolean iautoschedule) {
-        super(vclass,iport,inid,iautoschedule);
+    public MachineInterface_SimLocal(CVSE cvse, String vclass, int iport, int inid, boolean iautoschedule) {
+        super(cvse,vclass,iport,inid,iautoschedule);
         status=1;
     }
 
@@ -123,41 +122,41 @@ public class MachineInterface_SimLocal extends MachineInterface {
     //get back the runtime stat
     public void dataUpdate(){
         //Sync time
-        if(GOPTaskScheduler.maxElapsedTime> node_synctime){
-            //System.out.println("node sync time forward "+synctime +"-> "+GOPTaskScheduler_mergable.maxElapsedTime);
-            node_synctime =GOPTaskScheduler.maxElapsedTime;
+        if(_CVSE.GTS.maxElapsedTime> node_synctime){
+            //System.out.println("node sync time forward "+synctime +"-> "+_CVSE.GTS_mergable.maxElapsedTime);
+            node_synctime =_CVSE.GTS.maxElapsedTime;
         }
         // change to using the circular, tmp
 
 
 
         //System.out.println("dataUpdate");
-        GOPTaskScheduler.workpending-=(estimatedQueueLength);
+        _CVSE.GTS.workpending-=(estimatedQueueLength);
 
          //we completed the scheduling and execution
-        GOPTaskScheduler.machineInterfaces.get(id).estimatedQueueLength = 0;
-        GOPTaskScheduler.machineInterfaces.get(id).estimatedExecutionTime = 0;
-        GOPTaskScheduler.machineInterfaces.get(id).elapsedTime= node_synctime;
-        GOPTaskScheduler.machineInterfaces.get(id).actualSpentTime= node_realspentTime;
-        //System.out.println("actualSpentTime="+GOPTaskScheduler_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
+        _CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = 0;
+        _CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = 0;
+        _CVSE.GTS.machineInterfaces.get(id).elapsedTime= node_synctime;
+        _CVSE.GTS.machineInterfaces.get(id).actualSpentTime= node_realspentTime;
+        //System.out.println("actualSpentTime="+_CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        GOPTaskScheduler.machineInterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
-        GOPTaskScheduler.machineInterfaces.get(id).total_itemdone += node_aftersync_itemdone;
-        GOPTaskScheduler.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
-        GOPTaskScheduler.machineInterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
-        GOPTaskScheduler.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
-        GOPTaskScheduler.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
+        _CVSE.GTS.machineInterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
+        _CVSE.GTS.machineInterfaces.get(id).total_itemdone += node_aftersync_itemdone;
+        _CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
+        _CVSE.GTS.machineInterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
+        _CVSE.GTS.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
+        _CVSE.GTS.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
         node_aftersync_itemmiss=node_aftersync_itemdone=node_aftersync_taskdone=node_aftersync_taskmiss=0;
 
 
-        GOPTaskScheduler.machineInterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
-        GOPTaskScheduler.machineInterfaces.get(id).tmp_undertime =node_sum_undertime/node_focus_task;
+        _CVSE.GTS.machineInterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
+        _CVSE.GTS.machineInterfaces.get(id).tmp_undertime =node_sum_undertime/node_focus_task;
 
-        GOPTaskScheduler.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
-        GOPTaskScheduler.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
+        _CVSE.GTS.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
+        _CVSE.GTS.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
 
-        OutputWindow.ackCompletedVideo(completedTask);
+        _CVSE.VMP.ackCompletedVideo(completedTask);
         completedTask.clear();
         //data are self expired, no need to reset or resum
     }

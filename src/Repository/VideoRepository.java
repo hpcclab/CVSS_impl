@@ -1,5 +1,6 @@
 package Repository;
 import Scheduler.ServerConfig;
+import mainPackage.CVSE;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,9 +10,10 @@ import java.util.Arrays;
 public class VideoRepository {
     public static ArrayList<Video> videos;
     private List<RepositoryGOP> pretranscodedSegments = new ArrayList<RepositoryGOP>();
-
-    public VideoRepository(){
+    CVSE _CVSE;
+    public VideoRepository(CVSE cvse){
         videos = new ArrayList<Video>();
+        _CVSE=cvse;
     }
 
 

@@ -134,7 +134,7 @@ class handler implements Provider<Source> {
 
 }
 
-public class Webservicegate {
+public class WebserviceRequestGate {
     public String addr="http://localhost:9901/transcoderequest";
     public GOPTaskScheduler GTS;
     public StreamManager SM;

@@ -4,6 +4,7 @@ import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
 import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
+import mainPackage.CVSE;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -12,12 +13,14 @@ import java.util.ListIterator;
 //this List can be used as priority queue by take removeHighestPrio, instead of removeFirst.
 
 public class SortableList extends LinkedList<Streampkg.StreamGOP> {
-
-    public SortableList(Collection<? extends StreamGOP> collection) {
+    CVSE _CVSE;
+    public SortableList(CVSE cvse,Collection<? extends StreamGOP> collection) {
         super(collection);
+        _CVSE=cvse;
     }
-    public SortableList() {
+    public SortableList(CVSE cvse) {
         super();
+        _CVSE=cvse;
     }
 
     public Streampkg.StreamGOP pollHighestPrio() {
@@ -45,11 +48,11 @@ public class SortableList extends LinkedList<Streampkg.StreamGOP> {
     }
     public Streampkg.StreamGOP pollMaxUrgency(){ //Homogeneous Only
         Streampkg.StreamGOP earliest = peekFirst();
-        long earliestvalue=earliest.deadLine-TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.machineInterfaces.get(0).VM_class,GOPTaskScheduler.machineInterfaces.get(0).port, earliest,1);
+        long earliestvalue=earliest.deadLine-_CVSE.TE.getHistoricProcessTimeLong(_CVSE.GTS.machineInterfaces.get(0).VM_class,_CVSE.GTS.machineInterfaces.get(0).port, earliest,1);
         ListIterator<Streampkg.StreamGOP> it = listIterator(1);
         while (it.hasNext()) {
             Streampkg.StreamGOP t = it.next();
-            long checkvalue=t.deadLine- TimeEstimator.getHistoricProcessTimeLong(GOPTaskScheduler.machineInterfaces.get(0).VM_class,GOPTaskScheduler.machineInterfaces.get(0).port, t,1);
+            long checkvalue=t.deadLine- _CVSE.TE.getHistoricProcessTimeLong(_CVSE.GTS.machineInterfaces.get(0).VM_class,_CVSE.GTS.machineInterfaces.get(0).port, t,1);
             if ( checkvalue<earliestvalue) {
                 earliest = t;
                 earliestvalue=checkvalue;

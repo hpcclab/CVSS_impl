@@ -1,14 +1,18 @@
-package testpackage;
+package mainPackage;
 
 import DockerManagement.DockerManager;
 import Cache.Caching;
+import IOWindows.OutputWindow;
+import IOWindows.WebserviceRequestGate;
 import Repository.VideoRepository;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
+import Simulator.RequestGenerator;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
 import ResourceManagement.ResourceProvisioner;
+import TimeEstimatorpkg.TimeEstimator;
 import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
 
@@ -20,7 +24,23 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class RealModeTest {
-    public static void RealLocalThreads() throws IOException {
+
+        private static void setUpCVSE_forreal(CVSE _CVSE){
+            //Set things up
+            _CVSE.VR = new VideoRepository(_CVSE);
+            _CVSE.CACHING = new Caching(_CVSE); //change to other type if need something that work
+            _CVSE.GTS = new GOPTaskScheduler_mergable(_CVSE);
+            _CVSE.GTS.readlistedOperations();
+            _CVSE.VMP= new ResourceProvisioner(_CVSE, ServerConfig.minVM); //says we need at least two machines
+            _CVSE.OW=new OutputWindow(_CVSE); //todo, actually call its function from VMP
+            _CVSE.TE=new TimeEstimator(_CVSE);
+            //VMP.setGTS(GTS);
+            //load Videos into Repository
+            _CVSE.VR.addAllRealVideos();
+            _CVSE.RG= new RequestGenerator(_CVSE);
+        }
+
+        public static void RealLocalThreads() throws IOException {
 
         File configfile = new File("config/config_web.xml");
         JAXBContext ctx = null;
@@ -36,19 +56,11 @@ public class RealModeTest {
 
         //Step 1: Retrieve Real Videos from Video Repository
 
+        CVSE _CVSE=new CVSE();
+        setUpCVSE_forreal(_CVSE);
         StreamManager SM = new StreamManager();
-
-        VideoRepository VR = new VideoRepository();
-        VR.addAllRealVideos();
-
-        //Step 1a Create threads that wait for requests upon an entry of the index of a real video
-        Caching C = new Caching(); //change to other type if need something that work
         //seems fine for tbe most part
-        GOPTaskScheduler GTS=new GOPTaskScheduler_mergable(C);
-
         //checking...
-        ResourceProvisioner VMP=new ResourceProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
-
         int num = Integer.MAX_VALUE;
 
         //Step 2 Request a stream by requesting an index number
@@ -69,7 +81,7 @@ public class RealModeTest {
             newSettings.resHeight = "480";
             newSettings.videoname = VideoRepository.videos.get(num).name;
 
-            SM.InitializeStream(num, newSettings, GTS);
+            SM.InitializeStream(num, newSettings, _CVSE.GTS);
         }
 
         for (int i = 0; i < VideoRepository.videos.size(); i++) {
@@ -88,8 +100,8 @@ public class RealModeTest {
         //*/
 
         //wind down process
-        GTS.close();
-        VMP.closeAll();
+        _CVSE.GTS.close();
+        _CVSE.VMP.closeAll();
 
         //Step 6: remove all the folders and contents in the streams folder
         /*
@@ -117,22 +129,11 @@ public class RealModeTest {
         //Step 1: Retrieve Real Videos from Video Repository
 
         StreamManager SM = new StreamManager();
-
-        VideoRepository VR = new VideoRepository();
-        VR.addAllRealVideos();
-
-        //Step 1a Create threads that wait for requests upon an entry of the index of a real video
-        Caching C = new Caching(); //change to other type if need something that work
-        //seems fine for tbe most part
-        GOPTaskScheduler GTS=new GOPTaskScheduler_mergable(C);
-
-        //checking...
-        ResourceProvisioner VMP=new ResourceProvisioner(GTS,ServerConfig.minVM); //says we need at least two machines
-
+        CVSE _CVSE=new CVSE();
+        setUpCVSE_forreal(_CVSE);
         ////create open socket, receive new profile request then do similar to profiledRequests
-        IOWindows.Webservicegate webrqgate=new IOWindows.Webservicegate();
-        webrqgate.addr="http://localhost:9901/transcoderequest";
-        webrqgate.GTS=GTS;
+        _CVSE.WG=new WebserviceRequestGate();
+        _CVSE.WG.addr="http://localhost:9901/transcoderequest";
         if(SM == null){
             System.out.println("SM is null " + SM);
         }
@@ -140,24 +141,24 @@ public class RealModeTest {
             System.out.println("SM is fine " + SM);
         }
 
-        webrqgate.SM = SM;
+        _CVSE.WG.SM = SM;
 
         // example of actual request: http://localhost:9901/transcoderequest/?videoid=1,cmd=resolution,setting=180
         // (assume 10 is id of bigbuckbunny
         // TODO: figure about timing of the request, both deadline and arrival (in webservicegate class)
         ///*
         try {
-            webrqgate.startListener();
+            _CVSE.WG.startListener();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         System.out.println("webservice enabled");
-        if(webrqgate.SM == null){
-            System.out.println("webgate SM is null " + webrqgate.SM);
+        if(_CVSE.WG.SM == null){
+            System.out.println("webgate SM is null " + _CVSE.WG.SM);
         }
         else{
-            System.out.println("webgate SM is fine " + webrqgate.SM);
+            System.out.println("webgate SM is fine " + _CVSE.WG.SM);
         }
         //*/
         // int num = Integer.MAX_VALUE;
@@ -201,7 +202,8 @@ public class RealModeTest {
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
 
             //load video repo so we know their v numbers
-            VideoRepository VR = new VideoRepository();
+            CVSE _CVSE=new CVSE();
+            VideoRepository VR = new VideoRepository(_CVSE);
             VR.addAllKnownVideos();
         } catch (JAXBException e) {
             e.printStackTrace();

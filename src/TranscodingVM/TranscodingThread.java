@@ -136,7 +136,7 @@ public class TranscodingThread extends Thread{
                             //System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir()+"/"+filename);
                             //System.out.println("from "+"output "+aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"),aStreamGOP.userSetting.outputDir().length())+"/"+filename);
                             if (file.exists()) {
-                                testpackage.S3Control.PutFile(bucketName, "output" + aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"), aStreamGOP.userSetting.outputDir().length()) + "/" + filename, file, s3);
+                                mainPackage.S3Control.PutFile(bucketName, "output" + aStreamGOP.userSetting.outputDir().substring(aStreamGOP.userSetting.outputDir().lastIndexOf("/"), aStreamGOP.userSetting.outputDir().length()) + "/" + filename, file, s3);
                             } else {
                                 System.out.println("tried to upload nonexist file");
                             }

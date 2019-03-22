@@ -1,11 +1,14 @@
 package Cache;
 
 import Streampkg.StreamGOP;
+import mainPackage.CVSE;
 
 import java.io.File;
 
 public class CachingFileScan extends Caching {
-
+    public CachingFileScan(CVSE cvse){
+        super(cvse);
+    }
     public boolean checkExistence(StreamGOP x)
     {
         //currently only check if file is exist, not checking for set-up

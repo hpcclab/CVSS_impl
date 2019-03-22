@@ -1,10 +1,8 @@
 package Simulator;
 
 import Repository.VideoRepository;
-import Scheduler.AdmissionControl;
-import Scheduler.GOPTaskScheduler;
-import Scheduler.ServerConfig;
 import Streampkg.*;
+import mainPackage.CVSE;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,38 +16,41 @@ import static java.lang.Thread.sleep;
 
 public class RequestGenerator {
     // static String videonameList[]={"bbb_trailer","ff_trailer_part1","ff_trailer_part3"}; //not using
+    CVSE _CVSE;
+    public RequestGenerator(CVSE cvse){
+        _CVSE=cvse;
+    }
 
-
-
-    public static void OneRandomRequest(GOPTaskScheduler GTS){
+    public void OneRandomRequest(){
         //random a resolution example.
         //int randomRes=(int)(Math.random()*7)+1;
         //int x=randomRes*80;
         //int y=randomRes*60;
         //Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
         //String setting=x+"x"+y;
+
         int videoChoice=(int)(Math.random()* ( VideoRepository.videos.size()));
-        int operation=(int)(Math.random()*(GOPTaskScheduler.possible_Operations.size()));
+        int operation=(int)(Math.random()*(_CVSE.GTS.possible_Operations.size()));
         String setting=""+(Math.random()*2); //random between 0 and 1 as setting identifier
         long deadline=0; //did not specified deadline
         //setting.settingIdentifier=randomRes;
-        OneSpecificRequest(GTS,videoChoice,GOPTaskScheduler.possible_Operations.get(operation).operationname,setting,deadline,0);
+        OneSpecificRequest(videoChoice,_CVSE.GTS.possible_Operations.get(operation).operationname,setting,deadline,0);
     }
 
-    public static void OneSpecificRequest(GOPTaskScheduler GTS, int videoChoice, String command, String setting, long deadline, long arrival){
+    public void OneSpecificRequest( int videoChoice, String command, String setting, long deadline, long arrival){
         //System.out.println("create one specific request");
-        Stream ST=new Stream(VideoRepository.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
-        GTS.addStream(ST);
+        Stream ST=new Stream(_CVSE,VideoRepository.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
+        _CVSE.GTS.addStream(ST);
         //System.out.println("test2");
     }
     //simple static RandomRequest Generator
-    public static void nRandomRequest(GOPTaskScheduler GTS, int Request_Numbers, int interval, int n){
+    public void nRandomRequest(int Request_Numbers, int interval, int n){
         //interval =-1 for random delay
 
         int round = 1;
         do {
             for (int i = 0; i < Request_Numbers; i++) {
-                OneRandomRequest(GTS);
+                OneRandomRequest();
             }
             round++;
             if(interval>0&&round<n) {
@@ -64,7 +65,7 @@ public class RequestGenerator {
     private static ArrayList<requestprofile> rqe_arr=new ArrayList<>();
 
     //read all data profile to rqe
-    public static void ReadProfileRequests(String filename){
+    public void ReadProfileRequests(String filename){
         File F=new File("BenchmarkInput/"+filename);
         Scanner scanner= null;
         try {
@@ -85,12 +86,12 @@ public class RequestGenerator {
     public static boolean finished=false;
     static int currentIndex=0;
     //a once call to push out data that past their startTime
-    public static void contProfileRequestsGen(GOPTaskScheduler GTS){
+    public void contProfileRequestsGen(){
         if(currentIndex<rqe_arr.size()) {
-            while (rqe_arr.get(currentIndex).appearTime <= GOPTaskScheduler.maxElapsedTime) {
+            while (rqe_arr.get(currentIndex).appearTime <= _CVSE.GTS.maxElapsedTime) {
                 requestprofile arqe = rqe_arr.get(currentIndex);
                 currentIndex++;
-                OneSpecificRequest(GTS, arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline,arqe.appearTime);
+                OneSpecificRequest(arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline,arqe.appearTime);
                 if (currentIndex >= rqe_arr.size()) {
                     System.out.println("sim finished");
                     finished=true;
@@ -100,7 +101,7 @@ public class RequestGenerator {
             }
         }
     }
-    public static long nextappearTime(){
+    public long nextappearTime(){
         if(currentIndex<rqe_arr.size()) {
             return rqe_arr.get(currentIndex).appearTime;
         }
@@ -109,7 +110,7 @@ public class RequestGenerator {
     ///////////////// before are creation of the profile /////////////////
 
 
-    public static requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe,int videos,long segmentcounts){
+    public requestprofile[] modifyrqeb4sort(requestprofile[] original_rqe,int videos,long segmentcounts){
         //set first few requests to start from Time 0, start off with some load right away
         int maxchange=Math.min(original_rqe.length,10);
         for(int i=0;i<maxchange;i++){
@@ -130,7 +131,7 @@ public class RequestGenerator {
         original_rqe[oriindex].videoChoice = original_rqe[oriindex - offset].videoChoice;
     }
     //modify the rqe after sorting by appearance time done, so
-    public static requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe,Random r,int videos,int requestcount,long segmentcounts) {
+    public requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe,Random r,int videos,int requestcount,long segmentcounts) {
 
         double TypeArate=0.05,TypeCrate=0.2,TypeBrate=0.2;
         int cmdspace=4;
@@ -189,7 +190,7 @@ public class RequestGenerator {
 
     }
     //enforce least duplicate or match, unless neccessery, then modify to add matching
-    public static void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
+    public void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) throws IOException {
         //random into array, modify, sort array, write to file
         Random r =new Random(seed);
         int i=0;
@@ -210,7 +211,7 @@ public class RequestGenerator {
             //create the request
             for(int q=0;q<totalVideos;q++) {
                 // video choice is in the positionMatchup
-                String acmd=GOPTaskScheduler.possible_Operations.get((positionMatchup[q]+fold)%GOPTaskScheduler.possible_Operations.size()).operationname;// ensure least command overlap as possible
+                String acmd=_CVSE.GTS.possible_Operations.get((positionMatchup[q]+fold)%_CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
                 long appear=Math.abs(r.nextLong()%timeSpan);
                 long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
                 deadline+=appear;

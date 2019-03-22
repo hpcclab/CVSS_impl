@@ -4,6 +4,7 @@ import ResourceManagement.MachineInterface;
 import Streampkg.StreamGOP;
 import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
+import mainPackage.CVSE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,15 +12,19 @@ import java.util.HashMap;
 
 public class Merger {
 
-    private static HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_tasklvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();;
-    private static HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_operationlvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();
-    private static HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_datalvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();
-    public static long merged_tasklvl_count =0;
-    public static long probecounter=0;
+    private  HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_tasklvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();;
+    private  HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_operationlvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();
+    private  HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_datalvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();
+    public  long merged_tasklvl_count =0;
+    public  long probecounter=0;
     private miscTools.SortableList pendingqueue;
     private miscTools.SortableList Batchqueue;
-    public static ArrayList<MachineInterface> machineInterfaces;
-    public Merger(miscTools.SortableList bq,miscTools.SortableList pq,ArrayList<MachineInterface> vi) {
+    public  ArrayList<MachineInterface> machineInterfaces;
+    private CVSE _CVSE;
+    private GOPTaskScheduler_mergable GTS;
+    public Merger(CVSE cvse,miscTools.SortableList bq,miscTools.SortableList pq,ArrayList<MachineInterface> vi) {
+        _CVSE=cvse;
+        GTS=(GOPTaskScheduler_mergable)_CVSE.GTS;
         Batchqueue=bq;
         pendingqueue=pq;
         machineInterfaces =vi;
@@ -27,7 +32,7 @@ public class Merger {
 
     //binary search version, only work if original miss ==0
     public int Bsearch_trybetweenPositions(Streampkg.TaskRequest key,HashMap<Streampkg.TaskRequest,StreamGOP> thislvlmap,StreamGOP X,StreamGOP original,StreamGOP merged,int originalmiss) {
-        miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
+        miscTools.SortableList newVQ = new miscTools.SortableList(_CVSE,Batchqueue);
         int firstpos=0;
         newVQ.remove(original);
 
@@ -35,7 +40,7 @@ public class Merger {
         while(newfirstpos<searchlimit-1){
             int tryposition=(searchlimit+newfirstpos)/2;
             newVQ.add(tryposition,merged);
-            int test=countDLMiss( newVQ,merged,Integer.MAX_VALUE,GOPTaskScheduler_mergable.SDco);
+            int test=countDLMiss( newVQ,merged,Integer.MAX_VALUE,GTS.SDco);
             if(Math.abs(test)<originalmiss){
                 System.out.println("found a position");
                 return tryposition; //found perfect condition
@@ -53,7 +58,7 @@ public class Merger {
         return -1;
     }
     public int linearsearch_trybetweenPositions(Streampkg.TaskRequest key,HashMap<Streampkg.TaskRequest,StreamGOP> thislvlmap,StreamGOP X,StreamGOP original,StreamGOP merged,int originalmiss) {
-        miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
+        miscTools.SortableList newVQ = new miscTools.SortableList(_CVSE,Batchqueue);
         //put merged to latest position (at the moment)
         newVQ.remove(original);
         //get latest position for X not to miss their deadline
@@ -61,7 +66,7 @@ public class Merger {
         System.out.println("latestpos="+latestpos);
         //put merged to position that it'll not miss
         newVQ.add(latestpos,merged);
-        long check=countDLMiss( newVQ,Math.abs(originalmiss),GOPTaskScheduler_mergable.SDco);
+        long check=countDLMiss( newVQ,Math.abs(originalmiss),GTS.SDco);
         System.out.println(check +" vs "+originalmiss);
         if ( Math.abs(check)<= Math.abs(originalmiss)) {
             //make change to real queue
@@ -76,14 +81,14 @@ public class Merger {
 
 
     private int virtualQueueCheckReplace(StreamGOP Original,StreamGOP merged,int threshold){
-        miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
+        miscTools.SortableList newVQ = new miscTools.SortableList(_CVSE,Batchqueue);
         int indexofOriginal=newVQ.indexOf(Original);
         if(indexofOriginal<0||indexofOriginal>newVQ.size()){
             System.out.println("anomaly in virtualQueueCheckReplace index="+indexofOriginal);
             return -999;
         }else {
             newVQ.set(newVQ.indexOf(Original), merged); //can not find original???
-            return countDLMiss(newVQ, null,threshold,GOPTaskScheduler_mergable.SDco);
+            return countDLMiss(newVQ, null,threshold,GTS.SDco);
         }
     }
 
@@ -91,13 +96,13 @@ public class Merger {
         //System.out.println("virtual estimation");
         if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
-            return GOPTaskScheduler_mergable.shortestQueueFirst(x,queuelength,executiontime,true,1,false);
+            return GTS.shortestQueueFirst(x,queuelength,executiontime,true,1,false);
         }else { //default way, shortestQueueFirst
-            return GOPTaskScheduler_mergable.shortestQueueFirst(x,queuelength,executiontime,false,1,false); //false for not using TimeEstimator
+            return GTS.shortestQueueFirst(x,queuelength,executiontime,false,1,false); //false for not using TimeEstimator
         }
     }
     private int countOriginalMiss(StreamGOP X,double SDco){
-        miscTools.SortableList newVQ = new miscTools.SortableList(Batchqueue);
+        miscTools.SortableList newVQ = new miscTools.SortableList(_CVSE,Batchqueue);
         newVQ.add(X);
         //System.out.println("countOriginalMiss");
         //System.out.println(newVQ.toArray()[0]);
@@ -120,7 +125,7 @@ public class Merger {
         // perform check
         int missed=0,targetmiss=0;
         int threshold=Math.abs(rthreshold);
-        miscTools.SortableList virtualQueue_copy = new miscTools.SortableList(virtualQueue);
+        miscTools.SortableList virtualQueue_copy = new miscTools.SortableList(_CVSE,virtualQueue);
         //copy virtual queue
         int[] queuelength=new int[machineInterfaces.size()];
         long[] executiontime=new long[machineInterfaces.size()];
@@ -134,7 +139,7 @@ public class Merger {
             MachineInterface machine= v_selectMachine(aGOP,queuelength,executiontime);
             int machine_index= machineInterfaces.indexOf(machine);
             //update our queue
-            retStat thestat=TimeEstimator.getHistoricProcessTime(machine.VM_class,machine.port,aGOP);
+            retStat thestat=GTS._CVSE.TE.getHistoricProcessTime(machine.VM_class,machine.port,aGOP);
             executiontime[machine_index]+=thestat.mean+thestat.SD*SDco; //thestat.SD;
             queuelength[machine_index]++;
             long finishTimeofX= executiontime[machine_index];
@@ -156,7 +161,7 @@ public class Merger {
     private int findlatestposition(miscTools.SortableList  virtualQueue,StreamGOP themergedtask){
 
         // perform check
-        miscTools.SortableList virtualQueue_copy = new miscTools.SortableList(virtualQueue);
+        miscTools.SortableList virtualQueue_copy = new miscTools.SortableList(_CVSE,virtualQueue);
         //copy virtual queue
         int[] queuelength=new int[machineInterfaces.size()];
         long[] executiontime=new long[machineInterfaces.size()];
@@ -167,7 +172,7 @@ public class Merger {
             // try themergedtask first, if fail then return
             MachineInterface machine = v_selectMachine(themergedtask, queuelength, executiontime);
             int machine_index = machineInterfaces.indexOf(machine);
-            retStat thestat=TimeEstimator.getHistoricProcessTime(machine.VM_class, machine.port, themergedtask);
+            retStat thestat=GTS._CVSE.TE.getHistoricProcessTime(machine.VM_class, machine.port, themergedtask);
             if(executiontime[machine_index]+thestat.mean>themergedtask.deadLine){
                 return i-1;
             }
@@ -179,7 +184,7 @@ public class Merger {
             machine = v_selectMachine(aGOP, queuelength, executiontime);
             machine_index = machineInterfaces.indexOf(machine);
             //update our queue
-            thestat = TimeEstimator.getHistoricProcessTime(machine.VM_class, machine.port, aGOP);
+            thestat = GTS._CVSE.TE.getHistoricProcessTime(machine.VM_class, machine.port, aGOP);
             executiontime[machine_index] += thestat.mean; //thestat.SD;
             queuelength[machine_index]++;
             long finishTimeofX = executiontime[machine_index];
