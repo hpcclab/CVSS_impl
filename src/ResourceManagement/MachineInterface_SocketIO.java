@@ -16,8 +16,8 @@ public class MachineInterface_SocketIO extends MachineInterface {
     public ObjectInputStream ois=null;
     Thread connector;
 
-    public MachineInterface_SocketIO(CVSE cvse,String vclass, String addr, int port, int inid, boolean iautoschedule){
-        super(cvse,vclass,port,inid,iautoschedule);
+    public MachineInterface_SocketIO(String vclass, String addr, int port, int inid, boolean iautoschedule){
+        super(vclass,port,inid,iautoschedule);
 
         while (status != 1) {
             System.out.println("connecting");
@@ -81,22 +81,22 @@ public class MachineInterface_SocketIO extends MachineInterface {
 
                     query.cmdSet.put("query", null);
                     query.dispatched=true;
-                    query.deadLine=_CVSE.GTS.maxElapsedTime;
+                    query.deadLine=CVSE.GTS.maxElapsedTime;
                 oos.writeObject(query); //they expect an object, thus we need to send object
                 runtime_report answer = (runtime_report) ois.readObject();
                 //System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
                 //System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
-                _CVSE.GTS.workpending-=(estimatedQueueLength-answer.queue_size);
-                _CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = answer.queue_size;
-                _CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
-                _CVSE.GTS.machineInterfaces.get(id).elapsedTime=answer.VMelapsedTime;
-                _CVSE.GTS.machineInterfaces.get(id).actualSpentTime=answer.VMspentTime;
+                CVSE.GTS.workpending-=(estimatedQueueLength-answer.queue_size);
+                CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = answer.queue_size;
+                CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
+                CVSE.GTS.machineInterfaces.get(id).elapsedTime=answer.VMelapsedTime;
+                CVSE.GTS.machineInterfaces.get(id).actualSpentTime=answer.VMspentTime;
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
-                _CVSE.GTS.machineInterfaces.get(id).total_itemmiss =answer.missed;
-                _CVSE.GTS.machineInterfaces.get(id).total_itemdone =answer.workdone;
-                _CVSE.GTS.machineInterfaces.get(id).total_taskdone =answer.Nworkdone;
-                _CVSE.GTS.machineInterfaces.get(id).total_taskmiss =answer.Nmissed;
-                _CVSE.VMP.ackCompletedVideo(answer.completedTask);
+                CVSE.GTS.machineInterfaces.get(id).total_itemmiss =answer.missed;
+                CVSE.GTS.machineInterfaces.get(id).total_itemdone =answer.workdone;
+                CVSE.GTS.machineInterfaces.get(id).total_taskdone =answer.Nworkdone;
+                CVSE.GTS.machineInterfaces.get(id).total_taskmiss =answer.Nmissed;
+                CVSE.VMP.ackCompletedVideo(answer.completedTask);
                 //completedTask.clear();
                 //
 

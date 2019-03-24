@@ -6,8 +6,8 @@ import mainPackage.CVSE;
 import java.io.File;
 
 public class CachingFileScan extends Caching {
-    public CachingFileScan(CVSE cvse){
-        super(cvse);
+    public CachingFileScan(){
+        super();
     }
     public boolean checkExistence(StreamGOP x)
     {

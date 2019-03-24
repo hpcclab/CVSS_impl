@@ -15,10 +15,10 @@ import static java.lang.Thread.sleep;
 
 
 public class RequestGenerator {
+
+    public boolean finished=false;
     // static String videonameList[]={"bbb_trailer","ff_trailer_part1","ff_trailer_part3"}; //not using
-    CVSE _CVSE;
-    public RequestGenerator(CVSE cvse){
-        _CVSE=cvse;
+    public RequestGenerator(){
     }
 
     public void OneRandomRequest(){
@@ -29,18 +29,18 @@ public class RequestGenerator {
         //Settings setting=new Settings(videoList[videoChoice],x+"",y+"");
         //String setting=x+"x"+y;
 
-        int videoChoice=(int)(Math.random()* ( VideoRepository.videos.size()));
-        int operation=(int)(Math.random()*(_CVSE.GTS.possible_Operations.size()));
+        int videoChoice=(int)(Math.random()* ( CVSE.VR.videos.size()));
+        int operation=(int)(Math.random()*(CVSE.GTS.possible_Operations.size()));
         String setting=""+(Math.random()*2); //random between 0 and 1 as setting identifier
         long deadline=0; //did not specified deadline
         //setting.settingIdentifier=randomRes;
-        OneSpecificRequest(videoChoice,_CVSE.GTS.possible_Operations.get(operation).operationname,setting,deadline,0);
+        OneSpecificRequest(videoChoice,CVSE.GTS.possible_Operations.get(operation).operationname,setting,deadline,0);
     }
 
     public void OneSpecificRequest( int videoChoice, String command, String setting, long deadline, long arrival){
         //System.out.println("create one specific request");
-        Stream ST=new Stream(_CVSE,VideoRepository.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
-        _CVSE.GTS.addStream(ST);
+        Stream ST=new Stream(CVSE.VR.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
+        CVSE.GTS.addStream(ST);
         //System.out.println("test2");
     }
     //simple static RandomRequest Generator
@@ -83,12 +83,11 @@ public class RequestGenerator {
             System.out.println("read benchmarkProfileFail"+e);
         }
     }
-    public static boolean finished=false;
-    static int currentIndex=0;
+    int currentIndex=0;
     //a once call to push out data that past their startTime
     public void contProfileRequestsGen(){
         if(currentIndex<rqe_arr.size()) {
-            while (rqe_arr.get(currentIndex).appearTime <= _CVSE.GTS.maxElapsedTime) {
+            while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {
                 requestprofile arqe = rqe_arr.get(currentIndex);
                 currentIndex++;
                 OneSpecificRequest(arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline,arqe.appearTime);
@@ -148,7 +147,7 @@ public class RequestGenerator {
             //copy previous few, can duplicate
             int pminus=Math.abs(r.nextInt(3))+1;
             cloneC(original_rqe,cloneindex,cloneindex-pminus);
-            altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            altered += 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
             cloneindex += 3;  //so not too often happened, rather than cloneindex+=2
         }
         System.out.println("end C cloneindex="+cloneindex);
@@ -158,7 +157,7 @@ public class RequestGenerator {
             //copy previous few, can duplicate
             int pminus=Math.abs(r.nextInt(3))+1;
             cloneB(original_rqe,cloneindex,cloneindex-pminus);
-            altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            altered += 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
             cloneindex += 3;  //so not too often happened, rather than cloneindex+=2
         }
         System.out.println("end B cloneindex="+cloneindex);
@@ -168,7 +167,7 @@ public class RequestGenerator {
             //copy previous few
             int pminus=Math.abs(r.nextInt(3))+1;
             cloneA(original_rqe,cloneindex,cloneindex-pminus);
-            altered += 2*VideoRepository.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            altered += 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
             cloneindex += 3; //so not too often happened, rather than cloneindex+=2
         }
         System.out.println("end A cloneindex="+cloneindex);
@@ -211,7 +210,7 @@ public class RequestGenerator {
             //create the request
             for(int q=0;q<totalVideos;q++) {
                 // video choice is in the positionMatchup
-                String acmd=_CVSE.GTS.possible_Operations.get((positionMatchup[q]+fold)%_CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
+                String acmd=CVSE.GTS.possible_Operations.get((positionMatchup[q]+fold)%CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
                 long appear=Math.abs(r.nextLong()%timeSpan);
                 long deadline=(long)(r.nextGaussian()*sdslack)+avgslack;
                 deadline+=appear;
@@ -219,7 +218,7 @@ public class RequestGenerator {
                 //System.out.println("rqe[]="+(randomDone+q)+" positionMatup[]="+q);
                 rqes.add(new requestprofile(positionMatchup[q],acmd,""+settingnum,appear,deadline)); //setting ToBeDetermined
                 //System.out.println("b");
-                totalSegmentcount+=VideoRepository.videos.get(positionMatchup[q]).getTotalSegments();
+                totalSegmentcount+=CVSE.VR.videos.get(positionMatchup[q]).getTotalSegments();
                 //System.out.println("c");
                 if(totalSegmentcount-totalRequest>=0){
                     break;

@@ -19,21 +19,20 @@ public class ResourceProvisioner {
     private int numberOfinstances=0;
 
     //private String imageId;
-    private static int minimumMaintain;
-    private static int VMcount=0;
-    public static double deadLineMissRate=0.8;
+    private int minimumMaintain;
+    private int VMcount=0;
+    public double deadLineMissRate=0.8;
     //private double highscalingThreshold; //get from ServerConfig
     //private double lowscalingThreshold;
-    private static Semaphore x=new Semaphore(1);
-    private static ArrayList<machineinfo> VMCollection =new ArrayList<>();
-    CVSE _CVSE;
-    DataUpdate DU;
+    private Semaphore x;
+    private ArrayList<machineinfo> VMCollection =new ArrayList<>();
+    DataUpdate DU; //currently is a subcomponent of ResourceProvisioner
     //this need to set
 
 
-    public ResourceProvisioner(CVSE cvse, int minimumVMtomaintain) {
-        _CVSE=cvse;
-        DataUpdate DU=new DataUpdate(cvse);
+    public ResourceProvisioner( int minimumVMtomaintain) {
+        x=new Semaphore(1);
+        DU=new DataUpdate();
         minimumMaintain=minimumVMtomaintain;
         if(ServerConfig.useEC2){
             System.out.println("Before EC2 client, disabled for now");
@@ -102,23 +101,23 @@ public class ResourceProvisioner {
         int sum_DLmiss=0,sum_taskdone=0;
         long current_overtime=0,current_undertime=0;
         double current_weighted_undertime=0,current_weighted_overtime=0;
-        long T_maxElapsedTime=_CVSE.GTS.maxElapsedTime;
-        int clustersize=_CVSE.GTS.machineInterfaces.size();
+        long T_maxElapsedTime=CVSE.GTS.maxElapsedTime;
+        int clustersize=CVSE.GTS.machineInterfaces.size();
         for (int i=0;i<clustersize;i++){
-            _CVSE.GTS.machineInterfaces.get(i).dataUpdate();
-            System.out.println("tmp taskdone="+_CVSE.GTS.machineInterfaces.get(i).tmp_taskdone);
-            if(_CVSE.GTS.machineInterfaces.get(i).tmp_taskdone!=0){
-                sum_DLmiss+=_CVSE.GTS.machineInterfaces.get(i).tmp_taskmiss;
-                sum_taskdone+=_CVSE.GTS.machineInterfaces.get(i).tmp_taskdone;
-                current_overtime+=_CVSE.GTS.machineInterfaces.get(i).tmp_overtime;
-                current_undertime+=_CVSE.GTS.machineInterfaces.get(i).tmp_undertime;
-                current_weighted_overtime+=_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime;
-                current_weighted_undertime+=_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime;
-                System.out.println("in last 20 tasks overtime:"+_CVSE.GTS.machineInterfaces.get(i).tmp_overtime+" undertime:"+_CVSE.GTS.machineInterfaces.get(i).tmp_undertime
-                +" weighted_overtime"+_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+_CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime);
+            CVSE.GTS.machineInterfaces.get(i).dataUpdate();
+            System.out.println("tmp taskdone="+CVSE.GTS.machineInterfaces.get(i).tmp_taskdone);
+            if(CVSE.GTS.machineInterfaces.get(i).tmp_taskdone!=0){
+                sum_DLmiss+=CVSE.GTS.machineInterfaces.get(i).tmp_taskmiss;
+                sum_taskdone+=CVSE.GTS.machineInterfaces.get(i).tmp_taskdone;
+                current_overtime+=CVSE.GTS.machineInterfaces.get(i).tmp_overtime;
+                current_undertime+=CVSE.GTS.machineInterfaces.get(i).tmp_undertime;
+                current_weighted_overtime+=CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime;
+                current_weighted_undertime+=CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime;
+                System.out.println("in last 20 tasks overtime:"+CVSE.GTS.machineInterfaces.get(i).tmp_overtime+" undertime:"+CVSE.GTS.machineInterfaces.get(i).tmp_undertime
+                +" weighted_overtime"+CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime);
             }
-            if(_CVSE.GTS.machineInterfaces.get(i).elapsedTime>T_maxElapsedTime){
-                T_maxElapsedTime=_CVSE.GTS.machineInterfaces.get(i).elapsedTime;
+            if(CVSE.GTS.machineInterfaces.get(i).elapsedTime>T_maxElapsedTime){
+                T_maxElapsedTime=CVSE.GTS.machineInterfaces.get(i).elapsedTime;
                 System.out.println("TelapsedTime update to "+T_maxElapsedTime);
             }
         }
@@ -137,8 +136,8 @@ public class ResourceProvisioner {
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
             //primitive usage of SDco
-            if(_CVSE.GTS instanceof GOPTaskScheduler_mergable) {
-                GOPTaskScheduler_mergable GTS_parse=(GOPTaskScheduler_mergable)_CVSE.GTS ;
+            if(CVSE.GTS instanceof GOPTaskScheduler_mergable) {
+                GOPTaskScheduler_mergable GTS_parse=(GOPTaskScheduler_mergable)CVSE.GTS ;
                 GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime);
                 System.out.println("change SDco to " + GTS_parse.SDco);
             }
@@ -149,29 +148,33 @@ public class ResourceProvisioner {
 
         //if time doesn't move,F
         if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
-            if (_CVSE.GTS.maxElapsedTime != T_maxElapsedTime) {
-                System.out.println("_CVSE.GTS_mergable.maxElapsedTime="+_CVSE.GTS.maxElapsedTime);
+            if (CVSE.GTS.maxElapsedTime != T_maxElapsedTime) {
+                System.out.println("CVSE.GTS_mergable.maxElapsedTime="+CVSE.GTS.maxElapsedTime);
                 System.out.println("reset timeforced count");
-                _CVSE.GTS.maxElapsedTime = T_maxElapsedTime;
+                CVSE.GTS.maxElapsedTime = T_maxElapsedTime;
                 timeforced = 0;
             } else {
-                long t=_CVSE.RG.nextappearTime();
+                long t=CVSE.RG.nextappearTime();
                 if(t!=-1){ //force time move, to next arrival time
-                    _CVSE.GTS.maxElapsedTime=t;
-                    System.out.println("force time move to" + _CVSE.GTS.maxElapsedTime);
+                    CVSE.GTS.maxElapsedTime=t;
+                    System.out.println("force time move to" + CVSE.GTS.maxElapsedTime);
                 } else{ //force time to move, by 200 at final burst
                     System.out.println("force time move+200 " + timeforced);
-                    _CVSE.GTS.maxElapsedTime += 200;
+                    CVSE.GTS.maxElapsedTime += 200;
                 }
                 timeforced++;
                 if (timeforced >= 3) {
-                    DU.printstat();
+                    if(DU !=null) { //maybe it's terminated at the end
+                        DU.printstat();
+                    }else{
+                        System.out.println("Data update module is null");
+                    }
                     //timeforced=0;
                 }
             }
         }
         if(ServerConfig.profiledRequests){
-            _CVSE.RG.contProfileRequestsGen();
+            CVSE.RG.contProfileRequestsGen();
         }
     }
 
@@ -190,7 +193,7 @@ public class ResourceProvisioner {
             EvaluateClusterSize(20);
         }
         //System.out.println("tick, submit work");
-        _CVSE.GTS.taskScheduling();
+        CVSE.GTS.taskScheduling();
         x.release();
     }
     //this need to be call periodically somehow
@@ -246,7 +249,7 @@ public class ResourceProvisioner {
                     //System.out.println(ServerConfig.VM_ports.get(VMcount));
 
                     TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
-                    _CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
+                    CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                     TC.start();
                     try {
                         sleep(200);
@@ -254,24 +257,24 @@ public class ResourceProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new machineinfo("thread","",TC));
-                    _CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("local simulated thread");
                     VMCollection.add(new machineinfo("sim",""));
-                    _CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
-                    _CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
+                    CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new machineinfo("simNWcache",""));
-                    _CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
-                    _CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
+                    CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
                     /* //EC2
                     StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.VM_address.get(VMcount));
                     EC2instance.startInstances(start);
                     VMCollection.add(new machineinfo("EC2",ServerConfig.VM_address.get(VMcount)));
-                    //get IP back and feed to _CVSE.GTS_mergable.addVM
+                    //get IP back and feed to CVSE.GTS_mergable.addVM
 
                     try {
                         sleep(6000);
@@ -322,7 +325,7 @@ public class ResourceProvisioner {
                     System.out.println("get IP:"+IP);
                     //System.out.println("Halt!, before connect");
                     //scanner.nextInt();
-                    _CVSE.GTS_mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
+                    CVSE.GTS_mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
                     //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
@@ -347,7 +350,7 @@ public class ResourceProvisioner {
 
                 if (vmitoRemove.type.equalsIgnoreCase("thread")) {
                     System.out.println("Removing Thread " + (VMCollection.size() - 1));
-                    _CVSE.GTS.remove_VM(VMCollection.size() - 1);
+                    CVSE.GTS.remove_VM(VMCollection.size() - 1);
                     VMcount--;
                     vmitoRemove.TVM.close();
                 } else if (vmitoRemove.type.equalsIgnoreCase("EC2")) {
@@ -360,7 +363,7 @@ public class ResourceProvisioner {
 
                     */
                 } else {
-                    System.out.println("Removing unknown");
+                    System.out.println("Removing a resource");
                 }
             }
         }
@@ -370,7 +373,7 @@ public class ResourceProvisioner {
     }
     //relay function to outputwindoe
     public void ackCompletedVideo(List<StreamGOP> completedTasks){
-        _CVSE.OW.ackCompletedVideo(completedTasks);
+        CVSE.OW.ackCompletedVideo(completedTasks);
     }
 
 

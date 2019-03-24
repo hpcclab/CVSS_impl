@@ -7,10 +7,10 @@ import java.util.HashMap;
 
 public class CachingWithPathTable extends Caching {
 
-    private static HashMap<String,String> Table =new HashMap<String,String>();;
+    private HashMap<String,String> Table =new HashMap<String,String>();;
 
-    public CachingWithPathTable(CVSE cvse){
-        super(cvse);
+    public CachingWithPathTable(){
+        super();
     }
     //don't forget to implement this with something to notify settings, currently it count all settings the same
     public String convertStreamGopToString(StreamGOP x){

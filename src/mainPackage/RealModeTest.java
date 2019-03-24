@@ -5,6 +5,7 @@ import Cache.Caching;
 import IOWindows.OutputWindow;
 import IOWindows.WebserviceRequestGate;
 import Repository.VideoRepository;
+import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
@@ -25,19 +26,21 @@ import java.util.Scanner;
 
 public class RealModeTest {
 
-        private static void setUpCVSE_forreal(CVSE _CVSE){
+        private static void setUpCVSE_forreal(){
             //Set things up
-            _CVSE.VR = new VideoRepository(_CVSE);
-            _CVSE.CACHING = new Caching(_CVSE); //change to other type if need something that work
-            _CVSE.GTS = new GOPTaskScheduler_mergable(_CVSE);
-            _CVSE.GTS.readlistedOperations();
-            _CVSE.VMP= new ResourceProvisioner(_CVSE, ServerConfig.minVM); //says we need at least two machines
-            _CVSE.OW=new OutputWindow(_CVSE); //todo, actually call its function from VMP
-            _CVSE.TE=new TimeEstimator(_CVSE);
+            CVSE.VR = new VideoRepository();
+            CVSE.AC = new AdmissionControl();
+            CVSE.GTS = new GOPTaskScheduler_mergable();
+            CVSE.GTS.readlistedOperations();
+            CVSE.TE=new TimeEstimator();
+            CVSE.VMP= new ResourceProvisioner( ServerConfig.minVM); //says we need at least two machines
+            CVSE.CACHING = new Caching(); //change to other type if need something that work
+            CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
+
             //VMP.setGTS(GTS);
             //load Videos into Repository
-            _CVSE.VR.addAllRealVideos();
-            _CVSE.RG= new RequestGenerator(_CVSE);
+            CVSE.VR.addAllRealVideos();
+            CVSE.RG= new RequestGenerator();
         }
 
         public static void RealLocalThreads() throws IOException {
@@ -56,8 +59,7 @@ public class RealModeTest {
 
         //Step 1: Retrieve Real Videos from Video Repository
 
-        CVSE _CVSE=new CVSE();
-        setUpCVSE_forreal(_CVSE);
+        setUpCVSE_forreal();
         StreamManager SM = new StreamManager();
         //seems fine for tbe most part
         //checking...
@@ -68,8 +70,8 @@ public class RealModeTest {
 
             Scanner scanner = new Scanner(System.in);
 
-            for (int i = 0; i < VideoRepository.videos.size(); i++) {
-                System.out.println(VideoRepository.videos.get(i).name + ": " + i);
+            for (int i = 0; i < CVSE.VR.videos.size(); i++) {
+                System.out.println(CVSE.VR.videos.get(i).name + ": " + i);
             }
             System.out.println("Enter the video that you would like to have streamed: ");
             num = scanner.nextInt();
@@ -79,13 +81,13 @@ public class RealModeTest {
             newSettings.resolution = true;
             newSettings.resWidth = "640";
             newSettings.resHeight = "480";
-            newSettings.videoname = VideoRepository.videos.get(num).name;
+            newSettings.videoname = CVSE.VR.videos.get(num).name;
 
-            SM.InitializeStream(num, newSettings, _CVSE.GTS);
+            SM.InitializeStream(num, newSettings, CVSE.GTS);
         }
 
-        for (int i = 0; i < VideoRepository.videos.size(); i++) {
-            System.out.println(VideoRepository.videos.get(i).name);
+        for (int i = 0; i < CVSE.VR.videos.size(); i++) {
+            System.out.println(CVSE.VR.videos.get(i).name);
         }
 
         /*
@@ -100,8 +102,8 @@ public class RealModeTest {
         //*/
 
         //wind down process
-        _CVSE.GTS.close();
-        _CVSE.VMP.closeAll();
+        CVSE.GTS.close();
+        CVSE.VMP.closeAll();
 
         //Step 6: remove all the folders and contents in the streams folder
         /*
@@ -129,11 +131,10 @@ public class RealModeTest {
         //Step 1: Retrieve Real Videos from Video Repository
 
         StreamManager SM = new StreamManager();
-        CVSE _CVSE=new CVSE();
-        setUpCVSE_forreal(_CVSE);
+        setUpCVSE_forreal();
         ////create open socket, receive new profile request then do similar to profiledRequests
-        _CVSE.WG=new WebserviceRequestGate();
-        _CVSE.WG.addr="http://localhost:9901/transcoderequest";
+        CVSE.WG=new WebserviceRequestGate();
+        CVSE.WG.addr="http://localhost:9901/transcoderequest";
         if(SM == null){
             System.out.println("SM is null " + SM);
         }
@@ -141,24 +142,24 @@ public class RealModeTest {
             System.out.println("SM is fine " + SM);
         }
 
-        _CVSE.WG.SM = SM;
+        CVSE.WG.SM = SM;
 
         // example of actual request: http://localhost:9901/transcoderequest/?videoid=1,cmd=resolution,setting=180
         // (assume 10 is id of bigbuckbunny
         // TODO: figure about timing of the request, both deadline and arrival (in webservicegate class)
         ///*
         try {
-            _CVSE.WG.startListener();
+            CVSE.WG.startListener();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         System.out.println("webservice enabled");
-        if(_CVSE.WG.SM == null){
-            System.out.println("webgate SM is null " + _CVSE.WG.SM);
+        if(CVSE.WG.SM == null){
+            System.out.println("webgate SM is null " + CVSE.WG.SM);
         }
         else{
-            System.out.println("webgate SM is fine " + _CVSE.WG.SM);
+            System.out.println("webgate SM is fine " + CVSE.WG.SM);
         }
         //*/
         // int num = Integer.MAX_VALUE;
@@ -202,8 +203,7 @@ public class RealModeTest {
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
 
             //load video repo so we know their v numbers
-            CVSE _CVSE=new CVSE();
-            VideoRepository VR = new VideoRepository(_CVSE);
+            VideoRepository VR = new VideoRepository();
             VR.addAllKnownVideos();
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -211,8 +211,8 @@ public class RealModeTest {
 
         System.out.println(ServerConfig.repository);
 
-        for (int i = 0; i < VideoRepository.videos.size(); i++) {
-            System.out.println(VideoRepository.videos.get(i).name);
+        for (int i = 0; i < CVSE.VR.videos.size(); i++) {
+            System.out.println(CVSE.VR.videos.get(i).name);
         }
     }
 

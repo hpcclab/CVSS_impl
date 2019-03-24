@@ -11,15 +11,14 @@ import java.util.List;
 
 
 public class OutputWindow {
-    CVSE _CVSE;
-    public OutputWindow(CVSE cvse){
-        _CVSE=cvse;
+    public OutputWindow(){
+
     }
     private Video video;
     public void ackCompletedVideo(List<StreamGOP> completedTasks){
 
-        if(_CVSE.GTS instanceof GOPTaskScheduler_mergable) {
-            GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) _CVSE.GTS;
+        if(CVSE.GTS instanceof GOPTaskScheduler_mergable) {
+            GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
             if (ServerConfig.taskmerge) {
                 for (StreamGOP g: completedTasks
                      ) {

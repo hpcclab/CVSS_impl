@@ -15,7 +15,7 @@
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
 
     <taskmerge>True</taskmerge>
-    <consideratemerge>False</consideratemerge>
+    <consideratemerge>True</consideratemerge>
     <mergeOverwriteQueuePolicy>False</mergeOverwriteQueuePolicy>
     <overwriteQueuePolicyHeuristic>linear</overwriteQueuePolicyHeuristic>
 

@@ -32,15 +32,15 @@ public class MachineInterface_SimNWcache extends MachineInterface {
     public long getBandwidth() { //convert back to Megabits
         return bandwidth*8;
     }
-    public MachineInterface_SimNWcache(CVSE cvse,String vclass, int iport, int inid, boolean iautoschedule) {
-        super(cvse,vclass,iport,inid,iautoschedule);
+    public MachineInterface_SimNWcache(String vclass, int iport, int inid, boolean iautoschedule) {
+        super(vclass,iport,inid,iautoschedule);
         setBandwidth(iport);
         status=1;
     }
 
     //not used right now,
-    public MachineInterface_SimNWcache(CVSE cvse,String vclass, int inid, boolean iautoschedule, int ibandwidth, int idelay_mean, double idelay_SD) {
-        super(cvse,vclass,ibandwidth,inid,iautoschedule);
+    public MachineInterface_SimNWcache(String vclass, int inid, boolean iautoschedule, int ibandwidth, int idelay_mean, double idelay_SD) {
+        super(vclass,ibandwidth,inid,iautoschedule);
         setBandwidth(ibandwidth);
         delay_mean=idelay_mean;
         delay_SD=idelay_SD;
@@ -81,25 +81,25 @@ public class MachineInterface_SimNWcache extends MachineInterface {
     //get back the runtime stat
     public  void dataUpdate(){
         //Sync time
-        if(_CVSE.GTS.maxElapsedTime>synctime){
-            //System.out.println("node sync time forward "+synctime +"-> "+_CVSE.GTS_mergable.maxElapsedTime);
-            synctime=_CVSE.GTS.maxElapsedTime;
+        if(CVSE.GTS.maxElapsedTime>synctime){
+            //System.out.println("node sync time forward "+synctime +"-> "+CVSE.GTS_mergable.maxElapsedTime);
+            synctime=CVSE.GTS.maxElapsedTime;
         }
         //
         //System.out.println("dataUpdate");
-        _CVSE.GTS.workpending-=(estimatedQueueLength);
+        CVSE.GTS.workpending-=(estimatedQueueLength);
         //we completed the scheduling and execution, reset values
-        _CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = 0;
-        _CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = (long)(delay_mean+delay_SD);
-        _CVSE.GTS.machineInterfaces.get(id).elapsedTime=synctime;
-        _CVSE.GTS.machineInterfaces.get(id).actualSpentTime=realspentTime;
-        //System.out.println("actualSpentTime="+_CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
+        CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = 0;
+        CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = (long)(delay_mean+delay_SD);
+        CVSE.GTS.machineInterfaces.get(id).elapsedTime=synctime;
+        CVSE.GTS.machineInterfaces.get(id).actualSpentTime=realspentTime;
+        //System.out.println("actualSpentTime="+CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        _CVSE.GTS.machineInterfaces.get(id).total_itemmiss =deadlineMiss;
-        _CVSE.GTS.machineInterfaces.get(id).total_itemdone =workDone;
-        _CVSE.GTS.machineInterfaces.get(id).total_taskdone =NworkDone;
-        _CVSE.GTS.machineInterfaces.get(id).total_taskmiss =NdeadlineMiss;
+        CVSE.GTS.machineInterfaces.get(id).total_itemmiss =deadlineMiss;
+        CVSE.GTS.machineInterfaces.get(id).total_itemdone =workDone;
+        CVSE.GTS.machineInterfaces.get(id).total_taskdone =NworkDone;
+        CVSE.GTS.machineInterfaces.get(id).total_taskmiss =NdeadlineMiss;
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){

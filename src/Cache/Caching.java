@@ -4,9 +4,7 @@ import Streampkg.StreamGOP;
 import mainPackage.CVSE;
 
 public class Caching {
-    CVSE _CVSE;
-    public Caching(CVSE cvse){
-        _CVSE=cvse;
+    public Caching(){
     }
     //always return false in this simplest version, all items not exist
     public boolean checkExistence(StreamGOP x)

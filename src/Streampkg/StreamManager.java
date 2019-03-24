@@ -1,9 +1,9 @@
 package Streampkg;
 
-import Repository.VideoRepository;
 import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.ServerConfig;
+import mainPackage.CVSE;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,12 +77,12 @@ public class StreamManager {
 
         //Settings newRequest = new Settings(userRequest.videoname, userRequest.resHeight, userRequest.resWidth);
 
-        Stream ST=new Stream(VideoRepository.videos.get(videoIndex),userRequest); //admission control can work in constructor, or later?
+        Stream ST=new Stream(CVSE.VR.videos.get(videoIndex),userRequest); //admission control can work in constructor, or later?
 
         CreateDirectory(userRequest);
 
         //Admission Control assign Priority of each segments
-        AdmissionControl.AssignStreamPriority(ST);
+        CVSE.AC.AssignStreamPriority(ST);
         for(StreamGOP x:ST.streamGOPs){
             System.out.println(x.getPriority());
         }

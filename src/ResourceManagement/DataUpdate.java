@@ -12,9 +12,7 @@ import java.io.PrintWriter;
 import static java.lang.Thread.sleep;
 
 public class DataUpdate {
-    private CVSE _CVSE;
-    public DataUpdate(CVSE cvse){
-        _CVSE=cvse;
+    public DataUpdate(){
     }
 
     public void printstat(){
@@ -22,7 +20,7 @@ public class DataUpdate {
         long avgActualSpentTime=0;
         long totalWorkDone=0,ntotalWorkDone=0;
         long totaldeadlinemiss=0, ntotaldeadlinemiss=0;
-        if(RequestGenerator.finished){
+        if(CVSE.RG.finished){
             //file output
             try {
                 String prefix = (ServerConfig.taskmerge) ? "merge_" : "unmerge";
@@ -41,8 +39,8 @@ public class DataUpdate {
                 } else {
                     Fullwriter.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
                 }
-                for (int i = 0; i < _CVSE.GTS.machineInterfaces.size(); i++) {
-                    MachineInterface vmi = _CVSE.GTS.machineInterfaces.get(i);
+                for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
+                    MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
                     Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
                     Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
 
@@ -54,8 +52,8 @@ public class DataUpdate {
                     ntotaldeadlinemiss += vmi.total_taskmiss;
                 }
                 Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ")" );
-                if (_CVSE.GTS instanceof GOPTaskScheduler_mergable) {
-                    GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) _CVSE.GTS;
+                if (CVSE.GTS instanceof GOPTaskScheduler_mergable) {
+                    GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) CVSE.GTS;
                     System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
                 }
 
@@ -67,8 +65,8 @@ public class DataUpdate {
                 F1.close();
                 F2.close();
                 System.out.println("Benchmark finished");
-                if (_CVSE.GTS instanceof GOPTaskScheduler_mergable){
-                    GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) _CVSE.GTS;
+                if (CVSE.GTS instanceof GOPTaskScheduler_mergable){
+                    GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
                     System.out.println("Probe count=" + GTS.MRG.probecounter); //check how it works after refactor
                 }
                 sleep(200);
@@ -84,8 +82,8 @@ public class DataUpdate {
             } else {
                 System.out.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
             }
-            for (int i = 0; i < _CVSE.GTS.machineInterfaces.size(); i++) {
-                MachineInterface vmi = _CVSE.GTS.machineInterfaces.get(i);
+            for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
+                MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
                 System.out.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
                 System.out.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
                 avgActualSpentTime += vmi.actualSpentTime;
@@ -95,8 +93,8 @@ public class DataUpdate {
                 ntotaldeadlinemiss += vmi.total_taskmiss;
             }
             System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ")");
-            if (_CVSE.GTS instanceof GOPTaskScheduler_mergable){
-                GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) _CVSE.GTS;
+            if (CVSE.GTS instanceof GOPTaskScheduler_mergable){
+                GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
                 System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
             }
             System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);

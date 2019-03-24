@@ -3,6 +3,7 @@ package mainPackage;
 import Cache.Caching;
 import IOWindows.OutputWindow;
 import IOWindows.WebserviceRequestGate;
+import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
@@ -22,22 +23,22 @@ import static java.lang.Thread.sleep;
  * Created by pi on 6/29/17.
  */
 public class Test {
-    private static void setUpCVSE_forsim(CVSE _CVSE){
+    private static void setUpCVSE_forsim(){
         //Set things up
-        _CVSE.VR = new VideoRepository(_CVSE);
-        _CVSE.CACHING = new Caching(_CVSE); //change to other type if need something that work
-        _CVSE.GTS = new GOPTaskScheduler_mergable(_CVSE);
-        _CVSE.GTS.readlistedOperations();
-            System.out.println("BUG");
-        _CVSE.VMP= new ResourceProvisioner(_CVSE, ServerConfig.minVM); //says we need at least two machines
-        System.out.println("BUG2");
-        _CVSE.OW=new OutputWindow(_CVSE); //todo, actually call its function from VMP
-        System.out.println("BUG3");
-        _CVSE.TE=new TimeEstimator(_CVSE);
+        CVSE.VR = new VideoRepository();
+        CVSE.VR.addAllKnownVideos();
+        CVSE.AC = new AdmissionControl();
+        CVSE.GTS = new GOPTaskScheduler_mergable();
+        CVSE.GTS.readlistedOperations();
+        CVSE.TE=new TimeEstimator();
+        CVSE.VMP= new ResourceProvisioner(ServerConfig.minVM); //says we need at least two machines
+
+        CVSE.CACHING = new Caching(); //change to other type if need something that work
+        CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
         //VMP.setGTS(GTS);
         //load Videos into Repository
-        _CVSE.VR.addAllKnownVideos();
-        _CVSE.RG= new RequestGenerator(_CVSE);
+        CVSE.RG= new RequestGenerator();
+
     }
 
     public static String test(String confFile, String opt) {
@@ -49,42 +50,41 @@ public class Test {
             JAXBContext ctx = JAXBContext.newInstance(ServerConfig.class);
             Unmarshaller um = ctx.createUnmarshaller();
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-            CVSE _CVSE=new CVSE();
-            setUpCVSE_forsim(_CVSE);
+            setUpCVSE_forsim();
 
             int rqn = 1, interval, n;
             if (ServerConfig.profiledRequests) {
                 if (opt.equalsIgnoreCase("config")) {
-                    _CVSE.RG.ReadProfileRequests(ServerConfig.profileRequestsBenhmark);
+                    CVSE.RG.ReadProfileRequests(ServerConfig.profileRequestsBenhmark);
                 } else {
                     System.out.println("overwrite profileRequestBenhmark with " + opt);
                     ServerConfig.profileRequestsBenhmark = opt;
-                    _CVSE.RG.ReadProfileRequests(opt);
+                    CVSE.RG.ReadProfileRequests(opt);
                 }
                 //sleep(3000);
                 System.out.println("start sim");
-                _CVSE.RG.contProfileRequestsGen();
-                System.out.println("bug");
-                while (!_CVSE.RG.finished) {
+                CVSE.RG.contProfileRequestsGen();
+                while (!CVSE.RG.finished) {
                     sleep(300);
+                    System.out.println("wait for sim to finish");
                 }
                 System.out.println("\nAll request have been released\n");
 
-                while (!_CVSE.GTS.emptyQueue()) {
+                while (!CVSE.GTS.emptyQueue()) {
                     System.out.println("wait for pending work to finish");
                     sleep(300);
                 }
                 System.out.println("All queue are emptied");
             } else if (ServerConfig.openRequests) {
                 ////create open socket, receive new profile request then do similar to profiledRequests
-                _CVSE.WG=new WebserviceRequestGate();
-                _CVSE.WG.addr="http://localhost:9902/transcoderequest";
-                _CVSE.WG.GTS=_CVSE.GTS;
+                CVSE.WG=new WebserviceRequestGate();
+                CVSE.WG.addr="http://localhost:9902/transcoderequest";
+                CVSE.WG.GTS=CVSE.GTS;
 
                 // example of actual request: http://localhost:9902/transcoderequest/?videoid=1,cmd=resolution,setting=180
                 // (assume 10 is id of bigbugbunny
                 // TODO: figure about timing of the request, both deadline and arrival (in webservicegate class)
-                _CVSE.WG.startListener();
+                CVSE.WG.startListener();
                 System.out.println("webservice enabled");
             } else {
                 while (rqn != 0) {
@@ -93,7 +93,7 @@ public class Test {
                     interval = scanner.nextInt();
                     n = scanner.nextInt();
                     //create a lot of request to test out
-                    _CVSE.RG.nRandomRequest(rqn, interval, n);
+                    CVSE.RG.nRandomRequest(rqn, interval, n);
                 }
             }
             // Check point, enter any key to continue
@@ -101,8 +101,8 @@ public class Test {
             //scanner.next();
             sleep(300);
             //wind down process
-            _CVSE.GTS.close();
-            _CVSE.VMP.closeAll();
+            CVSE.GTS.close();
+            CVSE.VMP.closeAll();
             return "success";
 
         } catch (Exception e) {
@@ -121,7 +121,7 @@ public class Test {
         Unmarshaller um = ctx.createUnmarshaller();
         ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
         CVSE _CVSE=new CVSE();
-            setUpCVSE_forsim(_CVSE);
+            setUpCVSE_forsim();
 
             //sweep create many requests
             if (seed == 0) {

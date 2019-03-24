@@ -54,7 +54,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
             deadlineSet.put(Command+Setting,in_deadline);
             //System.out.println("cmd count="+requestcount+"\n\n");
         }else{
-            System.out.println("already have this cmd");
+            System.out.println("addCMD: already have this cmd");
         }
     }
     public void getAllCMD(StreamGOP aGOP){

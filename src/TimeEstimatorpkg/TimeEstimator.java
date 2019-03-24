@@ -17,9 +17,7 @@ import java.util.Scanner;
 public class TimeEstimator {
     //HashMap<(str)machinetype,  Hashmap<str(command+paramID),class stat >    >
     HashMap<String,HashMap<String,histStat>> Table=new HashMap<>();
-    CVSE _CVSE;
-    public TimeEstimator(CVSE cvse){
-        _CVSE=cvse;
+    public TimeEstimator(){
     }
 
     //updateTable is BROKEN

@@ -21,12 +21,10 @@ public abstract class GOPTaskScheduler {
     public  int workpending = 0;
     public  long maxElapsedTime; //use for setting Deadline
     public  List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
-    CVSE _CVSE;
 
-    public GOPTaskScheduler(CVSE cvse){
+    public GOPTaskScheduler(){
 
-        _CVSE=cvse;
-        Batchqueue= new miscTools.SortableList(_CVSE);
+        Batchqueue= new miscTools.SortableList();
     }
 
     public boolean add_VM(String VM_type, String VM_class, String addr, int port, int id, boolean autoSchedule)
@@ -39,7 +37,7 @@ public abstract class GOPTaskScheduler {
         }catch(Exception e){
             System.out.println("sleep bug");
         }
-        MachineInterface t = t = new MachineInterface_SimLocal(_CVSE,VM_class, port, id, autoSchedule); //only support simlocal in this minimal version
+        MachineInterface t = t = new MachineInterface_SimLocal(VM_class, port, id, autoSchedule); //only support simlocal in this minimal version
         machineInterfaces.add(t);
         return false;
     }
@@ -51,9 +49,9 @@ public abstract class GOPTaskScheduler {
     }
 
     public void addStream(Stream ST) {
-        AdmissionControl.AssignStreamPriority(ST);
+        CVSE.AC.AssignStreamPriority(ST);
         for (StreamGOP X : ST.streamGOPs) {
-            if(!_CVSE.CACHING.checkExistence(X)) {
+            if(!CVSE.CACHING.checkExistence(X)) {
                 Batchqueue.add(X);
             }else{
                 System.out.println("GOP cached, no reprocess");

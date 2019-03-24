@@ -41,8 +41,8 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private double l_undertime_weighted=0;
     */
 
-    public MachineInterface_SimLocal(CVSE cvse, String vclass, int iport, int inid, boolean iautoschedule) {
-        super(cvse,vclass,iport,inid,iautoschedule);
+    public MachineInterface_SimLocal(String vclass, int iport, int inid, boolean iautoschedule) {
+        super(vclass,iport,inid,iautoschedule);
         status=1;
     }
 
@@ -121,42 +121,43 @@ public class MachineInterface_SimLocal extends MachineInterface {
     }
     //get back the runtime stat
     public void dataUpdate(){
+        System.out.println("send Data Update");
         //Sync time
-        if(_CVSE.GTS.maxElapsedTime> node_synctime){
-            //System.out.println("node sync time forward "+synctime +"-> "+_CVSE.GTS_mergable.maxElapsedTime);
-            node_synctime =_CVSE.GTS.maxElapsedTime;
+        if(CVSE.GTS.maxElapsedTime> node_synctime){
+            //System.out.println("node sync time forward "+synctime +"-> "+CVSE.GTS_mergable.maxElapsedTime);
+            node_synctime =CVSE.GTS.maxElapsedTime;
         }
         // change to using the circular, tmp
 
 
 
         //System.out.println("dataUpdate");
-        _CVSE.GTS.workpending-=(estimatedQueueLength);
+        CVSE.GTS.workpending-=(estimatedQueueLength);
 
          //we completed the scheduling and execution
-        _CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = 0;
-        _CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = 0;
-        _CVSE.GTS.machineInterfaces.get(id).elapsedTime= node_synctime;
-        _CVSE.GTS.machineInterfaces.get(id).actualSpentTime= node_realspentTime;
-        //System.out.println("actualSpentTime="+_CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
+        CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = 0;
+        CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = 0;
+        CVSE.GTS.machineInterfaces.get(id).elapsedTime= node_synctime;
+        CVSE.GTS.machineInterfaces.get(id).actualSpentTime= node_realspentTime;
+        //System.out.println("actualSpentTime="+CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        _CVSE.GTS.machineInterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
-        _CVSE.GTS.machineInterfaces.get(id).total_itemdone += node_aftersync_itemdone;
-        _CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
-        _CVSE.GTS.machineInterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
-        _CVSE.GTS.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
-        _CVSE.GTS.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
+        CVSE.GTS.machineInterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
+        CVSE.GTS.machineInterfaces.get(id).total_itemdone += node_aftersync_itemdone;
+        CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
+        CVSE.GTS.machineInterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
+        CVSE.GTS.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
+        CVSE.GTS.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
         node_aftersync_itemmiss=node_aftersync_itemdone=node_aftersync_taskdone=node_aftersync_taskmiss=0;
 
 
-        _CVSE.GTS.machineInterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
-        _CVSE.GTS.machineInterfaces.get(id).tmp_undertime =node_sum_undertime/node_focus_task;
+        CVSE.GTS.machineInterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
+        CVSE.GTS.machineInterfaces.get(id).tmp_undertime =node_sum_undertime/node_focus_task;
 
-        _CVSE.GTS.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
-        _CVSE.GTS.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
+        CVSE.GTS.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
+        CVSE.GTS.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
 
-        _CVSE.VMP.ackCompletedVideo(completedTask);
+        CVSE.VMP.ackCompletedVideo(completedTask);
         completedTask.clear();
         //data are self expired, no need to reset or resum
     }

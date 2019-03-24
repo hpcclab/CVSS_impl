@@ -14,12 +14,10 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     public double SDco=2;
     private long oversubscriptionlevel;
-    public GOPTaskScheduler_mergable(CVSE cvse){
-        super(cvse);
-        pendingqueue = new miscTools.SortableList(_CVSE);
-        if(ServerConfig.taskmerge){
-            MRG= new Merger(_CVSE,Batchqueue,pendingqueue, machineInterfaces);
-        }
+    public GOPTaskScheduler_mergable(){
+        super();
+        pendingqueue = new miscTools.SortableList();
+        MRG= new Merger(Batchqueue,pendingqueue, machineInterfaces);
     }
 
     public boolean emptyQueue() {
@@ -31,10 +29,10 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     //bloated version of addStream, check duplication and similarity first
     public void addStream(Stream ST){
-        AdmissionControl.AssignStreamPriority(ST);
+        CVSE.AC.AssignStreamPriority(ST);
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
-            if (!_CVSE.CACHING.checkExistence(X)) {
+            if (!CVSE.CACHING.checkExistence(X)) {
                 if (ServerConfig.taskmerge) {
                     MRG.mergeifpossible(X, SDco);
                 } else {

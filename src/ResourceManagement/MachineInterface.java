@@ -20,8 +20,6 @@ public abstract class MachineInterface {
     public long actualSpentTime=0;
     public int port;
     public boolean autoschedule=false;
-    //link back to CVSE
-    protected CVSE _CVSE;
 
     //stats
     public long tmp_taskdone=0, total_taskdone =0, total_itemdone =0; //work done can be multiple task per item
@@ -30,12 +28,10 @@ public abstract class MachineInterface {
     public long tmp_undertime =0;
     public double tmp_weighted_overtime =0,tmp_weighted_undertime =0;
 
-    public MachineInterface(CVSE cvse){
-        _CVSE=cvse;
+    public MachineInterface(){
     }
 
-    public MachineInterface(CVSE cvse,String vclass, int iport, int inid, boolean iautoschedule){
-        _CVSE=cvse;
+    public MachineInterface(String vclass, int iport, int inid, boolean iautoschedule){
             this.VM_class=vclass;
             id=inid;
             port=iport;

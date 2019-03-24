@@ -23,6 +23,7 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.http.HTTPException;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
+import mainPackage.CVSE;
 
 //// Trimmed code from:
 //https://www.javaworld.com/article/3222065/java-language/web-services-in-java-se-part-3-creating-restful-web-services.html
@@ -94,7 +95,7 @@ class handler implements Provider<Source> {
             newSettings.resolution = true;
             newSettings.resWidth = "640";
             newSettings.resHeight = "480";
-            newSettings.videoname = VideoRepository.videos.get(video).name;
+            newSettings.videoname = CVSE.VR.videos.get(video).name;
 
             System.out.println("SM: " + SM);
             System.out.println("GTS: " + GTS);

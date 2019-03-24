@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Arrays;
 
 public class VideoRepository {
-    public static ArrayList<Video> videos;
+    public ArrayList<Video> videos;
     private List<RepositoryGOP> pretranscodedSegments = new ArrayList<RepositoryGOP>();
-    CVSE _CVSE;
-    public VideoRepository(CVSE cvse){
+    public VideoRepository(){
         videos = new ArrayList<Video>();
-        _CVSE=cvse;
     }
 
 

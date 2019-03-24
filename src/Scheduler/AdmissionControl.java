@@ -3,21 +3,21 @@ package Scheduler;
 import Streampkg.*;
 
 public class AdmissionControl {
-    private static double utilityBased_Prioritization(double c,int segment_number){
+    private double utilityBased_Prioritization(double c,int segment_number){
         //page 5 of the paper
         return Math.pow(1/Math.E,c*segment_number);
     }
 
 
-    public static void AssignSegmentPriority(StreamGOP segment)
+    public void AssignSegmentPriority(StreamGOP segment)
     {
         segment.setPriority(0);
     }
-    public static void AssignSegmentPriority(StreamGOP segment,int priority)
+    public void AssignSegmentPriority(StreamGOP segment,int priority)
     {
         segment.setPriority(priority);
     }
-    public static void AssignStreamPriority(Stream stream){
+    public void AssignStreamPriority(Stream stream){
         for (StreamGOP x :stream.streamGOPs){
             double newPriority;
            // System.out.println("adc segment"+x.segment);
