@@ -101,7 +101,7 @@ class handler implements Provider<Source> {
             System.out.println("GTS: " + GTS);
             System.out.println();
 
-            SM.InitializeStream(video, newSettings, GTS);
+            SM.InitializeStream(video, newSettings, CVSE.GTS);
 
             //RequestGenerator.OneSpecificRequest(GTS, video, cmd,setting, arrival+20000, arrival);
 

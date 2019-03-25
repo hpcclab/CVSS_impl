@@ -29,128 +29,15 @@
     <maxVM>8</maxVM>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
+	<outputDir>/var/www/html/streams/</outputDir>
     <path>./</path>
 	<run_mode>dry</run_mode>
 <repository>repositoryvideos/videoData</repository>
 <repository>repositoryvideos/realVideo</repository>
-<!--- 
 
-<videoList>repositoryvideos/0_fantasticfour-riseofthesilversurfer-trailer01/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_h264_05/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_h264_03/</videoList>
-<videoList>repositoryvideos/0_thesimpsonsmovie-trailer05/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_h264_04/</videoList>
-<videoList>repositoryvideos/0_beamextract_final_revb/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_480p_30mb/</videoList>
-<videoList>repositoryvideos/0_serenity-hddvdtrailer02/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_stereo02/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_stereo03/</videoList>
-<videoList>repositoryvideos/0_thesimpsonsmovie-trailer02/</videoList>
-<videoList>repositoryvideos/0_thesimpsonsmovie-trailer03/</videoList>
-<videoList>repositoryvideos/0_thebourneultimatum-trailer01/</videoList>
-<videoList>repositoryvideos/0_thesimpsonsmovie-trailer04/</videoList>
-<videoList>repositoryvideos/0_serenity-hddvdtrailer04/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_stereo01/</videoList>
-<videoList>repositoryvideos/0_serenity-hddvdtrailer03/</videoList>
-<videoList>repositoryvideos/0_thebourneultimatum-trailer02/</videoList>
-<videoList>repositoryvideos/0_fantasticfour-riseofthesilversurfer-trailer03/</videoList>
-<videoList>repositoryvideos/0_fantasticfour-riseofthesilversurfer-trailer02/</videoList>
-<videoList>repositoryvideos/0_towersofpfeiffer_mpeg4/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_h264_02/</videoList>
-<videoList>repositoryvideos/0_big_buck_bunny_720p_h264_01/</videoList>
-<videoList>repositoryvideos/0_thesimpsonsmovie-trailer01/</videoList>
-<videoList>repositoryvideos/0_orion_sm/</videoList>
-<videoList>repositoryvideos/0_thesimpsonsmovie-trailer06/</videoList>
-<videoList>repositoryvideos/0_serenity-hddvdtrailer01/</videoList>
-<videoList>repositoryvideos/1_fantasticfour-riseofthesilversurfer-trailer01/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_h264_05/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_h264_03/</videoList>
-<videoList>repositoryvideos/1_thesimpsonsmovie-trailer05/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_h264_04/</videoList>
-<videoList>repositoryvideos/1_beamextract_final_revb/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_480p_30mb/</videoList>
-<videoList>repositoryvideos/1_serenity-hddvdtrailer02/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_stereo02/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_stereo03/</videoList>
-<videoList>repositoryvideos/1_thesimpsonsmovie-trailer02/</videoList>
-<videoList>repositoryvideos/1_thesimpsonsmovie-trailer03/</videoList>
-<videoList>repositoryvideos/1_thebourneultimatum-trailer01/</videoList>
-<videoList>repositoryvideos/1_thesimpsonsmovie-trailer04/</videoList>
-<videoList>repositoryvideos/1_serenity-hddvdtrailer04/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_stereo01/</videoList>
-<videoList>repositoryvideos/1_serenity-hddvdtrailer03/</videoList>
-<videoList>repositoryvideos/1_thebourneultimatum-trailer02/</videoList>
-<videoList>repositoryvideos/1_fantasticfour-riseofthesilversurfer-trailer03/</videoList>
-<videoList>repositoryvideos/1_fantasticfour-riseofthesilversurfer-trailer02/</videoList>
-<videoList>repositoryvideos/1_towersofpfeiffer_mpeg4/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_h264_02/</videoList>
-<videoList>repositoryvideos/1_big_buck_bunny_720p_h264_01/</videoList>
-<videoList>repositoryvideos/1_thesimpsonsmovie-trailer01/</videoList>
-<videoList>repositoryvideos/1_orion_sm/</videoList>
-<videoList>repositoryvideos/1_thesimpsonsmovie-trailer06/</videoList>
-<videoList>repositoryvideos/1_serenity-hddvdtrailer01/</videoList>
-<videoList>repositoryvideos/2_fantasticfour-riseofthesilversurfer-trailer01/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_h264_05/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_h264_03/</videoList>
-<videoList>repositoryvideos/2_thesimpsonsmovie-trailer05/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_h264_04/</videoList>
-<videoList>repositoryvideos/2_beamextract_final_revb/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_480p_30mb/</videoList>
-<videoList>repositoryvideos/2_serenity-hddvdtrailer02/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_stereo02/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_stereo03/</videoList>
-<videoList>repositoryvideos/2_thesimpsonsmovie-trailer02/</videoList>
-<videoList>repositoryvideos/2_thesimpsonsmovie-trailer03/</videoList>
-<videoList>repositoryvideos/2_thebourneultimatum-trailer01/</videoList>
-<videoList>repositoryvideos/2_thesimpsonsmovie-trailer04/</videoList>
-<videoList>repositoryvideos/2_serenity-hddvdtrailer04/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_stereo01/</videoList>
-<videoList>repositoryvideos/2_serenity-hddvdtrailer03/</videoList>
-<videoList>repositoryvideos/2_thebourneultimatum-trailer02/</videoList>
-<videoList>repositoryvideos/2_fantasticfour-riseofthesilversurfer-trailer03/</videoList>
-<videoList>repositoryvideos/2_fantasticfour-riseofthesilversurfer-trailer02/</videoList>
-<videoList>repositoryvideos/2_towersofpfeiffer_mpeg4/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_h264_02/</videoList>
-<videoList>repositoryvideos/2_big_buck_bunny_720p_h264_01/</videoList>
-<videoList>repositoryvideos/2_thesimpsonsmovie-trailer01/</videoList>
-<videoList>repositoryvideos/2_orion_sm/</videoList>
-<videoList>repositoryvideos/2_thesimpsonsmovie-trailer06/</videoList>
-<videoList>repositoryvideos/2_serenity-hddvdtrailer01/</videoList>
-<videoList>repositoryvideos/3_fantasticfour-riseofthesilversurfer-trailer01/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_h264_05/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_h264_03/</videoList>
-<videoList>repositoryvideos/3_thesimpsonsmovie-trailer05/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_h264_04/</videoList>
-<videoList>repositoryvideos/3_beamextract_final_revb/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_480p_30mb/</videoList>
-<videoList>repositoryvideos/3_serenity-hddvdtrailer02/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_stereo02/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_stereo03/</videoList>
-<videoList>repositoryvideos/3_thesimpsonsmovie-trailer02/</videoList>
-<videoList>repositoryvideos/3_thesimpsonsmovie-trailer03/</videoList>
-<videoList>repositoryvideos/3_thebourneultimatum-trailer01/</videoList>
-<videoList>repositoryvideos/3_thesimpsonsmovie-trailer04/</videoList>
-<videoList>repositoryvideos/3_serenity-hddvdtrailer04/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_stereo01/</videoList>
-<videoList>repositoryvideos/3_serenity-hddvdtrailer03/</videoList>
-<videoList>repositoryvideos/3_thebourneultimatum-trailer02/</videoList>
-<videoList>repositoryvideos/3_fantasticfour-riseofthesilversurfer-trailer03/</videoList>
-<videoList>repositoryvideos/3_fantasticfour-riseofthesilversurfer-trailer02/</videoList>
-<videoList>repositoryvideos/3_towersofpfeiffer_mpeg4/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_h264_02/</videoList>
-<videoList>repositoryvideos/3_big_buck_bunny_720p_h264_01/</videoList>
-<videoList>repositoryvideos/3_thesimpsonsmovie-trailer01/</videoList>
-<videoList>repositoryvideos/3_orion_sm/</videoList>
-<videoList>repositoryvideos/3_thesimpsonsmovie-trailer06/</videoList>
-<videoList>repositoryvideos/3_serenity-hddvdtrailer01/</videoList>
-
-    <videoList>repositoryvideos/ff_trailer_part1/</videoList>
-    <videoList>repositoryvideos/ff_trailer_part3/</videoList>
-    <videoList>repositoryvideos/bbb_trailer/</videoList>    
-    
--->
+	
 <useEC2>False</useEC2>
-    <file_mode>file</file_mode> <!-- <file_mode>S3</file_mode> -->
+    <file_mode>container</file_mode> <!-- <file_mode>S3</file_mode> -->
 	
     <VM>thread,g2.2xlarge,localhost,5061,true</VM>
     <VM>thread,g2.2xlarge,localhost,5062,true</VM>
@@ -172,5 +59,7 @@
 	
 <!---->
 </serverConfig>
+
+
 
 

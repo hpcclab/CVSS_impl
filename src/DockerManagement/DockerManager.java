@@ -15,11 +15,25 @@ import java.util.Map;
  */
 public class DockerManager {
 
-    public static void CreateDockerClient() throws DockerCertificateException, DockerException, InterruptedException {
+    public static String imageName = "testimage";
 
-        String imageName = "testimage";
+    private static DockerClient docker = null;
 
-       final DockerClient docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+    public static List<Container> containers = null;
+
+
+    private static DockerClient CreateDockerClient(){
+        return new DefaultDockerClient("unix:///var/run/docker.sock");
+        //return new DefaultDockerClient("tcp://localhost:2375");
+        //return DefaultDockerClient.builder().uri(URI.create("https://localhost:80")).build();
+    }
+
+
+    public static void CreateContainers(int instanceNum)  {
+
+        if(docker == null)
+            docker = CreateDockerClient();
+
 
 /*
         final DockerClient docker = DefaultDockerClient.builder()
@@ -27,86 +41,98 @@ public class DockerManager {
                 .dockerCertificates(new DockerCertificates(Paths.get("/home/pi/.docker/config.json")))
                 .build();
 */
-      //  final List<Container> containers = docker.listContainers();
+        //  final List<Container> containers = docker.listContainers();
+        try {
+            containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 
-        final List<Container> containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
+            final List<Image> images = docker.listImages();
 
-        final List<Image> images = docker.listImages();
+            // final ContainerCreation creation = docker.createContainer(config, name);
 
-        final ContainerConfig config = ContainerConfig.builder()
-                .image(imageName)
-                .build();
+            //final String id = creation.id();
 
-        final String name = "random_container_name2";
+            final String[] ports = {"5601"};
 
-       // final ContainerCreation creation = docker.createContainer(config, name);
+            final Map<String, List<PortBinding>> portBindings = new HashMap<String, List<PortBinding>>();
+            for ( String port : ports ) {
+                List<PortBinding> hostPorts = new ArrayList<PortBinding>();
+                hostPorts.add( PortBinding.of( "0.0.0.0", null ) );
+                portBindings.put( port + "/tcp", hostPorts );
+            }
 
-        //final String id = creation.id();
+            final HostConfig hostConfig = HostConfig.builder()
+                    .binds("/mnt/container:/home/shared")
+                    .portBindings(portBindings)
+                    .build();
+            //         HostConfig.builder().binds("/var/www/html/2019WebDemo:~/").build();
 
-        final String[] command = {"sh", "-c", "test.sh"};
-        final ContainerConfig containerConfig = ContainerConfig.builder()
-                .image(imageName)
-                .cmd(command)
-                // Probably other configuration
-                .build();
-        final ContainerCreation containerCreation = docker.createContainer(containerConfig);
-        docker.startContainer(containerCreation.id());
+            final String[] command = {"/bin/bash"};
+            final ContainerConfig containerConfig = ContainerConfig.builder()
+                    .image(imageName)
+                    .attachStderr(Boolean.TRUE)
+                    .attachStdin(Boolean.TRUE)
+                    .tty(Boolean.TRUE)
+                    .hostConfig(hostConfig)
+                    .exposedPorts( "5601/tcp" )
+                    .cmd(command)
+                    .build();
 
-        /*
+            for (int i=0;i<instanceNum;i++){
+                final ContainerCreation containerCreation = docker.createContainer(containerConfig);
+                docker.startContainer(containerCreation.id());
 
-        docker.pull(imageName);
+                //   docker.execStart(containerCreation.id(),new String[]{"bash"});
+                //docker.execCreate()
 
-        /*
 
-        final String[] ports = {"80", "22"};
-        final Map<String, List<PortBinding>> portBindings = new HashMap<>();
-        for (String port : ports) {
-            List<PortBinding> hostPorts = new ArrayList<>();
-            hostPorts.add(PortBinding.of("0.0.0.0", port));
-            portBindings.put(port, hostPorts);
+                //    docker.execCreate(containerCreation.id(), new String[]{"bash"});
+
+                //   try (final LogStream stream = docker.execStart(containerCreation.id())) {
+                //       stream.readFully();
+                //   }
+
+            }
+        }catch(Exception e){
+            System.out.print("Docker fail");
         }
 
-// Bind container port 443 to an automatically allocated available host port.
-        List<PortBinding> randomPort = new ArrayList<>();
-        randomPort.add(PortBinding.randomPort("0.0.0.0"));
-        portBindings.put("443", randomPort);
+    }
 
-        final HostConfig hostConfig = HostConfig.builder().portBindings(portBindings).build();
+    //stop all containers?
+    public static void KillAllContainers() throws DockerException, InterruptedException {
+        if(docker == null)
+            docker = CreateDockerClient();
 
-// Create container with exposed ports
-        final ContainerConfig containerConfig = ContainerConfig.builder()
-                .hostConfig(hostConfig)
-                .image(imageName).exposedPorts(ports)
-                .cmd("sh", "-c", "while :; do sleep 1; done")
-                .build();
+        containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 
-        final ContainerCreation creation = docker.createContainer(containerConfig);
-        final String id = creation.id();
+        for (int i=0;i<containers.size();i++){
+            docker.killContainer(containers.get(i).id());
+        }
+    }
 
-// Inspect container
-        final ContainerInfo info = docker.inspectContainer(id);
+    //permanently remove all containers
+    public static void RemoveAllContainers() throws DockerException, InterruptedException {
+        if(docker == null)
+            docker = CreateDockerClient();
 
-// Start container
-        docker.startContainer(id);
+        containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 
-// Exec command inside running container with attached STDOUT and STDERR
-        final String[] command = {"sh", "-c", "ls"};
-        final ExecCreation execCreation = docker.execCreate(
-                id, command, DockerClient.ExecCreateParam.attachStdout(),
-                DockerClient.ExecCreateParam.attachStderr());
-        final LogStream output = docker.execStart(execCreation.id());
-        final String execOutput = output.readFully();
+        for (int i=0;i<containers.size();i++){
+            docker.stopContainer(containers.get(i).id(), 0);
+            docker.removeContainer(containers.get(i).id());
+        }
+    }
 
-// Kill container
-        docker.killContainer(id);
-
-// Remove container
-        docker.removeContainer(id);
-
-// Close the docker client
-        docker.close();
-
-//*/
+    public static void ExtractFiles(){
 
     }
+
+    public static void GetCurrentContainers() throws DockerException, InterruptedException {
+        if(docker == null)
+            docker = CreateDockerClient();
+
+        containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
+    }
+
 }
+

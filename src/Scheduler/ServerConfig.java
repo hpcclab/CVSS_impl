@@ -33,6 +33,8 @@ public class ServerConfig {
     public static boolean mergeOverwriteQueuePolicy=true;
     public static String overwriteQueuePolicyHeuristic;
 
+    public static String outputDir;
+
     public static String run_mode="real";
     public static int localqueuelengthperVM=4;
 
@@ -246,7 +248,7 @@ public class ServerConfig {
     }
     @XmlElement(name = "overwriteQueuePolicyHeuristic")
     public void setoverwriteQueuePolicyHeuristic(String value) {
-            ServerConfig.overwriteQueuePolicyHeuristic = value;
+        ServerConfig.overwriteQueuePolicyHeuristic = value;
     }
     @XmlElement(name = "maxVM")
     public void setMaxVM(int maxVM) {
@@ -289,4 +291,7 @@ public class ServerConfig {
     public void setrunMode(String mode) {
         ServerConfig.run_mode = mode;
     }
+    @XmlElement(name = "outputDir")
+    public void setOutputDir(String dir) {ServerConfig.outputDir = dir; }
 }
+

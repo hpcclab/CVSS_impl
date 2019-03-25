@@ -217,12 +217,12 @@ public class RealModeTest {
     }
 
     private static void CreateContainerTest() throws InterruptedException, DockerException, DockerCertificateException {
-        DockerManager.CreateDockerClient();
+        DockerManager.CreateContainers(1);
     }
 
 
     public static void main(String[] args) throws IOException, InterruptedException, DockerException, DockerCertificateException {
-        //WebRequestTest();
-        CreateContainerTest();
+        WebRequestTest();
+        //CreateContainerTest();
     }
 }
