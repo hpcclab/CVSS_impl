@@ -13,6 +13,7 @@ import Simulator.RequestGenerator;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
 import ResourceManagement.ResourceProvisioner;
+import TimeEstimatorpkg.TimeEstLearnMode;
 import TimeEstimatorpkg.TimeEstimator;
 import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
@@ -32,7 +33,7 @@ public class RealModeTest {
             CVSE.AC = new AdmissionControl();
             CVSE.GTS = new GOPTaskScheduler_mergable();
             CVSE.GTS.readlistedOperations();
-            CVSE.TE=new TimeEstimator();
+            CVSE.TE=new TimeEstLearnMode();
             CVSE.VMP= new ResourceProvisioner( ServerConfig.minVM); //says we need at least two machines
             CVSE.CACHING = new Caching(); //change to other type if need something that work
             CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP

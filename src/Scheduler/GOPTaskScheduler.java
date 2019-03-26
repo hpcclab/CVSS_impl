@@ -5,6 +5,7 @@ import ResourceManagement.MachineInterface_SimLocal;
 import Streampkg.Stream;
 import Streampkg.StreamGOP;
 import mainPackage.CVSE;
+import miscTools.TaskQueue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +15,7 @@ import java.util.Scanner;
 
 // base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.
 public abstract class GOPTaskScheduler {
-    protected miscTools.SortableList Batchqueue;
+    protected TaskQueue Batchqueue;
     public  ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
     public int scheduler_working = 0;
     protected  int maxpending = 0;
@@ -24,7 +25,7 @@ public abstract class GOPTaskScheduler {
 
     public GOPTaskScheduler(){
 
-        Batchqueue= new miscTools.SortableList();
+        Batchqueue= new TaskQueue();
     }
 
     public boolean add_VM(String VM_type, String VM_class, String addr, int port, int id, boolean autoSchedule)

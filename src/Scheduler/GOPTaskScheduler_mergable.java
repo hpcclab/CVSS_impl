@@ -2,6 +2,7 @@ package Scheduler;
 
 import Streampkg.*;
 import mainPackage.CVSE;
+import miscTools.TaskQueue;
 
 
 // mergable GOPTaskScheduler, this is just mostly pairing merger class to GOPTaskScheduler.
@@ -9,14 +10,14 @@ import mainPackage.CVSE;
 public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     public Merger MRG;
-    protected miscTools.SortableList pendingqueue; //keep track of pending task (submitted, but didn't completed)
+    protected TaskQueue pendingqueue; //keep track of pending task (submitted, but didn't completed)
 
 
     public double SDco=2;
     private long oversubscriptionlevel;
     public GOPTaskScheduler_mergable(){
         super();
-        pendingqueue = new miscTools.SortableList();
+        pendingqueue = new TaskQueue();
         MRG= new Merger(Batchqueue,pendingqueue, machineInterfaces);
     }
 

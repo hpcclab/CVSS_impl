@@ -4,13 +4,12 @@ import Cache.Caching;
 import IOWindows.OutputWindow;
 import IOWindows.WebserviceRequestGate;
 import Scheduler.AdmissionControl;
-import Scheduler.GOPTaskScheduler;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
 import Simulator.RequestGenerator;
 import Repository.*;
 import ResourceManagement.ResourceProvisioner;
-import TimeEstimatorpkg.TimeEstimator;
+import TimeEstimatorpkg.TimeEstProfileMode;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -30,7 +29,7 @@ public class Test {
         CVSE.AC = new AdmissionControl();
         CVSE.GTS = new GOPTaskScheduler_mergable();
         CVSE.GTS.readlistedOperations();
-        CVSE.TE=new TimeEstimator();
+        CVSE.TE=new TimeEstProfileMode();
         CVSE.VMP= new ResourceProvisioner(ServerConfig.minVM); //says we need at least two machines
 
         CVSE.CACHING = new Caching(); //change to other type if need something that work
@@ -79,7 +78,6 @@ public class Test {
                 ////create open socket, receive new profile request then do similar to profiledRequests
                 CVSE.WG=new WebserviceRequestGate();
                 CVSE.WG.addr="http://localhost:9902/transcoderequest";
-                CVSE.WG.GTS=CVSE.GTS;
 
                 // example of actual request: http://localhost:9902/transcoderequest/?videoid=1,cmd=resolution,setting=180
                 // (assume 10 is id of bigbugbunny

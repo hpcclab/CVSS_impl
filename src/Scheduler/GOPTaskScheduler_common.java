@@ -46,7 +46,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             //set initial value to machine 1
             if((pending_queuelength[0] < ServerConfig.localqueuelengthperVM) || !realSchedule){ //if not real assignment, we can violate queue length
                 if (useTimeEstimator) {
-                    retStat chk = CVSE.TE.getHistoricProcessTime(ServerConfig.VM_class.get(0), ServerConfig.VM_ports.get(0), x);
+                    retStat chk = CVSE.TE.getHistoricProcessTime(answer, x);
                     //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
                     estimatedT= (long) (chk.mean + chk.SD * SDcoefficient);
                     minFT = pending_executiontime[0] + estimatedT;
@@ -70,7 +70,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
 
                             //calculate new choice
                             if (useTimeEstimator) {
-                                retStat chk = CVSE.TE.getHistoricProcessTime(ServerConfig.VM_class.get(i), ServerConfig.VM_ports.get(i), x);
+                                retStat chk = CVSE.TE.getHistoricProcessTime(aMachine, x);
                                 //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
                                 estimatedT = pending_executiontime[i] + (long)(chk.mean + chk.SD * SDcoefficient);
                                 if (estimatedT < minFT) {
@@ -159,7 +159,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 }
 
                 if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
-                    retStat thestat=CVSE.TE.getHistoricProcessTime(chosenVM.VM_class,chosenVM.port,X);
+                    retStat thestat=CVSE.TE.getHistoricProcessTime(chosenVM,X);
                     //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
                     X.estimatedExecutionTime=thestat.mean;
                     X.estimatedExecutionSD=thestat.SD;
