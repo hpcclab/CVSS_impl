@@ -64,5 +64,5 @@ Class-Path: jersey-container-servlet.jar javax.ws.rs-api-2.0.jar jerse
  tions-2.6.0.jar jackson-core-2.6.7.jar jackson-dataformat-cbor-2.6.7.
  jar joda-time-2.8.1.jar aws-java-sdk-models-1.11.236.jar aws-java-sdk
  -swf-libraries-1.11.22.jar servlet-api.jar
-Main-Class: TranscodingVM.cloudMain
+Main-Class: mainPackage.cloudMain
 

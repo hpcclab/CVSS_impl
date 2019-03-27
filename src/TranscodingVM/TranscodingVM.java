@@ -155,7 +155,7 @@ public class TranscodingVM extends Thread{
     //have a main?
     /*
     public static void main(String[] args){
-        //TranscodingVMcloud.("ec2","test",2);
+        //TranscodingVMEC2.("ec2","test",2);
 
     }
     */

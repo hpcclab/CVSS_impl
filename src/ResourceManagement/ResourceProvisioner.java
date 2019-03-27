@@ -289,6 +289,11 @@ public class ResourceProvisioner {
                     int port=5601;
                     String IP=DockerManager.CreateContainers(1).split(",")[0]; //get IP from docker
                     VMCollection.add(new machineinfo("local container",IP));
+                    try {
+                        sleep(400);
+                    }catch(Exception e){
+                        System.out.println("sleep bug in AddInstance (localVMThread)");
+                    }
                     MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),IP, port,VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
                     CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
                    // CVSE.TE.populate(ServerConfig.VM_class.get(VMcount)); no profile for container machine, yet
@@ -352,7 +357,7 @@ public class ResourceProvisioner {
                     CVSE.GTS_mergable.add_VM(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
-                    //TranscodingVMcloud TC=new TranscodingVMcloud("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
+                    //TranscodingVMEC2 TC=new TranscodingVMEC2("EC2",ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount));
                     //make sure instance is up and running line above
                 */
                 }else{

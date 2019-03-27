@@ -9,13 +9,13 @@ import Scheduler.ServerConfig;
 //import com.amazonaws.services.s3.AmazonS3Client;
 //import com.amazonaws.services.s3.S3ClientOptions;
 
-public class TranscodingVMcloud extends TranscodingVM{
+public class TranscodingVMEC2 extends TranscodingVM{
     //cred removed
 
 
     /* //EC2
 //just in case anything different to TranscodingVM (thread)
-    public TranscodingVMcloud(String type,String addr,int port){
+    public TranscodingVMEC2(String type,String addr,int port){
         super(type,addr,port);
         //set flag to use S3
 
