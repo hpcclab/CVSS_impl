@@ -21,7 +21,6 @@ public class DockerManager {
 
     public static List<Container> containers = null;
 
-
     private static DockerClient CreateDockerClient(){
         return new DefaultDockerClient("unix:///var/run/docker.sock");
         //return new DefaultDockerClient("tcp://localhost:2375");
@@ -29,12 +28,12 @@ public class DockerManager {
     }
 
 
-    public static void CreateContainers(int instanceNum)  {
-
+    public static String CreateContainers(int instanceNum)  {
+        String createdIP="";
         if(docker == null)
             docker = CreateDockerClient();
 
-
+        String IP;
 /*
         final DockerClient docker = DefaultDockerClient.builder()
                 .uri(URI.create("https://boot2docker:2376"))
@@ -56,7 +55,7 @@ public class DockerManager {
             final Map<String, List<PortBinding>> portBindings = new HashMap<String, List<PortBinding>>();
             for ( String port : ports ) {
                 List<PortBinding> hostPorts = new ArrayList<PortBinding>();
-                hostPorts.add( PortBinding.of( "0.0.0.0", null ) );
+                hostPorts.add( PortBinding.of( "", 9000 ) );
                 portBindings.put( port + "/tcp", hostPorts );
             }
 
@@ -80,22 +79,19 @@ public class DockerManager {
             for (int i=0;i<instanceNum;i++){
                 final ContainerCreation containerCreation = docker.createContainer(containerConfig);
                 docker.startContainer(containerCreation.id());
+                createdIP+=docker.inspectContainer(containers.get(i).id()).networkSettings().ipAddress()+",";
+            }
 
-                //   docker.execStart(containerCreation.id(),new String[]{"bash"});
-                //docker.execCreate()
+            containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 
+            for(int i=0;i<containers.size();i++){
 
-                //    docker.execCreate(containerCreation.id(), new String[]{"bash"});
-
-                //   try (final LogStream stream = docker.execStart(containerCreation.id())) {
-                //       stream.readFully();
-                //   }
-
+                System.out.println(" id: " + containers.get(i).id()+ " ports: " +  containers.get(i).portsAsString() + " IP: "+docker.inspectContainer(containers.get(i).id()).networkSettings().ipAddress());
             }
         }catch(Exception e){
             System.out.print("Docker fail");
         }
-
+        return createdIP;
     }
 
     //stop all containers?

@@ -15,20 +15,11 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
         //}
     }
     //overwrite with common VM types
-    public boolean  add_VM(String VM_type,String VM_class,String addr,int port,int id,boolean autoSchedule){
-        MachineInterface t;
-        if(VM_type.equalsIgnoreCase("sim")) {
-            t = new MachineInterface_SimLocal(VM_class,port,id,autoSchedule);
-        }else if(VM_type.equalsIgnoreCase("simNWcache")){
-            t = new MachineInterface_SimNWcache(VM_class,port,id,autoSchedule);
-        }else{ //not a simulation, create socket
-            t = new MachineInterface_SocketIO(VM_class, addr, port, id,autoSchedule);
-        }
+    public boolean add_VM(MachineInterface t,boolean autoSchedule){
         if(autoSchedule) {
             maxpending += ServerConfig.localqueuelengthperVM; //4?
         }
         machineInterfaces.add(t);
-
         return true; //for success
     }
 

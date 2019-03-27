@@ -1,5 +1,6 @@
 package ResourceManagement;
 
+import DockerManagement.DockerManager;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
 import Streampkg.StreamGOP;
@@ -241,7 +242,18 @@ public class ResourceProvisioner {
             System.out.println("VMcount="+VMcount);
             if(VMcount <ServerConfig.maxVM) {
 
+/*
 
+        }
+        MachineInterface t;
+        if(VM_type.equalsIgnoreCase("sim")) {
+            t = new MachineInterface_SimLocal(VM_class,port,id,autoSchedule);
+        }else if(VM_type.equalsIgnoreCase("simNWcache")){
+            t = new MachineInterface_SimNWcache(VM_class,port,id,autoSchedule);
+        }else{ //not a simulation, create socket
+            t = new MachineInterface_SocketIO(VM_class, addr, port, id,autoSchedule);
+        }
+ */
                 if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("thread")) { //local transcoding thread mode
                     System.out.println("local virtual server");
                     //System.out.println(ServerConfig.VM_class.get(VMcount));
@@ -257,17 +269,29 @@ public class ResourceProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new machineinfo("thread","",TC));
-                    CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
+                    CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("local simulated thread");
                     VMCollection.add(new machineinfo("sim",""));
-                    CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    MachineInterface t=new MachineInterface_SimLocal(ServerConfig.VM_class.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
+                    CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
                     CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new machineinfo("simNWcache",""));
-                    CVSE.GTS.add_VM(ServerConfig.VM_type.get(VMcount),ServerConfig.VM_class.get(VMcount),ServerConfig.VM_address.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount));
+                    MachineInterface t=new MachineInterface_SimNWcache(ServerConfig.VM_class.get(VMcount), ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
+                    CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
                     CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
+                }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local container
+                    System.out.println("container thread");
+                    int port=5601;
+                    String IP=DockerManager.CreateContainers(1).split(",")[0]; //get IP from docker
+                    VMCollection.add(new machineinfo("local container",IP));
+                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),IP, port,VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
+                    CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
+                   // CVSE.TE.populate(ServerConfig.VM_class.get(VMcount)); no profile for container machine, yet
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
                     /* //EC2

@@ -28,19 +28,11 @@ public abstract class GOPTaskScheduler {
         Batchqueue= new TaskQueue();
     }
 
-    public boolean add_VM(String VM_type, String VM_class, String addr, int port, int id, boolean autoSchedule)
-      {
+    public boolean add_VM(MachineInterface t,boolean autoSchedule){
         //overwrite this
-
-        System.out.println("called empty non overwritten add_VM function, so i add only SimLocal thread");
-        try {
-            Thread.sleep(1000);
-        }catch(Exception e){
-            System.out.println("sleep bug");
-        }
-        MachineInterface t = t = new MachineInterface_SimLocal(VM_class, port, id, autoSchedule); //only support simlocal in this minimal version
+        maxpending += ServerConfig.localqueuelengthperVM; //4?
         machineInterfaces.add(t);
-        return false;
+        return true;
     }
 
     public boolean remove_VM(int which) {
