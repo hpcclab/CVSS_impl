@@ -1,9 +1,9 @@
 package ResourceManagement;
 
-        import Streampkg.StreamGOP;
-        import mainPackage.CVSE;
+import Streampkg.StreamGOP;
+import mainPackage.CVSE;
 
-        import java.util.Random;
+import java.util.Random;
 
 //does not actually have a socket, this code is simulating caching through Network, it has bandwidth and latency
 //currently each file have fixed size, rather than having a transfer size per GOP

@@ -1,7 +1,6 @@
 package Cache;
 
 import Streampkg.StreamGOP;
-import mainPackage.CVSE;
 
 public class Caching {
     public Caching(){

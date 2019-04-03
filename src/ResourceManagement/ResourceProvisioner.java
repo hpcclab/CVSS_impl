@@ -6,6 +6,7 @@ import Scheduler.ServerConfig;
 import Streampkg.StreamGOP;
 import TranscodingVM.TranscodingVM;
 import mainPackage.CVSE;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -286,15 +287,14 @@ public class ResourceProvisioner {
                     CVSE.TE.populate(ServerConfig.VM_class.get(VMcount));
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local container
                     System.out.println("container thread");
-                    int port=5601;
-                    String IP=DockerManager.CreateContainers(1).split(",")[0]; //get IP from docker
+                    String IP=DockerManager.CreateContainers(ServerConfig.VM_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
                     VMCollection.add(new machineinfo("local container",IP));
                     try {
                         sleep(400);
                     }catch(Exception e){
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
-                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),IP, port,VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
+                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
                     CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
                    // CVSE.TE.populate(ServerConfig.VM_class.get(VMcount)); no profile for container machine, yet
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2

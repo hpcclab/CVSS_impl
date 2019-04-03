@@ -1,22 +1,13 @@
 package mainPackage;
 
-import Cache.Caching;
-import IOWindows.OutputWindow;
 import Repository.VideoRepository;
-import ResourceManagement.ResourceProvisioner;
-import Scheduler.AdmissionControl;
-import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.ServerConfig;
-import Simulator.RequestGenerator;
 import TimeEstimatorpkg.TimeEstNone;
 import TranscodingVM.TranscodingVM;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+//import javax.xml.bind.JAXBContext;
+//import javax.xml.bind.Unmarshaller;
 import java.io.File;
-
-import static java.lang.Thread.sleep;
 
 
 //This class is meant to be main Jar of the cloud machine
@@ -25,8 +16,8 @@ public class cloudMain {
     private static void setUpCVSE_forNode(){
         //Set things up
         CVSE.VR = new VideoRepository();
-        CVSE.AC = new AdmissionControl();
-        //CVSE.GTS = new GOPTaskScheduler_mergable();
+        //CVSE.AC = new AdmissionControl();
+        //CVSE.GTS = new GOPTaskScheduler_common();
         //CVSE.GTS.readlistedOperations();
         CVSE.TE=new TimeEstNone(); //using no TimeEstimator
         //CVSE.VMP= new ResourceProvisioner( ServerConfig.minVM); //says we need at least two machines
@@ -35,12 +26,15 @@ public class cloudMain {
 
         //VMP.setGTS(GTS);
         //load Videos into Repository
-        CVSE.VR.addAllRealVideos();
+        //CVSE.VR.addAllRealVideos();
         //CVSE.RG= new RequestGenerator();
     }
+    private static void manualSetting(){
 
-    public static void main(String[] args) {
+    }
+    public static void main(String[] args) throws InterruptedException {
         File configfile = new File("config/config_node.xml");
+/*
         JAXBContext ctx = null;
         try {
             ctx = JAXBContext.newInstance(ServerConfig.class);
@@ -48,14 +42,17 @@ public class cloudMain {
             Unmarshaller um = ctx.createUnmarshaller();
             ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
 
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+*/
+        manualSetting(); // replace config reading
         setUpCVSE_forNode();
 
         //create
-        TranscodingVM TC = new TranscodingVM("localContainer","","0.0.0.0", 0);
+        TranscodingVM TC = new TranscodingVM("localContainer","g2.2xlarge","0.0.0.0", 5061);
         //CVSE.TE.populate("localContainer");
         TC.start();
+        TC.join();
     }
 }

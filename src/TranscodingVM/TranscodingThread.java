@@ -2,14 +2,18 @@ package TranscodingVM;
 
 import Scheduler.ServerConfig;
 import Streampkg.StreamGOP;
-//import com.amazonaws.services.s3.AmazonS3;
 import miscTools.Tuple;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+//import com.amazonaws.services.s3.AmazonS3;
 
 public class TranscodingThread extends Thread{
     public String type;
@@ -96,6 +100,8 @@ public class TranscodingThread extends Thread{
 
                     //don't process, always do dry mode
                     String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+
+                    //String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), "256", "144", aStreamGOP.videoSetting.outputDir(), filename};
 
                     ProcessBuilder pb = new ProcessBuilder(command);
                     pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen

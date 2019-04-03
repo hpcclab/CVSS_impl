@@ -1,7 +1,6 @@
 package Scheduler;
 
 import ResourceManagement.MachineInterface;
-import ResourceManagement.MachineInterface_SimLocal;
 import Streampkg.Stream;
 import Streampkg.StreamGOP;
 import mainPackage.CVSE;
@@ -9,8 +8,8 @@ import miscTools.TaskQueue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 // base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.

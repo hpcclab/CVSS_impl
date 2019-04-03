@@ -1,8 +1,9 @@
 package Streampkg;
-import Repository.RepositoryGOP;
-import Scheduler.ServerConfig;
 
-import java.util.*;
+import Repository.RepositoryGOP;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 
 public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
@@ -108,6 +109,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this.estimatedExecutionSD=X.estimatedExecutionSD;
         this.estimatedExecutionTime=X.estimatedExecutionTime;
         this.requestcount=X.requestcount;
+        this.videoSetting=X.videoSetting;
         //
         for(String command : X.cmdSet.keySet()){
             LinkedList<String> param= new LinkedList<>(X.cmdSet.get(command) );

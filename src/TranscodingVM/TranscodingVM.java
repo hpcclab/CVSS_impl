@@ -1,15 +1,12 @@
 package TranscodingVM;
 
 import Streampkg.StreamGOP;
-import miscTools.Tuple;
 
-import java.io.*;
+import java.io.File;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 //import com.amazonaws.services.ec2.model.Instance;
 
 /**

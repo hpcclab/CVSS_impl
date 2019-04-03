@@ -1,6 +1,7 @@
 package Scheduler;
 
-import Streampkg.*;
+import Streampkg.Stream;
+import Streampkg.StreamGOP;
 
 public class AdmissionControl {
     private double utilityBased_Prioritization(double c,int segment_number){

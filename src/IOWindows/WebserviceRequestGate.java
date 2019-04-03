@@ -1,29 +1,19 @@
 package IOWindows;
-import Repository.VideoRepository;
+
 import Scheduler.GOPTaskScheduler;
-
-import java.io.IOException;
-import java.io.StringReader;
-
-import javax.annotation.Resource;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-
-import javax.xml.ws.BindingType;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.Provider;
-import javax.xml.ws.ServiceMode;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.WebServiceProvider;
-
-import javax.xml.ws.handler.MessageContext;
-
-import javax.xml.ws.http.HTTPBinding;
-import javax.xml.ws.http.HTTPException;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
 import mainPackage.CVSE;
+
+import javax.annotation.Resource;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.ws.*;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.http.HTTPBinding;
+import javax.xml.ws.http.HTTPException;
+import java.io.IOException;
+import java.io.StringReader;
 
 //// Trimmed code from:
 //https://www.javaworld.com/article/3222065/java-language/web-services-in-java-se-part-3-creating-restful-web-services.html

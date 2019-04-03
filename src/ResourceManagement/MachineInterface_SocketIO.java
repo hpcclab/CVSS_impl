@@ -4,7 +4,8 @@ import Streampkg.StreamGOP;
 import TranscodingVM.runtime_report;
 import mainPackage.CVSE;
 
-import java.io.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import static java.lang.Thread.sleep;

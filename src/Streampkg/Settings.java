@@ -1,7 +1,5 @@
 package Streampkg;
 
-import Scheduler.ServerConfig;
-
 import javax.servlet.http.HttpServletRequest;
 
 public class Settings implements java.io.Serializable{

@@ -1,10 +1,10 @@
 package DockerManagement;
 
-import com.spotify.docker.client.*;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.DockerException;
 import com.spotify.docker.client.messages.*;
 
-import java.net.URI;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +21,8 @@ public class DockerManager {
 
     public static List<Container> containers = null;
 
+    private static int port = 5601;
+
     private static DockerClient CreateDockerClient(){
         return new DefaultDockerClient("unix:///var/run/docker.sock");
         //return new DefaultDockerClient("tcp://localhost:2375");
@@ -30,40 +32,37 @@ public class DockerManager {
 
     public static String CreateContainers(int instanceNum)  {
         String createdIP="";
+        for(int i=0;i<instanceNum;i++) {
+            createdIP=CreateContainers(9000);
+        }
+        return createdIP;
+    }
+
+    public static String CreateContainers(String givenPort)  {
+        String createdIP="";
         if(docker == null)
             docker = CreateDockerClient();
 
         String IP;
-/*
-        final DockerClient docker = DefaultDockerClient.builder()
-                .uri(URI.create("https://boot2docker:2376"))
-                .dockerCertificates(new DockerCertificates(Paths.get("/home/pi/.docker/config.json")))
-                .build();
-*/
-        //  final List<Container> containers = docker.listContainers();
+
         try {
             containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 
             final List<Image> images = docker.listImages();
 
-            // final ContainerCreation creation = docker.createContainer(config, name);
-
-            //final String id = creation.id();
-
-            final String[] ports = {"5601"};
-
+            String[] ports = {givenPort};
+            port++;
             final Map<String, List<PortBinding>> portBindings = new HashMap<String, List<PortBinding>>();
             for ( String port : ports ) {
                 List<PortBinding> hostPorts = new ArrayList<PortBinding>();
-                hostPorts.add( PortBinding.of( "", 9000 ) );
-                portBindings.put( port + "/tcp", hostPorts );
+                hostPorts.add( PortBinding.of( "", givenPort ) ); //host to container port
+                portBindings.put( givenPort + "/tcp", hostPorts );
             }
 
             final HostConfig hostConfig = HostConfig.builder()
                     .binds("/mnt/container:/home/shared")
                     .portBindings(portBindings)
                     .build();
-            //         HostConfig.builder().binds("/var/www/html/2019WebDemo:~/").build();
 
             final String[] command = {"/bin/bash"};
             final ContainerConfig containerConfig = ContainerConfig.builder()
@@ -72,22 +71,14 @@ public class DockerManager {
                     .attachStdin(Boolean.TRUE)
                     .tty(Boolean.TRUE)
                     .hostConfig(hostConfig)
-                    .exposedPorts( "5601/tcp" )
+                    .exposedPorts( givenPort+ "/tcp" ) //container to host
                     .cmd(command)
                     .build();
 
-            for (int i=0;i<instanceNum;i++){
                 final ContainerCreation containerCreation = docker.createContainer(containerConfig);
                 docker.startContainer(containerCreation.id());
-                createdIP+=docker.inspectContainer(containers.get(i).id()).networkSettings().ipAddress()+",";
-            }
+                createdIP+=docker.inspectContainer(containerCreation.id()).networkSettings().ipAddress()+",";
 
-            containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
-
-            for(int i=0;i<containers.size();i++){
-
-                System.out.println(" id: " + containers.get(i).id()+ " ports: " +  containers.get(i).portsAsString() + " IP: "+docker.inspectContainer(containers.get(i).id()).networkSettings().ipAddress());
-            }
         }catch(Exception e){
             System.out.print("Docker fail");
         }

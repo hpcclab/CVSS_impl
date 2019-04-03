@@ -1,10 +1,12 @@
 package Simulator;
 
-import Repository.VideoRepository;
-import Streampkg.*;
+import Streampkg.Stream;
 import mainPackage.CVSE;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;

@@ -1,6 +1,5 @@
 package TranscodingVM;
 
-import Scheduler.ServerConfig;
 //import com.amazonaws.auth.AWSCredentials;
 //import com.amazonaws.auth.BasicAWSCredentials;
 //import com.amazonaws.regions.Region;

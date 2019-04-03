@@ -1,9 +1,8 @@
 package Scheduler;
 
+import ResourceManagement.MachineInterface;
 import Streampkg.StreamGOP;
-import TimeEstimatorpkg.TimeEstimator;
 import TimeEstimatorpkg.retStat;
-import ResourceManagement.*;
 import mainPackage.CVSE;
 
 //extends GOPTaskScheduler, with more VM type support, more scheduling options

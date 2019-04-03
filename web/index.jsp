@@ -1,4 +1,3 @@
-<%@page import="mainPackage.Test" %>
 <%--
   Created by IntelliJ IDEA.
   User: pi

@@ -1,6 +1,7 @@
 package Scheduler;
 
-import Streampkg.*;
+import Streampkg.Stream;
+import Streampkg.StreamGOP;
 import mainPackage.CVSE;
 import miscTools.TaskQueue;
 
