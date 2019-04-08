@@ -27,12 +27,15 @@ public class MachineInterface_SocketIO extends MachineInterface {
                 s = new Socket(addr, port);
                 while(!s.isConnected()){
                     System.out.println("socket is not connected");
-                    sleep(1000);
+                    sleep(2000);
                 }
+                sleep(1000);
+                System.out.println("now create pipe");
                 oos = new ObjectOutputStream(s.getOutputStream());
                 oos.flush();
                 oos.reset();
-                sleep(2000);
+                sleep(1000);
+                System.out.println("now create input pipe");
                 ois = new ObjectInputStream(s.getInputStream());
                 status = 1;
                 System.out.println("succesfully set status=1");

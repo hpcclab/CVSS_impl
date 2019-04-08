@@ -7,7 +7,7 @@ import TranscodingVM.TranscodingVM;
 
 //import javax.xml.bind.JAXBContext;
 //import javax.xml.bind.Unmarshaller;
-import java.io.File;
+import java.io.*;
 
 
 //This class is meant to be main Jar of the cloud machine
@@ -48,9 +48,26 @@ public class cloudMain {
 */
         manualSetting(); // replace config reading
         setUpCVSE_forNode();
+        String port="15061";
+        try {
+            BufferedReader idread= new BufferedReader(new FileReader("/home/shared/portid"));
+            String tmp;
+            while ((tmp = idread.readLine()) != null) {
+                port=tmp;
+            }
+            idread.close();
 
+            //DEBUG, ack what i've read
+            /*
+                BufferedWriter writer = new BufferedWriter(new FileWriter("/home/shared/portid_ack"));
+                writer.write(port);
+                writer.close();
+            */
+        }catch(Exception e){
+            System.out.println("read bug");
+        }
         //create
-        TranscodingVM TC = new TranscodingVM("localContainer","g2.2xlarge","0.0.0.0", 5061);
+        TranscodingVM TC = new TranscodingVM("localContainer","g2.2xlarge","0.0.0.0", Integer.parseInt(port));
         //CVSE.TE.populate("localContainer");
         TC.start();
         TC.join();

@@ -99,8 +99,10 @@ public class Test {
             //scanner.next();
             sleep(300);
             //wind down process
+            CVSE.VMP.DU.printstat();
             CVSE.GTS.close();
             CVSE.VMP.closeAll();
+
             return "success";
 
         } catch (Exception e) {
@@ -156,7 +158,7 @@ public class Test {
             }
         } else {
             //System.out.println(testbug(0));
-            System.out.println(test("config.xml", "config"));
+            System.out.println(test("configTest.xml", "config"));
             /*
     try {
         RealModeTest.RealLocalThreads();

@@ -46,6 +46,11 @@ public class TranscodingVM extends Thread{
             ss = new ServerSocket(myport);
             System.out.println("waiting at "+myport);
             s = ss.accept();
+        }catch(Exception e){
+            myport++;
+            System.out.println("createRecvSocket Failed: " + e);
+        }
+        try{
             while(!s.isConnected()){
                 System.out.println("socket is not connected");
                 sleep(1000);

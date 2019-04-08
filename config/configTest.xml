@@ -39,7 +39,7 @@
 <repository>repositoryvideos/videoData</repository>
 <!--- 
 <repository>repositoryvideos/realVideo</repository>
--->
+
     <VM>sim,g2.2xlarge,localhost,5060,true</VM>
     <VM>sim,g2.2xlarge,localhost,5061,true</VM>
     <VM>sim,g2.2xlarge,localhost,5062,true</VM>
@@ -49,7 +49,7 @@
     <VM>sim,g2.2xlarge,localhost,5066,true</VM>
     <VM>sim,g2.2xlarge,localhost,5067,true</VM>
     <VM>sim,g2.2xlarge,localhost,5068,true</VM>
-	<!--- 
+	--> 
     <VM>sim,chameleonVM,localhost,5060,true</VM>
     <VM>sim,chameleonVM,localhost,5061,true</VM>
     <VM>sim,chameleonVM,localhost,5062,true</VM>

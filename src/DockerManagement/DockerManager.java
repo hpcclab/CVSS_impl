@@ -5,6 +5,10 @@ import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.DockerException;
 import com.spotify.docker.client.messages.*;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +50,11 @@ public class DockerManager {
         String IP;
 
         try {
+            //say it out the ip needed
+            BufferedWriter writer = new BufferedWriter(new FileWriter("/mnt/container/portid"));
+            writer.write(givenPort);
+            writer.close();
+
             containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 
             final List<Image> images = docker.listImages();
@@ -56,7 +65,7 @@ public class DockerManager {
             for ( String port : ports ) {
                 List<PortBinding> hostPorts = new ArrayList<PortBinding>();
                 hostPorts.add( PortBinding.of( "", givenPort ) ); //host to container port
-                portBindings.put( givenPort + "/tcp", hostPorts );
+                portBindings.put( givenPort, hostPorts ); //+ "/tcp" is optional?
             }
 
             final HostConfig hostConfig = HostConfig.builder()
@@ -71,13 +80,18 @@ public class DockerManager {
                     .attachStdin(Boolean.TRUE)
                     .tty(Boolean.TRUE)
                     .hostConfig(hostConfig)
-                    .exposedPorts( givenPort+ "/tcp" ) //container to host
+                    .exposedPorts( givenPort) //container to host + "/tcp"
                     .cmd(command)
                     .build();
 
                 final ContainerCreation containerCreation = docker.createContainer(containerConfig);
                 docker.startContainer(containerCreation.id());
                 createdIP+=docker.inspectContainer(containerCreation.id()).networkSettings().ipAddress()+",";
+                createdIP="0.0.0.0"; //TESTTTT, not using the returned IP
+                //byte[] ByteCode=givenPort.getBytes();
+                //Files.write("/mnt/container/portid",ByteCode);
+
+
 
         }catch(Exception e){
             System.out.print("Docker fail");

@@ -28,7 +28,7 @@ public class ResourceProvisioner {
     //private double lowscalingThreshold;
     private Semaphore x;
     private ArrayList<machineinfo> VMCollection =new ArrayList<>();
-    DataUpdate DU; //currently is a subcomponent of ResourceProvisioner
+    public DataUpdate DU; //currently is a subcomponent of ResourceProvisioner
     //this need to set
 
 
@@ -294,7 +294,10 @@ public class ResourceProvisioner {
                     }catch(Exception e){
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
+                    System.out.println("VMcount="+VMcount);
                     MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
+//                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),IP, 5061,VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
+
                     CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
                    // CVSE.TE.populate(ServerConfig.VM_class.get(VMcount)); no profile for container machine, yet
                 }else if(ServerConfig.VM_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
