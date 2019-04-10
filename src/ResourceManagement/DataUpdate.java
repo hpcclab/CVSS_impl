@@ -39,8 +39,8 @@ public class DataUpdate {
                 }
                 for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
                     MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
-                    Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
-                    Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
+                    Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent processing:" + vmi.actualSpentTime);
+                    Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_taskmiss + "(" + vmi.total_itemmiss + ")");
 
 
                     avgActualSpentTime += vmi.actualSpentTime;

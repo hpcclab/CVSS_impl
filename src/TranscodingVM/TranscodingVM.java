@@ -60,13 +60,13 @@ public class TranscodingVM extends Thread{
 
             oos.flush();
             oos.reset();
-            sleep(2000);
+            sleep(500);
             ois = new ObjectInputStream(s.getInputStream());
 
             ss.close();
             status = 1;
 
-            System.out.println("succesfully set status=1");
+            System.out.println("succesfully set status=running");
 
 
         }catch(Exception e){

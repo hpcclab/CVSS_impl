@@ -6,6 +6,8 @@ public class Settings implements java.io.Serializable{
 
     public String absPath;
     public String videoname = "";
+    public String type  = "";
+    public String settingNum = "";
     public boolean resolution = false;
     public boolean bitrate = false;
     public boolean subtitles = false;
@@ -63,7 +65,7 @@ public class Settings implements java.io.Serializable{
         //project dir
         //return ServerConfig.path + "streams/" + videoname + resWidth + resHeight;
         //local webdemo dir
-        return "/var/www/html/2019WebDemo/streams/" + videoname + resWidth + resHeight;
+        return "/var/www/html/2019WebDemo/streams/" + videoname + type + settingNum;
         //return "output/" + videoname + resWidth + resHeight;
     }
 }

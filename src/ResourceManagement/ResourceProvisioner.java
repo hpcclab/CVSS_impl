@@ -202,7 +202,7 @@ public class ResourceProvisioner {
     public void EvaluateClusterSize(int virtual_queuelength){
 
         int diff = 0;
-        System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
+        //System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
         System.out.println("virtual_queuelength= "+virtual_queuelength);
         //check QOS UpperBound, QOS LowerBound, update decision parameters
         if (virtual_queuelength == -1) { //-1 set special for just ignore this section

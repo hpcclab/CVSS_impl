@@ -248,7 +248,12 @@ public class RealModeTest {
 
             //load video repo so we know their v numbers
             VideoRepository VR = new VideoRepository();
-            VR.addAllKnownVideos();
+            //VR.addAllKnownVideos();
+            VR.addAllRealVideos();
+
+            for(int i=0;i<VR.videos.size();i++){
+                System.out.println("Video "+i+" name: "  + VR.videos.get(i).name);
+            }
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -261,7 +266,7 @@ public class RealModeTest {
 
     public static void main(String[] args) throws IOException, InterruptedException, DockerException, DockerCertificateException {
         ReadConfig();
-        RemoveContainers();
+        //RemoveContainers();
         WebRequestTest();
         //CreateContainerTest();
         //MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(0),"localhost", ServerConfig.VM_ports.get(0),0,ServerConfig.VM_autoschedule.get(0)); //no ip needed //this passed

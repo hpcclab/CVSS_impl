@@ -79,12 +79,37 @@ class handler implements Provider<Source> {
             String cmd=arg[3];
             String setting=arg[5];
 
-
             Settings newSettings = new Settings();
 
-            newSettings.resolution = true;
-            newSettings.resWidth = "640";
-            newSettings.resHeight = "480";
+            //newSettings.resolution = true;
+            if(cmd.equals("resolution")){
+                if(setting.equals("1080")){
+                    newSettings.resHeight = "720";
+                    newSettings.resWidth  = "1080";
+                }
+                else if(setting.equals("720")){
+                    newSettings.resHeight = "640";
+                    newSettings.resWidth  = "720";
+                }
+                else if(setting.equals("640")){
+                    newSettings.resHeight = "480";
+                    newSettings.resWidth  = "640";
+                }
+                else if(setting.equals("480")){
+                    newSettings.resHeight = "360";
+                    newSettings.resWidth  = "480";
+                }
+
+            }else if(cmd.equals("bitrate")){
+
+            }
+            else if(cmd.equals("framerate")){
+
+            }
+
+
+            newSettings.type = cmd;
+            newSettings.settingNum = setting;
             newSettings.videoname = CVSE.VR.videos.get(video).name;
 
             System.out.println("SM: " + SM);
@@ -93,16 +118,7 @@ class handler implements Provider<Source> {
 
             SM.InitializeStream(video, newSettings, CVSE.GTS);
 
-            //RequestGenerator.OneSpecificRequest(GTS, video, cmd,setting, arrival+20000, arrival);
-
-            /*
-            if (pair[2].equalsIgnoreCase("dl"))
-                String d = pair[1].trim();
-            */
-
             String response = newSettings.videoDir();
-//
-            //
 
             StringBuilder xml = new StringBuilder("<?xml version=\"1.0\"?>");
             xml.append("<response> video request "+ arg[1]+" "+arg[3]+" "+arg[5] +" accepted</response>");

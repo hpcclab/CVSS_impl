@@ -98,22 +98,50 @@ public class TranscodingThread extends Thread{
 
                     System.out.println("Segment output directory: " + aStreamGOP.videoSetting.outputDir());
 
+                    if(aStreamGOP.videoSetting.type.equals("resolution")){
+                        String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                        ProcessBuilder pb = new ProcessBuilder(command);
+                        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        try {
+                            Process p = pb.start();
+                            p.waitFor();
+
+                        } catch (Exception e) {
+                            System.out.println("Did not execute bashfile :(");
+                        }
+                    } else if(aStreamGOP.videoSetting.type.equals("framerate")){
+
+                        String[] command = {"bash", ServerConfig.path + "bash/framerate.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                        ProcessBuilder pb = new ProcessBuilder(command);
+                        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        try {
+                            Process p = pb.start();
+                            p.waitFor();
+
+                        } catch (Exception e) {
+                            System.out.println("Did not execute bashfile :(");
+                        }
+                    } else if(aStreamGOP.videoSetting.type.equals("bitrate")){
+                        String[] command = {"bash", ServerConfig.path + "bash/bitrate.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                        ProcessBuilder pb = new ProcessBuilder(command);
+                        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                        try {
+                            Process p = pb.start();
+                            p.waitFor();
+
+                        } catch (Exception e) {
+                            System.out.println("Did not execute bashfile :(");
+                        }
+                    }
+
                     //don't process, always do dry mode
-                    String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
 
                     //String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), "256", "144", aStreamGOP.videoSetting.outputDir(), filename};
 
-                    ProcessBuilder pb = new ProcessBuilder(command);
-                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                    pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
 
-                    try {
-                        Process p = pb.start();
-                        p.waitFor();
-
-                    } catch (Exception e) {
-                        System.out.println("Did not execute bashfile :(");
-                    }
 
 
                     //ideally, we should be able to pull setting out from StreamGOP but now use fixed
