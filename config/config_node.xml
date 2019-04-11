@@ -6,7 +6,7 @@
 	<addProfiledDelay>True</addProfiledDelay>
 	<profiledRequests>False</profiledRequests>
     <openWebRequests>True</openWebRequests>
-    <localqueuelengthperVM>4</localqueuelengthperVM>
+    <localqueuelengthperCR>4</localqueuelengthperCR>
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
     <lowscalingThreshold>0.1</lowscalingThreshold>
     <highscalingThreshold>0.5</highscalingThreshold>
@@ -21,17 +21,17 @@
     <enableTimeEstimator>true</enableTimeEstimator>
     <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
-    <enableVMscaling>true</enableVMscaling>
+    <enableCRscaling>true</enableCRscaling>
 	<dataUpdateInterval>1000</dataUpdateInterval>
-    <VMscalingIntervalTick>30</VMscalingIntervalTick>
-    <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
-    <minVM>8</minVM>
-    <maxVM>8</maxVM>
+    <CRscalingIntervalTick>30</CRscalingIntervalTick>
+    <enableCRscalingoutofInterval>false</enableCRscalingoutofInterval>
+    <minCR>8</minCR>
+    <maxCR>8</maxCR>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
 	<outputDir>/var/www/html/streams/</outputDir>
     <path>./</path>
-	<run_mode>dry</run_mode>
+	<run_mode>sim</run_mode>
 <repository>repositoryvideos/videoData</repository>
 <repository>repositoryvideos/realVideo</repository>
 

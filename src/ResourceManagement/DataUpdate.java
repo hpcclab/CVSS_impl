@@ -55,8 +55,8 @@ public class DataUpdate {
                     System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
                 }
 
-                Fullwriter.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
-                numberwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / ServerConfig.maxVM);
+                Fullwriter.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxCR);
+                numberwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / ServerConfig.maxCR);
 
                 Fullwriter.close();
                 numberwriter.close();
@@ -95,7 +95,7 @@ public class DataUpdate {
                 GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
                 System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
             }
-            System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxVM);
+            System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxCR);
         }
     }
 }

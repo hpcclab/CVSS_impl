@@ -36,7 +36,7 @@ public class RealModeTest {
             CVSE.GTS = new GOPTaskScheduler_mergable();
             CVSE.GTS.readlistedOperations();
             CVSE.TE=new TimeEstNone(); //using no TimeEstimator
-            CVSE.VMP= new ResourceProvisioner( ServerConfig.minVM); //says we need at least two machines
+            CVSE.VMP= new ResourceProvisioner( ServerConfig.minCR); //says we need at least two machines
             CVSE.CACHING = new Caching(); //change to other type if need something that work
             CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
 
@@ -223,15 +223,15 @@ public class RealModeTest {
         int VMcount=0;
             for (int i=0;i<1;i++){
                 //String result = DockerManager.CreateContainers(1);
-                System.out.println("container thread "+ServerConfig.VM_ports.get(VMcount));
-                String IP=DockerManager.CreateContainers(ServerConfig.VM_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
+                System.out.println("container thread "+ServerConfig.CR_ports.get(VMcount));
+                String IP=DockerManager.CreateContainers(ServerConfig.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
                 try {
                     sleep(400);
                 }catch(Exception e){
                     System.out.println("sleep bug in AddInstance (localVMThread)");
                 }
-                MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(VMcount),IP, ServerConfig.VM_ports.get(VMcount),VMcount,ServerConfig.VM_autoschedule.get(VMcount)); //no ip needed
-                //CVSE.GTS.add_VM(t,ServerConfig.VM_autoschedule.get(VMcount));
+                MachineInterface t=new MachineInterface_SocketIO(ServerConfig.CR_class.get(VMcount),IP, ServerConfig.CR_ports.get(VMcount),VMcount,ServerConfig.CR_autoschedule.get(VMcount)); //no ip needed
+                //CVSE.GTS.add_VM(t,ServerConfig.CR_autoschedule.get(VMcount));
                 VMcount++;
             }
         //DockerManager.RemoveAllContainers();
@@ -269,7 +269,7 @@ public class RealModeTest {
         //RemoveContainers();
         WebRequestTest();
         //CreateContainerTest();
-        //MachineInterface t=new MachineInterface_SocketIO(ServerConfig.VM_class.get(0),"localhost", ServerConfig.VM_ports.get(0),0,ServerConfig.VM_autoschedule.get(0)); //no ip needed //this passed
+        //MachineInterface t=new MachineInterface_SocketIO(ServerConfig.CR_class.get(0),"localhost", ServerConfig.CR_ports.get(0),0,ServerConfig.CR_autoschedule.get(0)); //no ip needed //this passed
 
     }
 }

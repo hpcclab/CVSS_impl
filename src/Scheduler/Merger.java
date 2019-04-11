@@ -228,11 +228,11 @@ public class Merger {
                 }
                 /*
                 System.out.println(checked + " vs " + originalmiss);
-                retStat chkmerged = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), merged);
+                retStat chkmerged = TimeEstimator.getHistoricProcessTime(ServerConfig.CR_class.get(0), merged);
                 System.out.println("runtime merged:" + chkmerged.mean + "(" + chkmerged.SD + ")");
-                retStat chkX = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), X);
+                retStat chkX = TimeEstimator.getHistoricProcessTime(ServerConfig.CR_class.get(0), X);
                 System.out.println("runtime X:" + chkX.mean + "(" + chkX.SD + ")");
-                retStat chkoriginal = TimeEstimator.getHistoricProcessTime(ServerConfig.VM_class.get(0), itspair);
+                retStat chkoriginal = TimeEstimator.getHistoricProcessTime(ServerConfig.CR_class.get(0), itspair);
                 System.out.println("runtime itspair:" + chkoriginal.mean + "(" + chkoriginal.SD + ")");
                 */
                 if (Math.abs(checked) <= Math.abs(originalmiss)) { //worth it, merge!

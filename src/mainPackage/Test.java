@@ -30,7 +30,7 @@ public class Test {
         CVSE.GTS = new GOPTaskScheduler_mergable();
         CVSE.GTS.readlistedOperations();
         CVSE.TE=new TimeEstProfileMode();
-        CVSE.VMP= new ResourceProvisioner(ServerConfig.minVM); //says we need at least two machines
+        CVSE.VMP= new ResourceProvisioner(ServerConfig.minCR); //says we need at least two machines
 
         CVSE.CACHING = new Caching(); //change to other type if need something that work
         CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP

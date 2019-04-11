@@ -20,7 +20,7 @@ public class Stream {
     public Stream(){
         status=0;
         video =new Video();
-        if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+        if(ServerConfig.run_mode.equalsIgnoreCase("sim")){
 
         }else {
             startTime = System.currentTimeMillis() + 1000; //thisTime+Constant for now, should really be scheduleTime
@@ -40,7 +40,7 @@ public class Stream {
         video =v;
         if(addedslackTime==0) { //ST==0, did not specified start time, make a new startTime
             //normally dont fall in this case anyway in sim mode
-            if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+            if(ServerConfig.run_mode.equalsIgnoreCase("sim")) {
 
                 startTime= CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
             }else{
@@ -78,7 +78,7 @@ public class Stream {
         video =v;
         if(addedslackTime==0) { //ST==0, did not specified start time, make a new startTime
             //normally dont fall in this case anyway in sim mode
-            if(ServerConfig.run_mode.equalsIgnoreCase("dry")) {
+            if(ServerConfig.run_mode.equalsIgnoreCase("sim")) {
 
                 startTime= CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
             }else{

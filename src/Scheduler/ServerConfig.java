@@ -15,14 +15,13 @@ public class ServerConfig {
     public static String defaultOutputPath; //
     public static String defaultBatchScript; //
     public static String path;
-    public static ArrayList<String> VM_type=new ArrayList<>();
-    public static ArrayList<String> VM_class=new ArrayList<>();
-    public static ArrayList<Boolean> VM_autoschedule=new ArrayList<>();
-    public static ArrayList<String> VM_address=new ArrayList<>();
-    public static ArrayList<Integer> VM_ports=new ArrayList<>();
+    public static ArrayList<String> CR_type =new ArrayList<>();
+    public static ArrayList<String> CR_class =new ArrayList<>();
+    public static ArrayList<Boolean> CR_autoschedule =new ArrayList<>();
+    public static ArrayList<String> CR_address =new ArrayList<>();
+    public static ArrayList<Integer> CR_ports =new ArrayList<>();
 
 
-    public static boolean addFakeDelay=false; //this is primitive randomized fake delay
     public static boolean addProfiledDelay=false; //this is profiled delay, from GOPS
     public static boolean consideratemerge =true; ////set to false for testing dumb merge
     public static String batchqueuesortpolicy="Deadline";
@@ -36,7 +35,7 @@ public class ServerConfig {
     public static String outputDir;
 
     public static String run_mode="real";
-    public static int localqueuelengthperVM=4;
+    public static int localqueuelengthperCR=4;
 
     // mainstay settings
     public static ArrayList<String> supportedCodecs=new ArrayList<>(8); //not being used right now
@@ -46,12 +45,12 @@ public class ServerConfig {
     public static String timeEstimatorMode="";
     public static String schedulerPolicy;
     public static boolean enableCaching=false; //if true, use caching system
-    public static boolean enableVMscaling=false;
+    public static boolean enableCRscaling=false;
     public static int dataUpdateInterval=1000; //millisecond, 0 to disable
-    public static int VMscalingIntervalTick=10; //millisecond, 0 to disable
-    public static boolean enableVMscalingoutofInterval=false;
-    public static int maxVM; //set max number of VMs
-    public static int minVM; //set max number of VMs
+    public static int CRscalingIntervalTick=10; //millisecond, 0 to disable
+    public static boolean enableCRscalingoutofInterval=false;
+    public static int maxCR; //set max number of ComputingResources
+    public static int minCR; //set max number of ComputingResources
     public static int remedialVM_constantfactor=10; //default value=10
     public static double lowscalingThreshold; // for VM provisioning algorithms
     public static double highscalingThreshold;
@@ -63,9 +62,9 @@ public class ServerConfig {
 
     //check for each parameters if there is any Invalid
     public static boolean isSettingValid(){
-        if(enableVMscaling){
-            if(maxVM<1){
-                System.out.println("maxVM must be >0");
+        if(enableCRscaling){
+            if(maxCR<1){
+                System.out.println("maxCR must be >0");
                 return false;
             }
             if((lowscalingThreshold<0)||(highscalingThreshold<0)||(lowscalingThreshold>1)||(highscalingThreshold>1)||(highscalingThreshold<lowscalingThreshold) ){
@@ -104,14 +103,6 @@ public class ServerConfig {
     @XmlElement(name = "defaultOutputPath")
     public void setDefaultBatchScript(String defaultBatchScript) {
         ServerConfig.defaultBatchScript = defaultBatchScript;
-    }
-    @XmlElement(name = "addFakeDelay")
-    public void setAddFakeDelay(String check) {
-        if(check.equalsIgnoreCase("True")) {
-            ServerConfig.addFakeDelay = true;
-        }else{
-            ServerConfig.addFakeDelay = false;
-        }
     }
     @XmlElement(name = "addProfiledDelay")
     public void setAddProfiledDelay(String check) {
@@ -158,15 +149,15 @@ public class ServerConfig {
         ServerConfig.repository.add(repository);
     }
 
-    @XmlElement(name = "VM")
-    public void setVM(String VM_Texts) {
-        String s[]=VM_Texts.split(",");
+    @XmlElement(name = "CR")
+    public void setCR(String CR_Texts) {
+        String s[]=CR_Texts.split(",");
         if(s.length==5) {
-            ServerConfig.VM_type.add(s[0]);
-            ServerConfig.VM_class.add(s[1]);
-            ServerConfig.VM_address.add(s[2]);
-            ServerConfig.VM_ports.add(Integer.parseInt(s[3]));
-            ServerConfig.VM_autoschedule.add(Boolean.parseBoolean(s[4]));
+            ServerConfig.CR_type.add(s[0]);
+            ServerConfig.CR_class.add(s[1]);
+            ServerConfig.CR_address.add(s[2]);
+            ServerConfig.CR_ports.add(Integer.parseInt(s[3]));
+            ServerConfig.CR_autoschedule.add(Boolean.parseBoolean(s[4]));
             //System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" ");
 
         }else {
@@ -202,21 +193,21 @@ public class ServerConfig {
             ServerConfig.enableCaching = false;
         }
     }
-    @XmlElement(name = "enableVMscaling")
-    public void setEnableVMscaling(String check) {
+    @XmlElement(name = "enableCRscaling")
+    public void setenableCRscaling(String check) {
         if(check.equalsIgnoreCase("True")) {
-            ServerConfig.enableVMscaling = true;
+            ServerConfig.enableCRscaling = true;
         }else{
-            ServerConfig.enableVMscaling = false;
+            ServerConfig.enableCRscaling = false;
         }
     }
-    @XmlElement(name = "VMscalingIntervalTick")
-    public void setVMscalingIntervalTick(int VMscalingIntervalTick) {
-        ServerConfig.VMscalingIntervalTick = VMscalingIntervalTick;
+    @XmlElement(name = "CRscalingIntervalTick")
+    public void setCRscalingIntervalTick(int CRscalingIntervalTick) {
+        ServerConfig.CRscalingIntervalTick = CRscalingIntervalTick;
     }
-    @XmlElement(name = "localqueuelengthperVM")
-    public void setlocalqueuelengthperVM(int ilocalqueuelengthperVM) {
-        ServerConfig.localqueuelengthperVM = ilocalqueuelengthperVM;
+    @XmlElement(name = "localqueuelengthperCR")
+    public void setlocalqueuelengthperCR(int ilocalqueuelengthperCR) {
+        ServerConfig.localqueuelengthperCR = ilocalqueuelengthperCR;
     }
     @XmlElement(name = "taskmerge")
     public void settaskmerge(String check) {
@@ -230,12 +221,12 @@ public class ServerConfig {
     public void setdataUpdateInterval(int dataUpdateInterval) {
         ServerConfig.dataUpdateInterval = dataUpdateInterval;
     }
-    @XmlElement(name = "enableVMscalingoutofInterval")
-    public void setEnableVMscalingoutofInterval(String check) {
+    @XmlElement(name = "enableCRscalingoutofInterval")
+    public void setenableCRscalingoutofInterval(String check) {
         if(check.equalsIgnoreCase("True")) {
-            ServerConfig.enableVMscalingoutofInterval = true;
+            ServerConfig.enableCRscalingoutofInterval = true;
         }else{
-            ServerConfig.enableVMscalingoutofInterval = false;
+            ServerConfig.enableCRscalingoutofInterval = false;
         }
     }
     @XmlElement(name = "mergeOverwriteQueuePolicy")
@@ -250,13 +241,13 @@ public class ServerConfig {
     public void setoverwriteQueuePolicyHeuristic(String value) {
         ServerConfig.overwriteQueuePolicyHeuristic = value;
     }
-    @XmlElement(name = "maxVM")
-    public void setMaxVM(int maxVM) {
-        ServerConfig.maxVM = maxVM;
+    @XmlElement(name = "maxCR")
+    public void setmaxCR(int maxCR) {
+        ServerConfig.maxCR = maxCR;
     }
-    @XmlElement(name = "minVM")
-    public void setminVM(int minVM) {
-        ServerConfig.minVM = minVM;
+    @XmlElement(name = "minCR")
+    public void setminCR(int minCR) {
+        ServerConfig.minCR = minCR;
     }
     @XmlElement(name = "remedialVM_constantfactor")
     public void setRemedialVM_constantfactor(int remedialVM_constantfactor) {

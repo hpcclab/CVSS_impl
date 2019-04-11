@@ -29,14 +29,14 @@ public abstract class GOPTaskScheduler {
 
     public boolean add_VM(MachineInterface t,boolean autoSchedule){
         //overwrite this
-        maxpending += ServerConfig.localqueuelengthperVM; //4?
+        maxpending += ServerConfig.localqueuelengthperCR; //4?
         machineInterfaces.add(t);
         return true;
     }
 
     public boolean remove_VM(int which) {
         machineInterfaces.remove(which);
-        maxpending -= ServerConfig.localqueuelengthperVM; //4?
+        maxpending -= ServerConfig.localqueuelengthperCR; //4?
         return true;
     }
 
@@ -65,7 +65,7 @@ public abstract class GOPTaskScheduler {
             scheduler_working = 1;
 
             for(int i = 0; i< machineInterfaces.size(); i++){ //get a free machine
-                int assignable= machineInterfaces.get(i).estimatedQueueLength - ServerConfig.localqueuelengthperVM; //get number of task can assign to this machine
+                int assignable= machineInterfaces.get(i).estimatedQueueLength - ServerConfig.localqueuelengthperCR; //get number of task can assign to this machine
                 System.out.println("basic scheduler");
                 while ((!Batchqueue.isEmpty()) && assignable>0) {
                     StreamGOP X=Batchqueue.removeDefault();

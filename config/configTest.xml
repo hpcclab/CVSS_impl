@@ -6,12 +6,12 @@
 	<addProfiledDelay>True</addProfiledDelay>
 	<profiledRequests>True</profiledRequests>
     <openWebRequests>False</openWebRequests>
-	<run_mode>dry</run_mode>
+	<run_mode>sim</run_mode>
     <profileRequestsBenhmark>test2000r_180000_10000_3000_s1.txt</profileRequestsBenhmark>
 
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
     <batchqueuesortpolicy>Deadline</batchqueuesortpolicy> <!-- Priority or Deadline or Urgency or None -->
-    <localqueuelengthperVM>4</localqueuelengthperVM>
+    <localqueuelengthperCR>4</localqueuelengthperCR>
     <c_const_for_utilitybased>0.2</c_const_for_utilitybased>
 
     <taskmerge>False</taskmerge>
@@ -23,14 +23,14 @@
     <timeEstimatorMode>profiled</timeEstimatorMode>
     <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
-    <enableVMscaling>true</enableVMscaling>
+    <enableCRscaling>true</enableCRscaling>
 	<dataUpdateInterval>1000</dataUpdateInterval>
-    <VMscalingIntervalTick>30</VMscalingIntervalTick>
-    <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
+    <CRscalingIntervalTick>30</CRscalingIntervalTick>
+    <enableCRscalingoutofInterval>false</enableCRscalingoutofInterval>
     <lowscalingThreshold>0.1</lowscalingThreshold>
     <highscalingThreshold>0.5</highscalingThreshold>
-    <minVM>8</minVM>
-    <maxVM>8</maxVM>
+    <minCR>8</minCR>
+    <maxCR>8</maxCR>
 	
     <path>./</path>
 <useEC2>False</useEC2>
@@ -40,33 +40,33 @@
 <!--- 
 <repository>repositoryvideos/realVideo</repository>
 
-    <VM>sim,g2.2xlarge,localhost,5060,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5061,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5062,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5063,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5064,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5065,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5066,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5067,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5068,true</VM>
+    <CR>sim,g2.2xlarge,localhost,5060,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5061,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5062,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5063,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5064,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5065,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5066,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5067,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5068,true</CR>
 	--> 
-    <VM>sim,chameleonVM,localhost,5060,true</VM>
-    <VM>sim,chameleonVM,localhost,5061,true</VM>
-    <VM>sim,chameleonVM,localhost,5062,true</VM>
-    <VM>sim,chameleonVM,localhost,5063,true</VM>
-    <VM>sim,chameleonVM,localhost,5064,true</VM>
-    <VM>sim,chameleonVM,localhost,5065,true</VM>
-    <VM>sim,chameleonVM,localhost,5066,true</VM>
-    <VM>sim,chameleonVM,localhost,5067,true</VM>
-    <VM>sim,g2.2xlarge,localhost,5068,true</VM>
+    <CR>sim,chameleonVM,localhost,5060,true</CR>
+    <CR>sim,chameleonVM,localhost,5061,true</CR>
+    <CR>sim,chameleonVM,localhost,5062,true</CR>
+    <CR>sim,chameleonVM,localhost,5063,true</CR>
+    <CR>sim,chameleonVM,localhost,5064,true</CR>
+    <CR>sim,chameleonVM,localhost,5065,true</CR>
+    <CR>sim,chameleonVM,localhost,5066,true</CR>
+    <CR>sim,chameleonVM,localhost,5067,true</CR>
+    <CR>sim,g2.2xlarge,localhost,5068,true</CR>
 	-->
-	<VM>simNWcache,fixedBandwidth,localhost,100,false</VM>  <!-- unit = Mbps-->
+	<CR>simNWcache,fixedBandwidth,localhost,100,false</CR>  <!-- unit = Mbps-->
 
-	<VM>EC2,t2.micro,i-019a067d161b807d4,5061,true</VM> <!-- small -->
-	<VM>EC2,t2.micro,i-0c1ae764e54ca5fb8,5061,true</VM> <!-- small -->
-	<VM>EC2,t2.micro,i-03b97c46afcb2c749,5061,true</VM> <!-- medium -->
-	<VM>EC2,t2.micro,i-0cd0f305e1dc8aeb5,5061,true</VM> <!-- medium --> 
-    <VM>EC2,t2.micro,i-0bce5f77aa6e0f3a2,5061,true</VM> <!-- micro -->
+	<CR>EC2,t2.micro,i-019a067d161b807d4,5061,true</CR> <!-- small -->
+	<CR>EC2,t2.micro,i-0c1ae764e54ca5fb8,5061,true</CR> <!-- small -->
+	<CR>EC2,t2.micro,i-03b97c46afcb2c749,5061,true</CR> <!-- medium -->
+	<CR>EC2,t2.micro,i-0cd0f305e1dc8aeb5,5061,true</CR> <!-- medium -->
+    <CR>EC2,t2.micro,i-0bce5f77aa6e0f3a2,5061,true</CR> <!-- micro -->
 	
 <!---->
 </serverConfig>

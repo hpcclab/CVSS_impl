@@ -16,7 +16,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
     //overwrite with common VM types
     public boolean add_VM(MachineInterface t,boolean autoSchedule){
         if(autoSchedule) {
-            maxpending += ServerConfig.localqueuelengthperVM; //4?
+            maxpending += ServerConfig.localqueuelengthperCR; //4?
         }
         machineInterfaces.add(t);
         return true; //for success
@@ -34,7 +34,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             double minSD=0;
 
             //set initial value to machine 1
-            if((pending_queuelength[0] < ServerConfig.localqueuelengthperVM) || !realSchedule){ //if not real assignment, we can violate queue length
+            if((pending_queuelength[0] < ServerConfig.localqueuelengthperCR) || !realSchedule){ //if not real assignment, we can violate queue length
                 if (useTimeEstimator) {
                     retStat chk = CVSE.TE.getHistoricProcessTime(answer, x);
                     //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
@@ -56,7 +56,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 MachineInterface aMachine = machineInterfaces.get(i);
                 if (aMachine.isWorking()) {
                     if (aMachine.autoschedule) {
-                        if((pending_queuelength[i] < ServerConfig.localqueuelengthperVM) || !realSchedule) {
+                        if((pending_queuelength[i] < ServerConfig.localqueuelengthperCR) || !realSchedule) {
 
                             //calculate new choice
                             if (useTimeEstimator) {
@@ -89,7 +89,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 }
             }
             if(realSchedule) {
-                System.out.println("decided to place on machine " + answer.VM_class + " id= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + ServerConfig.localqueuelengthperVM);
+                System.out.println("decided to place on machine " + answer.VM_class + " id= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + ServerConfig.localqueuelengthperCR);
             }
             if (realSchedule && useTimeEstimator) { //update estimatedExecutionTime
                 x.estimatedExecutionTime = minET;
@@ -138,7 +138,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 MachineInterface chosenVM = selectMachine(X);
                 System.out.println("ChosenVM="+chosenVM);
 
-                if (ServerConfig.enableVMscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.localqueuelengthperVM)) {
+                if (ServerConfig.enableCRscalingoutofInterval && (chosenVM.estimatedQueueLength > ServerConfig.localqueuelengthperCR)) {
                     //do reprovisioner, we need more VM!
                     //ResourceProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
                     System.out.println("queue too long, scale up!");
@@ -148,7 +148,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                     System.out.println("ChosenVM="+chosenVM);
                 }
 
-                if(ServerConfig.run_mode.equalsIgnoreCase("dry")){
+                if(ServerConfig.run_mode.equalsIgnoreCase("sim")){
                     retStat thestat=CVSE.TE.getHistoricProcessTime(chosenVM,X);
                     //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
                     X.estimatedExecutionTime=thestat.mean;

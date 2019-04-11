@@ -21,7 +21,6 @@ public class TranscodingThread extends Thread{
     //or
     //public BlockingQueue<StreamGOP> jobs = new PriorityBlockingQueue<>();
     public ConcurrentHashMap<String, Tuple<Long,Integer>> runtime_report=new ConcurrentHashMap<>(); //setting identifier number, < average, count>
-    private HashMap<Integer,Long> FakeDelay=new HashMap<>();
     public int workDone; //count each work as one
     public int NworkDone; //count each work as suggested in StreamGOP.requestcount
     public int deadlineMiss,NdeadlineMiss;
@@ -29,23 +28,14 @@ public class TranscodingThread extends Thread{
     long synctime=0; //spentTime+requiredTime is imaginary total time to clear the queue
     long realspentTime=0; //realspentTime is spentTime without Syncing
     public List<StreamGOP> completedTask=new LinkedList<StreamGOP>();
-    private Boolean useS3=false;
-    //EC2 public AmazonS3 s3;
     public String VM_class;
     private Random r=new Random();
-    /* //EC2
-    public void addS3(AmazonS3 ns3,String nbucketName){
-        this.useS3=true;
-        this.s3=ns3;
-        this.bucketName=nbucketName;
-    }
-    */
+
     private void TranscodeSegment()
     {
         int i=0;
         int exit=0;
         long delay=0;
-        long elapsedTime;
         while(true) {
             long savedTime=System.nanoTime()/1000000;
             try{
@@ -58,110 +48,61 @@ public class TranscodingThread extends Thread{
                     }
 
                     System.out.println("In TranscodeSegment of transcoding thread");
-
-                    //random delay, BROKEN for now, userSetting does not exist.
-
-                    if (ServerConfig.addFakeDelay) {
-                        int identifier = 0; //was aStreamGOP.userSetting.settingIdentifier;
-                        if (FakeDelay.containsKey(identifier)) //if we already have delay for this setting randomized,
-                            delay = FakeDelay.get(identifier); //use that value
-                        else {
-                            delay = (int) (Math.random() * 1000); //0-1000 ms
-                            FakeDelay.put(identifier, delay);
-                        }
-
-                    } else if (ServerConfig.addProfiledDelay) {
+                 if (ServerConfig.addProfiledDelay) {
                         //System.out.println("est="+aStreamGOP.estimatedExecutionTime+" sd:"+aStreamGOP.estimatedExecutionSD);
                         delay = (long) (aStreamGOP.estimatedExecutionTime + aStreamGOP.estimatedExecutionSD * r.nextGaussian());
                     }
-
-                    //aStreamGOP.
-
 
                     //System.out.println(aStreamGOP.getPath());
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
                     //extra line for windows below, need test if work with linux
                     filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.length());
                     String outputdir = aStreamGOP.outputDir();
-                    ;
-                    /*
-                    if(type.equalsIgnoreCase("EC2")){
-                        aStreamGOP.setPath("/home/ec2-user/"+aStreamGOP.getPath());
-                        outputdir= ("/home/ec2-user/"+aStreamGOP.userSetting.outputDir());
-                    }else{
-                        outputdir=aStreamGOP.userSetting.outputDir();
-                    }
-                    */
-                    //System.out.println(filename);
-
                     System.out.println("Segment name: " + aStreamGOP.segment);
-
                     System.out.println("Segment output directory: " + aStreamGOP.videoSetting.outputDir());
-
+                    String[] command;
+                    String bashdir="";
                     if(aStreamGOP.videoSetting.type.equals("resolution")){
-                        String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
-                        ProcessBuilder pb = new ProcessBuilder(command);
-                        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                        pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                        try {
-                            Process p = pb.start();
-                            p.waitFor();
-
-                        } catch (Exception e) {
-                            System.out.println("Did not execute bashfile :(");
-                        }
-                    } else if(aStreamGOP.videoSetting.type.equals("framerate")){
-
-                        String[] command = {"bash", ServerConfig.path + "bash/framerate.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
-                        ProcessBuilder pb = new ProcessBuilder(command);
-                        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                        pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                        try {
-                            Process p = pb.start();
-                            p.waitFor();
-
-                        } catch (Exception e) {
-                            System.out.println("Did not execute bashfile :(");
-                        }
-                    } else if(aStreamGOP.videoSetting.type.equals("bitrate")){
-                        String[] command = {"bash", ServerConfig.path + "bash/bitrate.sh", aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
-                        ProcessBuilder pb = new ProcessBuilder(command);
-                        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                        pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                        try {
-                            Process p = pb.start();
-                            p.waitFor();
-
-                        } catch (Exception e) {
-                            System.out.println("Did not execute bashfile :(");
-                        }
+                        bashdir="bash/resize.sh";
+                    }else if(aStreamGOP.videoSetting.type.equals("framerate")){
+                        bashdir="bash/framerate.sh";
+                    }else if(aStreamGOP.videoSetting.type.equals("bitrate")) {
+                        bashdir="bash/bitrate.sh";
+                    }else if(aStreamGOP.videoSetting.type.equals("codec")){
+                        bashdir="bash/codec.sh";
+                    }else{
+                        System.out.println("Unknown Command");
                     }
+                    command = new String[]{"bash", ServerConfig.path + bashdir, aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
 
-                    //don't process, always do dry mode
-
-                    //String[] command = {"bash", ServerConfig.path + "bash/resize.sh", aStreamGOP.getPath(), "256", "144", aStreamGOP.videoSetting.outputDir(), filename};
-
-
-
-
-                    //ideally, we should be able to pull setting out from StreamGOP but now use fixed
-
-                    //TC
-                    /*
-
-                    //if not dryMode
-                    if(!ServerConfig.run_mode.equalsIgnoreCase("dry")) {
-                        /* //not dry mode,
-
-                        ProcessBuilder pb = new ProcessBuilder(command);
-                        //pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
-                        //pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                    ProcessBuilder pb = new ProcessBuilder(command);
+                    pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                    pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+                    try {
                         Process p = pb.start();
                         p.waitFor();
 
-                        */
+                    } catch (Exception e) {
+                        System.out.println("Did not execute bashfile :(");
+                    }
+
+
 
                     System.out.println("finished a segment");
+                    //time calculations
+                    long finishedtime=System.nanoTime()/1000000;
+                    long timespan=finishedtime-savedTime;
+                    synctime=finishedtime;
+                    realspentTime+=timespan;
+                    workDone++;
+                    if(finishedtime>aStreamGOP.deadLine){
+                        //MISS
+                        deadlineMiss++;
+                    }else{
+                        //ONTIME //TODO: make stat count work for merged task too.
+
+                    }
+
                     completedTask.add(aStreamGOP); //mark task as finished
                     //put to S3
                         /* //EC2

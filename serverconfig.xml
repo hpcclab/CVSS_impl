@@ -11,12 +11,12 @@
     <enableTimeEstimator>true</enableTimeEstimator>
     <schedulerPolicy>minmin</schedulerPolicy>
     <enableCaching>false</enableCaching>
-    <enableVMscaling>true</enableVMscaling>
+    <enableCRscaling>true</enableCRscaling>
     <VMscalingInterval>30000</VMscalingInterval>
-    <enableVMscalingoutofInterval>false</enableVMscalingoutofInterval>
-    <minVM>1</minVM>
-    <maxVM>6</maxVM>
-    <maxVMqueuelength>6</maxVMqueuelength>
+    <enableCRscalingoutofInterval>false</enableCRscalingoutofInterval>
+    <minCR>1</minCR>
+    <maxCR>6</maxCR>
+    <maxCRqueuelength>6</maxCRqueuelength>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
     <path>./</path>
@@ -42,22 +42,22 @@
     <useEC2>True</useEC2>
     <file_mode>S3</file_mode> <!-- <file_mode>file</file_mode> -->
     
-	<VM>EC2,i-019a067d161b807d4,5061</VM> <!-- small -->
-	<VM>EC2,i-0c1ae764e54ca5fb8,5061</VM> <!-- small -->
-	<VM>EC2,i-03b97c46afcb2c749,5061</VM> <!-- medium -->
-	<VM>EC2,i-0cd0f305e1dc8aeb5,5061</VM> <!-- medium --> 
-    <VM>EC2,i-0bce5f77aa6e0f3a2,5061</VM> <!-- micro -->
-    <!--<VM>thread,localhost,5060</VM>-->
-    <VM>EC2,i-08395fae6fc05a8cd,5061</VM> <!-- micro -->	
+	<CR>EC2,i-019a067d161b807d4,5061</CR> <!-- small -->
+	<CR>EC2,i-0c1ae764e54ca5fb8,5061</CR> <!-- small -->
+	<CR>EC2,i-03b97c46afcb2c749,5061</CR> <!-- medium -->
+	<CR>EC2,i-0cd0f305e1dc8aeb5,5061</CR> <!-- medium -->
+    <CR>EC2,i-0bce5f77aa6e0f3a2,5061</CR> <!-- micro -->
+    <!--<CR>thread,localhost,5060</CR>-->
+    <CR>EC2,i-08395fae6fc05a8cd,5061</CR> <!-- micro -->
 		
-    <VM>thread,localhost,5061</VM>
-    <VM>thread,localhost,5062</VM>
-    <VM>thread,localhost,5063</VM>
-    <VM>thread,localhost,5064</VM>
-    <VM>thread,localhost,5065</VM>
-    <VM>thread,localhost,5066</VM>
-    <VM>thread,localhost,5067</VM>
-    <VM>thread,localhost,5068</VM>
+    <CR>thread,localhost,5061</CR>
+    <CR>thread,localhost,5062</CR>
+    <CR>thread,localhost,5063</CR>
+    <CR>thread,localhost,5064</CR>
+    <CR>thread,localhost,5065</CR>
+    <CR>thread,localhost,5066</CR>
+    <CR>thread,localhost,5067</CR>
+    <CR>thread,localhost,5068</CR>
 <!---->
 </serverConfig>
 
