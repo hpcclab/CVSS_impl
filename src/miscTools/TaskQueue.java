@@ -1,6 +1,6 @@
 package miscTools;
 
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
 import Streampkg.StreamGOP;
 import mainPackage.CVSE;
 
@@ -71,14 +71,14 @@ public class TaskQueue extends LinkedList<StreamGOP> {
         return earliest;
     }
     public Streampkg.StreamGOP removeDefault() {
-        if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) { //not sorting batch queue
+        if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) { //not sorting batch queue
             //X= Batchqueue.poll();
             return remove();
-        }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Priority")) {
+        }else if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("Priority")) {
             return removeHighestPrio();
-        }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
+        }else if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
             return removeEDL();
-        }else if(ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
+        }else if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
             return removeMaxUrgency(); //Homogeneous Only
         }else{
             System.out.println("unrecognize batchqueue policy");

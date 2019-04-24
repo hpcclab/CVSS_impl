@@ -94,7 +94,7 @@ public class Merger {
 
         GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) CVSE.GTS;
         //System.out.println("virtual estimation");
-        if(ServerConfig.schedulerPolicy.equalsIgnoreCase("minmin")){
+        if(CVSE.config.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
             return GTS.shortestQueueFirst(x,queuelength,executiontime,true,1,false);
         }else { //default way, shortestQueueFirst
@@ -221,18 +221,18 @@ public class Merger {
             StreamGOP merged = new StreamGOP(itspair); //create a copy of the old one for evaluation, but don't use this object
             merged.getAllCMD(X); //may already conatain some msg
             // do merging
-            if(!ServerConfig.mergeOverwriteQueuePolicy){ //if we obey queuing policy
+            if(!CVSE.config.mergeOverwriteQueuePolicy){ //if we obey queuing policy
                 long checked = 0;
-                if(ServerConfig.consideratemerge){ //if we want to evaluate merge impact...
+                if(CVSE.config.consideratemerge){ //if we want to evaluate merge impact...
                     checked = virtualQueueCheckReplace(itspair, merged, Math.abs(originalmiss)); //assume direct replace to the object
                 }
                 /*
                 System.out.println(checked + " vs " + originalmiss);
-                retStat chkmerged = TimeEstimator.getHistoricProcessTime(ServerConfig.CR_class.get(0), merged);
+                retStat chkmerged = TimeEstimator.getHistoricProcessTime(CVSE.config.CR_class.get(0), merged);
                 System.out.println("runtime merged:" + chkmerged.mean + "(" + chkmerged.SD + ")");
-                retStat chkX = TimeEstimator.getHistoricProcessTime(ServerConfig.CR_class.get(0), X);
+                retStat chkX = TimeEstimator.getHistoricProcessTime(CVSE.config.CR_class.get(0), X);
                 System.out.println("runtime X:" + chkX.mean + "(" + chkX.SD + ")");
-                retStat chkoriginal = TimeEstimator.getHistoricProcessTime(ServerConfig.CR_class.get(0), itspair);
+                retStat chkoriginal = TimeEstimator.getHistoricProcessTime(CVSE.config.CR_class.get(0), itspair);
                 System.out.println("runtime itspair:" + chkoriginal.mean + "(" + chkoriginal.SD + ")");
                 */
                 if (Math.abs(checked) <= Math.abs(originalmiss)) { //worth it, merge!
@@ -252,9 +252,9 @@ public class Merger {
                 }
             }else{
                 System.out.println("try merge with overwriting queue positioning, work with FIFO queue only");
-                if(ServerConfig.consideratemerge){
+                if(CVSE.config.consideratemerge){
                     ///////////////////////////////////////////// redo code both upper and below
-                    if (ServerConfig.overwriteQueuePolicyHeuristic.equalsIgnoreCase("logarithmic")) {
+                    if (CVSE.config.overwriteQueuePolicyHeuristic.equalsIgnoreCase("logarithmic")) {
                         // logarithmic probe
                         if (Bsearch_trybetweenPositions(requestSig, LVmap_pending, X, itspair, merged, originalmiss) == -1) {
                             System.out.println("don't merge");

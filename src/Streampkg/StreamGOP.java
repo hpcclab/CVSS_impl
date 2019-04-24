@@ -1,7 +1,8 @@
 package Streampkg;
 
 import Repository.RepositoryGOP;
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
+import mainPackage.CVSE;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -144,9 +145,9 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public String outputDir() {
         //return System.getProperty("user.dir") + "./webapps/CVSS_Implementation_war_exploded/repositoryvideos/" + videoname + "/out.m3u8";
         //project dir
-        //return ServerConfig.path + "streams/" + videoname;
+        //return CVSE.config.path + "streams/" + videoname;
         //local web demo
-        return ServerConfig.outputDir + videoname;
+        return CVSE.config.outputDir + videoname;
         //return "/var/www/html/2019WebDemo/streams/" + videoname;
     }
     public String toString()

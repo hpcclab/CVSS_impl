@@ -33,7 +33,7 @@ public class TranscodingVMEC2 extends TranscodingVM{
 
         Region region = Region.getRegion(Regions.US_EAST_2);
         String bucket_name = "cvss-video-bucket";
-        if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
+        if(CVSE.config.file_mode.equalsIgnoreCase("S3")) {
             AmazonS3Client s3 = new AmazonS3Client(credentials);
             s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
             TT.addS3(s3, bucket_name);

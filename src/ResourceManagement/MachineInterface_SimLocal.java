@@ -1,6 +1,6 @@
 package ResourceManagement;
 
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
 import Streampkg.StreamGOP;
 import mainPackage.CVSE;
 
@@ -56,7 +56,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
         estimatedExecutionTime += segment.estimatedExecutionTime;
         //simulate time
         double exetime=0;
-        if(ServerConfig.addProfiledDelay) {
+        if(CVSE.config.addProfiledDelay) {
             //System.out.println("est="+segment.estimatedExecutionTime+" sd:"+segment.estimatedExecutionSD);
             exetime=(long) (segment.estimatedExecutionTime+segment.estimatedExecutionSD*r.nextGaussian());
         }

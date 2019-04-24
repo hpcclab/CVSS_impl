@@ -1,7 +1,6 @@
 package Streampkg;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class TaskRequest{ //fill every thing for lvl1 mapping constructor, skip resolution for lvl2 mapping, ...
     private final String command;

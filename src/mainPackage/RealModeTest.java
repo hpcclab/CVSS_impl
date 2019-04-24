@@ -10,7 +10,7 @@ import ResourceManagement.MachineInterface_SocketIO;
 import ResourceManagement.ResourceProvisioner;
 import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler_mergable;
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
 import Simulator.RequestGenerator;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
@@ -29,14 +29,15 @@ import static java.lang.Thread.sleep;
 
 public class RealModeTest {
 
-        private static void setUpCVSE_forreal(){
+        private static void setUpCVSE_forreal(String configfile){
             //Set things up
+            CVSE.config=new SystemConfig(configfile);
             CVSE.VR = new VideoRepository();
             CVSE.AC = new AdmissionControl();
             CVSE.GTS = new GOPTaskScheduler_mergable();
             CVSE.GTS.readlistedOperations();
             CVSE.TE=new TimeEstNone(); //using no TimeEstimator
-            CVSE.VMP= new ResourceProvisioner( ServerConfig.minCR); //says we need at least two machines
+            CVSE.VMP= new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
             CVSE.CACHING = new Caching(); //change to other type if need something that work
             CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
 
@@ -48,21 +49,9 @@ public class RealModeTest {
 
         public static void RealLocalThreads() throws IOException {
 
-        File configfile = new File("config/config_web.xml");
-        JAXBContext ctx = null;
-        try {
-            ctx = JAXBContext.newInstance(ServerConfig.class);
-
-            Unmarshaller um = ctx.createUnmarshaller();
-            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         //Step 1: Retrieve Real Videos from Video Repository
 
-        setUpCVSE_forreal();
+        setUpCVSE_forreal("config/nuConfigWeb.properties");
         StreamManager SM = new StreamManager();
         //seems fine for tbe most part
         //checking...
@@ -120,21 +109,10 @@ public class RealModeTest {
     public static void WebRequestTest() throws IOException {
 
 
-        File configfile = new File("config/config_web.xml");
-        JAXBContext ctx = null;
-        try {
-            ctx = JAXBContext.newInstance(ServerConfig.class);
-
-            Unmarshaller um = ctx.createUnmarshaller();
-            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         //Step 1: Retrieve Real Videos from Video Repository
 
         StreamManager SM = new StreamManager();
-        setUpCVSE_forreal();
+        setUpCVSE_forreal("config/nuConfigWeb.properties");
         ////create open socket, receive new profile request then do similar to profiledRequests
         CVSE.WG=new WebserviceRequestGate();
         CVSE.WG.addr="http://localhost:9901/transcoderequest";
@@ -197,22 +175,7 @@ public class RealModeTest {
     private static void DirectoryTest() {
         System.out.println("Directory Test");
 
-        File configfile = new File("config/config_web.xml");
-        JAXBContext ctx = null;
-        try {
-            ctx = JAXBContext.newInstance(ServerConfig.class);
-
-            Unmarshaller um = ctx.createUnmarshaller();
-            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
-            //load video repo so we know their v numbers
-            VideoRepository VR = new VideoRepository();
-            VR.addAllKnownVideos();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(ServerConfig.repository);
+        System.out.println(CVSE.config.repository);
 
         for (int i = 0; i < CVSE.VR.videos.size(); i++) {
             System.out.println(CVSE.VR.videos.get(i).name);
@@ -223,30 +186,25 @@ public class RealModeTest {
         int VMcount=0;
             for (int i=0;i<1;i++){
                 //String result = DockerManager.CreateContainers(1);
-                System.out.println("container thread "+ServerConfig.CR_ports.get(VMcount));
-                String IP=DockerManager.CreateContainers(ServerConfig.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
+                System.out.println("container thread "+ CVSE.config.CR_ports.get(VMcount));
+                String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
                 try {
                     sleep(400);
                 }catch(Exception e){
                     System.out.println("sleep bug in AddInstance (localVMThread)");
                 }
-                MachineInterface t=new MachineInterface_SocketIO(ServerConfig.CR_class.get(VMcount),IP, ServerConfig.CR_ports.get(VMcount),VMcount,ServerConfig.CR_autoschedule.get(VMcount)); //no ip needed
-                //CVSE.GTS.add_VM(t,ServerConfig.CR_autoschedule.get(VMcount));
+                MachineInterface t=new MachineInterface_SocketIO(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
+                //CVSE.GTS.add_VM(t,CVSE.config.CR_autoschedule.get(VMcount));
                 VMcount++;
             }
         //DockerManager.RemoveAllContainers();
     }
 
     private static void ReadConfig(){
-        File configfile = new File("config/config_web.xml");
-        JAXBContext ctx = null;
-        try {
-            ctx = JAXBContext.newInstance(ServerConfig.class);
+            
+        //setUpCVSE_forreal("config/nuConfigWeb.properties");
 
-            Unmarshaller um = ctx.createUnmarshaller();
-            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
-
-            //load video repo so we know their v numbers
+        //load video repo so we know their v numbers
             VideoRepository VR = new VideoRepository();
             //VR.addAllKnownVideos();
             VR.addAllRealVideos();
@@ -254,9 +212,6 @@ public class RealModeTest {
             for(int i=0;i<VR.videos.size();i++){
                 System.out.println("Video "+i+" name: "  + VR.videos.get(i).name);
             }
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
     }
 
     private static void RemoveContainers() throws DockerException, InterruptedException {
@@ -269,7 +224,7 @@ public class RealModeTest {
         //RemoveContainers();
         WebRequestTest();
         //CreateContainerTest();
-        //MachineInterface t=new MachineInterface_SocketIO(ServerConfig.CR_class.get(0),"localhost", ServerConfig.CR_ports.get(0),0,ServerConfig.CR_autoschedule.get(0)); //no ip needed //this passed
+        //MachineInterface t=new MachineInterface_SocketIO(CVSE.config.CR_class.get(0),"localhost", CVSE.config.CR_ports.get(0),0,CVSE.config.CR_autoschedule.get(0)); //no ip needed //this passed
 
     }
 }

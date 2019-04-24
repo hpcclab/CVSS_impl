@@ -1,14 +1,11 @@
 package mainPackage;
 
 import Repository.VideoRepository;
-import Scheduler.ServerConfig;
 import TimeEstimatorpkg.TimeEstNone;
 import TranscodingVM.TranscodingVM;
 
 //import javax.xml.bind.JAXBContext;
 //import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import java.io.*;
 
 
@@ -22,7 +19,7 @@ public class cloudMain {
         //CVSE.GTS = new GOPTaskScheduler_common();
         //CVSE.GTS.readlistedOperations();
         CVSE.TE=new TimeEstNone(); //using no TimeEstimator
-        //CVSE.VMP= new ResourceProvisioner( ServerConfig.minCR); //says we need at least two machines
+        //CVSE.VMP= new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
         //CVSE.CACHING = new Caching(); //change to other type if need something that work
         //CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
 
@@ -39,10 +36,10 @@ public class cloudMain {
 /*
         JAXBContext ctx = null;
         try {
-            ctx = JAXBContext.newInstance(ServerConfig.class);
+            ctx = JAXBContext.newInstance(CVSE.config.class);
 
             Unmarshaller um = ctx.createUnmarshaller();
-            ServerConfig rootElement = (ServerConfig) um.unmarshal(configfile);
+            SystemConfig rootElement = (SystemConfig) um.unmarshal(configfile);
 
         } catch (Exception e) {
             e.printStackTrace();

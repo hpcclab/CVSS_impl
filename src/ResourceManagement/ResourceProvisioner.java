@@ -2,7 +2,7 @@ package ResourceManagement;
 
 import DockerManagement.DockerManager;
 import Scheduler.GOPTaskScheduler_mergable;
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
 import Streampkg.StreamGOP;
 import TranscodingVM.TranscodingVM;
 import mainPackage.CVSE;
@@ -24,7 +24,7 @@ public class ResourceProvisioner {
     private int minimumMaintain;
     private int VMcount=0;
     public double deadLineMissRate=0.8;
-    //private double highscalingThreshold; //get from ServerConfig
+    //private double highscalingThreshold; //get from SystemConfig
     //private double lowscalingThreshold;
     private Semaphore x;
     private ArrayList<machineinfo> VMCollection =new ArrayList<>();
@@ -36,7 +36,7 @@ public class ResourceProvisioner {
         x=new Semaphore(1);
         DU=new DataUpdate();
         minimumMaintain=minimumVMtomaintain;
-        if(ServerConfig.useEC2){
+        if(CVSE.config.useEC2){
             System.out.println("Before EC2 client, disabled for now");
             /* //EC2, cred removed
             EC2instance= new AmazonEC2Client(credentials);
@@ -72,7 +72,7 @@ public class ResourceProvisioner {
             System.out.println("use EC2");
             */
         }
-        if(ServerConfig.file_mode.equalsIgnoreCase("S3")) {
+        if(CVSE.config.file_mode.equalsIgnoreCase("S3")) {
             /* //cred removed
             s3 = new AmazonS3Client(credentials);
             s3.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).disableChunkedEncoding().build());
@@ -83,13 +83,13 @@ public class ResourceProvisioner {
         }
         EvaluateClusterSize(-1);
         //set up task for evaluate cluster size every ms
-        if(ServerConfig.dataUpdateInterval>0){
+        if(CVSE.config.dataUpdateInterval>0){
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     Tick();
                 }
             };
-            new Timer(ServerConfig.dataUpdateInterval, taskPerformer).start();
+            new Timer(CVSE.config.dataUpdateInterval, taskPerformer).start();
 
         }
         //
@@ -149,7 +149,7 @@ public class ResourceProvisioner {
         }
 
         //if time doesn't move,F
-        if(ServerConfig.run_mode.equalsIgnoreCase("sim")) {
+        if(CVSE.config.run_mode.equalsIgnoreCase("sim")) {
             if (CVSE.GTS.maxElapsedTime != T_maxElapsedTime) {
                 System.out.println("CVSE.GTS_mergable.maxElapsedTime="+CVSE.GTS.maxElapsedTime);
                 System.out.println("reset timeforced count");
@@ -175,7 +175,7 @@ public class ResourceProvisioner {
                 }
             }
         }
-        if(ServerConfig.profiledRequests){
+        if(CVSE.config.profiledRequests){
             CVSE.RG.contProfileRequestsGen();
         }
     }
@@ -190,7 +190,7 @@ public class ResourceProvisioner {
         //System.out.println("Tick, col data");
         tcount++;
         collectData();
-        if(tcount%ServerConfig.CRscalingIntervalTick==0){
+        if(tcount% CVSE.config.CRscalingIntervalTick==0){
 
             EvaluateClusterSize(20);
         }
@@ -202,7 +202,7 @@ public class ResourceProvisioner {
     public void EvaluateClusterSize(int virtual_queuelength){
 
         int diff = 0;
-        //System.out.println(deadLineMissRate + " vs " + ServerConfig.lowscalingThreshold);
+        //System.out.println(deadLineMissRate + " vs " + CVSE.config.lowscalingThreshold);
         System.out.println("virtual_queuelength= "+virtual_queuelength);
         //check QOS UpperBound, QOS LowerBound, update decision parameters
         if (virtual_queuelength == -1) { //-1 set special for just ignore this section
@@ -211,13 +211,13 @@ public class ResourceProvisioner {
             diff = 1;
         } else {
             //collectData();
-            if (deadLineMissRate > ServerConfig.highscalingThreshold) {
+            if (deadLineMissRate > CVSE.config.highscalingThreshold) {
 
-                //         if(deadLineMissRate>ServerConfig.highscalingThreshold){
+                //         if(deadLineMissRate>CVSE.config.highscalingThreshold){
                 //we need to scale up by n
-                diff = virtual_queuelength / (ServerConfig.remedialVM_constantfactor); // then divided by beta?
+                diff = virtual_queuelength / (CVSE.config.remedialVM_constantfactor); // then divided by beta?
                 System.out.println("diff=" + diff);
-            } else if (deadLineMissRate < ServerConfig.lowscalingThreshold) {
+            } else if (deadLineMissRate < CVSE.config.lowscalingThreshold) {
                 //we might consider scale down, for now, one at a time
                 System.out.println("scaling down");
                 diff = -1;
@@ -241,7 +241,7 @@ public class ResourceProvisioner {
 
         for(int i=0;i<diff;i++){
             System.out.println("VMcount="+VMcount);
-            if(VMcount <ServerConfig.maxCR) {
+            if(VMcount < CVSE.config.maxCR) {
 
 /*
 
@@ -255,14 +255,14 @@ public class ResourceProvisioner {
             t = new MachineInterface_SocketIO(CR_class, addr, port, id,autoSchedule);
         }
  */
-                if(ServerConfig.CR_type.get(VMcount).equalsIgnoreCase("thread")) { //local transcoding thread mode
+                if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("thread")) { //local transcoding thread mode
                     System.out.println("local virtual server");
-                    //System.out.println(ServerConfig.CR_class.get(VMcount));
-                    //System.out.println(ServerConfig.CR_address.get(VMcount));
-                    //System.out.println(ServerConfig.CR_ports.get(VMcount));
+                    //System.out.println(CVSE.config.CR_class.get(VMcount));
+                    //System.out.println(CVSE.config.CR_address.get(VMcount));
+                    //System.out.println(CVSE.config.CR_ports.get(VMcount));
 
-                    TranscodingVM TC = new TranscodingVM("Thread",ServerConfig.CR_class.get(VMcount),ServerConfig.CR_address.get(VMcount), ServerConfig.CR_ports.get(VMcount));
-                    CVSE.TE.populate(ServerConfig.CR_class.get(VMcount));
+                    TranscodingVM TC = new TranscodingVM("Thread", CVSE.config.CR_class.get(VMcount), CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount));
+                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     TC.start();
                     try {
                         sleep(200);
@@ -270,24 +270,24 @@ public class ResourceProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     VMCollection.add(new machineinfo("thread","",TC));
-                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.CR_class.get(VMcount),ServerConfig.CR_address.get(VMcount), ServerConfig.CR_ports.get(VMcount),VMcount,ServerConfig.CR_autoschedule.get(VMcount));
-                    CVSE.GTS.add_VM(t,ServerConfig.CR_autoschedule.get(VMcount));
-                    CVSE.TE.populate(ServerConfig.CR_class.get(VMcount));
-                }else if(ServerConfig.CR_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
+                    MachineInterface t=new MachineInterface_SocketIO(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("local simulated thread");
                     VMCollection.add(new machineinfo("sim",""));
-                    MachineInterface t=new MachineInterface_SimLocal(ServerConfig.CR_class.get(VMcount), ServerConfig.CR_ports.get(VMcount),VMcount,ServerConfig.CR_autoschedule.get(VMcount)); //no ip needed
-                    CVSE.GTS.add_VM(t,ServerConfig.CR_autoschedule.get(VMcount));
-                    CVSE.TE.populate(ServerConfig.CR_class.get(VMcount));
-                }else if(ServerConfig.CR_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
+                    MachineInterface t=new MachineInterface_SimLocal(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
+                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new machineinfo("simNWcache",""));
-                    MachineInterface t=new MachineInterface_SimNWcache(ServerConfig.CR_class.get(VMcount), ServerConfig.CR_ports.get(VMcount),VMcount,ServerConfig.CR_autoschedule.get(VMcount)); //no ip needed
-                    CVSE.GTS.add_VM(t,ServerConfig.CR_autoschedule.get(VMcount));
-                    CVSE.TE.populate(ServerConfig.CR_class.get(VMcount));
-                }else if(ServerConfig.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local container
+                    MachineInterface t=new MachineInterface_SimNWcache(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
+                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local container
                     System.out.println("container thread");
-                    String IP=DockerManager.CreateContainers(ServerConfig.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
+                    String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
                     System.out.println("returned IP="+IP);
                     VMCollection.add(new machineinfo("local container",IP));
                     try {
@@ -296,17 +296,17 @@ public class ResourceProvisioner {
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
                     System.out.println("VMcount="+VMcount);
-                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.CR_class.get(VMcount),IP, ServerConfig.CR_ports.get(VMcount),VMcount,ServerConfig.CR_autoschedule.get(VMcount)); //no ip needed
-//                    MachineInterface t=new MachineInterface_SocketIO(ServerConfig.CR_class.get(VMcount),IP, 5061,VMcount,ServerConfig.CR_autoschedule.get(VMcount)); //no ip needed
+                    MachineInterface t=new MachineInterface_SocketIO(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
+//                    MachineInterface t=new MachineInterface_SocketIO(CVSE.config.CR_class.get(VMcount),IP, 5061,VMcount,CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
 
-                    CVSE.GTS.add_VM(t,ServerConfig.CR_autoschedule.get(VMcount));
-                   // CVSE.TE.populate(ServerConfig.CR_class.get(VMcount)); no profile for container machine, yet
-                }else if(ServerConfig.CR_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
+                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                   // CVSE.TE.populate(CVSE.config.CR_class.get(VMcount)); no profile for container machine, yet
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
                     /* //EC2
-                    StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(ServerConfig.CR_address.get(VMcount));
+                    StartInstancesRequest start=new StartInstancesRequest().withInstanceIds(CVSE.config.CR_address.get(VMcount));
                     EC2instance.startInstances(start);
-                    VMCollection.add(new machineinfo("EC2",ServerConfig.CR_address.get(VMcount)));
+                    VMCollection.add(new machineinfo("EC2",CVSE.config.CR_address.get(VMcount)));
                     //get IP back and feed to CVSE.GTS_mergable.addVM
 
                     try {
@@ -323,7 +323,7 @@ public class ResourceProvisioner {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    DescribeInstancesRequest request = new   DescribeInstancesRequest().withInstanceIds(ServerConfig.CR_address.get(VMcount));
+                    DescribeInstancesRequest request = new   DescribeInstancesRequest().withInstanceIds(CVSE.config.CR_address.get(VMcount));
                     DescribeInstancesResult result= EC2instance.describeInstances(request);
 
                     /* //list all from request
@@ -358,10 +358,10 @@ public class ResourceProvisioner {
                     System.out.println("get IP:"+IP);
                     //System.out.println("Halt!, before connect");
                     //scanner.nextInt();
-                    CVSE.GTS_mergable.add_VM(ServerConfig.CR_class.get(VMcount),IP, ServerConfig.CR_ports.get(VMcount),VMcount);
+                    CVSE.GTS_mergable.add_VM(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount);
 
                     // Line below, run in the VM machine, NOT here! we need to somehow make that server run this line of code
-                    //TranscodingVMEC2 TC=new TranscodingVMEC2("EC2",ServerConfig.CR_address.get(VMcount), ServerConfig.CR_ports.get(VMcount));
+                    //TranscodingVMEC2 TC=new TranscodingVMEC2("EC2",CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount));
                     //make sure instance is up and running line above
                 */
                 }else{
@@ -378,7 +378,7 @@ public class ResourceProvisioner {
     public int DeleteInstances(int diff){
         diff*=-1; //change to positive numbers
         for(int i=0;i<diff;i++) {
-            if(VMcount >ServerConfig.minCR) {
+            if(VMcount > CVSE.config.minCR) {
                 machineinfo vmitoRemove = VMCollection.remove(VMCollection.size() - 1);
 
                 if (vmitoRemove.type.equalsIgnoreCase("thread")) {

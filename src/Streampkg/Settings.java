@@ -1,6 +1,7 @@
 package Streampkg;
 
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
+import mainPackage.CVSE;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,7 +28,7 @@ public class Settings implements java.io.Serializable{
         /* //don't make dir here
         //mk output dir if not exist
         File F=new File(this.outputDir() );
-        if(ServerConfig.file_mode.equalsIgnoreCase("EC2")){
+        if(CVSE.config.file_mode.equalsIgnoreCase("EC2")){
             //create cloud directory here
         }else {
             if (!F.exists()) {
@@ -65,9 +66,9 @@ public class Settings implements java.io.Serializable{
         //return "repositoryvideos/output";
         //return System.getProperty("user.dir") + "./webapps/CVSS_Implementation_war_exploded/repositoryvideos/" + videoname + "/out.m3u8";
         //project dir
-        //return ServerConfig.path + "streams/" + videoname + resWidth + resHeight;
+        //return CVSE.config.path + "streams/" + videoname + resWidth + resHeight;
         //local webdemo dir
-        return ServerConfig.outputDir + videoname + type + settingNum;
+        return CVSE.config.outputDir + videoname + type + settingNum;
         //return "output/" + videoname + resWidth + resHeight;
     }
 }

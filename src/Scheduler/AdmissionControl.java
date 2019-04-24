@@ -2,6 +2,7 @@ package Scheduler;
 
 import Streampkg.Stream;
 import Streampkg.StreamGOP;
+import mainPackage.CVSE;
 
 public class AdmissionControl {
     private double utilityBased_Prioritization(double c,int segment_number){
@@ -25,7 +26,7 @@ public class AdmissionControl {
             int segment_number=Integer.parseInt(x.segment);
 
             //how we actually assign priority?
-            newPriority=utilityBased_Prioritization(ServerConfig.c_const_for_utilitybased,segment_number);
+            newPriority=utilityBased_Prioritization(CVSE.config.c_const_for_utilitybased,segment_number);
             //
             x.setPriority(newPriority);
         }

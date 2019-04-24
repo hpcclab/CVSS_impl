@@ -1,7 +1,7 @@
 package ResourceManagement;
 
 import Scheduler.GOPTaskScheduler_mergable;
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
 import mainPackage.CVSE;
 
 import java.io.FileWriter;
@@ -21,21 +21,21 @@ public class DataUpdate {
         if(CVSE.RG.finished){
             //file output
             try {
-                String prefix = (ServerConfig.taskmerge) ? "merge_" : "unmerge";
-                prefix += (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
-                prefix += (ServerConfig.consideratemerge) ? "" : "always_merge";
-                prefix += (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) ? ServerConfig.batchqueuesortpolicy : "";
+                String prefix = (CVSE.config.taskmerge) ? "merge_" : "unmerge";
+                prefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
+                prefix += (CVSE.config.consideratemerge) ? "" : "always_merge";
+                prefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "";
                 prefix += "_";
-                FileWriter F1 = new FileWriter("./resultstat/full/" + prefix + ServerConfig.profileRequestsBenhmark);
-                FileWriter F2 = new FileWriter("./resultstat/numbers/" + prefix + ServerConfig.profileRequestsBenhmark);
+                FileWriter F1 = new FileWriter("./resultstat/full/" + prefix + CVSE.config.profileRequestsBenchmark);
+                FileWriter F2 = new FileWriter("./resultstat/numbers/" + prefix + CVSE.config.profileRequestsBenchmark);
                 PrintWriter Fullwriter = new PrintWriter(F1);
                 PrintWriter numberwriter = new PrintWriter(F2);
                 //to screen
-                Fullwriter.println("File" + ServerConfig.profileRequestsBenhmark);
-                if (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) {
-                    Fullwriter.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
+                Fullwriter.println("File" + CVSE.config.profileRequestsBenchmark);
+                if (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) {
+                    Fullwriter.println("Stat for Queuesort=" + CVSE.config.batchqueuesortpolicy + " mergable=" + CVSE.config.taskmerge);
                 } else {
-                    Fullwriter.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
+                    Fullwriter.println("Stat for Queuesort=" + CVSE.config.batchqueuesortpolicy + " mergable=" + CVSE.config.taskmerge);
                 }
                 for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
                     MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
@@ -55,8 +55,8 @@ public class DataUpdate {
                     System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
                 }
 
-                Fullwriter.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxCR);
-                numberwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / ServerConfig.maxCR);
+                Fullwriter.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
+                numberwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / CVSE.config.maxCR);
 
                 Fullwriter.close();
                 numberwriter.close();
@@ -74,11 +74,11 @@ public class DataUpdate {
             }
         }else {
             //to screen
-            System.out.println("File" + ServerConfig.profileRequestsBenhmark);
-            if (!ServerConfig.batchqueuesortpolicy.equalsIgnoreCase("None")) {
-                System.out.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
+            System.out.println("File" + CVSE.config.profileRequestsBenchmark);
+            if (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) {
+                System.out.println("Stat for Queuesort=" + CVSE.config.batchqueuesortpolicy + " mergable=" + CVSE.config.taskmerge);
             } else {
-                System.out.println("Stat for Queuesort=" + ServerConfig.batchqueuesortpolicy + " mergable=" + ServerConfig.taskmerge);
+                System.out.println("Stat for Queuesort=" + CVSE.config.batchqueuesortpolicy + " mergable=" + CVSE.config.taskmerge);
             }
             for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
                 MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
@@ -95,7 +95,7 @@ public class DataUpdate {
                 GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
                 System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
             }
-            System.out.println("avgspentTime " + avgActualSpentTime / ServerConfig.maxCR);
+            System.out.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
         }
     }
 }

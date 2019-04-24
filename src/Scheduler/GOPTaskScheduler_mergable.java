@@ -35,7 +35,7 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
         //Batchqueue.addAll(ST.streamGOPs); // can not just mass add without checking each piece if exist
         for(StreamGOP X:ST.streamGOPs) {
             if (!CVSE.CACHING.checkExistence(X)) {
-                if (ServerConfig.taskmerge) {
+                if (CVSE.config.taskmerge) {
                     MRG.mergeifpossible(X, SDco);
                 } else {
                     //dont merge check
@@ -56,7 +56,7 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
     protected void postschedulefn(StreamGOP X){
         //System.out.println("overwritten postschedulefn is CALLED\n\n\n");
         /*
-        if(ServerConfig.taskmerge) {
+        if(CVSE.config.taskmerge) {
             mrg.removeStreamGOPfromTable(X);
         }
         */

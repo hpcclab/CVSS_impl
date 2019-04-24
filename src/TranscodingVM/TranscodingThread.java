@@ -1,10 +1,10 @@
 package TranscodingVM;
 
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
 import Streampkg.StreamGOP;
+import mainPackage.CVSE;
 import miscTools.Tuple;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -49,7 +49,7 @@ public class TranscodingThread extends Thread{
 
                     System.out.println("In TranscodeSegment of transcoding thread");
 
-                 if (ServerConfig.addProfiledDelay) {
+                 if (CVSE.config.addProfiledDelay) {
                         //System.out.println("est="+aStreamGOP.estimatedExecutionTime+" sd:"+aStreamGOP.estimatedExecutionSD);
                         delay = (long) (aStreamGOP.estimatedExecutionTime + aStreamGOP.estimatedExecutionSD * r.nextGaussian());
                     }
@@ -74,7 +74,7 @@ public class TranscodingThread extends Thread{
                     }else{
                         System.out.println("Unknown Command");
                     }
-                    command = new String[]{"bash", ServerConfig.path + bashdir, aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                    command = new String[]{"bash", CVSE.config.path + bashdir, aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
 
                     ProcessBuilder pb = new ProcessBuilder(command);
                     pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen

@@ -40,7 +40,7 @@ public class TimeEstimator {
         //poll machine type
         HashMap<String, histStat> polled1 = detailedTable.get(VM.VM_class);
         if (polled1 != null) { //have the machine type data
-            //if(ServerConfig.timeEstimatorMode.equalsIgnoreCase("profiled")) {
+            //if(CVSE.config.timeEstimatorMode.equalsIgnoreCase("profiled")) {
                 return searchHistoricProcessTime(polled1, segment,"profiled");
             //}
         }else{

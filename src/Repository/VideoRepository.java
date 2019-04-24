@@ -1,6 +1,7 @@
 package Repository;
 
-import Scheduler.ServerConfig;
+import Scheduler.SystemConfig;
+import mainPackage.CVSE;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class VideoRepository {
     }
     //add both real and profile video
     public void addAllKnownVideos(){
-        for(int j=0;j<ServerConfig.repository.size();j++) {
-            File[] directories = new File(ServerConfig.repository.get(j)).listFiles(File::isDirectory);
+        for(int j = 0; j< CVSE.config.repository.size(); j++) {
+            File[] directories = new File(CVSE.config.repository.get(j)).listFiles(File::isDirectory);
             Arrays.sort(directories);
             for (int i = 0; i < directories.length; i++) {
                 //System.out.println(directories[i].getPath() + File.separatorChar);
@@ -33,9 +34,9 @@ public class VideoRepository {
     }
     //only add real video
     public void addAllRealVideos(){
-        for(int j=0;j<ServerConfig.repository.size();j++) {
-            if(ServerConfig.repository.get(j).equals("repositoryvideos/realVideo")){
-                File[] directories = new File(ServerConfig.repository.get(j)).listFiles(File::isDirectory);
+        for(int j = 0; j< CVSE.config.repository.size(); j++) {
+            if(CVSE.config.repository.get(j).equals("repositoryvideos/realVideo")){
+                File[] directories = new File(CVSE.config.repository.get(j)).listFiles(File::isDirectory);
                 Arrays.sort(directories);
                 for (int i = 0; i < directories.length; i++) {
                     Video v = new Video(directories[i].getPath() + File.separatorChar);

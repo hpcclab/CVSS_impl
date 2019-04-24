@@ -60,7 +60,7 @@ public class MachineInterface_SocketIO extends MachineInterface {
         if(isWorking()) {
 
             //convert path if needed
-            // if(!ServerConfig.CR_type.get(id).equalsIgnoreCase("thread")){
+            // if(!CVSE.config.CR_type.get(id).equalsIgnoreCase("thread")){
             // System.out.println("convert!");
             segment.setPath(segment.getPath().replaceAll("\\\\","/"));
             // }
