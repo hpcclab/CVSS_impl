@@ -1,6 +1,7 @@
 package Streampkg;
 
 import Repository.RepositoryGOP;
+import Scheduler.ServerConfig;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -145,7 +146,8 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         //project dir
         //return ServerConfig.path + "streams/" + videoname;
         //local web demo
-        return "/var/www/html/2019WebDemo/streams/" + videoname;
+        return ServerConfig.outputDir + videoname;
+        //return "/var/www/html/2019WebDemo/streams/" + videoname;
     }
     public String toString()
     {

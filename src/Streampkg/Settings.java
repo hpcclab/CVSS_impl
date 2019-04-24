@@ -1,5 +1,7 @@
 package Streampkg;
 
+import Scheduler.ServerConfig;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class Settings implements java.io.Serializable{
@@ -65,7 +67,7 @@ public class Settings implements java.io.Serializable{
         //project dir
         //return ServerConfig.path + "streams/" + videoname + resWidth + resHeight;
         //local webdemo dir
-        return "/var/www/html/2019WebDemo/streams/" + videoname + type + settingNum;
+        return ServerConfig.outputDir + videoname + type + settingNum;
         //return "output/" + videoname + resWidth + resHeight;
     }
 }

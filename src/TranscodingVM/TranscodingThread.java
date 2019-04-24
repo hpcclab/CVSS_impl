@@ -48,6 +48,7 @@ public class TranscodingThread extends Thread{
                     }
 
                     System.out.println("In TranscodeSegment of transcoding thread");
+
                  if (ServerConfig.addProfiledDelay) {
                         //System.out.println("est="+aStreamGOP.estimatedExecutionTime+" sd:"+aStreamGOP.estimatedExecutionSD);
                         delay = (long) (aStreamGOP.estimatedExecutionTime + aStreamGOP.estimatedExecutionSD * r.nextGaussian());

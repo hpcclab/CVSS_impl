@@ -28,9 +28,9 @@
     <maxCR>8</maxCR>
     <mapping_mechanism>ShortestQueueFirst</mapping_mechanism>	
 	
-	<outputDir>/var/www/html/streams/</outputDir>
+	<outputDir>/mnt/container/streams/</outputDir>
     <path>./</path>
-	<run_mode>sim</run_mode>
+	<run_mode>real</run_mode>
 <repository>repositoryvideos/videoData</repository>
 <repository>repositoryvideos/realVideo</repository>
 
@@ -47,7 +47,7 @@
 	<CR>thread,g2.2xlarge,localhost,15067,true</CR>
 	<CR>thread,g2.2xlarge,localhost,15068,true</CR> -->
 
-<CR>localContainer,g2.2xlarge,localhost,15061,true</CR>
+	<CR>localContainer,g2.2xlarge,localhost,15061,true</CR>
     <CR>localContainer,g2.2xlarge,localhost,15062,true</CR>
     <CR>localContainer,g2.2xlarge,localhost,15063,true</CR>
     <CR>localContainer,g2.2xlarge,localhost,15064,true</CR>

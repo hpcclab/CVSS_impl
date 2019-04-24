@@ -288,6 +288,7 @@ public class ResourceProvisioner {
                 }else if(ServerConfig.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local container
                     System.out.println("container thread");
                     String IP=DockerManager.CreateContainers(ServerConfig.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
+                    System.out.println("returned IP="+IP);
                     VMCollection.add(new machineinfo("local container",IP));
                     try {
                         sleep(400);

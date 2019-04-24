@@ -44,8 +44,10 @@ public class DockerManager {
 
     public static String CreateContainers(String givenPort)  {
         String createdIP="";
-        if(docker == null)
+        if(docker == null) {
             docker = CreateDockerClient();
+            System.out.println("docker Client Created");
+        }
 
         String IP;
 
@@ -61,6 +63,7 @@ public class DockerManager {
 
             String[] ports = {givenPort};
             port++;
+            System.out.println("givenport="+givenPort);
             final Map<String, List<PortBinding>> portBindings = new HashMap<String, List<PortBinding>>();
             for ( String port : ports ) {
                 List<PortBinding> hostPorts = new ArrayList<PortBinding>();
@@ -94,7 +97,7 @@ public class DockerManager {
 
 
         }catch(Exception e){
-            System.out.print("Docker fail");
+            System.out.println("Docker fail: "+e);
         }
         return createdIP;
     }
