@@ -57,9 +57,9 @@ public class SystemConfig {
                         case "outputDir": outputDir= prop.getProperty(keystr); break;
                         case "run_mode": run_mode= prop.getProperty(keystr); break;
                         case "timeEstimatorMode": timeEstimatorMode= prop.getProperty(keystr); break;
-                        case "schedulerPolicy": outputDir= prop.getProperty(keystr); break;
-                        case "mapping_mechanism": run_mode= prop.getProperty(keystr); break;
-                        case "file_mode": timeEstimatorMode= prop.getProperty(keystr); break;
+                        case "schedulerPolicy": schedulerPolicy= prop.getProperty(keystr); break;
+                        case "mapping_mechanism": mapping_mechanism= prop.getProperty(keystr); break;
+                        case "file_mode": file_mode= prop.getProperty(keystr); break;
                         //Int
                         case "localqueuelengthperCR": localqueuelengthperCR= Integer.parseInt(prop.getProperty(keystr)); break;
                         case "dataUpdateInterval": dataUpdateInterval= Integer.parseInt(prop.getProperty(keystr)); break;
@@ -118,7 +118,7 @@ public class SystemConfig {
             CR_address.add(s[2]);
             CR_ports.add(Integer.parseInt(s[3]));
             CR_autoschedule.add(Boolean.parseBoolean(s[4]));
-            //System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" ");
+            //System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" "+s[4]+" ");
 
         } else {
             System.out.println("invalid format");

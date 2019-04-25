@@ -201,7 +201,6 @@ public class RealModeTest {
     }
 
     private static void ReadConfig(){
-            
         //setUpCVSE_forreal("config/nuConfigWeb.properties");
 
         //load video repo so we know their v numbers

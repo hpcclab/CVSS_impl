@@ -93,7 +93,7 @@ public class Merger {
     private MachineInterface v_selectMachine(StreamGOP x, int[] queuelength, long[] executiontime){
 
         GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) CVSE.GTS;
-        //System.out.println("virtual estimation");
+        //System.out.println("select machine using "+CVSE.config.schedulerPolicy);
         if(CVSE.config.schedulerPolicy.equalsIgnoreCase("minmin")){
             //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
             return GTS.shortestQueueFirst(x,queuelength,executiontime,true,1,false);
@@ -103,7 +103,6 @@ public class Merger {
     }
     private int countOriginalMiss(StreamGOP X,double SDco){
         miscTools.TaskQueue newVQ = new miscTools.TaskQueue(Batchqueue);
-
         newVQ.add(X);
         //System.out.println("countOriginalMiss");
         //System.out.println(newVQ.toArray()[0]);
@@ -131,15 +130,22 @@ public class Merger {
         int[] queuelength=new int[machineInterfaces.size()];
         long[] executiontime=new long[machineInterfaces.size()];
         fillEstimatorArray(queuelength,executiontime);
+        //System.out.println("count Original miss function");
+
         for(int i=0;i<virtualQueue_copy.size();i++){
             probecounter++;
             //get a GOP
+
             StreamGOP aGOP=virtualQueue_copy.removeDefault();
             //get a machine
+            //System.out.println("got GOP");
             MachineInterface machine= v_selectMachine(aGOP,queuelength,executiontime);
+            //System.out.println("got machine");
             int machine_index= machineInterfaces.indexOf(machine);
+            //System.out.println("got interface");
             //update our queue
             retStat thestat=CVSE.TE.getHistoricProcessTime(machine,aGOP);
+            //System.out.println("got stat");
             executiontime[machine_index]+=thestat.mean+thestat.SD*SDco; //thestat.SD;
             queuelength[machine_index]++;
             long finishTimeofX= executiontime[machine_index];
@@ -154,6 +160,8 @@ public class Merger {
                 }
             }
         }
+        System.out.println("count Original miss");
+
         return missed;
     }
 
