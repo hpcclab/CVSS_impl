@@ -37,7 +37,7 @@ public class SystemConfig {
     }
     public SystemConfig(String filePath){
         setDefaultValues();
-        try(InputStream inp=new FileInputStream("config/nuConfig.properties")) {
+        try(InputStream inp=new FileInputStream(filePath)) {
             prop.load(inp);
             String keystr="";
             ////////// parse all prop to actual configs

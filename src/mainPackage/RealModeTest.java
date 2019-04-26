@@ -200,7 +200,7 @@ public class RealModeTest {
         //DockerManager.RemoveAllContainers();
     }
 
-    private static void ReadConfig(){
+    private static void ReadVideos(){
         //setUpCVSE_forreal("config/nuConfigWeb.properties");
 
         //load video repo so we know their v numbers
@@ -219,7 +219,7 @@ public class RealModeTest {
 
 
     public static void main(String[] args) throws IOException, InterruptedException, DockerException, DockerCertificateException {
-        ReadConfig();
+        //ReadVideos();
         //RemoveContainers();
         WebRequestTest();
         //CreateContainerTest();

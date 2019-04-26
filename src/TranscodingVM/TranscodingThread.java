@@ -74,7 +74,7 @@ public class TranscodingThread extends Thread{
                     }else{
                         System.out.println("Unknown Command");
                     }
-                    command = new String[]{"bash", CVSE.config.path + bashdir, aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                    command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
 
                     ProcessBuilder pb = new ProcessBuilder(command);
                     pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen

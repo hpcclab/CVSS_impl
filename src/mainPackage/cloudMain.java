@@ -1,6 +1,7 @@
 package mainPackage;
 
 import Repository.VideoRepository;
+import Scheduler.SystemConfig;
 import TimeEstimatorpkg.TimeEstNone;
 import TranscodingVM.TranscodingVM;
 
@@ -30,9 +31,14 @@ public class cloudMain {
     }
     private static void manualSetting(){
 
+        CVSE.config=new SystemConfig("/home/shared/config/nuConfigWeb.properties");
+        CVSE.config.addProfiledDelay = true;
+        CVSE.config.path = "/home/shared/";
+        CVSE.config.outputDir="/home/shared/streams/";
+
     }
     public static void main(String[] args) throws InterruptedException {
-        File configfile = new File("config/config_node.xml");
+        //File configfile = new File("config/config_node.xml");
 /*
         JAXBContext ctx = null;
         try {

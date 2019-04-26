@@ -55,7 +55,7 @@ public class StreamManager {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
 
-        String[] command = {"bash", CVSE.config.path + "bash/createDir.sh", userRequest.outputDir(), CVSE.config.path, userRequest.videoname};
+        String[] command = {"bash", CVSE.config.path + "/bash/createDir.sh", userRequest.outputDir(), CVSE.config.path, userRequest.videoname};
 
         try {
             ProcessBuilder pb = new ProcessBuilder(command);

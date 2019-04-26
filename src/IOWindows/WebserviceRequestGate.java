@@ -107,7 +107,6 @@ class handler implements Provider<Source> {
 
             }
 
-
             newSettings.type = cmd;
             newSettings.settingNum = setting;
             newSettings.videoname = CVSE.VR.videos.get(video).name;
@@ -124,7 +123,7 @@ class handler implements Provider<Source> {
             xml.append("<response> video request "+ arg[1]+" "+arg[3]+" "+arg[5] +" accepted</response>");
             //xml.append(newSettings.videoDir());
            // return new StreamSource(new StringReader(xml.toString()));
-            return new StreamSource(response);
+            return new StreamSource("");
         }
     }
 
