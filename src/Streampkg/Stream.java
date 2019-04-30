@@ -70,7 +70,7 @@ public class Stream {
 
     ////////// real mode
     public Stream(Video v, Settings settings){
-        this(v,"Resolution", settings.resWidth,0,v.repositoryGOPs.size(),(long)0,(long)0, settings);
+        this(v,settings.type, settings.resWidth,0,v.repositoryGOPs.size(),(long)0,(long)0, settings);
     }
     public Stream(Video v,String command, String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime,Settings vidSettings){
         videoSettings = vidSettings;

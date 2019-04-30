@@ -81,10 +81,15 @@ public class StreamManager {
         CreateDirectory(userRequest);
 
         //Admission Control assign Priority of each segments
-        CVSE.AC.AssignStreamPriority(ST);
-        for(StreamGOP x:ST.streamGOPs){
-            System.out.println(x.getPriority());
+        for(int i=0;i<ST.streamGOPs.size();i++){
+            File dir = new File(ST.streamGOPs.get(i).outputDir());
+            if (dir.exists()){
+                ST.streamGOPs.remove(i);
+                i--;
+            }
         }
+        CVSE.AC.AssignStreamPriority(ST);
+
         System.out.println("Number of Stream GOPs in stream: " + ST.streamGOPs.size());
         //Scheduler
         System.out.println("before stream");
