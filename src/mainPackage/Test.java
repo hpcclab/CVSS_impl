@@ -93,6 +93,7 @@ public class Test {
             sleep(300);
             //wind down process
             CVSE.VMP.DU.printstat();
+            CVSE.VMP.DU.graphplot();
             CVSE.GTS.close();
             CVSE.VMP.closeAll();
 
@@ -120,7 +121,7 @@ public class Test {
 
         CVSE _CVSE=new CVSE();
             setUpCVSE_forsim("config/nuConfig.properties");
-
+        CVSE.VMP.DU.graphplot();
 
         return "done";
     }
@@ -138,8 +139,8 @@ public class Test {
                 System.out.println(test(args[2], args[1]));
             }
         } else {
-            //System.out.println(testbug(0));
-            System.out.println(test("nuConfig.properties", "config"));
+            System.out.println(testbug(0));
+            //System.out.println(test("nuConfig.properties", "config"));
         }
     //System.out.println(testbug(0));
             //DirectoryTest();

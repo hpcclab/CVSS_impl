@@ -10,9 +10,27 @@ import java.io.PrintWriter;
 import static java.lang.Thread.sleep;
 
 public class DataUpdate {
+    String Statpath="./resultstat";
+    String filename="merge__Sortalways_mergeDeadline_test2000r_180000_10000_3000_s1.txt";
     public DataUpdate(){
     }
+    public void graphplot(){
+        //brief graph
+        String command[] = new String[]{"bash", "bash/plot.sh", Statpath+"/numbers/"+filename};
+        //full graph
+        //String command[] =...
+        ////
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+        pb.redirectError(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen
+        try {
+            Process p = pb.start();
+            p.waitFor();
 
+        } catch (Exception e) {
+            System.out.println("Did not execute bashfile :(");
+        }
+    }
     public void printstat(){
         //print stat!
         long avgActualSpentTime=0;
@@ -20,14 +38,16 @@ public class DataUpdate {
         long totaldeadlinemiss=0, ntotaldeadlinemiss=0;
         if(CVSE.RG.finished){
             //file output
+
             try {
                 String prefix = (CVSE.config.taskmerge) ? "merge_" : "unmerge";
                 prefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
                 prefix += (CVSE.config.consideratemerge) ? "" : "always_merge";
                 prefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "";
                 prefix += "_";
-                FileWriter F1 = new FileWriter("./resultstat/full/" + prefix + CVSE.config.profileRequestsBenchmark);
-                FileWriter F2 = new FileWriter("./resultstat/numbers/" + prefix + CVSE.config.profileRequestsBenchmark);
+                filename=prefix+CVSE.config.profileRequestsBenchmark;
+                FileWriter F1 = new FileWriter(Statpath+"/full/" +filename);
+                FileWriter F2 = new FileWriter(Statpath+"/numbers/" +filename);
                 PrintWriter Fullwriter = new PrintWriter(F1);
                 PrintWriter numberwriter = new PrintWriter(F2);
                 //to screen
