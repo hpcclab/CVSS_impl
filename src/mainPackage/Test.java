@@ -90,10 +90,19 @@ public class Test {
             // Check point, enter any key to continue
             //System.out.println("enter any key to terminate the system");
             //scanner.next();
-            sleep(300);
             //wind down process
+            if(CVSE.VMP==null){
+                System.out.println("VMP is down");
+            }else{
+                if(CVSE.VMP.DU==null){
+                    System.out.println("DU is down");
+                }
+                System.out.println("Okay");
+            }
             CVSE.VMP.DU.printstat();
             CVSE.VMP.DU.graphplot();
+
+            sleep(300);
             CVSE.GTS.close();
             CVSE.VMP.closeAll();
 
@@ -108,20 +117,26 @@ public class Test {
     //sandbox testing something strange, not really doing the program code
     private static String testbug(int seed) {
 
-        /*try {
-        //read config file
-        File configfile = new File("config/config.xml");
-        JAXBContext ctx = JAXBContext.newInstance(CVSE.config.class);
-        Unmarshaller um = ctx.createUnmarshaller();
-        SystemConfig rootElement = (SystemConfig) um.unmarshal(configfile);
-        } catch (Exception e) {
-            return "Failed: " + e;
-        }
-        */
+
 
         CVSE _CVSE=new CVSE();
             setUpCVSE_forsim("config/nuConfig.properties");
-        CVSE.VMP.DU.graphplot();
+        if (seed == 0) {
+            //int[] sr={699,1911,16384,9999,555,687,9199,104857,212223,777}; // first 10
+            int[] sr = {1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
+            for (int j = 0; j < sr.length; j++) {
+                for (int i = 2000; i <= 3400; i += 200) {
+                    _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 88, i, 180000, 10000, 3000);
+                }
+            }
+        } else {
+            for (int i = 2000; i <= 3400; i += 200) {
+                _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + seed, seed, 88, i, 180000, 10000, 3000);
+            }
+        }
+
+
+        //CVSE.VMP.DU.graphplot();
 
         return "done";
     }
@@ -139,8 +154,8 @@ public class Test {
                 System.out.println(test(args[2], args[1]));
             }
         } else {
-            System.out.println(testbug(0));
-            //System.out.println(test("nuConfig.properties", "config"));
+            //System.out.println(testbug(0));
+            System.out.println(test("nuConfig.properties", "config"));
         }
     //System.out.println(testbug(0));
             //DirectoryTest();

@@ -147,8 +147,10 @@ public class ResourceProvisioner {
             previous_wovertime=current_weighted_overtime;
             previous_wundertime=current_weighted_undertime;
         }
-
-        //if time doesn't move,F
+        if(DU !=null) { //maybe it's terminated at the end
+            DU.printfrequentstat();
+        }
+        //if time doesn't move,Force time move
         if(CVSE.config.run_mode.equalsIgnoreCase("sim")) {
             if (CVSE.GTS.maxElapsedTime != T_maxElapsedTime) {
                 System.out.println("CVSE.GTS_mergable.maxElapsedTime="+CVSE.GTS.maxElapsedTime);

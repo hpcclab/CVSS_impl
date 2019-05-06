@@ -5,16 +5,34 @@ import Scheduler.SystemConfig;
 import mainPackage.CVSE;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import static java.lang.Thread.sleep;
 
 public class DataUpdate {
     String Statpath="./resultstat";
+    String FilenamePrefix;
     String filename="merge__Sortalways_mergeDeadline_test2000r_180000_10000_3000_s1.txt";
+    FileWriter Freq;
+    PrintWriter Freqwriter;
     public DataUpdate(){
+        FilenamePrefix = (CVSE.config.taskmerge) ? "merge_" : "unmerge";
+        FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
+        FilenamePrefix += (CVSE.config.consideratemerge) ? "" : "always_merge";
+        FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "";
+        FilenamePrefix += "_";
+        filename=FilenamePrefix+CVSE.config.profileRequestsBenchmark;
+        try {
+            Freq = new FileWriter(Statpath+"/freq/" +filename);
+            Freqwriter = new PrintWriter(Freq);
+        } catch (IOException e) {
+            System.out.println("Stat printing error");
+            e.printStackTrace();
+        }
     }
     public void graphplot(){
+        System.out.println("Call graphplot");
         //brief graph
         String command[] = new String[]{"bash", "bash/plot.sh", Statpath+"/numbers/"+filename};
         //full graph
@@ -29,7 +47,25 @@ public class DataUpdate {
 
         } catch (Exception e) {
             System.out.println("Did not execute bashfile :(");
+            e.printStackTrace();
         }
+    }
+    //refuent stat printing, for plotting graph with more detail
+    public void printfrequentstat(){
+        System.out.println("Print frequent Stat");
+        long avgActualSpentTime=0;
+        long totalWorkDone=0,ntotalWorkDone=0;
+        long totaldeadlinemiss=0, ntotaldeadlinemiss=0;
+        for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
+            MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
+            avgActualSpentTime += vmi.actualSpentTime;
+            totalWorkDone += vmi.total_itemdone;
+            ntotalWorkDone += vmi.total_taskdone;
+            totaldeadlinemiss += vmi.total_itemmiss;
+            ntotaldeadlinemiss += vmi.total_taskmiss;
+        }
+
+        Freqwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / CVSE.config.maxCR);
     }
     public void printstat(){
         //print stat!
@@ -40,12 +76,6 @@ public class DataUpdate {
             //file output
 
             try {
-                String prefix = (CVSE.config.taskmerge) ? "merge_" : "unmerge";
-                prefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
-                prefix += (CVSE.config.consideratemerge) ? "" : "always_merge";
-                prefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "";
-                prefix += "_";
-                filename=prefix+CVSE.config.profileRequestsBenchmark;
                 FileWriter F1 = new FileWriter(Statpath+"/full/" +filename);
                 FileWriter F2 = new FileWriter(Statpath+"/numbers/" +filename);
                 PrintWriter Fullwriter = new PrintWriter(F1);
@@ -87,8 +117,10 @@ public class DataUpdate {
                     GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
                     System.out.println("Probe count=" + GTS.MRG.probecounter); //check how it works after refactor
                 }
-                sleep(200);
-                System.exit(0);
+                Freqwriter.close();
+                Freq.close();
+                //sleep(200);
+                //System.exit(0);
             }catch(Exception e){
                 System.out.println("printstat bug:"+e);
             }
@@ -117,5 +149,6 @@ public class DataUpdate {
             }
             System.out.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
         }
+
     }
 }

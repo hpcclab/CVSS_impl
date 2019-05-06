@@ -20,8 +20,9 @@ def insMeanAndCI(mean,CI,raw,count):
     mean.append(cin[0])
     CI.append(cin[1])
 
-Ontime=0
+Total=0
 Miss=0
+Ontime=0
 #####################
 #grab data section
 #print "This is The arguments [1]", sys.argv[1]
@@ -30,11 +31,12 @@ with open(sys.argv[1]) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     for row in csv_reader:
-        Ontime=int(row[0])
+        Total=int(row[0])
         Miss=int(row[2])
-print(str(Ontime)+" "+str(Miss))
+        Ontime=Total-Miss
+print(str(Total)+" "+str(Miss) +" "+str(Ontime))
 #####################
-top=max(Ontime,Miss)*1.2
+top=max(Total,Miss)*1.05
 ###########################################
 # initiation
 fig, ax = plt.subplots()
