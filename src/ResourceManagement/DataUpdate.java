@@ -7,15 +7,46 @@ import mainPackage.CVSE;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import static java.lang.Thread.sleep;
-
+//graph
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
+//
+class graph extends ApplicationFrame {
+    public graph(final String title,XYSeries hitcount,XYSeries misscount) {
+        super(title);
+        XYSeriesCollection data = new XYSeriesCollection(hitcount);
+        data.addSeries(misscount);
+        final JFreeChart chart = ChartFactory.createXYLineChart(
+                "Hit Miss demo",
+                "Finish tasks",
+                "Task count",
+                data,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        setContentPane(chartPanel);
+    }
+}
 public class DataUpdate {
     String Statpath="./resultstat";
     String FilenamePrefix;
     String filename="merge__Sortalways_mergeDeadline_test2000r_180000_10000_3000_s1.txt";
     FileWriter Freq;
     PrintWriter Freqwriter;
+    XYSeries hitcount = new XYSeries("On-time");
+    XYSeries misscount = new XYSeries("Miss");
+
     public DataUpdate(){
         FilenamePrefix = (CVSE.config.taskmerge) ? "merge_" : "unmerge";
         FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
@@ -33,6 +64,12 @@ public class DataUpdate {
     }
     public void graphplot(){
         System.out.println("Call graphplot");
+        /////////// Java plot
+        final graph finalgraph=new graph("Hit/Miss tasks",hitcount,misscount);
+        finalgraph.pack();
+        RefineryUtilities.centerFrameOnScreen(finalgraph);
+        finalgraph.setVisible(true);
+        /*
         //brief graph
         String command[] = new String[]{"bash", "bash/plot.sh", Statpath+"/numbers/"+filename};
         //full graph
@@ -49,6 +86,8 @@ public class DataUpdate {
             System.out.println("Did not execute bashfile :(");
             e.printStackTrace();
         }
+
+         */
     }
     //refuent stat printing, for plotting graph with more detail
     public void printfrequentstat(){
@@ -64,7 +103,8 @@ public class DataUpdate {
             totaldeadlinemiss += vmi.total_itemmiss;
             ntotaldeadlinemiss += vmi.total_taskmiss;
         }
-
+        hitcount.add(totalWorkDone,totalWorkDone-totaldeadlinemiss);
+        misscount.add(totalWorkDone,totaldeadlinemiss);
         Freqwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / CVSE.config.maxCR);
     }
     public void printstat(){

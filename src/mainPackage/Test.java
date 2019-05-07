@@ -97,7 +97,6 @@ public class Test {
                 if(CVSE.VMP.DU==null){
                     System.out.println("DU is down");
                 }
-                System.out.println("Okay");
             }
             CVSE.VMP.DU.printstat();
             CVSE.VMP.DU.graphplot();

@@ -85,5 +85,6 @@
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.52" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-simple:1.7.26" level="project" />
+    <orderEntry type="library" name="org.jfree:jfreechart:1.0.19" level="project" />
   </component>
 </module>
