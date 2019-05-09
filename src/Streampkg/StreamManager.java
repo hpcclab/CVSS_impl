@@ -82,6 +82,8 @@ public class StreamManager {
 
         //Admission Control assign Priority of each segments
         for(int i=0;i<ST.streamGOPs.size();i++){
+            System.out.println(ST.streamGOPs.get(i).outputDir());
+            System.out.println(ST.streamGOPs.get(i).segment);
             File dir = new File(ST.streamGOPs.get(i).outputDir());
             if (dir.exists()){
                 ST.streamGOPs.remove(i);
@@ -97,3 +99,4 @@ public class StreamManager {
         System.out.println("after stream");
     }
 }
+

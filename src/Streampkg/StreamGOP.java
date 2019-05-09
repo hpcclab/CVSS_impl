@@ -4,6 +4,7 @@ import Repository.RepositoryGOP;
 import Scheduler.SystemConfig;
 import mainPackage.CVSE;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -23,52 +24,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     public long estimatedExecutionTime=0;
     public double estimatedExecutionSD=0;
     public int requestcount=0; //be 1 unless merged
-    public long getdeadlineof(String key){
-        if(!deadlineSet.containsKey(key)){
-            System.out.println("does not contain data for this deadline!");
-            return -1;
-        }else{
-                return deadlineSet.get(key);
-        }
 
-    }
-    public boolean containCmdParam(String Command,String Setting){
-        if(cmdSet.containsKey(Command)) {
-            LinkedList<String> paramList=cmdSet.get(Command);
-            if(paramList.contains(Setting)){
-                return true;
-            }
-        }
-        return false;
-    }
-    public void addCMD(String Command,String Setting,long in_deadline){
-        //System.out.println("call addcmd"+Command+" "+Setting);
-        if(!containCmdParam(Command,Setting)) {
-            if (cmdSet.containsKey(Command)) {
-                LinkedList<String> parameterList = cmdSet.get(Command);
-                parameterList.add(Setting);
-                // do i need to put back?, NO? it's pointer!
-            } else {
-                LinkedList<String> parameterList = new LinkedList<>();
-                parameterList.add(Setting);
-                cmdSet.put(Command, parameterList);
-            }
-            requestcount++;
-            deadlineSet.put(Command+Setting,in_deadline);
-            //System.out.println("cmd count="+requestcount+"\n\n");
-        }else{
-            System.out.println("addCMD: already have this cmd");
-        }
-    }
-    public void getAllCMD(StreamGOP aGOP){
-        for (String command : aGOP.cmdSet.keySet()) { //not really needed, since X should have just one cmd at the moment
-            LinkedList<String> param = new LinkedList<>(aGOP.cmdSet.get(command));
-            for (String aparam : param) {
-                addCMD(command, aparam,aGOP.getdeadlineof(command+aparam));
-                //System.out.println("a call to add cmd");
-            }
-        }
-    }
     public StreamGOP(){
         super();
         deadLine=presentationTime;
@@ -119,6 +75,52 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         }
     }
 
+    public long getdeadlineof(String key){
+        if(!deadlineSet.containsKey(key)){
+            System.out.println("does not contain data for this deadline!");
+            return -1;
+        }else{
+            return deadlineSet.get(key);
+        }
+
+    }
+    public boolean containCmdParam(String Command,String Setting){
+        if(cmdSet.containsKey(Command)) {
+            LinkedList<String> paramList=cmdSet.get(Command);
+            if(paramList.contains(Setting)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void addCMD(String Command,String Setting,long in_deadline){
+        //System.out.println("call addcmd"+Command+" "+Setting);
+        if(!containCmdParam(Command,Setting)) {
+            if (cmdSet.containsKey(Command)) {
+                LinkedList<String> parameterList = cmdSet.get(Command);
+                parameterList.add(Setting);
+                // do i need to put back?, NO? it's pointer!
+            } else {
+                LinkedList<String> parameterList = new LinkedList<>();
+                parameterList.add(Setting);
+                cmdSet.put(Command, parameterList);
+            }
+            requestcount++;
+            deadlineSet.put(Command+Setting,in_deadline);
+            //System.out.println("cmd count="+requestcount+"\n\n");
+        }else{
+            System.out.println("addCMD: already have this cmd");
+        }
+    }
+    public void getAllCMD(StreamGOP aGOP){
+        for (String command : aGOP.cmdSet.keySet()) { //not really needed, since X should have just one cmd at the moment
+            LinkedList<String> param = new LinkedList<>(aGOP.cmdSet.get(command));
+            for (String aparam : param) {
+                addCMD(command, aparam,aGOP.getdeadlineof(command+aparam));
+                //System.out.println("a call to add cmd");
+            }
+        }
+    }
 
     private double priority;
 
@@ -141,13 +143,13 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
     {
         this.priority = priority;
     }
-        //need to re
+    //need to re
     public String outputDir() {
         //return System.getProperty("user.dir") + "./webapps/CVSS_Implementation_war_exploded/repositoryvideos/" + videoname + "/out.m3u8";
         //project dir
         //return CVSE.config.path + "streams/" + videoname;
         //local web demo
-        return CVSE.config.outputDir + videoname;
+        return CVSE.config.outputDir + videoname + videoSetting.type + videoSetting.settingNum + File.separator + segment + ".ts";
         //return "/var/www/html/2019WebDemo/streams/" + videoname;
     }
     public String toString()
