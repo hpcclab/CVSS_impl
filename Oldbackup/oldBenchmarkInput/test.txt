@@ -1,4 +1,0 @@
-7 Codec TBD 0 20150
-7 Codec TBD 0 47229
-7 Bitrate TBD 0 61953
-7 Bitrate TBD 0 52497

@@ -39,6 +39,7 @@ public abstract class MachineInterface {
     }
 
     public abstract boolean sendJob(StreamGOP segment);
+    public void addOperation(Operations.simpleoperation newOP){} //introduce new operation to the system, interface for future feature, do nothing for now
     public abstract void dataUpdate();
     public abstract boolean sendShutdownmessage();
     public void close(){}
