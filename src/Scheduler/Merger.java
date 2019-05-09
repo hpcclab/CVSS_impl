@@ -93,12 +93,22 @@ public class Merger {
     private MachineInterface v_selectMachine(StreamGOP x, int[] queuelength, long[] executiontime){
 
         GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) CVSE.GTS;
-        //System.out.println("select machine using "+CVSE.config.schedulerPolicy);
-        if(CVSE.config.schedulerPolicy.equalsIgnoreCase("minmin")){
-            //minimum expectedTime is basically ShortestQueueFirst but calculate using TimeEstimator, and QueueExpectedTime
-            return GTS.shortestQueueFirst(x,queuelength,executiontime,true,1,false);
-        }else { //default way, shortestQueueFirst
-            return GTS.shortestQueueFirst(x,queuelength,executiontime,false,1,false); //false for not using TimeEstimator
+        //System.out.println("select machine using "+CVSE.config.scheduler_machineselectionpolicy);
+
+        if(CVSE.config.scheduler_machineselectionpolicy.equalsIgnoreCase("MCT")){ //Minimum Completion Time
+            //use SDco or 2 ??
+            return GTS.simplemachineselect(x,queuelength,executiontime,"MCT",2,false);
+        }else if(CVSE.config.scheduler_machineselectionpolicy.equalsIgnoreCase("SJF")){  //Shortest Job(queue) First
+            return GTS.simplemachineselect(x,queuelength,executiontime,"SJF",2,false);
+        }else if(CVSE.config.scheduler_machineselectionpolicy.equalsIgnoreCase("MET")){  //Minimum Execution time First
+            return GTS.simplemachineselect(x,queuelength,executiontime,"MET",2,false);
+
+        }else if(CVSE.config.scheduler_machineselectionpolicy.equalsIgnoreCase("SQL")){ //Shortest Queue Length,
+            // don't need time estimator
+            return GTS.ShortestQueueLength(x,queuelength,executiontime,2,false);
+        }else{
+            //what should be a default? SQL maybe?
+            return GTS.ShortestQueueLength(x,queuelength,executiontime,2,false);
         }
     }
     private int countOriginalMiss(StreamGOP X,double SDco){

@@ -58,22 +58,25 @@ public abstract class GOPTaskScheduler {
         }
         return false;
     }
-
+    public int FCFS(){
+        int dispatched=0;
+        for(int i = 0; i< machineInterfaces.size(); i++){ //get a free machine
+            int assignable= machineInterfaces.get(i).estimatedQueueLength - CVSE.config.localqueuelengthperCR; //get number of task can assign to this machine
+            while ((!Batchqueue.isEmpty()) && assignable>0) {
+                StreamGOP X=Batchqueue.removeDefault();
+                X.dispatched=true;
+                machineInterfaces.get(i).sendJob(X);
+                dispatched++;
+                System.out.println("FCFS scheduler send job " + X.getPath() + " to " + machineInterfaces.get(i).toString());
+            }
+        }
+        return dispatched;
+    }
     public void taskScheduling() {
         System.out.println("called non overwritten taskScheduling function, doing FCFS assignment");
         if(scheduler_working !=1) {
             scheduler_working = 1;
-
-            for(int i = 0; i< machineInterfaces.size(); i++){ //get a free machine
-                int assignable= machineInterfaces.get(i).estimatedQueueLength - CVSE.config.localqueuelengthperCR; //get number of task can assign to this machine
-                System.out.println("basic scheduler");
-                while ((!Batchqueue.isEmpty()) && assignable>0) {
-                    StreamGOP X=Batchqueue.removeDefault();
-                    X.dispatched=true;
-                    machineInterfaces.get(i).sendJob(X);
-                    System.out.println("basic scheduler send job " + X.getPath() + " to " + machineInterfaces.get(i).toString());
-                    }
-            }
+            FCFS();
             scheduler_working =0;
         }
     }

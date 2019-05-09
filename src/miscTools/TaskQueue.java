@@ -43,11 +43,11 @@ public class TaskQueue extends LinkedList<StreamGOP> {
     }
     public Streampkg.StreamGOP pollMaxUrgency(){ //Homogeneous Only
         Streampkg.StreamGOP earliest = peekFirst();
-        long earliestvalue=earliest.deadLine-CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), earliest,1);
+        long earliestvalue=earliest.deadLine-CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), earliest,2);
         ListIterator<Streampkg.StreamGOP> it = listIterator(1);
         while (it.hasNext()) {
             Streampkg.StreamGOP t = it.next();
-            long checkvalue=t.deadLine- CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), t,1);
+            long checkvalue=t.deadLine- CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), t,2);
             if ( checkvalue<earliestvalue) {
                 earliest = t;
                 earliestvalue=checkvalue;
@@ -78,7 +78,7 @@ public class TaskQueue extends LinkedList<StreamGOP> {
             return removeHighestPrio();
         }else if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("Deadline")) {
             return removeEDL();
-        }else if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) {
+        }else if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("Urgency")) { //maybe broken right now
             return removeMaxUrgency(); //Homogeneous Only
         }else{
             System.out.println("unrecognize batchqueue policy");

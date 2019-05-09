@@ -9,7 +9,7 @@ import java.util.Properties;
 public class SystemConfig {
     private ArrayList<String> Stringlist= new ArrayList<>(Arrays.asList("defaultInputPath","defaultOutputPath","defaultBatchScript","path","batchqueuesortpolicy",
             "profileRequestsBenhmark","overwriteQueuePolicyHeuristic","outputDir","run_mode","timeEstimatorMode",
-            "schedulerPolicy","mapping_mechanism","file_mode"));
+            "scheduler_machineselectionpolicy","file_mode"));
 
     private ArrayList<String> intList= new ArrayList<>(Arrays.asList("localqueuelengthperCR","dataUpdateInterval","CRscalingIntervalTick","maxCR","minCR","remedialVM_constantfactor"));
     private ArrayList<String> doubleList= new ArrayList<>(Arrays.asList("lowscalingThreshold","highscalingThreshold","c_const_for_utilitybased"));
@@ -57,8 +57,7 @@ public class SystemConfig {
                         case "outputDir": outputDir= prop.getProperty(keystr); break;
                         case "run_mode": run_mode= prop.getProperty(keystr); break;
                         case "timeEstimatorMode": timeEstimatorMode= prop.getProperty(keystr); break;
-                        case "schedulerPolicy": schedulerPolicy= prop.getProperty(keystr); break;
-                        case "mapping_mechanism": mapping_mechanism= prop.getProperty(keystr); break;
+                        case "scheduler_machineselectionpolicy": scheduler_machineselectionpolicy = prop.getProperty(keystr); break;
                         case "file_mode": file_mode= prop.getProperty(keystr); break;
                         //Int
                         case "localqueuelengthperCR": localqueuelengthperCR= Integer.parseInt(prop.getProperty(keystr)); break;
@@ -159,7 +158,7 @@ public class SystemConfig {
     //public static int maximumResolution;
     public  boolean enableTimeEstimator=false; //if true, use Time estimator to do scheduling
     public  String timeEstimatorMode="";
-    public  String schedulerPolicy;
+    public  String scheduler_machineselectionpolicy;
     public  boolean enableCaching=false; //if true, use caching system
     public  boolean enableCRscaling=false;
     public  int dataUpdateInterval=1000; //millisecond, 0 to disable
@@ -171,7 +170,6 @@ public class SystemConfig {
     public  double lowscalingThreshold; // for VM provisioning algorithms
     public  double highscalingThreshold;
     public  double c_const_for_utilitybased=0.1; //default value=0.1
-    public  String mapping_mechanism;// can be either MM,MSD,MMU
     public  boolean useEC2;
     public  String file_mode="S3"; //can be S3 or
     //public static boolean mergeOverwriteQueuePolicy=true;
@@ -256,8 +254,8 @@ public class SystemConfig {
         CVSE.config.timeEstimatorMode = timeEstimatorMode;
     }
 
-    public void setSchedulerPolicy(String schedulerPolicy) {
-        CVSE.config.schedulerPolicy = schedulerPolicy;
+    public void setSchedulerPolicy(String scheduler_machineselectionpolicy) {
+        CVSE.config.scheduler_machineselectionpolicy = scheduler_machineselectionpolicy;
     }
     public void setEnableCaching(String check) {
         if(check.equalsIgnoreCase("True")) {

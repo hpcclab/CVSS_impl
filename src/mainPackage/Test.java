@@ -37,13 +37,13 @@ public class Test {
 
     }
 
-    public static String test(String confFile, String opt) {
+    public static String Sim(String confFile, String opt) {
         try {
             Scanner scanner = new Scanner(System.in);
             //read config file
-
-            setUpCVSE_forsim("config/" + confFile);
-
+            if(!opt.equals("testconfig.txt")) { //if benchmark profile is freshly generated, CVSE is already set-up
+                setUpCVSE_forsim("config/" + confFile);
+            }
             int rqn = 1, interval, n;
             if (CVSE.config.profiledRequests) {
                 if (opt.equalsIgnoreCase("config")) {
@@ -150,11 +150,22 @@ public class Test {
             if (args[0].equalsIgnoreCase("makeconfig")) {
                 System.out.println(testbug(Integer.parseInt(args[1])));
             } else { //run
-                System.out.println(test(args[2], args[1]));
+                System.out.println(Sim(args[2], args[1]));
             }
         } else {
             //System.out.println(testbug(0));
-            System.out.println(test("nuConfig.properties", "config"));
+            //System.out.println(test("nuConfig.properties", "config"));
+            ///
+            //Benchmark file test
+            CVSE _CVSE=new CVSE();
+            setUpCVSE_forsim("config/nuConfig.properties");
+            String benchmarkname="testconfig";
+            // For 4 parameters
+            // CVSE.RG.generateProfiledRandomRequests(benchmarkname,1024, 88, 1000, 180000, 10000, 3000);
+            CVSE.RG.generateProfiledRandomRequests(benchmarkname,1024, 88, 8000, 180000, 10000, 3000);
+
+            System.out.println(Sim("nuConfig.properties", benchmarkname+".txt"));
+            //
         }
     //System.out.println(testbug(0));
             //DirectoryTest();
