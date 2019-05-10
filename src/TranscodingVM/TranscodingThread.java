@@ -58,23 +58,34 @@ public class TranscodingThread extends Thread{
                     String filename = aStreamGOP.getPath().substring(aStreamGOP.getPath().lastIndexOf("/") + 1, aStreamGOP.getPath().length());
                     //extra line for windows below, need test if work with linux
                     filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.length());
-                    String outputdir = aStreamGOP.outputDir();
                     System.out.println("Segment name: " + aStreamGOP.segment);
                     System.out.println("Segment output directory: " + aStreamGOP.videoSetting.outputDir());
                     String[] command;
                     String bashdir="";
                     if(aStreamGOP.videoSetting.type.equals("resolution")){
                         bashdir="bash/resize.sh";
+                        command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
                     }else if(aStreamGOP.videoSetting.type.equals("framerate")){
                         bashdir="bash/framerate.sh";
+                        command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
                     }else if(aStreamGOP.videoSetting.type.equals("bitrate")) {
                         bashdir="bash/bitrate.sh";
+                        command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
                     }else if(aStreamGOP.videoSetting.type.equals("codec")){
                         bashdir="bash/codec.sh";
-                    }else{
-                        System.out.println("Unknown Command");
+                        command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                    }else if(aStreamGOP.videoSetting.type.equals("blackwhite")) {
+                        bashdir="bash/bw.sh";
+                        command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.outputDir(), filename};
+                        System.out.println(CVSE.config.path + bashdir);
+                        System.out.println(CVSE.config.path + aStreamGOP.getPath());
+                        System.out.println(aStreamGOP.videoSetting.outputDir());
+                        System.out.println(filename);
                     }
-                    command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                    else{
+                        System.out.println("Unknown Command");
+                        command = new String[]{"bash", CVSE.config.path + bashdir, CVSE.config.path + aStreamGOP.getPath(), aStreamGOP.videoSetting.resWidth, aStreamGOP.videoSetting.resHeight, aStreamGOP.videoSetting.outputDir(), filename};
+                    }
 
                     ProcessBuilder pb = new ProcessBuilder(command);
                     pb.redirectOutput(ProcessBuilder.Redirect.INHERIT); //debug,make output from bash to screen

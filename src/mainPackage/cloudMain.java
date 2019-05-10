@@ -72,7 +72,7 @@ public class cloudMain {
             System.out.println("read bug");
         }
         //create
-        TranscodingVM TC = new TranscodingVM("localContainer","g2.2xlarge","0.0.0.0", Integer.parseInt(port));
+        TranscodingVM TC = new TranscodingVM("localContainer","chameleonBM","0.0.0.0", Integer.parseInt(port));
         //CVSE.TE.populate("localContainer");
         TC.start();
         TC.join();

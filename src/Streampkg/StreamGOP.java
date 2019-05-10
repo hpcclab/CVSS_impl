@@ -149,9 +149,14 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         //project dir
         //return CVSE.config.path + "streams/" + videoname;
         //local web demo
-        return CVSE.config.outputDir + videoname + videoSetting.type + videoSetting.settingNum + File.separator + segment + ".ts";
+        return CVSE.config.outputDir + videoname + videoSetting.type + videoSetting.settingNum + File.separator;
         //return "/var/www/html/2019WebDemo/streams/" + videoname;
     }
+
+    public String outputFile(){
+        return CVSE.config.outputDir + videoname + videoSetting.type + videoSetting.settingNum + File.separator + segment + ".ts";
+    }
+
     public String toString()
     {
         return "estimatedExeT: "+estimatedExecutionTime+"estimatedExeSD: "+estimatedExecutionSD+"deadline: "+deadLine+" "+cmdSet.toString();

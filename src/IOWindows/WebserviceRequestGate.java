@@ -80,6 +80,9 @@ class handler implements Provider<Source> {
             String setting=arg[5];
 
             Settings newSettings = new Settings();
+            newSettings.type = cmd;
+            newSettings.settingNum = setting;
+            newSettings.videoname = CVSE.VR.videos.get(video).name;
 
             //newSettings.resolution = true;
             if(cmd.equals("resolution")){
@@ -106,10 +109,10 @@ class handler implements Provider<Source> {
             else if(cmd.equals("framerate")){
 
             }
+            else if(cmd.equals("blackwhite")){
+                newSettings.settingNum = "";
+            }
 
-            newSettings.type = cmd;
-            newSettings.settingNum = setting;
-            newSettings.videoname = CVSE.VR.videos.get(video).name;
 
             System.out.println("SM: " + SM);
             System.out.println("GTS: " + GTS);

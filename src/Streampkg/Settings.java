@@ -68,7 +68,12 @@ public class Settings implements java.io.Serializable{
         //project dir
         //return CVSE.config.path + "streams/" + videoname + resWidth + resHeight;
         //local webdemo dir
-        return CVSE.config.outputDir + videoname + type + settingNum;
+        if(settingNum == ""){
+            return CVSE.config.outputDir + videoname + type;
+        }
+        else{
+            return CVSE.config.outputDir + videoname + type + settingNum;
+        }
         //return "output/" + videoname + resWidth + resHeight;
     }
 }

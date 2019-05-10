@@ -1,8 +1,7 @@
 #!/bin/bash
 path=$1
-codec=$2
-outdir=$3
-filename=$4
-ffmpeg -hide_banner -y -i $path -vf hue=s=0 -c:a copy $outdir/$filename 
+outdir=$2
+filename=$3
+ffmpeg -hide_banner -y -i $path -vcodec libx264 -acodec copy -vf hue=s=0 $outdir/$filename 
 chmod 775 $outdir/$filename
 
