@@ -116,8 +116,10 @@ public abstract class GOPTaskScheduler {
     public void addOperation(Operations.simpleoperation op) {
         System.out.println("operation: "+op.operationname+" is added to the system");
         possible_Operations.add(op);
+
         for (int i=0; i<machineInterfaces.size();i++){
             machineInterfaces.get(i).addOperation(op);
         }
+
     }
 }
