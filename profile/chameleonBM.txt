@@ -3158,6 +3158,16 @@ Resolution,0,12_Short Time-lapse Video of Stars including a Shooting Star,253.66
 Resolution,0,13_Short Time-lapse Video of Stars including a Shooting Star,251.7,41.7976653365,50,70
 Resolution,0,14_Short Time-lapse Video of Stars including a Shooting Star,244.53333333333333,35.7912851397,50,70
 Resolution,0,15_Short Time-lapse Video of Stars including a Shooting Star,246.93333333333334,20.5358111656,50,70
+Resolution,0,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,329.8666666666667,26.2727514978,50,70
+Resolution,0,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,330.06666666666666,27.1762235499,50,70
+Resolution,0,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,348.76666666666665,29.0702873944,50,70
+Resolution,0,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,344.0,17.5420676641,50,70
+Resolution,0,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,340.26666666666665,18.7486704509,50,70
+Resolution,0,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,337.06666666666666,26.0396691188,50,70
+Resolution,0,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,333.46666666666664,25.6578728031,50,70
+Resolution,0,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,330.8333333333333,16.4024458507,50,70
+Resolution,0,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,331.8,29.6989492442,50,70
+Resolution,0,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,280.53333333333336,22.7592093271,50,70
 Resolution,1,1_20to26myth,306.4193548387097,38.3586358756,50,70
 Resolution,1,2_20to26myth,311.48387096774195,38.9793714399,50,70
 Resolution,1,3_20to26myth,318.0,45.0725341348,50,70
@@ -6318,6 +6328,16 @@ Resolution,1,12_Short Time-lapse Video of Stars including a Shooting Star,269.1,
 Resolution,1,13_Short Time-lapse Video of Stars including a Shooting Star,261.1666666666667,33.800717533,50,70
 Resolution,1,14_Short Time-lapse Video of Stars including a Shooting Star,261.56666666666666,42.3993195565,50,70
 Resolution,1,15_Short Time-lapse Video of Stars including a Shooting Star,241.13333333333333,29.27837066,50,70
+Resolution,1,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,343.6666666666667,29.9278826668,50,70
+Resolution,1,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,341.23333333333335,42.9664530995,50,70
+Resolution,1,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,358.03333333333336,34.5787290939,50,70
+Resolution,1,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,357.2,27.2705474573,50,70
+Resolution,1,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,346.56666666666666,25.9411579958,50,70
+Resolution,1,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,344.03333333333336,42.1520100828,50,70
+Resolution,1,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,350.9,19.4729697716,50,70
+Resolution,1,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,350.3333333333333,27.9165422883,50,70
+Resolution,1,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,348.03333333333336,32.9853502836,50,70
+Resolution,1,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,290.7,26.5019843109,50,70
 Framerate,0,1_20to26myth,246.25806451612902,13.0638629865,50,70
 Framerate,0,2_20to26myth,241.90322580645162,20.2028955659,50,70
 Framerate,0,3_20to26myth,266.38709677419354,13.0860674494,50,70
@@ -9431,6 +9451,16 @@ Framerate,0,12_Short Time-lapse Video of Stars including a Shooting Star,251.666
 Framerate,0,13_Short Time-lapse Video of Stars including a Shooting Star,251.56666666666666,42.4472762892,50,70
 Framerate,0,14_Short Time-lapse Video of Stars including a Shooting Star,253.7,43.2117081835,50,70
 Framerate,0,15_Short Time-lapse Video of Stars including a Shooting Star,234.66666666666666,40.5941505327,50,70
+Framerate,0,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,255.4,30.4354602623,50,70
+Framerate,0,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,274.1,38.8323984891,50,70
+Framerate,0,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,281.26666666666665,33.7270313499,50,70
+Framerate,0,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,275.9,43.3807123835,50,70
+Framerate,0,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,254.5,32.5997144053,50,70
+Framerate,0,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,274.9,35.6905763666,50,70
+Framerate,0,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,269.0,38.5647686277,50,70
+Framerate,0,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,265.4,43.4484236451,50,70
+Framerate,0,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,261.1,40.9021962145,50,70
+Framerate,0,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,213.16666666666666,32.0926281505,50,70
 Framerate,1,1_20to26myth,244.0,18.4986485993,50,70
 Framerate,1,2_20to26myth,264.5483870967742,21.7253135147,50,70
 Framerate,1,3_20to26myth,283.9032258064516,11.91457046,50,70
@@ -12544,6 +12574,16 @@ Framerate,1,12_Short Time-lapse Video of Stars including a Shooting Star,272.9,6
 Framerate,1,13_Short Time-lapse Video of Stars including a Shooting Star,256.1,33.4698526212,50,70
 Framerate,1,14_Short Time-lapse Video of Stars including a Shooting Star,255.0,37.246615213,50,70
 Framerate,1,15_Short Time-lapse Video of Stars including a Shooting Star,248.9,38.7950850069,50,70
+Framerate,1,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,268.56666666666666,33.9885207126,50,70
+Framerate,1,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,293.1,37.3717115956,50,70
+Framerate,1,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,304.76666666666665,39.2240982695,50,70
+Framerate,1,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,284.73333333333335,39.5247049179,50,70
+Framerate,1,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,280.9,43.7771393656,50,70
+Framerate,1,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,288.6333333333333,39.5400131977,50,70
+Framerate,1,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,301.4,42.9519378552,50,70
+Framerate,1,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,285.26666666666665,45.9692050844,50,70
+Framerate,1,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,289.53333333333336,44.0201625695,50,70
+Framerate,1,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,232.63333333333333,35.8795718782,50,70
 Bitrate,0,1_20to26myth,247.29032258064515,19.4476966046,50,70
 Bitrate,0,2_20to26myth,262.16129032258067,17.8551519628,50,70
 Bitrate,0,3_20to26myth,283.5483870967742,20.5650815862,50,70
@@ -15679,6 +15719,9 @@ Bitrate,0,4_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEO
 Bitrate,0,5_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,188.16666666666666,16.3086304934,50,70
 Bitrate,0,6_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,193.27777777777777,18.4400358089,50,70
 Bitrate,0,7_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,151.08333333333334,12.0008928239,50,70
+Bitrate,0,8_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,188.16666666666666,16.3086304934,50,70
+Bitrate,0,9_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,193.27777777777777,18.4400358089,50,70
+Bitrate,0,10_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,151.08333333333334,12.0008928239,50,70
 Bitrate,0,1_No Copyright Video - Sea View _ Landscape - short clip,165.1,11.5887876847,50,70
 Bitrate,0,2_No Copyright Video - Sea View _ Landscape - short clip,168.86666666666667,12.361601652,50,70
 Bitrate,0,3_No Copyright Video - Sea View _ Landscape - short clip,166.76666666666668,14.6209187252,50,70
@@ -15701,6 +15744,16 @@ Bitrate,0,12_Short Time-lapse Video of Stars including a Shooting Star,212.66666
 Bitrate,0,13_Short Time-lapse Video of Stars including a Shooting Star,221.3,20.7499896136,50,70
 Bitrate,0,14_Short Time-lapse Video of Stars including a Shooting Star,220.56666666666666,25.0374661786,50,70
 Bitrate,0,15_Short Time-lapse Video of Stars including a Shooting Star,221.2,15.3047209304,50,70
+Bitrate,0,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,220.86666666666667,12.759670662,50,70
+Bitrate,0,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,225.53333333333333,15.3122293549,50,70
+Bitrate,0,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,232.9,16.2912076985,50,70
+Bitrate,0,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,227.46666666666667,11.984856345,50,70
+Bitrate,0,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,222.1,12.2821709863,50,70
+Bitrate,0,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,224.5,16.5357501941,50,70
+Bitrate,0,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,227.4,16.2387361492,50,70
+Bitrate,0,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,220.53333333333333,11.9011252245,50,70
+Bitrate,0,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,221.9,13.7674027801,50,70
+Bitrate,0,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,190.06666666666666,13.2585257758,50,70
 Bitrate,1,1_20to26myth,250.67741935483872,15.8858156789,50,70
 Bitrate,1,2_20to26myth,267.1290322580645,16.6748152123,50,70
 Bitrate,1,3_20to26myth,284.5483870967742,15.4441762696,50,70
@@ -18836,6 +18889,9 @@ Bitrate,1,4_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEO
 Bitrate,1,5_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,194.08333333333334,13.8571796759,50,70
 Bitrate,1,6_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,195.08333333333334,14.9787945348,50,70
 Bitrate,1,7_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,152.72222222222223,14.2379996812,50,70
+Bitrate,1,8_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,194.08333333333334,13.8571796759,50,70
+Bitrate,1,9_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,195.08333333333334,14.9787945348,50,70
+Bitrate,1,10_NAAYA SAAL MEIN TU RAHA HARIHAR _ NICE SHORT CLIPPED VIDEO _ 3KVIDEOZ _ MUST WATCH _,152.72222222222223,14.2379996812,50,70
 Bitrate,1,1_No Copyright Video - Sea View _ Landscape - short clip,166.13333333333333,10.5821363247,50,70
 Bitrate,1,2_No Copyright Video - Sea View _ Landscape - short clip,163.63333333333333,8.97691803857,50,70
 Bitrate,1,3_No Copyright Video - Sea View _ Landscape - short clip,165.0,8.78478308173,50,70
@@ -18858,6 +18914,16 @@ Bitrate,1,12_Short Time-lapse Video of Stars including a Shooting Star,225.06666
 Bitrate,1,13_Short Time-lapse Video of Stars including a Shooting Star,219.23333333333332,15.8172392494,50,70
 Bitrate,1,14_Short Time-lapse Video of Stars including a Shooting Star,222.86666666666667,21.0266388239,50,70
 Bitrate,1,15_Short Time-lapse Video of Stars including a Shooting Star,223.13333333333333,17.6727597387,50,70
+Bitrate,1,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,224.16666666666666,14.5958977074,50,70
+Bitrate,1,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,223.03333333333333,12.2684999879,50,70
+Bitrate,1,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,229.2,14.3824605827,50,70
+Bitrate,1,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,228.1,11.0026642542,50,70
+Bitrate,1,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,222.63333333333333,12.4082379013,50,70
+Bitrate,1,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,218.6,15.009422328,50,70
+Bitrate,1,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,228.93333333333334,9.97560242182,50,70
+Bitrate,1,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,220.43333333333334,8.05876405914,50,70
+Bitrate,1,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,219.63333333333333,9.95674553301,50,70
+Bitrate,1,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,188.1,11.111814154,50,70
 Codec,0,1_20to26myth,943.5,107.732061011,50,70
 Codec,0,2_20to26myth,1223.0882352941176,163.846633323,50,70
 Codec,0,3_20to26myth,1853.5,319.835492753,50,70
@@ -22003,6 +22069,16 @@ Codec,0,12_Short Time-lapse Video of Stars including a Shooting Star,1051.333333
 Codec,0,13_Short Time-lapse Video of Stars including a Shooting Star,814.7333333333333,32.0612918764,50,70
 Codec,0,14_Short Time-lapse Video of Stars including a Shooting Star,789.6333333333333,17.9395216431,50,70
 Codec,0,15_Short Time-lapse Video of Stars including a Shooting Star,876.6666666666666,29.8401873588,50,70
+Codec,0,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2308.2,39.082053382,50,70
+Codec,0,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2528.5,40.5213864351,50,70
+Codec,0,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2308.2,32.8186238128,50,70
+Codec,0,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2416.4666666666667,28.4831872167,50,70
+Codec,0,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2335.2,38.0882822057,50,70
+Codec,0,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2430.0666666666666,35.4633694777,50,70
+Codec,0,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2513.9666666666667,35.7466982641,50,70
+Codec,0,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2356.4666666666667,37.8460887911,50,70
+Codec,0,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,2166.633333333333,36.0808319857,50,70
+Codec,0,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,1514.5666666666666,28.9299788828,50,70
 Codec,1,1_20to26myth,6934.823529411765,1225.81036822,50,70
 Codec,1,2_20to26myth,7859.205882352941,1415.89375948,50,70
 Codec,1,3_20to26myth,7647.470588235294,1353.26870801,50,70
@@ -25148,3 +25224,13 @@ Codec,1,12_Short Time-lapse Video of Stars including a Shooting Star,2867.5,93.8
 Codec,1,13_Short Time-lapse Video of Stars including a Shooting Star,3181.0333333333333,88.5427943809,50,70
 Codec,1,14_Short Time-lapse Video of Stars including a Shooting Star,2909.7,73.8452015577,50,70
 Codec,1,15_Short Time-lapse Video of Stars including a Shooting Star,3035.8333333333335,93.1865327451,50,70
+Codec,1,1_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,11957.666666666666,193.476958146,50,70
+Codec,1,2_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,14295.866666666667,223.390910403,50,70
+Codec,1,3_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,13185.766666666666,220.580845033,50,70
+Codec,1,4_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,13315.4,214.140398675,50,70
+Codec,1,5_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,14483.2,181.07997852,50,70
+Codec,1,6_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,14806.133333333333,209.8869537,50,70
+Codec,1,7_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,12968.733333333334,288.151293275,50,70
+Codec,1,8_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,13163.633333333333,190.276112139,50,70
+Codec,1,9_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,12413.6,119.132091279,50,70
+Codec,1,10_short Video_ Start Saatkartoffelernte bei Kollege Bernhard,7506.933333333333,132.452706806,50,70

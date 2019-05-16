@@ -134,45 +134,51 @@ public class RequestGenerator {
     //modify the rqe after sorting by appearance time done, so
     public requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe,Random r,int videos,int requestcount,long segmentcounts) {
 
-        double TypeArate=0.05,TypeCrate=0.2,TypeBrate=0.2;
-        int cmdspace=4;
+        double TypeArate=0.05,TypeCrate=0.2,TypeBrate=0.1;
+        int cmdspace=CVSE.GTS.possible_Operations.size();
         int paramspace=2;
         int cloneindex=original_rqe.length/6; //so it doesn't start immediately
-        double requestspace=(videos*1.0)*cmdspace*paramspace; //88 videos, 4 cmd, 2 params so request space =704 ?
-        double duplicated=(requestcount*1.0)/requestspace; // 130 /424 = 0% typeA natural match
-        System.out.println("duplicated="+duplicated+" typeArate="+TypeArate);
+        double requestspace=(CVSE.VR.videos.size()*1.0)*cmdspace*paramspace; //100 videos, 3 cmd, 2 params so request space =600 ?
+        double typeA_duplicated=Math.max(requestcount*1.0/requestspace-1,0.0);
+        double typeB_duplicated=Math.max(requestcount*1.0*paramspace/requestspace-1,0.0);
+        double typeC_duplicated=Math.max(requestcount*1.0*paramspace*cmdspace/requestspace-1,0.0);
+
+        System.out.println("duplicatedA ="+typeA_duplicated+" duplicatedB="+typeB_duplicated+" duplicatedC="+typeC_duplicated);
         //set 20% of the request to match type C
-        duplicated*=cmdspace; //type C don't care cmd, so bring it back
-        double togo = TypeCrate;
-        int altered = 0;
-        while (altered < togo * segmentcounts && cloneindex<original_rqe.length) {
-            //copy previous few, can duplicate
-            int pminus=Math.abs(r.nextInt(3))+1;
-            cloneC(original_rqe,cloneindex,cloneindex-pminus);
-            altered += 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
-            cloneindex += 3;  //so not too often happened, rather than cloneindex+=2
-        }
-        System.out.println("end C cloneindex="+cloneindex);
-        togo = TypeBrate;
-        altered = 0;
-        while (altered < togo * segmentcounts && cloneindex<original_rqe.length) {
-            //copy previous few, can duplicate
-            int pminus=Math.abs(r.nextInt(3))+1;
-            cloneB(original_rqe,cloneindex,cloneindex-pminus);
-            altered += 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
-            cloneindex += 3;  //so not too often happened, rather than cloneindex+=2
-        }
-        System.out.println("end B cloneindex="+cloneindex);
-        togo = TypeArate;
-        altered = 0;
-        while (altered < togo * segmentcounts && cloneindex<original_rqe.length) {
+        int altered;
+        while (typeA_duplicated <TypeArate && cloneindex<original_rqe.length) {
             //copy previous few
-            int pminus=Math.abs(r.nextInt(3))+1;
+            int pminus=Math.abs(r.nextInt(3))+1; //pick 1-4 spots ago
             cloneA(original_rqe,cloneindex,cloneindex-pminus);
-            altered += 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
-            cloneindex += 3; //so not too often happened, rather than cloneindex+=2
+            altered = 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            cloneindex += 3; //so not too often happened
+            typeA_duplicated+=altered*1.0/segmentcounts;
+            //System.out.println(" altered="+altered+" segmentcount="+segmentcounts);
+            //System.out.println("duplicatedA ="+typeA_duplicated+" duplicatedB="+typeB_duplicated+" duplicatedC="+typeC_duplicated);
         }
         System.out.println("end A cloneindex="+cloneindex);
+        while (typeB_duplicated <TypeBrate && cloneindex<original_rqe.length) {
+            //copy previous few
+            int pminus=Math.abs(r.nextInt(3))+1;
+            cloneB(original_rqe,cloneindex,cloneindex-pminus);
+            altered = 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            cloneindex += 3;
+            typeB_duplicated+=altered*1.0/segmentcounts;
+
+        }
+        System.out.println("end B cloneindex="+cloneindex);
+        while (typeC_duplicated <TypeCrate && cloneindex<original_rqe.length) { //it's actually unlikely we need to inject type c match
+            //copy previous few
+            int pminus=Math.abs(r.nextInt(3))+1;
+            cloneC(original_rqe,cloneindex,cloneindex-pminus);
+            altered = 2*CVSE.VR.videos.get(original_rqe[cloneindex].videoChoice).getTotalSegments();
+            cloneindex += 3;
+            typeC_duplicated+=altered*1.0/segmentcounts;
+
+        }
+        System.out.println("end C cloneindex="+cloneindex);
+
+
             /*
         }else{
             System.out.println("Already have too many type A match");
@@ -194,6 +200,7 @@ public class RequestGenerator {
     public void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack){
         //random into array, modify, sort array, write to file
         Random r =new Random(seed);
+        int parametertypes=2; //number of parameter types
         int i=0;
         try {
             FileWriter F = new FileWriter("BenchmarkInput/" + filename + ".txt");
@@ -213,11 +220,11 @@ public class RequestGenerator {
                 //create the request
                 for (int q = 0; q < totalVideos; q++) {
                     // video choice is in the positionMatchup
-                    String acmd = CVSE.GTS.possible_Operations.get((positionMatchup[q] + fold) % CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
+                    String acmd = CVSE.GTS.possible_Operations.get((positionMatchup[q] + fold/parametertypes) % CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
                     long appear = Math.abs(r.nextLong() % timeSpan);
                     long deadline = (long) (r.nextGaussian() * sdslack) + avgslack;
                     deadline += appear;
-                    int settingnum = (q + fold) % 2;
+                    int settingnum = (q + fold) % parametertypes;
                     //System.out.println("rqe[]="+(randomDone+q)+" positionMatup[]="+q);
                     rqes.add(new requestprofile(positionMatchup[q], acmd, "" + settingnum, appear, deadline)); //setting ToBeDetermined
                     //System.out.println("b");
@@ -242,7 +249,7 @@ public class RequestGenerator {
             Arrays.sort(rqe);
             System.out.println("rqe length=" + rqe.length);
             //modify again?
-            modifyrqeaftersort(rqe, r, randomDone, totalRequest, totalSegmentcount); //enforce some duplication
+            modifyrqeaftersort(rqe, r, randomDone, rqe.length, totalSegmentcount); //enforce some duplication
             // write to file
             System.out.println("randomized " + totalSegmentcount + " segments");
             for (i = 0; i < randomDone; i++) {

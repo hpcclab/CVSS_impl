@@ -18,10 +18,6 @@ import TimeEstimatorpkg.TimeEstNone;
 import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -173,7 +169,7 @@ public class RealModeTest {
         */
     }
     private static void DirectoryTest() {
-        System.out.println("Directory Test");
+        System.out.println("Directory SimModeTest");
 
         System.out.println(CVSE.config.repository);
 

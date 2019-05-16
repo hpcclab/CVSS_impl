@@ -237,7 +237,7 @@ public class Merger {
             //System.out.println("not too late to merge");
             // create merged StreamGOP
             StreamGOP merged = new StreamGOP(itspair); //create a copy of the old one for evaluation, but don't use this object
-            merged.getAllCMD(X); //may already conatain some msg
+            merged.getAllCMD(X); //may already contain some msg
             // do merging
             if(!CVSE.config.mergeOverwriteQueuePolicy){ //if we obey queuing policy
                 long checked = 0;
@@ -284,7 +284,7 @@ public class Merger {
                             return false;
                         }
                     }
-                }else{
+                }else{ // incase of non considerate merge, why would you find a suitable position???
                     System.out.println("merge");
                     itspair.getAllCMD(X);
                     return true;
@@ -305,8 +305,12 @@ public class Merger {
             //don't even need to check if it is not null or state is not dispatched
         }else {
             System.out.println("not duplicated");
-            //count how many miss would happen if not merging
-            int originalmiss = countOriginalMiss(X,SDco);
+            mergePending_tasklvl.put(aRequestlvl1, X); //or replace???
+            int originalmiss=0;
+            if(CVSE.config.consideratemerge) {
+                //count how many miss would happen if not merging
+                originalmiss = countOriginalMiss(X, SDco);
+            }
             //System.out.println("Original miss=" + originalmiss);
 
             //create task signature, to check for matching
@@ -319,6 +323,7 @@ public class Merger {
                     return;
                 }
             }
+            mergePending_operationlvl.put(aRequestlvl2, X);
 
             if (mergePending_datalvl.containsKey(aRequestlvl3)) {
                 if (trymerge(X, originalmiss, aRequestlvl3, mergePending_datalvl)) {
@@ -326,10 +331,9 @@ public class Merger {
                     return;
                 }
             }
-            System.out.println("add to queue directly, not matching anything");
-            mergePending_tasklvl.put(aRequestlvl1, X); //or replace???
-            mergePending_operationlvl.put(aRequestlvl2, X);
             mergePending_operationlvl.put(aRequestlvl3, X);
+
+            System.out.println("add to queue directly, not matching anything");
             Batchqueue.add(X);
         }
     }
