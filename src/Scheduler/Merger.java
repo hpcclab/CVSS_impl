@@ -215,8 +215,12 @@ public class Merger {
 
     public void removeStreamGOPfromTable(StreamGOP X){
         //remove anything with this value (need removeAll, not remove or it'll only remove the first one)
-        mergePending_tasklvl.values().removeAll(Collections.singleton(X));
-        mergePending_operationlvl.values().removeAll(Collections.singleton(X));
+
+        //*** remove only data level, otherwise, we cache the rest
+
+        //mergePending_tasklvl.values().removeAll(Collections.singleton(X));
+        //mergePending_operationlvl.values().removeAll(Collections.singleton(X));
+
         mergePending_datalvl.values().removeAll(Collections.singleton(X));
         pendingqueue.remove(X); //only one record here
         //can try this way too

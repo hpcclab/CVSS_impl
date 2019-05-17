@@ -55,10 +55,14 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
     //function that do something after task X get sent
     protected void postschedulefn(StreamGOP X){
         //System.out.println("overwritten postschedulefn is CALLED\n\n\n");
-        /*
+
+        //////below should not be required, should have been removed when each machine report its finish ??
+
         if(CVSE.config.taskmerge) {
-            mrg.removeStreamGOPfromTable(X);
+            MRG.removeStreamGOPfromTable(X);
         }
-        */
+
+
+
     }
 }
