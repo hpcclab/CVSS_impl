@@ -86,7 +86,7 @@ public class RequestGenerator {
         }
     }
     int currentIndex=0;
-    //a once call to push out data that past their startTime
+    //a once call to push ut data that past their startTime
     public void contProfileRequestsGen(){
         if(currentIndex<rqe_arr.size()) {
             while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {
@@ -95,6 +95,7 @@ public class RequestGenerator {
                 OneSpecificRequest(arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline,arqe.appearTime);
                 if (currentIndex >= rqe_arr.size()) {
                     System.out.println("sim finished");
+                    CVSE.VMP.datacolEvent.stop();
                     finished=true;
                     break;
                 }

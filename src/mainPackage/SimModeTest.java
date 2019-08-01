@@ -19,9 +19,12 @@ import static java.lang.Thread.sleep;
  * Created by pi on 6/29/17.
  */
 public class SimModeTest {
-    private static void setUpCVSE_forsim(String configfile){
+    private static void setUpCVSE_forsim(String configfile,String overwriteOpt){
         //Set things up
         CVSE.config=new SystemConfig(configfile);
+        if(overwriteOpt!=null){
+            CVSE.config.profileRequestsBenchmark=overwriteOpt;
+        }
         CVSE.VR = new VideoRepository();
         CVSE.VR.addAllKnownVideos();
         CVSE.AC = new AdmissionControl();
@@ -39,20 +42,27 @@ public class SimModeTest {
 
     public static String Sim(String confFile, String opt) {
         try {
+            if(opt.contains("BenchmarkInput/")){
+                opt=opt.replaceFirst("BenchmarkInput/","");
+                System.out.println("config trim BenchmarkInput/ out");
+            }
+            if(confFile.contains("config/")){ // will auto insert anyway
+                opt=opt.replaceFirst("config/","");
+            }
             Scanner scanner = new Scanner(System.in);
             //read config file
             if(!opt.equals("testconfig.txt")) { //if benchmark profile is freshly generated, CVSE is already set-up
-                setUpCVSE_forsim("config/" + confFile);
+                setUpCVSE_forsim("config/" + confFile,opt);
             }
             int rqn = 1, interval, n;
             if (CVSE.config.profiledRequests) {
-                if (opt.equalsIgnoreCase("config")) {
-                    CVSE.RG.ReadProfileRequests(CVSE.config.profileRequestsBenchmark);
-                } else {
+                // read benchmark input
+                if (!opt.equalsIgnoreCase("config")) {
                     System.out.println("overwrite profileRequestBenhmark with " + opt);
                     CVSE.config.profileRequestsBenchmark = opt;
-                    CVSE.RG.ReadProfileRequests(opt);
                 }
+                CVSE.RG.ReadProfileRequests(CVSE.config.profileRequestsBenchmark);
+                //
                 //sleep(3000);
                 System.out.println("start sim");
                 CVSE.RG.contProfileRequestsGen();
@@ -99,7 +109,7 @@ public class SimModeTest {
                 }
             }
             CVSE.VMP.DU.printstat();
-            CVSE.VMP.DU.graphplot();
+            //CVSE.VMP.DU.graphplot();
 
             sleep(300);
             CVSE.GTS.close();
@@ -119,17 +129,17 @@ public class SimModeTest {
 
 
         CVSE _CVSE=new CVSE();
-            setUpCVSE_forsim("config/nuConfig.properties");
+            setUpCVSE_forsim("config/nuConfig.properties",null);
         if (seed == 0) {
             //int[] sr={699,1911,16384,9999,555,687,9199,104857,212223,777}; // first 10
             int[] sr = {1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
             for (int j = 0; j < sr.length; j++) {
-                for (int i = 5000; i <= 9000; i += 1000) {
+                for (int i = 3000; i <= 4000; i += 1000) {
                     _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);
                 }
             }
         } else {
-            for (int i = 5000; i <= 9000; i += 1000) {
+            for (int i = 3000; i <= 4000; i += 1000) {
                 _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + seed, seed, 100, i, 180000, 10000, 3000);
             }
         }
@@ -158,9 +168,13 @@ public class SimModeTest {
             ///
             //Benchmark file test
 
+
             CVSE _CVSE=new CVSE();
-            setUpCVSE_forsim("config/nuConfig.properties");
+            setUpCVSE_forsim("config/nuConfig.properties",null);
             String benchmarkname="testconfig";
+
+            //String benchmarkname="nocodec5000r_180000_10000_12000_s1";
+
             /*
             // For 4 parameters
             // CVSE.RG.generateProfiledRandomRequests(benchmarkname,1024, 88, 1000, 180000, 10000, 3000);

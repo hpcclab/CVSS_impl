@@ -24,6 +24,7 @@ public class ResourceProvisioner {
     private int minimumMaintain;
     private int VMcount=0;
     public double deadLineMissRate=0.8;
+    public Timer datacolEvent;
     //private double highscalingThreshold; //get from SystemConfig
     //private double lowscalingThreshold;
     private Semaphore x;
@@ -89,8 +90,8 @@ public class ResourceProvisioner {
                     Tick();
                 }
             };
-            new Timer(CVSE.config.dataUpdateInterval, taskPerformer).start();
-
+            datacolEvent=new Timer(CVSE.config.dataUpdateInterval, taskPerformer);
+            datacolEvent.start();
         }
         //
     }

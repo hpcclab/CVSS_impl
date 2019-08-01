@@ -41,7 +41,7 @@ class graph extends ApplicationFrame {
 public class DataUpdate {
     String Statpath="./resultstat";
     String FilenamePrefix;
-    String filename="merge__Sortalways_mergeDeadline_test2000r_180000_10000_3000_s1.txt";
+    String filename="merge__SortalwaysmergeDeadline_test2000r_180000_10000_3000_s1.txt";
     FileWriter Freq;
     PrintWriter Freqwriter;
     XYSeries hitcount = new XYSeries("On-time");
@@ -50,7 +50,7 @@ public class DataUpdate {
     public DataUpdate(){
         FilenamePrefix = (CVSE.config.taskmerge) ? "merge_" : "unmerge";
         FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
-        FilenamePrefix += (CVSE.config.consideratemerge) ? "" : "always_merge";
+        FilenamePrefix += (CVSE.config.consideratemerge) ? "" : "alwaysmerge";
         FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "";
         FilenamePrefix += "_";
         filename=FilenamePrefix+CVSE.config.profileRequestsBenchmark;

@@ -1,0 +1,20 @@
+Filenocodec7000r_180000_10000_3000_s521.txt
+Stat for Queuesort=none mergable=false
+Machine 0 time elapsed:278110 time actually spent processing:275214
+completed: 916(916) requests, missed 406(406)
+Machine 1 time elapsed:277742 time actually spent processing:274317
+completed: 916(916) requests, missed 383(383)
+Machine 2 time elapsed:277619 time actually spent processing:274976
+completed: 916(916) requests, missed 398(398)
+Machine 3 time elapsed:277569 time actually spent processing:271284
+completed: 916(916) requests, missed 400(400)
+Machine 4 time elapsed:278594 time actually spent processing:277632
+completed: 916(916) requests, missed 408(408)
+Machine 5 time elapsed:278227 time actually spent processing:272983
+completed: 916(916) requests, missed 405(405)
+Machine 6 time elapsed:277626 time actually spent processing:276387
+completed: 916(916) requests, missed 396(396)
+Machine 7 time elapsed:277565 time actually spent processing:272709
+completed: 916(916) requests, missed 400(400)
+total completed: 7328(7328) missed 3196(3196)
+avgspentTime 274437
