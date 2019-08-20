@@ -62,7 +62,7 @@ public class Merger {
         int latestpos=findlatestposition(newVQ, merged); //note, we won't have merged task in the queue
         System.out.println("latestpos="+latestpos);
         //put merged to position that it'll not miss
-        newVQ.add(latestpos,merged);
+        newVQ.add(latestpos,merged); //should we test +1??
         long check=countDLMiss( newVQ,Math.abs(originalmiss),GTS.SDco);
         System.out.println(check +" vs "+originalmiss);
         if ( Math.abs(check)<= Math.abs(originalmiss)) {
@@ -184,17 +184,21 @@ public class Merger {
         int[] queuelength=new int[machineInterfaces.size()];
         long[] executiontime=new long[machineInterfaces.size()];
         fillEstimatorArray(queuelength,executiontime);
-
+        double tmpSDCO=0;
         for(int i=0;i<virtualQueue_copy.size();i++) {
             probecounter++;
             // try themergedtask first, if fail then return
             MachineInterface machine = v_selectMachine(themergedtask, queuelength, executiontime);
             int machine_index = machineInterfaces.indexOf(machine);
             retStat thestat=CVSE.TE.getHistoricProcessTime(machine,themergedtask);
-            if(executiontime[machine_index]+thestat.mean>themergedtask.deadLine){
-                return i-1;
+            if(executiontime[machine_index]+thestat.mean+thestat.SD*tmpSDCO>themergedtask.deadLine){
+                return i-1; //can be -1 (miss on first position)
             }
 
+            if(i==0){
+                //after first position evaluation, use SDco=2
+                tmpSDCO=2;
+            }
             //not missing, therefore assign a new task
             //get a GOP
             StreamGOP aGOP = virtualQueue_copy.removeDefault();
@@ -203,7 +207,7 @@ public class Merger {
             machine_index = machineInterfaces.indexOf(machine);
             //update our queue
             thestat = CVSE.TE.getHistoricProcessTime(machine, aGOP);
-            executiontime[machine_index] += thestat.mean; //thestat.SD;
+            executiontime[machine_index] += thestat.mean+thestat.SD*tmpSDCO; // use SDco=
             queuelength[machine_index]++;
             long finishTimeofX = executiontime[machine_index];
             if (finishTimeofX > aGOP.deadLine) {
@@ -219,9 +223,10 @@ public class Merger {
         //*** remove only data level, otherwise, we cache the rest
 
         //mergePending_tasklvl.values().removeAll(Collections.singleton(X));
-        //mergePending_operationlvl.values().removeAll(Collections.singleton(X));
-
+        mergePending_operationlvl.values().removeAll(Collections.singleton(X));
         mergePending_datalvl.values().removeAll(Collections.singleton(X));
+
+        //a copy of pending queue
         pendingqueue.remove(X); //only one record here
         //can try this way too
         //mergePending_tasklvl.values().removeIf(val -> X.equals(val));
@@ -245,7 +250,7 @@ public class Merger {
             // do merging
             if(!CVSE.config.mergeOverwriteQueuePolicy){ //if we obey queuing policy
                 long checked = 0;
-                if(CVSE.config.consideratemerge){ //if we want to evaluate merge impact...
+                if(!CVSE.config.mergeaggressiveness.equalsIgnoreCase("Aggressive")){ //if we want to evaluate merge impact...
                     checked = virtualQueueCheckReplace(itspair, merged, Math.abs(originalmiss)); //assume direct replace to the object
                 }
                 /*
@@ -274,7 +279,7 @@ public class Merger {
                 }
             }else{
                 System.out.println("try merge with overwriting queue positioning, work with FIFO queue only");
-                if(CVSE.config.consideratemerge){
+                if(!CVSE.config.mergeaggressiveness.equalsIgnoreCase("Aggressive")){
                     ///////////////////////////////////////////// redo code both upper and below
                     if (CVSE.config.overwriteQueuePolicyHeuristic.equalsIgnoreCase("logarithmic")) {
                         // logarithmic probe
@@ -300,20 +305,20 @@ public class Merger {
 
 
     public void mergeifpossible(StreamGOP X,double SDco){
-        //HOLD UP! check for duplication first
+        //check for duplication first
         Streampkg.TaskRequest aRequestlvl1 = new Streampkg.TaskRequest(X,1); //= ... derive from X
-        System.out.println(X.videoname+" ");
+        System.out.print(X.videoname+" ");
         if (mergePending_tasklvl.containsKey(aRequestlvl1)) {
             merged_tasklvl_count++;
             System.out.println("match Task lvl (exactly the same request) -> dropping this request");
             //don't even need to check if it is not null or state is not dispatched
         }else {
-            System.out.println("not duplicated");
+            //System.out.println("not duplicated");
             mergePending_tasklvl.put(aRequestlvl1, X); //or replace???
             int originalmiss=0;
-            if(CVSE.config.consideratemerge) {
+            if(!CVSE.config.mergeaggressiveness.equalsIgnoreCase("Aggressive")) {
                 //count how many miss would happen if not merging
-                originalmiss = countOriginalMiss(X, SDco);
+                originalmiss = countOriginalMiss(X, 2); //use SDco=2 here
             }
             //System.out.println("Original miss=" + originalmiss);
 
@@ -326,6 +331,7 @@ public class Merger {
                     System.out.println("Merged in lvl2");
                     return;
                 }
+                System.out.println("found Mergeable lvl 2, but not merged.");
             }
             mergePending_operationlvl.put(aRequestlvl2, X);
 
@@ -334,12 +340,12 @@ public class Merger {
                     System.out.println("Merged in lvl3");
                     return;
                 }
+                System.out.println("found Mergeable lvl 3, but not merged.");
             }
-            mergePending_operationlvl.put(aRequestlvl3, X);
+            mergePending_datalvl.put(aRequestlvl3, X);
 
-            System.out.println("add to queue directly, not matching anything");
+            System.out.println("add to queue directly, not merging with anything");
             Batchqueue.add(X);
         }
     }
-
 }

@@ -1,0 +1,20 @@
+Filenocodec4500r_180000_10000_3000_s4192.txt
+Stat for Queuesort=none mergable=true
+Machine 0 time elapsed:183936 time actually spent processing:158248
+completed: 489(489) requests, missed 11(11)
+Machine 1 time elapsed:183759 time actually spent processing:157837
+completed: 486(486) requests, missed 9(9)
+Machine 2 time elapsed:183604 time actually spent processing:154636
+completed: 490(490) requests, missed 6(6)
+Machine 3 time elapsed:183291 time actually spent processing:155022
+completed: 487(487) requests, missed 11(11)
+Machine 4 time elapsed:183433 time actually spent processing:158448
+completed: 493(493) requests, missed 15(15)
+Machine 5 time elapsed:183961 time actually spent processing:155860
+completed: 489(489) requests, missed 11(11)
+Machine 6 time elapsed:183994 time actually spent processing:154896
+completed: 484(484) requests, missed 10(10)
+Machine 7 time elapsed:184348 time actually spent processing:157897
+completed: 489(489) requests, missed 9(9)
+total completed: 3907(3907) missed 82(82)
+avgspentTime 156605

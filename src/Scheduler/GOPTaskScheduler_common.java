@@ -198,7 +198,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                     X.estimatedExecutionSD=thestat.SD;
                     //X.estimatedDelay
                 }
-                System.out.println("before dispatch");
+                //System.out.println("before dispatch");
 
                 //change StreamGOP type to Dispatched
                 X.dispatched = true;

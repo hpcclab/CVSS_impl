@@ -9,11 +9,11 @@ import java.util.Properties;
 public class SystemConfig {
     private ArrayList<String> Stringlist= new ArrayList<>(Arrays.asList("defaultInputPath","defaultOutputPath","defaultBatchScript","path","batchqueuesortpolicy",
             "profileRequestsBenhmark","overwriteQueuePolicyHeuristic","outputDir","run_mode","timeEstimatorMode",
-            "scheduler_machineselectionpolicy","file_mode"));
+            "scheduler_machineselectionpolicy","file_mode","mergeaggressiveness"));
 
     private ArrayList<String> intList= new ArrayList<>(Arrays.asList("localqueuelengthperCR","dataUpdateInterval","CRscalingIntervalTick","maxCR","minCR","remedialVM_constantfactor"));
     private ArrayList<String> doubleList= new ArrayList<>(Arrays.asList("lowscalingThreshold","highscalingThreshold","c_const_for_utilitybased"));
-    private ArrayList<String> boolList= new ArrayList<>(Arrays.asList("addProfiledDelay","consideratemerge","taskmerge","profiledRequests","openRequests","mergeOverwriteQueuePolicy",
+    private ArrayList<String> boolList= new ArrayList<>(Arrays.asList("addProfiledDelay","taskmerge","profiledRequests","openRequests","mergeOverwriteQueuePolicy",
             "enableTimeEstimator","enableCaching","enableCRscaling","enableCRscalingoutofInterval","useEC2"));
 
     private Properties prop = new Properties();
@@ -22,7 +22,7 @@ public class SystemConfig {
         prop.setProperty("run_mode","real");
         prop.setProperty("file_mode","S3");
         prop.setProperty("addProfiledDelay","false");
-        prop.setProperty("consideratemerge","true");
+        prop.setProperty("mergeaggressiveness","Conservative");
         prop.setProperty("taskmerge","false");
         prop.setProperty("openWebRequests","false");
         prop.setProperty("mergeOverwriteQueuePolicy","true");
@@ -72,7 +72,7 @@ public class SystemConfig {
                         case "c_const_for_utilitybased": c_const_for_utilitybased= Double.parseDouble(prop.getProperty(keystr)); break;
                         //Boolean
                         case "addProfiledDelay": addProfiledDelay= Boolean.parseBoolean(prop.getProperty(keystr)); break;
-                        case "consideratemerge": consideratemerge= Boolean.parseBoolean(prop.getProperty(keystr)); break;
+                        case "mergeaggressiveness": mergeaggressiveness= prop.getProperty(keystr); break;
                         case "taskmerge": taskmerge= Boolean.parseBoolean(prop.getProperty(keystr)); break;
                         case "profiledRequests": profiledRequests= Boolean.parseBoolean(prop.getProperty(keystr)); break;
                         case "openWebRequests": openWebRequests = Boolean.parseBoolean(prop.getProperty(keystr)); break;
@@ -138,7 +138,7 @@ public class SystemConfig {
 
 
     public  boolean addProfiledDelay=false; //this is profiled delay, from GOPS
-    public  boolean consideratemerge =true; ////set to false for testing dumb merge
+    public  String mergeaggressiveness ="Conservative"; ////either Conservative, Adaptive, or Aggressive
     public  String batchqueuesortpolicy="Deadline";
     public  boolean taskmerge=false;
     public  boolean profiledRequests=false;

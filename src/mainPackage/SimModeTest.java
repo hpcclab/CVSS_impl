@@ -134,13 +134,18 @@ public class SimModeTest {
             //int[] sr={699,1911,16384,9999,555,687,9199,104857,212223,777}; // first 10
             int[] sr = {1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
             for (int j = 0; j < sr.length; j++) {
-                for (int i = 3000; i <= 4000; i += 1000) {
-                    _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);
+                for (int i = 1500; i <= 4500; i += 500) {
+                    //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);
+                    //use default avgslacktime value, 10000 for most operations, 8000 for codec
+                    _CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 0, 3000);
+
                 }
             }
         } else {
-            for (int i = 3000; i <= 4000; i += 1000) {
-                _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + seed, seed, 100, i, 180000, 10000, 3000);
+            for (int i = 1500; i <= 4500; i += 500) {
+                //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + seed, seed, 100, i, 180000, 10000, 3000);
+                _CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + seed, seed, 100, i, 180000, 0, 3000);
+
             }
         }
 

@@ -48,12 +48,12 @@ public class DataUpdate {
     XYSeries misscount = new XYSeries("Miss");
 
     public DataUpdate(){
-        FilenamePrefix = (CVSE.config.taskmerge) ? "merge_" : "unmerge";
+        FilenamePrefix = (CVSE.config.taskmerge) ? "merge" : "unmerge";
         FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
-        FilenamePrefix += (CVSE.config.consideratemerge) ? "" : "alwaysmerge";
-        FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "";
-        FilenamePrefix += "_";
-        filename=FilenamePrefix+CVSE.config.profileRequestsBenchmark;
+        FilenamePrefix += "_"+CVSE.config.mergeaggressiveness+"merge";
+        FilenamePrefix += (CVSE.config.mergeOverwriteQueuePolicy) ? "_"+CVSE.config.overwriteQueuePolicyHeuristic+"PositionFind" : "_inplace";
+        FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "_nobatchqueuesort";
+        filename=FilenamePrefix+"_"+CVSE.config.profileRequestsBenchmark;
         try {
             Freq = new FileWriter(Statpath+"/freq/" +filename);
             Freqwriter = new PrintWriter(Freq);

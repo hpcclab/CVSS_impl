@@ -53,10 +53,12 @@ public class TimeEstimator {
         long ESTTime = 0;
         double SD = 0;
         boolean firstCmd = true;
+        int cmdcount=segment.cmdSet.keySet().size();
         for (String cmd : segment.cmdSet.keySet()) {
             //System.out.println("cmd="+cmd);
             boolean newcmd = true;
             for (String param : segment.cmdSet.get(cmd)) {
+                int paramcount=segment.cmdSet.get(cmd).size();
                 String pollstr;
                 if(searchMode.equalsIgnoreCase("profiled")) {
                     //System.out.println("Time Estimator for cmd="+cmd+" param="+param+" segment="+segment.segment+" vname="+segment.videoname);
@@ -71,11 +73,20 @@ public class TimeEstimator {
                 if (polled2 != null) {
                     if (firstCmd) { //first base cmd
                         //System.out.println("Historically, this task takes " + polled2.mean + " SD:" + polled2.SD + " on class:" + VMclass);
-                        ESTTime += polled2.mean;
-                        SD += polled2.SD;
+                        if(cmdcount>1) { //first of b mergeable
+                            ESTTime = (long)(polled2.plusB* polled2.mean);
+                            SD = polled2.SD * polled2.plusB;
+                        }else
+                        if(cmdcount>1) { //first of c mergeable
+                            ESTTime = (long)(polled2.plusC* polled2.mean);
+                            SD = polled2.SD * polled2.plusC;
+                        }else{ //first, and only one
+                            ESTTime = polled2.mean ;
+                            SD = polled2.SD ;
+                        }
                         firstCmd = false;
                         newcmd = false;
-                    } else if (newcmd) { //new command, count as case C merged
+                    } else if (newcmd) { //new command but not first cmd, count as case C merged
                         ESTTime += polled2.plusC * polled2.mean;
                         SD += polled2.plusC * polled2.SD;
                         newcmd = false;

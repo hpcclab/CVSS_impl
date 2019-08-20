@@ -1,0 +1,20 @@
+Filewcodec2500r_180000_10000_3000_s251.txt
+Stat for Queuesort=none mergable=false
+Machine 0 time elapsed:912391 time actually spent processing:760740
+completed: 264(264) requests, missed 218(218)
+Machine 1 time elapsed:913249 time actually spent processing:797939
+completed: 264(264) requests, missed 219(219)
+Machine 2 time elapsed:912258 time actually spent processing:712609
+completed: 264(264) requests, missed 219(219)
+Machine 3 time elapsed:912236 time actually spent processing:718952
+completed: 264(264) requests, missed 220(220)
+Machine 4 time elapsed:912242 time actually spent processing:756931
+completed: 264(264) requests, missed 217(217)
+Machine 5 time elapsed:912830 time actually spent processing:864986
+completed: 264(264) requests, missed 219(219)
+Machine 6 time elapsed:912342 time actually spent processing:802837
+completed: 264(264) requests, missed 219(219)
+Machine 7 time elapsed:912231 time actually spent processing:703115
+completed: 264(264) requests, missed 217(217)
+total completed: 2112(2112) missed 1748(1748)
+avgspentTime 764763

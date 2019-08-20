@@ -138,11 +138,12 @@ public class ResourceProvisioner {
             /////???? how to calculate oversubscription level?
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
-            //primitive usage of SDco
-            if(CVSE.GTS instanceof GOPTaskScheduler_mergable) {
-                GOPTaskScheduler_mergable GTS_parse=(GOPTaskScheduler_mergable)CVSE.GTS ;
-                GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime);
-                System.out.println("change SDco to " + GTS_parse.SDco);
+            //for adaptive merge aggressiveness, change SD coefficient
+            if(CVSE.GTS instanceof GOPTaskScheduler_mergable && CVSE.config.mergeaggressiveness.equalsIgnoreCase("Adaptive")) {
+                GOPTaskScheduler_mergable GTS_parse = (GOPTaskScheduler_mergable) CVSE.GTS;
+                    //primitive usage of SDco
+                    GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime);
+                System.out.println("adaptive SDco: change SDco to " + GTS_parse.SDco);
             }
             //finally, update current time to previous time
             previous_wovertime=current_weighted_overtime;
