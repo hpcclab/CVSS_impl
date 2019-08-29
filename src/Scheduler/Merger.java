@@ -293,7 +293,7 @@ public class Merger {
                             return false;
                         }
                     }
-                }else{ // incase of non considerate merge, why would you find a suitable position???
+                }else{ // incase of aggressive merge, just merge right away
                     System.out.println("merge");
                     itspair.getAllCMD(X);
                     return true;

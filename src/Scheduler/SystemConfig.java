@@ -144,7 +144,7 @@ public class SystemConfig {
     public  boolean profiledRequests=false;
     public  boolean openWebRequests =false;
     public  String profileRequestsBenchmark;
-    public  boolean mergeOverwriteQueuePolicy=true;
+    public  boolean mergeOverwriteQueuePolicy=false;
     public  String overwriteQueuePolicyHeuristic;
 
     public  String outputDir;

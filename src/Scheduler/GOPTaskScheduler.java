@@ -26,7 +26,9 @@ public abstract class GOPTaskScheduler {
 
         Batchqueue= new TaskQueue();
     }
-
+    public int getBatchqueueLength(){
+        return Batchqueue.size();
+    }
     public boolean add_VM(MachineInterface t,boolean autoSchedule){
         //overwrite this
         maxpending += CVSE.config.localqueuelengthperCR; //4?

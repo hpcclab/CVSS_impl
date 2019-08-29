@@ -160,11 +160,11 @@ public class ResourceProvisioner {
                 CVSE.GTS.maxElapsedTime = T_maxElapsedTime;
                 timeforced = 0;
             } else {
-                long t=CVSE.RG.nextappearTime();
+                long t=CVSE.RG.nextappearTime()+1;
                 if(t!=-1){ //force time move, to next arrival time
                     CVSE.GTS.maxElapsedTime=t;
                     System.out.println("force time move to" + CVSE.GTS.maxElapsedTime);
-                } else{ //force time to move, by 200 at final burst
+                } else{ //force time to move, by 200 at final bursts
                     System.out.println("force time move+200 " + timeforced);
                     CVSE.GTS.maxElapsedTime += 200;
                 }
@@ -195,8 +195,7 @@ public class ResourceProvisioner {
         tcount++;
         collectData();
         if(tcount% CVSE.config.CRscalingIntervalTick==0){
-
-            EvaluateClusterSize(20);
+            EvaluateClusterSize(CVSE.GTS.getBatchqueueLength());
         }
         //System.out.println("tick, submit work");
         CVSE.GTS.taskScheduling();

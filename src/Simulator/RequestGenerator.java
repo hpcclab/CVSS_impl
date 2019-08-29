@@ -11,16 +11,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 import static java.lang.Thread.sleep;
 
 
 
 public class RequestGenerator {
-
+    private Semaphore canGenTask;
     public boolean finished=false;
     // static String videonameList[]={"bbb_trailer","ff_trailer_part1","ff_trailer_part3"}; //not using
     public RequestGenerator(){
+        canGenTask=new Semaphore(1);
     }
 
     public void OneRandomRequest(){
@@ -40,10 +42,10 @@ public class RequestGenerator {
     }
 
     public void OneSpecificRequest( int videoChoice, String command, String setting, long deadline, long arrival){
-        //System.out.println("create one specific request");
+        System.out.print("create one specific request: ");
         Stream ST=new Stream(CVSE.VR.videos.get(videoChoice),command,setting,deadline,arrival); //admission control can work in constructor, or later?
+        System.out.println(ST.video.name);
         CVSE.GTS.addStream(ST);
-        //System.out.println("test2");
     }
     //simple static RandomRequest Generator
     public void nRandomRequest(int Request_Numbers, int interval, int n){
@@ -86,21 +88,28 @@ public class RequestGenerator {
         }
     }
     int currentIndex=0;
-    //a once call to push ut data that past their startTime
+
+    //Something bug?, with merging sometime doesn't finish...
     public void contProfileRequestsGen(){
-        if(currentIndex<rqe_arr.size()) {
-            while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {
-                requestprofile arqe = rqe_arr.get(currentIndex);
-                currentIndex++;
-                OneSpecificRequest(arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline,arqe.appearTime);
-                if (currentIndex >= rqe_arr.size()) {
-                    System.out.println("sim finished");
-                    CVSE.VMP.datacolEvent.stop();
-                    finished=true;
-                    break;
+        if(canGenTask.tryAcquire()) {
+            System.out.println("Check task arrival");
+            if (currentIndex < rqe_arr.size()) {
+                while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {
+                    requestprofile arqe = rqe_arr.get(currentIndex);
+                    currentIndex++;
+                    OneSpecificRequest(arqe.videoChoice, arqe.command, arqe.setting, arqe.deadline, arqe.appearTime);
+                    if (currentIndex >= rqe_arr.size()) {
+                        System.out.println("sim finished");
+                        CVSE.VMP.datacolEvent.stop();
+                        finished = true;
+                        break;
+                    }
+                    System.out.println("currentIndex=" + currentIndex + " rqe_arr size=" + rqe_arr.size());
                 }
-                System.out.println("currentIndex="+currentIndex+" rqe_arr size="+rqe_arr.size());
             }
+            canGenTask.release();
+        }else{
+            System.out.println("RequestGenerator is still busy, not generating task");
         }
     }
     public long nextappearTime(){
@@ -199,8 +208,30 @@ public class RequestGenerator {
         return original_rqe;
 
     }
+    //simple linear random
+    public long randTimeLinear(Random r,long timeSpan){
+        return Math.abs(r.nextLong() % timeSpan);
+    }
+    //create high and low work load intensity pulse
+    public long randTimeInterval(Random r,long timeSpan,int hiperiodlength,int lowperiodlength,double highperiodAmp){
+        long pulselength=hiperiodlength+lowperiodlength;
+        long pseudopulselength=lowperiodlength+ (long)(hiperiodlength*highperiodAmp);
+        long pseudotimeSpan=timeSpan/pulselength*pseudopulselength;
+
+        long rand=Math.abs(r.nextLong() % pseudotimeSpan);
+        long flop=rand/pseudopulselength;
+        long remain=rand%pseudopulselength;
+        long transformedTime=flop*pulselength;
+        if(remain<=lowperiodlength){ //end in low range
+            return transformedTime+remain;
+        }else{ // end in high range
+            return transformedTime+lowperiodlength+ (long)((remain-lowperiodlength)/highperiodAmp);
+        }
+    }
     //enforce least duplicate or match, unless neccessery, then modify to add matching
     public void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack){
+        int highPeriod=20000,lowPeriod=20000;
+        double highAmp=3.0;
         //random into array, modify, sort array, write to file
         Random r =new Random(seed);
         int parametertypes=2; //number of parameter types
@@ -224,7 +255,8 @@ public class RequestGenerator {
                 for (int q = 0; q < totalVideos; q++) {
                     // video choice is in the positionMatchup
                     String acmd = CVSE.GTS.possible_Operations.get((positionMatchup[q] +2+ fold/parametertypes) % CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
-                    long appear = Math.abs(r.nextLong() % timeSpan);
+                    //long appear = randTimeLinear(r,timeSpan);
+                    long appear =randTimeInterval(r,timeSpan,highPeriod,lowPeriod,highAmp);
                     int thisslacktime;
                     if(avgslack==0){ // if not set, use default value for now
                         if(acmd.equalsIgnoreCase("Codec")){
