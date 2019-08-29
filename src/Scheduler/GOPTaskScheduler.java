@@ -11,19 +11,20 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 // base class of all GOPTaskScheduler, have common functions, taskScheduling function itself schedule task in FCFS.
 public abstract class GOPTaskScheduler {
+    Semaphore readytoWork;
     protected TaskQueue Batchqueue;
     public  ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
-    public int scheduler_working = 0;
     protected  int maxpending = 0;
     public  int workpending = 0;
     public  long maxElapsedTime; //use for setting Deadline
     public  List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
 
     public GOPTaskScheduler(){
-
+        readytoWork=new Semaphore(1);
         Batchqueue= new TaskQueue();
     }
     public int getBatchqueueLength(){
@@ -76,12 +77,15 @@ public abstract class GOPTaskScheduler {
     }
     public void taskScheduling() {
         System.out.println("called non overwritten taskScheduling function, doing FCFS assignment");
-        if(scheduler_working !=1) {
-            scheduler_working = 1;
-            FCFS();
-            scheduler_working =0;
+        try {
+            readytoWork.acquire();
+        }catch(Exception e){
+            System.out.println("Sem of task scheduling error");
         }
-    }
+
+        FCFS();
+        readytoWork.release();
+        }
     //turn off VMS socket connection sockets
     public void close(){
         for(int i = 0; i< machineInterfaces.size(); i++){

@@ -5,9 +5,7 @@ import Streampkg.StreamGOP;
 import TimeEstimatorpkg.retStat;
 import mainPackage.CVSE;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 public class Merger {
 
@@ -170,7 +168,7 @@ public class Merger {
                 }
             }
         }
-        System.out.println("count Original miss");
+        //System.out.println("count DL miss return");
 
         return missed;
     }
@@ -216,16 +214,27 @@ public class Merger {
         }
         return virtualQueue_copy.size()-1; // nowhere is missed
     }
-
-    public void removeStreamGOPfromTable(StreamGOP X){
+    public int removeValuefromHashTable(HashMap H,StreamGOP X){
+        Iterator<Map.Entry> iterator = H.entrySet().iterator();
+        int count=0;
+        while (iterator.hasNext()) {
+            Map.Entry entry=iterator.next();
+            if (entry.getValue()==X) {
+                iterator.remove();
+                count++;
+            }
+        }
+        return count;
+    }
+    public void removeStreamGOPfromTables(StreamGOP X){
         //remove anything with this value (need removeAll, not remove or it'll only remove the first one)
 
-        //*** remove only data level, otherwise, we cache the rest
-
+        //The Way below cause errors, if removing multiple objects
         //mergePending_tasklvl.values().removeAll(Collections.singleton(X));
-        mergePending_operationlvl.values().removeAll(Collections.singleton(X));
-        mergePending_datalvl.values().removeAll(Collections.singleton(X));
 
+        //testing this instead
+        removeValuefromHashTable(mergePending_operationlvl,X);
+        removeValuefromHashTable(mergePending_datalvl,X);
         //a copy of pending queue
         pendingqueue.remove(X); //only one record here
         //can try this way too

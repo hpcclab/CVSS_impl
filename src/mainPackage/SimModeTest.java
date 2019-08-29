@@ -69,6 +69,7 @@ public class SimModeTest {
                 while (!CVSE.RG.finished) {
                     sleep(300);
                     System.out.println("wait for sim to finish");
+                    //CVSE.RG.contProfileRequestsGen(); //probably good idea to call here...
                 }
                 System.out.println("\nAll request have been released\n");
 
@@ -132,9 +133,9 @@ public class SimModeTest {
             setUpCVSE_forsim("config/nuConfig.properties",null);
         if (seed == 0) {
             //30
-            //int[] sr = {699,1911,16384,9999,555,687,9199,104857,212223,777,1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
+            int[] sr = {699,1911,16384,9999,555,687,9199,104857,212223,777,1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
             //5
-            int[] sr = {699,1911,16384,9999,555};
+            //int[] sr = {699,1911,16384,9999,555};
             for (int j = 0; j < sr.length; j++) {
                 for (int i = 3000; i <= 9000; i += 500) {
                     //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);

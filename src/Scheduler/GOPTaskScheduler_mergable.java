@@ -56,11 +56,12 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
     protected void postschedulefn(StreamGOP X){
         //System.out.println("overwritten postschedulefn is CALLED\n\n\n");
 
-        //////below should not be required, should have been removed when each machine report its finish ??
+        //either use function below, or dataUpdate's ackCompletedVideo, BUT NOT BOTH
 
         if(CVSE.config.taskmerge) {
-            MRG.removeStreamGOPfromTable(X);
+            MRG.removeStreamGOPfromTables(X);
         }
+        //////code above works better for simulation but for real production dataUpdate's ackCompletedVideo should be the one to report (commented out at the moment)
 
 
 

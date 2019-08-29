@@ -108,6 +108,7 @@ public class RequestGenerator {
                 }
             }
             canGenTask.release();
+            System.out.println("Finish Request Gen");
         }else{
             System.out.println("RequestGenerator is still busy, not generating task");
         }

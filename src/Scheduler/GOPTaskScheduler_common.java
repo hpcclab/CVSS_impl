@@ -5,8 +5,10 @@ import Streampkg.StreamGOP;
 import TimeEstimatorpkg.retStat;
 import mainPackage.CVSE;
 
+
 //extends GOPTaskScheduler, with more VM type support, more scheduling options
 public class GOPTaskScheduler_common extends GOPTaskScheduler {
+
     public GOPTaskScheduler_common(){
         super();
         //if(CVSE.config.mapping_mechanism.equalsIgnoreCase("ShortestQueueFirst")){
@@ -169,57 +171,61 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
     public void taskScheduling(){ // first function call to submit some works to other machine
 
         System.out.println("call submit work");
-        if(scheduler_working !=1) {
-            scheduler_working = 1;
-            while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
-                StreamGOP X;
-                //select a task by a criteria
-                X=Batchqueue.removeDefault();
-
-                preschedulefn(X);
-
-                MachineInterface chosenVM = selectMachine(X);
-                System.out.println("ChosenVM="+chosenVM);
-
-                if (CVSE.config.enableCRscalingoutofInterval && (chosenVM.estimatedQueueLength > CVSE.config.localqueuelengthperCR)) {
-                    //do reprovisioner, we need more VM!
-                    //ResourceProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
-                    System.out.println("queue too long, scale up!");
-                    CVSE.VMP.EvaluateClusterSize(-2);
-                    //re-assign works
-                    chosenVM = selectMachine(X);
-                    System.out.println("ChosenVM="+chosenVM);
-                }
-
-                if(CVSE.config.run_mode.equalsIgnoreCase("sim")){
-                    retStat thestat=CVSE.TE.getHistoricProcessTime(chosenVM,X);
-                    //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
-                    X.estimatedExecutionTime=thestat.mean;
-                    X.estimatedExecutionSD=thestat.SD;
-                    //X.estimatedDelay
-                }
-                //System.out.println("before dispatch");
-
-                //change StreamGOP type to Dispatched
-                X.dispatched = true;
-                //X.parentStream=null;
-
-                //then it's ready to send out
-                chosenVM.sendJob(X);
-                postschedulefn(X);
-                System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());
-                //System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
-                //System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);
-                workpending++;
-                System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
-                if (workpending == maxpending) {
-                    System.out.println("workpending==maxpending");
-                    CVSE.VMP.collectData();
-                }
-            }
-            scheduler_working =0;
+        try {
+            readytoWork.acquire();
+        }catch(Exception e){
+            System.out.println("Sem of task scheduling error");
         }
+
+        while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
+            StreamGOP X;
+            //select a task by a criteria
+            X = Batchqueue.removeDefault();
+
+            preschedulefn(X);
+
+            MachineInterface chosenVM = selectMachine(X);
+            System.out.println("ChosenVM=" + chosenVM);
+
+            if (CVSE.config.enableCRscalingoutofInterval && (chosenVM.estimatedQueueLength > CVSE.config.localqueuelengthperCR)) {
+                //do reprovisioner, we need more VM!
+                //ResourceProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
+                System.out.println("queue too long, scale up!");
+                CVSE.VMP.EvaluateClusterSize(-2);
+                //re-assign works
+                chosenVM = selectMachine(X);
+                System.out.println("ChosenVM=" + chosenVM);
+            }
+
+            if (CVSE.config.run_mode.equalsIgnoreCase("sim")) {
+                retStat thestat = CVSE.TE.getHistoricProcessTime(chosenVM, X);
+                //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
+                X.estimatedExecutionTime = thestat.mean;
+                X.estimatedExecutionSD = thestat.SD;
+                //X.estimatedDelay
+            }
+            //System.out.println("before dispatch");
+
+            //change StreamGOP type to Dispatched
+            X.dispatched = true;
+            //X.parentStream=null;
+
+            //then it's ready to send out
+            chosenVM.sendJob(X);
+            postschedulefn(X);
+            System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());
+            //System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
+            //System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);
+            workpending++;
+            System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
+            if (workpending == maxpending) {
+                System.out.println("workpending==maxpending");
+                CVSE.VMP.collectData();
+            }
+        }
+        readytoWork.release();
     }
+
     //function that do something after task X get sent
     protected void postschedulefn(StreamGOP X){
 

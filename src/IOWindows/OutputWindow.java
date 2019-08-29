@@ -2,7 +2,6 @@ package IOWindows;
 
 import Repository.Video;
 import Scheduler.GOPTaskScheduler_mergable;
-import Scheduler.SystemConfig;
 import Streampkg.StreamGOP;
 import mainPackage.CVSE;
 
@@ -21,7 +20,7 @@ public class OutputWindow {
             if (CVSE.config.taskmerge) {
                 for (StreamGOP g: completedTasks
                      ) {
-                    GTS.MRG.removeStreamGOPfromTable(g);
+                    GTS.MRG.removeStreamGOPfromTables(g);
                 }
             }
         }

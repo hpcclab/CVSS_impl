@@ -101,6 +101,7 @@ public class ResourceProvisioner {
     public void collectData(){
         //choice A: direct read (not feasible in real multiple VM run)
         //choice B: send packet to ask and wait for reply (need ID)
+        System.out.println("start collect data procedure");
         int sum_DLmiss=0,sum_taskdone=0;
         long current_overtime=0,current_undertime=0;
         double current_weighted_undertime=0,current_weighted_overtime=0;
@@ -180,26 +181,27 @@ public class ResourceProvisioner {
             }
         }
         if(CVSE.config.profiledRequests){
+            System.out.println("continue profile request gen");
             CVSE.RG.contProfileRequestsGen();
         }
     }
 
     private static int tcount=0;
     public void Tick(){
-        try {
-            x.acquire();
-        }catch(Exception e){
-            System.out.println("Semaphore Bug");
+        if(x.tryAcquire()){
+            //System.out.println("Tick, col data");
+            tcount++;
+            collectData();
+            if(tcount% CVSE.config.CRscalingIntervalTick==0){
+                EvaluateClusterSize(CVSE.GTS.getBatchqueueLength());
+            }
+            //System.out.println("tick, submit work");
+            CVSE.GTS.taskScheduling();
+            x.release();
+        }else{
+            System.out.println("System still busy, not doing interval job");
         }
-        //System.out.println("Tick, col data");
-        tcount++;
-        collectData();
-        if(tcount% CVSE.config.CRscalingIntervalTick==0){
-            EvaluateClusterSize(CVSE.GTS.getBatchqueueLength());
-        }
-        //System.out.println("tick, submit work");
-        CVSE.GTS.taskScheduling();
-        x.release();
+
     }
     //this need to be call periodically somehow
     public void EvaluateClusterSize(int virtual_queuelength){
@@ -409,7 +411,7 @@ public class ResourceProvisioner {
     }
     //relay function to outputwindoe
     public void ackCompletedVideo(List<StreamGOP> completedTasks){
-        CVSE.OW.ackCompletedVideo(completedTasks);
+        //CVSE.OW.ackCompletedVideo(completedTasks);
     }
 
 
