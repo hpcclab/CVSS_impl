@@ -20,7 +20,11 @@ public class OutputWindow {
             if (CVSE.config.taskmerge) {
                 for (StreamGOP g: completedTasks
                      ) {
-                    GTS.MRG.removeStreamGOPfromTables(g);
+                    //a copy of pending queue
+                    GTS.MRG.removefromPendingQueue(g); //only one record here
+                    // already deleted when dispatch
+                    //GTS.MRG.removeStreamGOPfromTables(g);
+
                 }
             }
         }

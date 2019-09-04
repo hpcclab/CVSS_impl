@@ -20,7 +20,7 @@ public abstract class GOPTaskScheduler {
     public  ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
     protected  int maxpending = 0;
     public  int workpending = 0;
-    public  long maxElapsedTime; //use for setting Deadline
+    public  long  maxElapsedTime; //use for setting Deadline
     public  List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
 
     public GOPTaskScheduler(){
@@ -47,12 +47,14 @@ public abstract class GOPTaskScheduler {
         CVSE.AC.AssignStreamPriority(ST);
         for (StreamGOP X : ST.streamGOPs) {
             if(!CVSE.CACHING.checkExistence(X)) {
-                Batchqueue.add(X);
+                synchronized (Batchqueue) {
+                    Batchqueue.add(X);
+                }
             }else{
                 System.out.println("GOP cached, no reprocess");
             }
         }
-        taskScheduling();
+        //taskScheduling();
     }
 
     public boolean emptyQueue() {
@@ -66,7 +68,10 @@ public abstract class GOPTaskScheduler {
         for(int i = 0; i< machineInterfaces.size(); i++){ //get a free machine
             int assignable= machineInterfaces.get(i).estimatedQueueLength - CVSE.config.localqueuelengthperCR; //get number of task can assign to this machine
             while ((!Batchqueue.isEmpty()) && assignable>0) {
-                StreamGOP X=Batchqueue.removeDefault();
+                StreamGOP X;
+                synchronized (Batchqueue) {
+                    X = Batchqueue.removeDefault();
+                }
                 X.dispatched=true;
                 machineInterfaces.get(i).sendJob(X);
                 dispatched++;

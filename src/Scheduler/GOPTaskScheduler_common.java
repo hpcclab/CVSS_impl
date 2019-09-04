@@ -180,8 +180,9 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
         while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
             StreamGOP X;
             //select a task by a criteria
-            X = Batchqueue.removeDefault();
-
+            synchronized (Batchqueue) {
+                X = Batchqueue.removeDefault();
+            }
             preschedulefn(X);
 
             MachineInterface chosenVM = selectMachine(X);
@@ -190,7 +191,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             if (CVSE.config.enableCRscalingoutofInterval && (chosenVM.estimatedQueueLength > CVSE.config.localqueuelengthperCR)) {
                 //do reprovisioner, we need more VM!
                 //ResourceProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
-                System.out.println("queue too long, scale up!");
+                System.out.println("queue too long, please scale up!");
                 CVSE.VMP.EvaluateClusterSize(-2);
                 //re-assign works
                 chosenVM = selectMachine(X);

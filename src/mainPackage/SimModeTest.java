@@ -39,9 +39,15 @@ public class SimModeTest {
         CVSE.RG= new RequestGenerator();
 
     }
-
-    public static String Sim(String confFile, String opt) {
+    public static String trysleep(int time){
         try {
+            sleep(time);
+        }catch (Exception e) {
+        return "Failed: " + e;
+    }
+        return "";
+    }
+    public static String Sim(String confFile, String opt) {
             if(opt.contains("BenchmarkInput/")){
                 opt=opt.replaceFirst("BenchmarkInput/","");
                 System.out.println("config trim BenchmarkInput/ out");
@@ -67,7 +73,7 @@ public class SimModeTest {
                 System.out.println("start sim");
                 CVSE.RG.contProfileRequestsGen();
                 while (!CVSE.RG.finished) {
-                    sleep(300);
+                    trysleep(300);
                     System.out.println("wait for sim to finish");
                     //CVSE.RG.contProfileRequestsGen(); //probably good idea to call here...
                 }
@@ -75,7 +81,7 @@ public class SimModeTest {
 
                 while (!CVSE.GTS.emptyQueue()) {
                     System.out.println("wait for pending work to finish");
-                    sleep(300);
+                    trysleep(300);
                 }
                 System.out.println("All queue are emptied");
             } else if (CVSE.config.openWebRequests) {
@@ -86,7 +92,12 @@ public class SimModeTest {
                 // example of actual request: http://localhost:9902/transcoderequest/?videoid=1,cmd=resolution,setting=180
                 // (assume 10 is id of bigbugbunny
                 // TODO: figure about timing of the request, both deadline and arrival (in webservicegate class)
-                CVSE.WG.startListener();
+                try {
+                    CVSE.WG.startListener();
+                }catch(Exception e){
+                    System.out.println("Request listener fail:"+e);
+                    return "failed";
+                }
                 System.out.println("webservice enabled");
             } else {
                 while (rqn != 0) {
@@ -112,15 +123,13 @@ public class SimModeTest {
             CVSE.VMP.DU.printstat();
             //CVSE.VMP.DU.graphplot();
 
-            sleep(300);
+            trysleep(300);
             CVSE.GTS.close();
             CVSE.VMP.closeAll();
 
             return "success";
 
-        } catch (Exception e) {
-            return "Failed: " + e;
-        }
+
 
     }
 
@@ -133,11 +142,11 @@ public class SimModeTest {
             setUpCVSE_forsim("config/nuConfig.properties",null);
         if (seed == 0) {
             //30
-            int[] sr = {699,1911,16384,9999,555,687,9199,104857,212223,777,1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
+            //int[] sr = {699,1911,16384,9999,555,687,9199,104857,212223,777,1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
             //5
-            //int[] sr = {699,1911,16384,9999,555};
+            int[] sr = {699,1911,16384,9999,555};
             for (int j = 0; j < sr.length; j++) {
-                for (int i = 3000; i <= 9000; i += 500) {
+                for (int i = 6000; i <= 10000; i += 500) {
                     //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);
                     //use default avgslacktime value, 10000 for most operations, 8000 for codec
                     _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 0, 3000);
@@ -145,7 +154,7 @@ public class SimModeTest {
                 }
             }
         } else {
-            for (int i = 3000; i <= 9000; i += 500) {
+            for (int i = 6000; i <= 10000; i += 500) {
                 //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + seed, seed, 100, i, 180000, 10000, 3000);
                 _CVSE.RG.generateProfiledRandomRequests("nocodec" + i + "r_180000_10000_3000_s" + seed, seed, 100, i, 180000, 0, 3000);
 

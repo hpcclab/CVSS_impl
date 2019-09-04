@@ -411,7 +411,9 @@ public class ResourceProvisioner {
     }
     //relay function to outputwindoe
     public void ackCompletedVideo(List<StreamGOP> completedTasks){
-        //CVSE.OW.ackCompletedVideo(completedTasks);
+
+
+        CVSE.OW.ackCompletedVideo(completedTasks);
     }
 
 

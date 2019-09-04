@@ -39,18 +39,22 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
                     MRG.mergeifpossible(X, SDco);
                 } else {
                     //dont merge check
-                    Batchqueue.add(X);
+                    synchronized (Batchqueue) {
+                        Batchqueue.add(X);
+                    }
                 }
             }else{
                 System.out.println("GOP cached, no reprocess");
             }
         }
             //assignwork thread start
-            taskScheduling();
+            //taskScheduling();
     }
     //function that do something before task X get sent
     protected void preschedulefn(StreamGOP X){
-        pendingqueue.add(X);
+        synchronized (pendingqueue) {
+            pendingqueue.add(X);
+        }
     }
     //function that do something after task X get sent
     protected void postschedulefn(StreamGOP X){

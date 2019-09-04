@@ -2,6 +2,7 @@ package Scheduler;
 
 import ResourceManagement.MachineInterface;
 import Streampkg.StreamGOP;
+import Streampkg.TaskRequest;
 import TimeEstimatorpkg.retStat;
 import mainPackage.CVSE;
 
@@ -9,7 +10,7 @@ import java.util.*;
 
 public class Merger {
 
-    private  HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_tasklvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();;
+    private  HashMap<TaskRequest,StreamGOP> mergePending_tasklvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();;
     private  HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_operationlvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();
     private  HashMap<Streampkg.TaskRequest,StreamGOP> mergePending_datalvl =new HashMap<Streampkg.TaskRequest,StreamGOP>();
     public  long merged_tasklvl_count =0;
@@ -214,31 +215,34 @@ public class Merger {
         }
         return virtualQueue_copy.size()-1; // nowhere is missed
     }
-    public int removeValuefromHashTable(HashMap H,StreamGOP X){
-        Iterator<Map.Entry> iterator = H.entrySet().iterator();
-        int count=0;
-        while (iterator.hasNext()) {
-            Map.Entry entry=iterator.next();
-            if (entry.getValue()==X) {
-                iterator.remove();
-                count++;
+
+    public int removeValuefromHashMap(HashMap H,StreamGOP X){
+        int count = 0;
+        synchronized (H) {
+            Iterator<Map.Entry> iterator = H.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry entry = iterator.next();
+                if (entry.getValue() == X) {
+                    iterator.remove();
+                    count++;
+                }
             }
         }
         return count;
     }
+
     public void removeStreamGOPfromTables(StreamGOP X){
         //remove anything with this value (need removeAll, not remove or it'll only remove the first one)
 
-        //The Way below cause errors, if removing multiple objects
-        //mergePending_tasklvl.values().removeAll(Collections.singleton(X));
+        //The Way below can cause errors, if removing multiple objects
+        /*
+        mergePending_tasklvl.values().removeAll(Collections.singleton(X));
+        mergePending_datalvl.values().removeAll(Collections.singleton(X));
+        */
+        //testing this
+        removeValuefromHashMap(mergePending_operationlvl,X);
+        removeValuefromHashMap(mergePending_datalvl,X);
 
-        //testing this instead
-        removeValuefromHashTable(mergePending_operationlvl,X);
-        removeValuefromHashTable(mergePending_datalvl,X);
-        //a copy of pending queue
-        pendingqueue.remove(X); //only one record here
-        //can try this way too
-        //mergePending_tasklvl.values().removeIf(val -> X.equals(val));
     }
     public void updateTable(){
 
@@ -292,14 +296,12 @@ public class Merger {
                     ///////////////////////////////////////////// redo code both upper and below
                     if (CVSE.config.overwriteQueuePolicyHeuristic.equalsIgnoreCase("logarithmic")) {
                         // logarithmic probe
-                        if (Bsearch_trybetweenPositions(requestSig, LVmap_pending, X, itspair, merged, originalmiss) == -1) {
-                            System.out.println("don't merge");
-                            return false;
+                        if (Bsearch_trybetweenPositions(requestSig, LVmap_pending, X, itspair, merged, originalmiss) != -1) {
+                            return true;
                         }
                     }else { //default to linearProbe
-                        if (linearsearch_trybetweenPositions(requestSig, LVmap_pending, X, itspair, merged, originalmiss) == -1) {
-                            System.out.println("don't merge");
-                            return false;
+                        if (linearsearch_trybetweenPositions(requestSig, LVmap_pending, X, itspair, merged, originalmiss) != -1) {
+                            return true;
                         }
                     }
                 }else{ // incase of aggressive merge, just merge right away
@@ -309,9 +311,14 @@ public class Merger {
                 }
             }
         }
+        System.out.println("don't merge");
         return false;
     }
-
+    public void removefromPendingQueue(StreamGOP X){
+        synchronized (pendingqueue) {
+            pendingqueue.remove(X);
+        }
+    }
 
     public void mergeifpossible(StreamGOP X,double SDco){
         //check for duplication first
@@ -323,7 +330,9 @@ public class Merger {
             //don't even need to check if it is not null or state is not dispatched
         }else {
             //System.out.println("not duplicated");
-            mergePending_tasklvl.put(aRequestlvl1, X); //or replace???
+            //synchronized (mergePending_tasklvl) { // no modification to tasklvl mapping anywhere else
+                mergePending_tasklvl.put(aRequestlvl1, X); //or replace???
+            //}
             int originalmiss=0;
             if(!CVSE.config.mergeaggressiveness.equalsIgnoreCase("Aggressive")) {
                 //count how many miss would happen if not merging
@@ -342,8 +351,9 @@ public class Merger {
                 }
                 System.out.println("found Mergeable lvl 2, but not merged.");
             }
-            mergePending_operationlvl.put(aRequestlvl2, X);
-
+            synchronized (mergePending_operationlvl) {
+                mergePending_operationlvl.put(aRequestlvl2, X);
+            }
             if (mergePending_datalvl.containsKey(aRequestlvl3)) {
                 if (trymerge(X, originalmiss, aRequestlvl3, mergePending_datalvl)) {
                     System.out.println("Merged in lvl3");
@@ -351,7 +361,10 @@ public class Merger {
                 }
                 System.out.println("found Mergeable lvl 3, but not merged.");
             }
-            mergePending_datalvl.put(aRequestlvl3, X);
+            synchronized (mergePending_datalvl) {
+                mergePending_datalvl.put(aRequestlvl3, X);
+            }
+
 
             System.out.println("add to queue directly, not merging with anything");
             Batchqueue.add(X);

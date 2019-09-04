@@ -34,20 +34,20 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         deadLine=presentationTime;
         arrivalTime=arrivaltime;
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x,long slacktime,long arrivaltime){
+    public StreamGOP(String name,Stream p,RepositoryGOP x,long starttime,long arrivaltime){
         super(x);
         videoname=name;
         parentStream=p;
-        deadLine=presentationTime+slacktime;
+        deadLine=presentationTime+starttime;
         //System.out.println("X presentationTime="+x.presentationTime);
         //System.out.println("this deadline="+deadLine);
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long slacktime,long arrivaltime){
-        this(name,p,x,slacktime,arrivaltime);
+    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long startTime,long arrivaltime){
+        this(name,p,x,startTime,arrivaltime);
         addCMD(Command, Setting,deadLine);
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long slacktime,long arrivaltime,Settings vidSetting){
-        this(name,p,x,slacktime,arrivaltime);
+    public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long startTime,long arrivaltime,Settings vidSetting){
+        this(name,p,x,startTime,arrivaltime);
         videoSetting = vidSetting;
         addCMD(Command, Setting,deadLine);
     }

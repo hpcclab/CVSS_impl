@@ -11,7 +11,7 @@ public class Stream {
     public String id;
     private int status;
     public ArrayList<StreamGOP> streamGOPs;
-    public long startTime;
+    public long presentationTime;
     public Settings videoSettings = null;
 
     public void ScheduleVideoSegments(){
@@ -23,31 +23,31 @@ public class Stream {
         if(CVSE.config.run_mode.equalsIgnoreCase("sim")){
 
         }else {
-            startTime = System.currentTimeMillis() + 1000; //thisTime+Constant for now, should really be scheduleTime
+            presentationTime = System.currentTimeMillis() + 1000; //thisTime+Constant for now, should really be scheduleTime
         }
         streamGOPs= new ArrayList<StreamGOP>();
     }
-    public Stream(Video v,String command,String settings,long addedslackTime,long arrivalTime){
-        this(v,command,settings,0,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
+    public Stream(Video v,String command,String settings,long deadline,long arrivalTime){
+        this(v,command,settings,0,v.repositoryGOPs.size(),deadline,arrivalTime);
     }
-    public Stream(Video v,String command, String settings, int startSegment,long addedslackTime,long arrivalTime){
-        this(v,command,settings,startSegment,v.repositoryGOPs.size(),addedslackTime,arrivalTime);
+    public Stream(Video v,String command, String settings, int startSegment,long deadline,long arrivalTime){
+        this(v,command,settings,startSegment,v.repositoryGOPs.size(),deadline,arrivalTime);
     }
 
-    public Stream(Video v,String command,String settings,int startSegment,int endSegment,long addedslackTime,long arrivalTime){
+    public Stream(Video v,String command,String settings,int startSegment,int endSegment,long deadline,long arrivalTime){
 
         status=0;
         video =v;
-        if(addedslackTime==0) { //ST==0, did not specified start time, make a new startTime
+        if(deadline==0) { //ST==0, did not specified a preliminary deadline
             //normally dont fall in this case anyway in sim mode
             if(CVSE.config.run_mode.equalsIgnoreCase("sim")) {
 
-                startTime= CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
+                presentationTime= CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
             }else{
-                startTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
+                presentationTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
             }
         }else{
-            startTime=addedslackTime;
+            presentationTime=deadline;
         }
         streamGOPs= new ArrayList<StreamGOP>();
         //for(RepositoryGOP x: v.repositoryGOPs){
@@ -62,7 +62,7 @@ public class Stream {
             }else{
                 designatedSettings=settings;
             }
-            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings,startTime,arrivalTime);
+            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,designatedSettings,presentationTime,arrivalTime);
             //System.out.println("deadline of "+video.name+" "+(i+1)+"="+xcopy.getDeadLine());
             streamGOPs.add(xcopy);
         }
@@ -80,17 +80,17 @@ public class Stream {
             //normally dont fall in this case anyway in sim mode
             if(CVSE.config.run_mode.equalsIgnoreCase("sim")) {
 
-                startTime= CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
+                presentationTime= CVSE.GTS.maxElapsedTime+2000; //add a prelinary value
             }else{
-                startTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
+                presentationTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
             }
         }else{
-            startTime=addedslackTime;
+            presentationTime=addedslackTime;
         }
         streamGOPs= new ArrayList<StreamGOP>();
 
         for(int i=startSegment;i<endSegment;i++){
-            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,settings,startTime,arrivalTime,vidSettings);
+            StreamGOP xcopy=new StreamGOP(video.name,this,v.repositoryGOPs.get(i),command,settings,presentationTime,arrivalTime,vidSettings);
             //System.out.println("deadline of "+video.name+" "+(i+1)+"="+xcopy.getDeadLine());
             streamGOPs.add(xcopy);
         }

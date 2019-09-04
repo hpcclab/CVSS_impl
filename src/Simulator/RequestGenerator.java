@@ -263,7 +263,7 @@ public class RequestGenerator {
                         if(acmd.equalsIgnoreCase("Codec")){
                             thisslacktime=80000;
                         }else{
-                            thisslacktime=15000;
+                            thisslacktime=17000;
                         }
                     }else{ //if set, use slacktime that is set
                         thisslacktime=avgslack;
