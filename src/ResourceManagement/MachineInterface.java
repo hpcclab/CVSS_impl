@@ -19,8 +19,8 @@ public abstract class MachineInterface {
     public boolean autoschedule=false;
 
     //stats
-    public long tmp_taskdone=0, total_taskdone =0, total_itemdone =0; //work done can be multiple task per item
-    public long tmp_taskmiss=0, total_taskmiss =0, total_itemmiss =0;
+    public long tmp_taskdone=0, total_requestdone =0, total_taskdone =0; //work done can be multiple task per item
+    public long tmp_taskmiss=0, total_requestmiss =0, total_taskmiss =0;
     public long tmp_overtime =0; // no need for total
     public long tmp_undertime =0;
     public double tmp_weighted_overtime =0,tmp_weighted_undertime =0;

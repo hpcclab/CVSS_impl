@@ -64,13 +64,15 @@ public class MachineInterface_SimNWcache extends MachineInterface {
         //System.out.println("realspentTime="+realspentTime);
         boolean missed=false;
         //if transfer finished after synctime+delay, it misses
-        for (String cmd:segment.deadlineSet.keySet()){
-            if(segment.getdeadlineof(cmd)<=synctime+sampleddelay){
-                if(!missed) {
-                    deadlineMiss++;
-                    missed=true;
+        for (String cmd:segment.cmdSet.keySet()){
+            for(String param:segment.cmdSet.get(cmd).keySet()) {
+                if (segment.getdeadlineof(cmd, param) <= synctime + sampleddelay) {
+                    if (!missed) {
+                        deadlineMiss++;
+                        missed = true;
+                    }
+                    NdeadlineMiss++;
                 }
-                NdeadlineMiss++;
             }
         }
         workDone++;
@@ -96,10 +98,10 @@ public class MachineInterface_SimNWcache extends MachineInterface {
         //System.out.println("actualSpentTime="+CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        CVSE.GTS.machineInterfaces.get(id).total_itemmiss =deadlineMiss;
-        CVSE.GTS.machineInterfaces.get(id).total_itemdone =workDone;
-        CVSE.GTS.machineInterfaces.get(id).total_taskdone =NworkDone;
-        CVSE.GTS.machineInterfaces.get(id).total_taskmiss =NdeadlineMiss;
+        CVSE.GTS.machineInterfaces.get(id).total_taskmiss =deadlineMiss;
+        CVSE.GTS.machineInterfaces.get(id).total_taskdone =workDone;
+        CVSE.GTS.machineInterfaces.get(id).total_requestdone =NworkDone;
+        CVSE.GTS.machineInterfaces.get(id).total_requestmiss =NdeadlineMiss;
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){

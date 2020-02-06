@@ -12,7 +12,7 @@ public class SystemConfig {
             "scheduler_machineselectionpolicy","file_mode","mergeaggressiveness"));
 
     private ArrayList<String> intList= new ArrayList<>(Arrays.asList("localqueuelengthperCR","dataUpdateInterval","CRscalingIntervalTick","maxCR","minCR","remedialVM_constantfactor"));
-    private ArrayList<String> doubleList= new ArrayList<>(Arrays.asList("lowscalingThreshold","highscalingThreshold","c_const_for_utilitybased"));
+    private ArrayList<String> doubleList= new ArrayList<>(Arrays.asList("lowscalingThreshold","highscalingThreshold","c_const_for_utilitybased","sdmultiplier"));
     private ArrayList<String> boolList= new ArrayList<>(Arrays.asList("addProfiledDelay","taskmerge","profiledRequests","openRequests","mergeOverwriteQueuePolicy",
             "enableTimeEstimator","enableCaching","enableCRscaling","enableCRscalingoutofInterval","useEC2"));
 
@@ -30,6 +30,7 @@ public class SystemConfig {
         prop.setProperty("enableCaching","false");
         prop.setProperty("enableCRscaling","false");
         prop.setProperty("enableCRscalingoutofInterval","false");
+        prop.setProperty("sdmultiplier","1.0");
     }
     public SystemConfig(){
         setDefaultValues();
@@ -70,6 +71,8 @@ public class SystemConfig {
                         case "lowscalingThreshold": lowscalingThreshold= Double.parseDouble(prop.getProperty(keystr)); break;
                         case "highscalingThreshold": highscalingThreshold= Double.parseDouble(prop.getProperty(keystr)); break;
                         case "c_const_for_utilitybased": c_const_for_utilitybased= Double.parseDouble(prop.getProperty(keystr)); break;
+                        case "sdmultiplier": sdmultiplier= Double.parseDouble(prop.getProperty(keystr)); break;
+
                         //Boolean
                         case "addProfiledDelay": addProfiledDelay= Boolean.parseBoolean(prop.getProperty(keystr)); break;
                         case "mergeaggressiveness": mergeaggressiveness= prop.getProperty(keystr); break;
@@ -170,6 +173,7 @@ public class SystemConfig {
     public  double lowscalingThreshold; // for VM provisioning algorithms
     public  double highscalingThreshold;
     public  double c_const_for_utilitybased=0.1; //default value=0.1
+    public  double sdmultiplier=1.0; //change SD to be more volatile? default is 1.0 (truthful for the data).
     public  boolean useEC2;
     public  String file_mode="S3"; //can be S3 or
     //public static boolean mergeOverwriteQueuePolicy=true;

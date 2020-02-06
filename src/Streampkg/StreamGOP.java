@@ -5,40 +5,44 @@ import Scheduler.SystemConfig;
 import mainPackage.CVSE;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 
 public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,java.io.Serializable {
-    //public Settings userSetting;
-    public HashMap<String,LinkedList<String>> cmdSet=new HashMap<>();
-    public HashMap<String,Long> deadlineSet=new HashMap<>();
+    public HashMap<String, HashMap<String,TranscodingRequest>> cmdSet=new HashMap<String, HashMap<String,TranscodingRequest>>(); //key is Operation, value is hashmap of parameter
+    //the Map in 2nd layer's key is parameter, then value is each instance of TranscodingRequest
     public transient Stream parentStream;
-    public Settings videoSetting = null;
+    public Settings videoSetting = null; //legacy one, from Vaughan's RealMode
 
     public String videoname = "";
-    public long deadLine=0;
+    public long deadLine=Long.MAX_VALUE; //global deadline for the entire StreamGOP
     public long fileSize =900; //deprecated, use parameter of cmdSet instead
     public boolean dispatched=false;
     public long arrivalTime=0;
     public long estimatedExecutionTime=0;
     public double estimatedExecutionSD=0;
+    public int flags=0; //can be used to store some marked status, currently, %2==1 means it got PASSED in their queue
     public int requestcount=0; //be 1 unless merged
 
-    public StreamGOP(){
+    public StreamGOP(){ //arbitary request //instant deadline miss in this case
         super();
         deadLine=presentationTime;
     }
-    public StreamGOP(long arrivaltime){
+    public StreamGOP(long arrivaltime){ //arbitary request
         super();
-        deadLine=presentationTime;
+        deadLine=arrivaltime+presentationTime;
         arrivalTime=arrivaltime;
     }
-    public StreamGOP(String name,Stream p,RepositoryGOP x,long starttime,long arrivaltime){
+
+    public StreamGOP(String name,Stream p,RepositoryGOP x,long starttime,long arrivaltime){ //does not assign the
         super(x);
         videoname=name;
         parentStream=p;
         deadLine=presentationTime+starttime;
+        arrivalTime=arrivaltime; //not actually used but store it just in case
+
         //System.out.println("X presentationTime="+x.presentationTime);
         //System.out.println("this deadline="+deadLine);
     }
@@ -46,6 +50,7 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this(name,p,x,startTime,arrivaltime);
         addCMD(Command, Setting,deadLine);
     }
+    //video setting is implementation of Vaughan for real mode.
     public StreamGOP(String name,Stream p,RepositoryGOP x, String Command,String Setting,long startTime,long arrivaltime,Settings vidSetting){
         this(name,p,x,startTime,arrivaltime);
         videoSetting = vidSetting;
@@ -70,53 +75,54 @@ public class StreamGOP extends RepositoryGOP implements Comparable<StreamGOP>,ja
         this.videoSetting=X.videoSetting;
         //
         for(String command : X.cmdSet.keySet()){
-            LinkedList<String> param= new LinkedList<>(X.cmdSet.get(command) );
+            HashMap<String,TranscodingRequest> param= new HashMap<String,TranscodingRequest>(X.cmdSet.get(command));
             cmdSet.put(command,param);
         }
     }
-
-    public long getdeadlineof(String key){
-        if(!deadlineSet.containsKey(key)){
-            System.out.println("does not contain data for this deadline!");
-            return -1;
-        }else{
-            return deadlineSet.get(key);
-        }
-
-    }
-    public boolean containCmdParam(String Command,String Setting){
-        if(cmdSet.containsKey(Command)) {
-            LinkedList<String> paramList=cmdSet.get(Command);
-            if(paramList.contains(Setting)){
+    public boolean containCmdParam(String cmd,String param){
+        if(cmdSet.containsKey(cmd)) {
+            if (cmdSet.get(cmd).containsKey(param)) {
                 return true;
             }
         }
         return false;
     }
-    public void addCMD(String Command,String Setting,long in_deadline){
+    public long getdeadlineof(String cmd,String param){
+        if(containCmdParam(cmd,param)) {
+                return cmdSet.get(cmd).get(param).adeadline;
+        } //else
+        System.out.println("does not contain data for this deadline!");
+        return -1;
+    }
+
+    public void addCMD(String cmd,String param,long in_deadline) {
+        HashMap<String, TranscodingRequest> acmdRecord;
         //System.out.println("call addcmd"+Command+" "+Setting);
-        if(!containCmdParam(Command,Setting)) {
-            if (cmdSet.containsKey(Command)) {
-                LinkedList<String> parameterList = cmdSet.get(Command);
-                parameterList.add(Setting);
-                // do i need to put back?, NO? it's pointer!
-            } else {
-                LinkedList<String> parameterList = new LinkedList<>();
-                parameterList.add(Setting);
-                cmdSet.put(Command, parameterList);
-            }
-            requestcount++;
-            deadlineSet.put(Command+Setting,in_deadline);
-            //System.out.println("cmd count="+requestcount+"\n\n");
+
+        if (!cmdSet.containsKey(cmd)) { // operation didn't existed
+            acmdRecord = new HashMap<String, TranscodingRequest>();
+            cmdSet.put(cmd,acmdRecord);
         }else{
+            acmdRecord=cmdSet.get(cmd);
+        }
+
+        if (!acmdRecord.containsKey(param)) { //parameter didn't existed
+            acmdRecord.put(param,new TranscodingRequest(cmd,param,in_deadline,null));
+            requestcount++;
+        } else {    //any update? new individual deadline?
             System.out.println("addCMD: already have this cmd");
+            acmdRecord.get(param).chkUpdatedeadline(in_deadline);
+        }
+
+        if (in_deadline < deadLine) { //if deadline is earlier than current most urgent, set new deadline
+            deadLine = in_deadline;
         }
     }
+
     public void getAllCMD(StreamGOP aGOP){
-        for (String command : aGOP.cmdSet.keySet()) { //not really needed, since X should have just one cmd at the moment
-            LinkedList<String> param = new LinkedList<>(aGOP.cmdSet.get(command));
-            for (String aparam : param) {
-                addCMD(command, aparam,aGOP.getdeadlineof(command+aparam));
+        for (String command : aGOP.cmdSet.keySet()) {
+            for (String aparam : aGOP.cmdSet.get(command).keySet()) {
+                addCMD(command, aparam,aGOP.getdeadlineof(command,aparam));
                 //System.out.println("a call to add cmd");
             }
         }

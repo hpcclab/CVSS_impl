@@ -11,7 +11,7 @@ import miscTools.TaskQueue;
 public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
 
     public Merger MRG;
-    protected TaskQueue pendingqueue; //keep track of pending task (submitted, but didn't completed)
+    protected TaskQueue pendingqueue; //keep track of pending task (submitted, but didn't)
 
 
     public double SDco=2;
@@ -66,8 +66,6 @@ public class GOPTaskScheduler_mergable extends GOPTaskScheduler_common {
             MRG.removeStreamGOPfromTables(X);
         }
         //////code above works better for simulation but for real production dataUpdate's ackCompletedVideo should be the one to report (commented out at the moment)
-
-
 
     }
 }

@@ -1,5 +1,4 @@
-Framerate,framerate.sh
-Resolution,resolution.sh
-Bitrate,bitrate.sh
-Codec,codec.sh
-
+FRAMERATE,framerate.sh
+RESOLUTION,resolution.sh
+BITRATE,bitrate.sh
+CODEC,codec.sh

@@ -13,11 +13,14 @@ public class TaskRequest{ //fill every thing for lvl1 mapping constructor, skip 
         String theparam="";
         int i=0;
         for(String cmd : original.cmdSet.keySet()){
-            thecmd=cmd;
-            theparam=original.cmdSet.get(thecmd).get(0);
-            i++;
-            if(i>1){
-                System.out.println("ERROR: why do we have merged command here?");
+            thecmd = cmd;
+            for(String param:original.cmdSet.get(thecmd).keySet()) {
+                theparam=param;
+                ;
+                i++;
+                if(i>1){
+                    System.out.println("ERROR: why do we have merged command here?");
+                }
             }
         }
         if(level==3) { //Type C

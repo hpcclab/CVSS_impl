@@ -1,7 +1,6 @@
 package ResourceManagement;
 
 import Scheduler.GOPTaskScheduler_mergable;
-import Scheduler.SystemConfig;
 import mainPackage.CVSE;
 
 import java.io.FileWriter;
@@ -53,6 +52,7 @@ public class DataUpdate {
         FilenamePrefix += "_"+CVSE.config.mergeaggressiveness+"merge";
         FilenamePrefix += (CVSE.config.mergeOverwriteQueuePolicy) ? "_"+CVSE.config.overwriteQueuePolicyHeuristic+"PositionFind" : "_inplace";
         FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "_nobatchqueuesort";
+        FilenamePrefix +=(CVSE.config.sdmultiplier==1.0) ? "" : "SDmultiplyby"+CVSE.config.sdmultiplier;
         filename=FilenamePrefix+"_"+CVSE.config.profileRequestsBenchmark;
         try {
             Freq = new FileWriter(Statpath+"/freq/" +filename);
@@ -98,10 +98,10 @@ public class DataUpdate {
         for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
             MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
             avgActualSpentTime += vmi.actualSpentTime;
-            totalWorkDone += vmi.total_itemdone;
-            ntotalWorkDone += vmi.total_taskdone;
-            totaldeadlinemiss += vmi.total_itemmiss;
-            ntotaldeadlinemiss += vmi.total_taskmiss;
+            totalWorkDone += vmi.total_taskdone;
+            ntotalWorkDone += vmi.total_requestdone;
+            totaldeadlinemiss += vmi.total_taskmiss;
+            ntotaldeadlinemiss += vmi.total_requestmiss;
         }
         hitcount.add(totalWorkDone,totalWorkDone-totaldeadlinemiss);
         misscount.add(totalWorkDone,totaldeadlinemiss);
@@ -112,7 +112,8 @@ public class DataUpdate {
         long avgActualSpentTime=0;
         long totalWorkDone=0,ntotalWorkDone=0;
         long totaldeadlinemiss=0, ntotaldeadlinemiss=0;
-        if(CVSE.RG.finished){
+        int mergemiss=0;
+        if(CVSE.RG.finished && CVSE.GTS.emptyQueue()){
             //file output
 
             try {
@@ -130,14 +131,18 @@ public class DataUpdate {
                 for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
                     MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
                     Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent processing:" + vmi.actualSpentTime);
-                    Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_taskmiss + "(" + vmi.total_itemmiss + ")");
-
-
+                    Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_requestdone + ") requests, missed " + vmi.total_taskmiss + "(" + vmi.total_requestmiss + ")");
+                    if(vmi instanceof MachineInterface_SimLocal) {
+                        MachineInterface_SimLocal vmi_t=(MachineInterface_SimLocal)vmi;
+                        int mergemiss_t=vmi_t.mergeEffectedMiss;
+                        Fullwriter.println("task miss because of merging: " + mergemiss_t);
+                        mergemiss+=mergemiss_t;
+                    }
                     avgActualSpentTime += vmi.actualSpentTime;
-                    totalWorkDone += vmi.total_itemdone;
-                    ntotalWorkDone += vmi.total_taskdone;
-                    totaldeadlinemiss += vmi.total_itemmiss;
-                    ntotaldeadlinemiss += vmi.total_taskmiss;
+                    totalWorkDone += vmi.total_taskdone;
+                    ntotalWorkDone += vmi.total_requestdone;
+                    totaldeadlinemiss += vmi.total_taskmiss;
+                    ntotaldeadlinemiss += vmi.total_requestmiss;
                 }
                 Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ")" );
                 if (CVSE.GTS instanceof GOPTaskScheduler_mergable) {
@@ -146,7 +151,7 @@ public class DataUpdate {
                 }
 
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
-                numberwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / CVSE.config.maxCR);
+                numberwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / CVSE.config.maxCR+ " , " + mergemiss);
 
                 Fullwriter.close();
                 numberwriter.close();
@@ -175,12 +180,12 @@ public class DataUpdate {
             for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
                 MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
                 System.out.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
-                System.out.println("completed: " + vmi.total_taskdone + "(" + vmi.total_itemdone + ") requests, missed " + vmi.total_itemmiss + "(" + vmi.total_taskmiss + ")");
+                System.out.println("completed: " + vmi.total_taskdone + "(" + vmi.total_requestdone + ") requests, missed " + vmi.total_taskmiss + "(" + vmi.total_requestmiss + ")");
                 avgActualSpentTime += vmi.actualSpentTime;
-                totalWorkDone += vmi.total_itemdone;
-                ntotalWorkDone += vmi.total_taskdone;
-                totaldeadlinemiss += vmi.total_itemmiss;
-                ntotaldeadlinemiss += vmi.total_taskmiss;
+                totalWorkDone += vmi.total_taskdone;
+                ntotalWorkDone += vmi.total_requestdone;
+                totaldeadlinemiss += vmi.total_taskmiss;
+                ntotaldeadlinemiss += vmi.total_requestmiss;
             }
             System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ")");
             if (CVSE.GTS instanceof GOPTaskScheduler_mergable){

@@ -1,0 +1,12 @@
+changed:
+    profile ChameleonBM -> NchameleonVM
+    purge plusC and plusB from Java Code
+    rework StreamGOP's merged parameter structure
+    Video Repository,read video in id, now correctly sort by id
+    fix unreliable termination time
+    solve a mistake in request generator, which make them match case A so much more often
+    change pulse interval generator, high amp first, before low amp instead of the opposite
+todo:
+    
+    regenerate benchmarkinput
+    

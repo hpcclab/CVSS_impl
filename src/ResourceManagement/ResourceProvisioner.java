@@ -143,7 +143,8 @@ public class ResourceProvisioner {
             if(CVSE.GTS instanceof GOPTaskScheduler_mergable && CVSE.config.mergeaggressiveness.equalsIgnoreCase("Adaptive")) {
                 GOPTaskScheduler_mergable GTS_parse = (GOPTaskScheduler_mergable) CVSE.GTS;
                     //primitive usage of SDco
-                    GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime);
+
+                    GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime+0.2);
                 System.out.println("adaptive SDco: change SDco to " + GTS_parse.SDco);
             }
             //finally, update current time to previous time
@@ -182,7 +183,15 @@ public class ResourceProvisioner {
         }
         if(CVSE.config.profiledRequests){
             System.out.println("continue profile request gen");
-            CVSE.RG.contProfileRequestsGen();
+            if(!CVSE.RG.finished || !CVSE.GTS.emptyQueue()) { // all request arrives and queue is emtied
+                CVSE.RG.contProfileRequestsGen();
+            }  //move this somewhere else
+            else{
+                CVSE.VMP.datacolEvent.setRepeats(false);
+                CVSE.VMP.datacolEvent.stop();
+            }
+
+
         }
     }
 

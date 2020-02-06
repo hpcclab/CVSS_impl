@@ -96,10 +96,10 @@ public class MachineInterface_SocketIO extends MachineInterface {
                 CVSE.GTS.machineInterfaces.get(id).elapsedTime=answer.VMelapsedTime;
                 CVSE.GTS.machineInterfaces.get(id).actualSpentTime=answer.VMspentTime;
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
-                CVSE.GTS.machineInterfaces.get(id).total_itemmiss =answer.missed;
-                CVSE.GTS.machineInterfaces.get(id).total_itemdone =answer.workdone;
-                CVSE.GTS.machineInterfaces.get(id).total_taskdone =answer.Nworkdone;
-                CVSE.GTS.machineInterfaces.get(id).total_taskmiss =answer.Nmissed;
+                CVSE.GTS.machineInterfaces.get(id).total_taskmiss =answer.missed;
+                CVSE.GTS.machineInterfaces.get(id).total_taskdone =answer.workdone;
+                CVSE.GTS.machineInterfaces.get(id).total_requestdone =answer.Nworkdone;
+                CVSE.GTS.machineInterfaces.get(id).total_requestmiss =answer.Nmissed;
                 CVSE.VMP.ackCompletedVideo(answer.completedTask);
                 //completedTask.clear();
                 //

@@ -1,6 +1,5 @@
 package ResourceManagement;
 
-import Scheduler.SystemConfig;
 import Streampkg.StreamGOP;
 import mainPackage.CVSE;
 
@@ -30,6 +29,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private double node_wundertimeArr[] =new double[50]; //negative num for overtime
     private double node_sum_wundertime;
     private double node_sum_wovertime;
+    public int mergeEffectedMiss=0;
     public List<StreamGOP> completedTask=new LinkedList<StreamGOP>();
     /*
     private int l_workDone; //count each work as one
@@ -66,51 +66,57 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //System.out.println("synctime="+synctime);
         //System.out.println("realspentTime="+realspentTime);
         boolean missed=false;
-        for (String cmd:segment.deadlineSet.keySet()){
-            double slackleft=segment.getdeadlineof(cmd)- node_synctime;
-            long slacktime=(segment.getdeadlineof(cmd)-segment.arrivalTime);
+        for (String cmd:segment.cmdSet.keySet()){
+            for(String param:segment.cmdSet.get(cmd).keySet()) {
+            double slackleft = segment.getdeadlineof(cmd,param) - node_synctime;
+            long slacktime = (segment.getdeadlineof(cmd,param) - segment.arrivalTime);
 
-            node_miss-=node_missArr[node_statindex]; //desum old miss record, if missed
-            node_missArr[node_statindex]=0; //reset the miss record
+            node_miss -= node_missArr[node_statindex]; //desum old miss record, if missed
+            node_missArr[node_statindex] = 0; //reset the miss record
             //System.out.println("node_statindex="+node_statindex+" diff="+slackleft+" slacktime="+slacktime);
             //desum undertime
-            if(node_undertimeArr[node_statindex]<0){// miss
-                node_sum_overtime-=node_undertimeArr[node_statindex];
-                node_sum_wovertime-=node_wundertimeArr[node_statindex];
-            }else{
-                node_sum_undertime-=node_undertimeArr[node_statindex]; //desum
-                node_sum_wundertime-=node_wundertimeArr[node_statindex];
+            if (node_undertimeArr[node_statindex] < 0) {// miss
+                node_sum_overtime -= node_undertimeArr[node_statindex];
+                node_sum_wovertime -= node_wundertimeArr[node_statindex];
+            } else {
+                node_sum_undertime -= node_undertimeArr[node_statindex]; //desum
+                node_sum_wundertime -= node_wundertimeArr[node_statindex];
             }
 
-            if(slackleft<0){
-                if(!missed) { //havent miss before
-                    node_aftersync_taskmiss++;
-                    missed=true;
+            if (slackleft < 0) {
+                if( (segment.flags&1)==1) {
+                    mergeEffectedMiss++;
+                    System.out.println("a task miss because of merging");
+                }
+                if (!missed) { //havent miss before
+                    node_aftersync_itemmiss++;
+                    missed = true;
                 }
                 node_missArr[node_statindex]++; //it miss, so count
-                node_aftersync_itemmiss++;
+                node_aftersync_taskmiss++;
 
-                if(slacktime!=0) {
-                    node_sum_overtime-=(long)slackleft;
-                    node_sum_wovertime-=slackleft/slacktime;
-                }else{
+                if (slacktime != 0) {
+                    node_sum_overtime -= (long) slackleft;
+                    node_sum_wovertime -= slackleft / slacktime;
+                } else {
                     System.out.println("ERROR: Time since dispatch=0");
                 }
-                node_miss+=node_missArr[node_statindex];
-            }else{
-                if(slacktime!=0) {
-                    double usefulslack=slacktime-exetime;
-                    node_sum_undertime+=(long)slackleft;
-                    node_sum_wundertime+=slackleft/usefulslack;
-                }else{
+                node_miss += node_missArr[node_statindex];
+            } else {
+                if (slacktime != 0) {
+                    double usefulslack = slacktime - exetime;
+                    node_sum_undertime += (long) slackleft;
+                    node_sum_wundertime += slackleft / usefulslack;
+                } else {
                     System.out.println("ERROR: Time since dispatch=0");
                 }
             }
             //System.out.println("node_sum_undertime="+node_sum_undertime+" node_sum_overtime="+node_sum_overtime);
             //System.out.println("node_sum_wundertime="+node_sum_wundertime+" node_sum_wovertime="+node_sum_wovertime);
-            node_undertimeArr[node_statindex]=(long)slackleft; //set undertime
-            node_wundertimeArr[node_statindex]=slackleft/slacktime;
-            node_statindex=(node_statindex+1)%node_focus_task;
+            node_undertimeArr[node_statindex] = (long) slackleft; //set undertime
+            node_wundertimeArr[node_statindex] = slackleft / slacktime;
+            node_statindex = (node_statindex + 1) % node_focus_task;
+        }
         }
         node_aftersync_itemdone++;
         //System.out.println("request count="+segment.requestcount);
@@ -142,10 +148,10 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //System.out.println("actualSpentTime="+CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        CVSE.GTS.machineInterfaces.get(id).total_itemmiss +=node_aftersync_itemmiss;
-        CVSE.GTS.machineInterfaces.get(id).total_itemdone += node_aftersync_itemdone;
-        CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
-        CVSE.GTS.machineInterfaces.get(id).total_taskmiss += node_aftersync_taskmiss;
+        CVSE.GTS.machineInterfaces.get(id).total_taskmiss +=node_aftersync_itemmiss;
+        CVSE.GTS.machineInterfaces.get(id).total_requestmiss += node_aftersync_taskmiss;
+        CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_itemdone;
+        CVSE.GTS.machineInterfaces.get(id).total_requestdone += node_aftersync_taskdone;
         CVSE.GTS.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
         CVSE.GTS.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
         node_aftersync_itemmiss=node_aftersync_itemdone=node_aftersync_taskdone=node_aftersync_taskmiss=0;

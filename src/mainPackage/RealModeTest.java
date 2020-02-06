@@ -11,7 +11,7 @@ import ResourceManagement.ResourceProvisioner;
 import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.SystemConfig;
-import Simulator.RequestGenerator;
+import Simulator.RequestGenerator_Streamlevel;
 import Streampkg.Settings;
 import Streampkg.StreamManager;
 import TimeEstimatorpkg.TimeEstNone;
@@ -40,7 +40,7 @@ public class RealModeTest {
             //VMP.setGTS(GTS);
             //load Videos into Repository
             CVSE.VR.addAllRealVideos();
-            CVSE.RG= new RequestGenerator();
+            CVSE.RG= new RequestGenerator_Streamlevel();
         }
 
         public static void RealLocalThreads() throws IOException {

@@ -1,0 +1,3 @@
+java -jar CVSS.jar run BenchmarkInput/wcodec2500r_600000_10000_3000_s333.txt simconfig_positionfind.properties
+java -jar CVSS.jar run BenchmarkInput/wcodec2500r_600000_10000_3000_s333.txt simconfig_positionfind.properties
+java -jar CVSS.jar run BenchmarkInput/wcodec2500r_600000_10000_3000_s333.txt simconfig_positionfind.properties

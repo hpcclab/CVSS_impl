@@ -70,6 +70,7 @@ public class Merger {
             Batchqueue.remove(original); //remove from old position
             original.getAllCMD(X);
             Batchqueue.add(latestpos,original); //re add at new specific position
+            markEffected(original);
             return latestpos;
         }
         return -1;
@@ -285,6 +286,8 @@ public class Merger {
                         Batchqueue.add(itspair);
                     }
                     */
+                    // validation, count how many tasks are effected by the merging
+                    markEffected(itspair);
                     return true;
                 }else{
                     System.out.println("no Merge");
@@ -317,6 +320,21 @@ public class Merger {
     public void removefromPendingQueue(StreamGOP X){
         synchronized (pendingqueue) {
             pendingqueue.remove(X);
+        }
+    }
+    //This is only valid for batch queue that does not resorted, useful for benchmarking purpose only
+    public void markEffected(Streampkg.StreamGOP theTask){
+        GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) CVSE.GTS;
+        miscTools.TaskQueue newVQ = new miscTools.TaskQueue(Batchqueue);
+        boolean found=false;
+        while(!newVQ.isEmpty()){
+            StreamGOP T=newVQ.removeDefault();
+            if(found){
+                T.flags|=1; //mark flag as 1
+            }else if(theTask==T){
+                found=true;
+                T.flags|=1;
+            }
         }
     }
 

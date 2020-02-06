@@ -3,16 +3,26 @@ package Repository;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
-/**
- * Created by pi on 5/21/17.
- */
-public class Video {
+
+
+class Sortbyid implements Comparator<Video>
+{
+    // Used for sorting in ascending order of
+    // roll number
+    public int compare(Video a, Video b)
+    {
+        return a.id - b.id;
+    }
+}
+public class Video{
 
     public ArrayList<RepositoryGOP> repositoryGOPs= new ArrayList<RepositoryGOP>();;
 
     private int totalSegments = 0;
+    public int id;
     public String name;
 
     public Video(){
@@ -27,6 +37,12 @@ public class Video {
     }
         name=pathsplit[pathsplit.length-1];
         File listfile = new File(path + "list.txt");
+        try{
+            id=Integer.parseInt(name);
+        }catch(Exception e){
+            System.out.println("video id "+id +"is not an integer");
+            id=0;
+        }
         if(listfile.exists()){
             //list mode
             try {
@@ -110,6 +126,5 @@ public class Video {
         repositoryGOPs.add(repositoryGop);
         totalSegments++;
     }
-
 
 }
