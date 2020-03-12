@@ -187,7 +187,7 @@ func listandrunthroughFolders(thefolder string){
 }
 
 func main() {
-    thefolder :="2020_FebFormat"
+    thefolder :="2020_FebFormat_halfSave"
     listandrunthroughFolders(thefolder)
 }
 

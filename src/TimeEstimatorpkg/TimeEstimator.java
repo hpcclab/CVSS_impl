@@ -113,6 +113,8 @@ public class TimeEstimator {
             if(mergeTable.containsKey(mergecmd)) {
                 double savingPercent = mergeTable.get(mergecmd);
                 saving= savingPercent*0.01; //convert from percentage saving
+            }else{
+                System.out.println("Warning, saving ratio not found");
             }
         } // else{} //no merge, then don't deduct transcoding time
         return saving;

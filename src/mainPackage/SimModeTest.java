@@ -130,7 +130,7 @@ public class SimModeTest {
             }
         }
         CVSE.VMP.DU.printstat();
-        //CVSE.VMP.DU.graphplot();
+        CVSE.VMP.DU.graphplot();
 
         trysleep(300);
         CVSE.GTS.close();
@@ -186,10 +186,10 @@ public class SimModeTest {
             }
         } else {
             System.out.println(genbenchmarkTrace(0));
-            String benchmarkname="testconfig";
+            //String benchmarkname="testconfig";
 
             ///
-            //String benchmarkname="wcodec2000r_90000_10000_3000_s699";
+            String benchmarkname="wcodec1000r_600000_10000_3000_s1";
             //String benchmarkname="nocodec4000r_90000_10000_12000_s1";
 
             /*

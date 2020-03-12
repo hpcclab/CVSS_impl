@@ -14,5 +14,10 @@ else
     java -jar CVSS.jar run $f simconfigd_adaptive.properties
     java -jar CVSS.jar run $f simconfigd_aggressivemerge.properties
     java -jar CVSS.jar run $f simconfigd_consideratemerge.properties
+    java -jar CVSS.jar run $f simconfigu_nomerge.properties
+    java -jar CVSS.jar run $f simconfigu_adaptive.properties
+    java -jar CVSS.jar run $f simconfigu_aggressivemerge.properties
+    java -jar CVSS.jar run $f simconfigu_consideratemerge.properties
+
 fi
 done
