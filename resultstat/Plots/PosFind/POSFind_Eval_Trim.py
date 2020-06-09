@@ -112,7 +112,7 @@ xlabel='Oversubscription Level (#Service Requests)'
 ylabel='Miss Rate Reduction (%)'
 n_point = column # number of x ticks to use, must match number of xtick and number of data point
 xtick=('1.5k','2.5k')
-labels=['Conservative','Conservative-Pfind',"Adaptive","Adaptive-Pfind",'Aggressive','Aggressive-Pfind']
+labels=['Conservative','Conservative+Pfind',"Adaptive","Adaptive+Pfind",'Aggressive','Aggressive+Pfind']
 legendcolumn= 2 #number of column in the legend
 data=[Cons,ConsP,Adapt,AdaptP,Agg,AggP]
 yerrdata=[Cons_ci,ConsP_ci,Adapt_ci,AdaptP_ci,Agg_ci,AggP_ci]
@@ -167,9 +167,10 @@ plt.ylabel(ylabel,fontsize=axislabelfontsize)
 #plt.title('Execution time (deadline sorted batch queue)') #generally, we add title in latex
 ax.set_xticks(index)
 ax.set_xticklabels(xtick)
-ax.legend(loc='upper center', prop={'size': 14},bbox_to_anchor=(0.5, 1.00), shadow= True, ncol=legendcolumn)
+ax.legend(loc='upper center', prop={'size': 13},bbox_to_anchor=(0.5, 1.00), shadow= True, ncol=legendcolumn)
 
 plt.tight_layout()
+plt.savefig("PositionFinder.pdf",dpi=200)
 plt.show()
 
 

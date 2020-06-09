@@ -1,6 +1,6 @@
 package ResourceManagement;
 
-import Streampkg.StreamGOP;
+import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
 import java.util.Random;
@@ -50,34 +50,35 @@ public class MachineInterface_SimNWcache extends MachineInterface {
         return status==1;
     }
     //push in the data
-    public  boolean sendJob(StreamGOP segment){
-        double sampleddelay=(long) (delay_mean+delay_SD*r.nextGaussian());
-        double transfertime=(long)bandwidth/segment.fileSize;
-        segment.setPath(segment.getPath().replaceAll("\\\\","/"));
-        estimatedQueueLength++;
-        estimatedExecutionTime += transfertime;
-        //simulate time
-        System.out.println("delay="+sampleddelay);
-        synctime+=transfertime;
-        realspentTime+=transfertime;
-        //System.out.println("synctime="+synctime);
-        //System.out.println("realspentTime="+realspentTime);
-        boolean missed=false;
-        //if transfer finished after synctime+delay, it misses
-        for (String cmd:segment.cmdSet.keySet()){
-            for(String param:segment.cmdSet.get(cmd).keySet()) {
-                if (segment.getdeadlineof(cmd, param) <= synctime + sampleddelay) {
-                    if (!missed) {
-                        deadlineMiss++;
-                        missed = true;
-                    }
-                    NdeadlineMiss++;
-                }
-            }
-        }
-        workDone++;
-        NworkDone+=segment.requestcount;
-        //
+    public  boolean sendJob(TranscodingRequest segment){
+        System.out.println("NW cached Disabled");
+//        double sampleddelay=(long) (delay_mean+delay_SD*r.nextGaussian());
+//        double transfertime=(long)bandwidth/segment.fileSize;
+//        segment.setPath(segment.getPath().replaceAll("\\\\","/"));
+//        estimatedQueueLength++;
+//        estimatedExecutionTime += transfertime;
+//        //simulate time
+//        System.out.println("delay="+sampleddelay);
+//        synctime+=transfertime;
+//        realspentTime+=transfertime;
+//        //System.out.println("synctime="+synctime);
+//        //System.out.println("realspentTime="+realspentTime);
+//        boolean missed=false;
+//        //if transfer finished after synctime+delay, it misses
+//        for (String cmd:segment.cmdSet.keySet()){
+//            for(String param:segment.cmdSet.get(cmd).keySet()) {
+//                if (segment.getdeadlineof(cmd, param) <= synctime + sampleddelay) {
+//                    if (!missed) {
+//                        deadlineMiss++;
+//                        missed = true;
+//                    }
+//                    NdeadlineMiss++;
+//                }
+//            }
+//        }
+//        workDone++;
+//        NworkDone+=segment.requestcount;
+//        //
         return true;
     }
     //get back the runtime stat
@@ -100,8 +101,6 @@ public class MachineInterface_SimNWcache extends MachineInterface {
 
         CVSE.GTS.machineInterfaces.get(id).total_taskmiss =deadlineMiss;
         CVSE.GTS.machineInterfaces.get(id).total_taskdone =workDone;
-        CVSE.GTS.machineInterfaces.get(id).total_requestdone =NworkDone;
-        CVSE.GTS.machineInterfaces.get(id).total_requestmiss =NdeadlineMiss;
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){

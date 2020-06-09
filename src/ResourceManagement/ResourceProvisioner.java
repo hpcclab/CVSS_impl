@@ -1,9 +1,7 @@
 package ResourceManagement;
 
 import DockerManagement.DockerManager;
-import Scheduler.GOPTaskScheduler_mergable;
-import Scheduler.SystemConfig;
-import Streampkg.StreamGOP;
+import SessionPkg.TranscodingRequest;
 import TranscodingVM.TranscodingVM;
 import mainPackage.CVSE;
 
@@ -140,13 +138,13 @@ public class ResourceProvisioner {
             //System.out.println("deadline miss rate="+deadLineMissRate);
 
             //for adaptive merge aggressiveness, change SD coefficient
-            if(CVSE.GTS instanceof GOPTaskScheduler_mergable && CVSE.config.mergeaggressiveness.equalsIgnoreCase("Adaptive")) {
-                GOPTaskScheduler_mergable GTS_parse = (GOPTaskScheduler_mergable) CVSE.GTS;
-                    //primitive usage of SDco
-
-                    GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime+0.2);
-                System.out.println("adaptive SDco: change SDco to " + GTS_parse.SDco);
-            }
+//            if(CVSE.GTS instanceof GOPTaskScheduler_mergable && CVSE.config.mergeaggressiveness.equalsIgnoreCase("Adaptive")) {
+//                GOPTaskScheduler_mergable GTS_parse = (GOPTaskScheduler_mergable) CVSE.GTS;
+//                    //primitive usage of SDco
+//
+//                    GTS_parse.SDco = 2 - 4 * Math.min(1, current_weighted_overtime+0.2);
+//                System.out.println("adaptive SDco: change SDco to " + GTS_parse.SDco);
+//            }
             //finally, update current time to previous time
             previous_wovertime=current_weighted_overtime;
             previous_wundertime=current_weighted_undertime;
@@ -419,7 +417,7 @@ public class ResourceProvisioner {
         return VMcount;
     }
     //relay function to outputwindoe
-    public void ackCompletedVideo(List<StreamGOP> completedTasks){
+    public void ackCompletedVideo(List<TranscodingRequest> completedTasks){
 
 
         CVSE.OW.ackCompletedVideo(completedTasks);

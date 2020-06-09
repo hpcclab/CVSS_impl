@@ -1,6 +1,6 @@
 package ResourceManagement;
 
-import Scheduler.GOPTaskScheduler_mergable;
+//import Scheduler.GOPTaskScheduler_mergable;
 import mainPackage.CVSE;
 
 import java.io.FileWriter;
@@ -99,9 +99,7 @@ public class DataUpdate {
             MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
             avgActualSpentTime += vmi.actualSpentTime;
             totalWorkDone += vmi.total_taskdone;
-            ntotalWorkDone += vmi.total_requestdone;
             totaldeadlinemiss += vmi.total_taskmiss;
-            ntotaldeadlinemiss += vmi.total_requestmiss;
         }
         hitcount.add(totalWorkDone,totalWorkDone-totaldeadlinemiss);
         misscount.add(totalWorkDone,totaldeadlinemiss);
@@ -110,8 +108,8 @@ public class DataUpdate {
     public void printstat(){
         //print stat!
         long avgActualSpentTime=0;
-        long totalWorkDone=0,ntotalWorkDone=0;
-        long totaldeadlinemiss=0, ntotaldeadlinemiss=0;
+        long totalWorkDone=0;
+        long totaldeadlinemiss=0;
         int mergemiss=0;
         if(CVSE.RG.finished && CVSE.GTS.emptyQueue()){
             //file output
@@ -131,37 +129,35 @@ public class DataUpdate {
                 for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
                     MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
                     Fullwriter.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent processing:" + vmi.actualSpentTime);
-                    Fullwriter.println("completed: " + vmi.total_taskdone + "(" + vmi.total_requestdone + ") requests, missed " + vmi.total_taskmiss + "(" + vmi.total_requestmiss + ")");
-                    if(vmi instanceof MachineInterface_SimLocal) {
-                        MachineInterface_SimLocal vmi_t=(MachineInterface_SimLocal)vmi;
-                        int mergemiss_t=vmi_t.mergeEffectedMiss;
-                        Fullwriter.println("task miss because of merging: " + mergemiss_t);
-                        mergemiss+=mergemiss_t;
-                    }
+                    Fullwriter.println("completed: " + vmi.total_taskdone + " "+ "requests, missed " + vmi.total_taskmiss);
+//                    if(vmi instanceof MachineInterface_SimLocal) {
+//                        MachineInterface_SimLocal vmi_t=(MachineInterface_SimLocal)vmi;
+//                        int mergemiss_t=vmi_t.mergeEffectedMiss;
+//                        Fullwriter.println("task miss because of merging: " + mergemiss_t);
+//                        mergemiss+=mergemiss_t;
+//                    }
                     avgActualSpentTime += vmi.actualSpentTime;
                     totalWorkDone += vmi.total_taskdone;
-                    ntotalWorkDone += vmi.total_requestdone;
                     totaldeadlinemiss += vmi.total_taskmiss;
-                    ntotaldeadlinemiss += vmi.total_requestmiss;
                 }
-                Fullwriter.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ")" );
-                if (CVSE.GTS instanceof GOPTaskScheduler_mergable) {
-                    GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) CVSE.GTS;
-                    System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
-                }
+                Fullwriter.println("total completed: " + totalWorkDone + " missed " + totaldeadlinemiss );
+//                if (CVSE.GTS instanceof GOPTaskScheduler_mergable) {
+//                    GOPTaskScheduler_mergable GTS = (GOPTaskScheduler_mergable) CVSE.GTS;
+//                    System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
+//                }
 
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
-                numberwriter.println(totalWorkDone + " , " + ntotalWorkDone + " , " + totaldeadlinemiss + " , " + ntotaldeadlinemiss + " , " + avgActualSpentTime / CVSE.config.maxCR+ " , " + mergemiss);
+                numberwriter.println(totalWorkDone + ", " + totaldeadlinemiss + ", " + avgActualSpentTime / CVSE.config.maxCR+ ", " + mergemiss);
 
                 Fullwriter.close();
                 numberwriter.close();
                 F1.close();
                 F2.close();
                 System.out.println("Benchmark finished");
-                if (CVSE.GTS instanceof GOPTaskScheduler_mergable){
-                    GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
-                    System.out.println("Probe count=" + GTS.MRG.probecounter); //check how it works after refactor
-                }
+//                if (CVSE.GTS instanceof GOPTaskScheduler_mergable){
+//                    GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
+//                    System.out.println("Probe count=" + GTS.MRG.probecounter); //check how it works after refactor
+//                }
                 Freqwriter.close();
                 Freq.close();
                 //sleep(200);
@@ -180,18 +176,16 @@ public class DataUpdate {
             for (int i = 0; i < CVSE.GTS.machineInterfaces.size(); i++) {
                 MachineInterface vmi = CVSE.GTS.machineInterfaces.get(i);
                 System.out.println("Machine " + i + " time elapsed:" + vmi.elapsedTime + " time actually spent:" + vmi.actualSpentTime);
-                System.out.println("completed: " + vmi.total_taskdone + "(" + vmi.total_requestdone + ") requests, missed " + vmi.total_taskmiss + "(" + vmi.total_requestmiss + ")");
+                System.out.println("completed: " + vmi.total_taskdone + " "+ "requests, missed " + vmi.total_taskmiss);
                 avgActualSpentTime += vmi.actualSpentTime;
                 totalWorkDone += vmi.total_taskdone;
-                ntotalWorkDone += vmi.total_requestdone;
                 totaldeadlinemiss += vmi.total_taskmiss;
-                ntotaldeadlinemiss += vmi.total_requestmiss;
             }
-            System.out.println("total completed: " + totalWorkDone + "(" + ntotalWorkDone + ") missed " + totaldeadlinemiss + "(" + ntotaldeadlinemiss + ")");
-            if (CVSE.GTS instanceof GOPTaskScheduler_mergable){
-                GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
-                System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
-            }
+            System.out.println("total completed: " + totalWorkDone + " missed " + totaldeadlinemiss );
+//            if (CVSE.GTS instanceof GOPTaskScheduler_mergable){
+//                GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;
+//                System.out.println("type A merged:" + GTS.MRG.merged_tasklvl_count);
+//            }
             System.out.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
         }
 

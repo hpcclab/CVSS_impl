@@ -97,14 +97,14 @@ axes = plt.gca()
 #your main input parameters section
 n_groups =4 # number of different data to plot, can change here without removing data
 xlabel='Oversubscription Level (#Service Requests)'
-ylabel='Total Makespan (x1000)'
+ylabel='Makespan (s)'
 n_point = column # number of x ticks to use, must match number of xtick and number of data point
 xtick=('1k','1.5k','2k','2.5k')
 labels=['Conservative',"Adaptive",'Aggressive','No-merge']
 legendcolumn= 2 #number of column in the legend
 data=[Cons,Adapt,Agg,Nomerge]
 yerrdata=[Cons_ci,Adapt_ci,Agg_ci,Nomerge_ci]
-axes.set_ylim([0,10]) #y axis scale
+axes.set_ylim([0,10.5]) #y axis scale
 ticklabelsize=18
 axislabelfontsize=16
 
@@ -158,6 +158,7 @@ ax.set_xticklabels(xtick)
 ax.legend(loc='upper center', prop={'size': 14},bbox_to_anchor=(0.5, 1.00), shadow= True, ncol=legendcolumn)
 
 plt.tight_layout()
+plt.savefig("FCFSMakespan.pdf",dpi=200)
 plt.show()
 
 

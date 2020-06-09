@@ -1,6 +1,6 @@
 package ResourceManagement;
 
-import Streampkg.StreamGOP;
+import SessionPkg.TranscodingRequest;
 
 import java.util.HashMap;
 
@@ -19,8 +19,8 @@ public abstract class MachineInterface {
     public boolean autoschedule=false;
 
     //stats
-    public long tmp_taskdone=0, total_requestdone =0, total_taskdone =0; //work done can be multiple task per item
-    public long tmp_taskmiss=0, total_requestmiss =0, total_taskmiss =0;
+    public long tmp_taskdone=0, total_taskdone =0; //work done can be multiple task per item
+    public long tmp_taskmiss=0, total_taskmiss =0;
     public long tmp_overtime =0; // no need for total
     public long tmp_undertime =0;
     public double tmp_weighted_overtime =0,tmp_weighted_undertime =0;
@@ -38,7 +38,7 @@ public abstract class MachineInterface {
         return status==1;
     }
 
-    public abstract boolean sendJob(StreamGOP segment);
+    public abstract boolean sendJob(TranscodingRequest segment);
     public void addOperation(Operations.simpleoperation newOP){} //introduce new operation to the system, interface for future feature, do nothing for now
     public abstract void dataUpdate();
     public abstract boolean sendShutdownmessage();

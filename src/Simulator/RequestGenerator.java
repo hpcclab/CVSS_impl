@@ -1,6 +1,7 @@
 package Simulator;
 
-import Streampkg.Stream;
+import SessionPkg.Session;
+import SessionPkg.videoSession;
 import mainPackage.CVSE;
 
 import java.io.File;
@@ -30,13 +31,13 @@ public abstract class RequestGenerator {
     public void OneSpecificRequest( int videoChoice,int gopstartnum,int gopendnum, String command, String setting, long deadline, long arrival ){
         System.out.print("create one specific request: ");
         System.out.println("videoChoice "+videoChoice);
-        Stream ST;
+        Session ST;
         if(gopstartnum==-1) { //whole steam
-            ST = new Stream(CVSE.VR.videos.get(videoChoice), command, setting, deadline, arrival); //admission control can work in constructor, or later?
+            ST = new videoSession(videoChoice, command, setting, deadline, arrival);
         }else{
-            ST = new Stream(CVSE.VR.videos.get(videoChoice), command, setting, gopstartnum, gopendnum, deadline, arrival);
+            ST = new videoSession(videoChoice, command, setting, gopstartnum, gopendnum, deadline, arrival);
         }
-        System.out.println(ST.video.name);
+        System.out.println("this session has "+ST.AssociatedRequests.size()+" segments");
         CVSE.GTS.addStream(ST);
     }
 

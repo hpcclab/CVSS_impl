@@ -1,7 +1,7 @@
 package ResourceManagement;
 
-import Streampkg.StreamGOP;
-import TranscodingVM.runtime_report;
+import ProtoMessage.TaskRequest;
+import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
 import java.io.ObjectInputStream;
@@ -56,19 +56,19 @@ public class MachineInterface_SocketIO extends MachineInterface {
         return status==1;
     }
 
-    public boolean sendJob(StreamGOP segment){
+    public boolean sendJob(TranscodingRequest segment){
         if(isWorking()) {
 
             //convert path if needed
             // if(!CVSE.config.CR_type.get(id).equalsIgnoreCase("thread")){
             // System.out.println("convert!");
-            segment.setPath(segment.getPath().replaceAll("\\\\","/"));
+            //segment.setPath(segment.getPath().replaceAll("\\\\","/"));
             // }
 
             estimatedQueueLength++;
-            estimatedExecutionTime += segment.estimatedExecutionTime;
+            estimatedExecutionTime += segment.EstMean;
             try {
-                oos.writeObject(segment);
+                oos.writeObject(segment.buildRequest());
             } catch (Exception e) {
                 System.out.println("sendJob fail:" + e);
                 return false;
@@ -81,30 +81,29 @@ public class MachineInterface_SocketIO extends MachineInterface {
     public void dataUpdate(){
         if(isWorking()) {
             try {
-                StreamGOP query = new StreamGOP();
-
-                    query.cmdSet.put("query", null);
-                    query.dispatched=true;
-                    query.deadLine=CVSE.GTS.maxElapsedTime;
+                TaskRequest.Operation.Builder Obuilder=TaskRequest.Operation.newBuilder();
+                TaskRequest.ServiceRequest.Builder ReBuilder=TaskRequest.ServiceRequest.newBuilder();
+                TaskRequest.ServiceRequest query=ReBuilder.addOPlist(Obuilder.setCmd("query"))
+                        .setPriority(0)
+                        .setGlobalDeadline(CVSE.GTS.maxElapsedTime)
+                        .build();
                 oos.writeObject(query); //they expect an object, thus we need to send object
-                runtime_report answer = (runtime_report) ois.readObject();
+                TaskRequest.WorkerReport answer = (TaskRequest.WorkerReport) ois.readObject();
                 //System.out.println("id= " + id + " update queue length data to " + answer.runtime_report);
                 //System.out.println("id= " + id + " update queue Time data to " + answer.queue_executionTime);
-                CVSE.GTS.workpending-=(estimatedQueueLength-answer.queue_size);
-                CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = answer.queue_size;
-                CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = answer.queue_executionTime;
-                CVSE.GTS.machineInterfaces.get(id).elapsedTime=answer.VMelapsedTime;
-                CVSE.GTS.machineInterfaces.get(id).actualSpentTime=answer.VMspentTime;
+                CVSE.GTS.workpending-=(estimatedQueueLength-answer.getQueueSize());
+                CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = answer.getQueueSize();
+                CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = answer.getQueueExecutionTime();
+                CVSE.GTS.machineInterfaces.get(id).elapsedTime=answer.getVMelapsedTime();
+                CVSE.GTS.machineInterfaces.get(id).actualSpentTime=answer.getVMWorkTime();
                 //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
-                CVSE.GTS.machineInterfaces.get(id).total_taskmiss =answer.missed;
-                CVSE.GTS.machineInterfaces.get(id).total_taskdone =answer.workdone;
-                CVSE.GTS.machineInterfaces.get(id).total_requestdone =answer.Nworkdone;
-                CVSE.GTS.machineInterfaces.get(id).total_requestmiss =answer.Nmissed;
-                CVSE.VMP.ackCompletedVideo(answer.completedTask);
+                CVSE.GTS.machineInterfaces.get(id).total_taskmiss =answer.getDlMissed();
+                CVSE.GTS.machineInterfaces.get(id).total_taskdone =answer.getOntimeCompletion();
+                //CVSE.VMP.ackCompletedVideo(answer.getCompletedTaskIDList());
                 //completedTask.clear();
                 //
 
-                    System.out.println("got deadLineMissRate=" + answer.deadLineMissRate);
+                    System.out.println("got deadLineMissRate=" + CVSE.GTS.machineInterfaces.get(id).total_taskdone/CVSE.GTS.machineInterfaces.get(id).total_taskmiss);
 
             } catch (Exception e) {
                 System.out.println("data update error:"+e);
@@ -114,9 +113,12 @@ public class MachineInterface_SocketIO extends MachineInterface {
     public boolean sendShutdownmessage(){
         if(isWorking()) {
             try {
-                StreamGOP poison = new StreamGOP();
-                poison.cmdSet.put("shutdown",null);
-                poison.setPriority(0);
+                TaskRequest.Operation.Builder Obuilder=TaskRequest.Operation.newBuilder();
+                TaskRequest.ServiceRequest.Builder ReBuilder=TaskRequest.ServiceRequest.newBuilder();
+                TaskRequest.ServiceRequest poison=ReBuilder.addOPlist(Obuilder.setCmd("shutdown"))
+                        .setPriority(0)
+                        .setTaskID(-1)
+                        .build();
                 oos.writeObject(poison);
             } catch (Exception e) {
                 System.out.println("SocketIO error"+ e);

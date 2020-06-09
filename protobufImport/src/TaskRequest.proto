@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package SVSE;
+
+option java_package = "ProtoMessage";
+option java_outer_classname = "TaskRequest";
+
+
+message Operation {
+    message ParamOptions {
+        string subparameter = 1;
+        string owner=2;  
+        int64 requestDL=3;
+      }
+
+    string Cmd = 1;
+    repeated ParamOptions Parameter = 2;
+  }
+
+message ServiceRequest {
+    string DataSource=1;
+    int64 GlobalDeadline=2;
+    string DataTag=3;
+    int64 Arrival=4;
+    double EstMean=5;
+    double EstSD=6;
+    int32 Priority=7;
+    int64 TaskID=8;
+    repeated Operation OPlist=9;
+}
+
+message WorkerReport {
+    int32 queue_size=1;
+    int64 queue_executionTime=2;
+    int64 VMelapsedTime=3;
+    int64 VMWorkTime=4;    
+    int64 ontime_completion=5; //always count merged task separately
+    int64 dl_missed=6;    //miss rate not needed
+    repeated int64 completedTaskID=7;
+    double weightedOvertime=8; //just in case we calculate weighted overtime
+}
+
+
+

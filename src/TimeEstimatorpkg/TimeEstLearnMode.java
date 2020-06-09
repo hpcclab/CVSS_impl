@@ -1,8 +1,7 @@
 package TimeEstimatorpkg;
 
 import ResourceManagement.MachineInterface;
-import Streampkg.StreamGOP;
-
+import SessionPkg.TranscodingRequest;
 import java.util.HashMap;
 
 public class TimeEstLearnMode extends TimeEstimator{
@@ -20,8 +19,8 @@ public class TimeEstLearnMode extends TimeEstimator{
     }
 
     //(overwrite) search 3lvl
-    public retStat getHistoricProcessTime(MachineInterface VM, StreamGOP segment) {
-        retStat test= super.getHistoricProcessTime(VM,segment); //basic finding for detailed data
+    public histStat getHistoricProcessTime(MachineInterface VM, TranscodingRequest segment) {
+        histStat test= super.getHistoricProcessTime(VM,segment); //basic finding for detailed data
         if(test.mean>0 || test.SD>0){ //have some fine result
             return test;
         }
@@ -37,12 +36,12 @@ public class TimeEstLearnMode extends TimeEstimator{
                 return test;
             }
             //no data, do something! , give out non zero return
-            return new retStat(1,0);
+            return new histStat(1,0);
 
         }else{//doesn't even have machine's profile
             //what to do?
         }
-        return new retStat(1,0);
+        return new histStat(1,0);
     }
 
     }

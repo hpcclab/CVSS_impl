@@ -91,6 +91,13 @@
             <version>1.7.26</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.12.1</version>
+        </dependency>
+
     </dependencies>
 
 

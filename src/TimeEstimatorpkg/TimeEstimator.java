@@ -1,7 +1,7 @@
 package TimeEstimatorpkg;
 
 import ResourceManagement.MachineInterface;
-import Streampkg.StreamGOP;
+import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
 import java.io.File;
@@ -20,8 +20,8 @@ public class TimeEstimator {
     HashMap<String,Double> mergeTable=new HashMap<>(); //merge time saving
     public TimeEstimator(){
     }
-    public String hashkey( String operation, String param, String video,String segmentnum){ //machine type, operation, parameter, video (data) can set as Generic
-        return operation+'_'+param+'_'+video+'_'+segmentnum;
+    public String hashkey( String operation, String param, String Datasource){ //machine type, operation, parameter, video (data) can set as Generic
+        return operation+'_'+param+'_'+Datasource;
     }
     public void updateTable(String VMclass, HashMap<String,histStat> runtime_report) {
 
@@ -31,14 +31,22 @@ public class TimeEstimator {
     //select do it all in here!
     //get port data just because fixedBandwidth machine store Bandwidth in their port
 
-    public retStat getHistoricProcessTime(MachineInterface VM, StreamGOP segment){
+    public histStat getHistoricProcessTime(MachineInterface VM, TranscodingRequest segment){
+        System.out.println("check historical time of "+segment.DataSource+" on VM type "+ VM.VM_class);
+//        try {
+//            Thread.sleep(20);
+//        }catch (Exception e){
+//            System.out.println("sleep bug");
+//        }
         //for fixedBandwidth case
         if(VM.VM_class.equalsIgnoreCase("fixedBandwidth")) {
-            long bandwidth = VM.port;
-            System.out.println("bandwidth=" + bandwidth * 8);
-            System.out.println("request HistoricProcessTime of a fixedBandwidth VM, data is not reliable at the moment, use with caution-- only return transferTIme, no transmission delay");
-            System.out.println("segment size=" + segment.fileSize);
-            return new retStat(segment.fileSize / bandwidth + 1, 1);
+//            long bandwidth = VM.port;
+//            System.out.println("bandwidth=" + bandwidth * 8);
+//            System.out.println("request HistoricProcessTime of a fixedBandwidth VM, data is not reliable at the moment, use with caution-- only return transferTIme, no transmission delay");
+//            //System.out.println("segment size=" + segment.fileSize);
+//            return new histStat(segment.fileSize / bandwidth + 1, 1);
+            System.out.println("Warning time estimation for fixedbandwidth is disabled");
+            return new histStat(1000, 1);
         }
         //for other case
         //poll machine type
@@ -49,27 +57,30 @@ public class TimeEstimator {
             //}
         }else{
             System.out.println("\nNo historic data for this machine type!: " + VM.VM_class);
-            return new retStat(-1, -1); //set at arbitary value
+            return new histStat(-1, -1); //set at arbitary value
         }
     }
 
-    public retStat searchHistoricProcessTime(HashMap<String,histStat> table,StreamGOP segment,String searchMode){
+    public histStat searchHistoricProcessTime(HashMap<String,histStat> table,TranscodingRequest segment,String searchMode){
         //SDcoefficient=1 is Worst case, -1 is BestCase,
+        System.out.println("found machine type, now search the record");
+
         long ESTTime = 0;
         double SD = 0;
         ArrayList<String> cmdlist=new ArrayList<String>();
         double sumsave=0; //sum saving, then average later
-
-        for (String cmd : segment.cmdSet.keySet()) { //all cmd
+        System.out.println(segment.listallCMD());
+        for (String cmd : segment.listallCMD()) { //all cmd
             //System.out.println("cmd="+cmd);
-            for (String param : segment.cmdSet.get(cmd).keySet() ) { //all param
+            //System.out.println(segment.listparamsofCMD(cmd));
+            for (String param : segment.listparamsofCMD(cmd) ) { //all param
                 //actually ignore everything in TranscodingRequest at this moment
                 String pollstr;
                 //System.out.println("tablekeyset="+table.keySet());
 
                 if (searchMode.equalsIgnoreCase("profiled")) {
                     //System.out.println("Time Estimator for cmd="+cmd+" param="+param+" segment="+segment.segment+" vname="+segment.videoname);
-                    pollstr = hashkey(cmd, param, segment.videoname, segment.segment);
+                    pollstr = hashkey(cmd, param, segment.DataSource);
                 } else if (searchMode.equalsIgnoreCase("operation")) { //operation based
                     pollstr = cmd;
                 } else {
@@ -84,7 +95,7 @@ public class TimeEstimator {
                     SD += polled2.SD;
                     cmdlist.add(cmd+'+'+param);
                 } else {
-                    System.out.println("No historic data for this cmd!:" + cmd + " param:" + param + " Video id=" +segment.videoname+" segment id=" + segment.segment + " pollstr=" + pollstr);
+                    System.out.println("No historic data for this cmd!:" + cmd + " param:" + param + " Video Sessionid=" +segment.DataSource + " pollstr=" + pollstr);
                     ESTTime+=99999;
                 }
             }
@@ -94,20 +105,20 @@ public class TimeEstimator {
             ESTTime*=1-mergesaving;
             SD*=1-mergesaving;
         }
-        //System.out.println("Normal Estimation");
-        return new retStat(ESTTime, SD);
+        System.out.println("Normal Estimation mean="+ESTTime+" SD="+SD);
+        return new histStat(ESTTime, SD);
     }
     //can be replaced with better solution later if there are more merge data
-    public double mergeSaving(StreamGOP segment,ArrayList<String> cmdlist){
+    public double mergeSaving(TranscodingRequest segment,ArrayList<String> cmdlist){
         //now calculate the saving from all the merge
         double saving=0;
         if(segment.requestcount>2){ //complex merge...
             // WHAT TO DO WITH COMPLEX MERGING... ,estimating it?
-            if(segment.cmdSet.containsKey("CODEC")){ //saving around 15%
-                saving=0.15;
-            }else{
+            //if(segment.cmdSet.containsKey("CODEC")){ //saving around 15%
+            //    saving=0.15;
+            //}else{
                 saving=0.32;
-            }
+           // }
         }else if(segment.requestcount==2){ //simple two operation merge
             String mergecmd=cmdlist.get(0)+"+"+cmdlist.get(1);
             if(mergeTable.containsKey(mergecmd)) {
@@ -120,8 +131,8 @@ public class TimeEstimator {
         return saving;
     }
 
-    public long getHistoricProcessTimeLong(MachineInterface VM,StreamGOP segment,double SDco) {
-    retStat rS=getHistoricProcessTime(VM,segment);
+    public long getHistoricProcessTimeLong(MachineInterface VM,TranscodingRequest segment,double SDco) {
+    histStat rS=getHistoricProcessTime(VM,segment);
     return rS.mean+ (long)(rS.SD*SDco);
     }
     //function called at the beginning of running to populate data
@@ -190,7 +201,7 @@ public class TimeEstimator {
             }
         }
     }
-    public void SetSegmentProcessingTime(StreamGOP segment)
+    public void SetSegmentProcessingTime(TranscodingRequest segment)
     {
         // set deadline Time to System.currentTime() +getHistoricProcessTime(segment)+ constant ?
         // don't use System.nanoTime Across the machine

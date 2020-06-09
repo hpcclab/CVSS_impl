@@ -2,11 +2,12 @@ package mainPackage;
 
 import Cache.Caching;
 import IOWindows.OutputWindow;
-import IOWindows.WebserviceRequestGate;
+//import IOWindows.WebserviceRequestGate;
 import Repository.VideoRepository;
 import ResourceManagement.ResourceProvisioner;
 import Scheduler.AdmissionControl;
-import Scheduler.GOPTaskScheduler_mergable;
+import Scheduler.GOPTaskScheduler_common;
+//import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.SystemConfig;
 import Simulator.RequestGenerator_GOPlevel;
 import TimeEstimatorpkg.TimeEstProfileMode;
@@ -28,7 +29,7 @@ public class SimModeTest {
         CVSE.VR = new VideoRepository();
         CVSE.VR.addAllKnownVideos();
         CVSE.AC = new AdmissionControl();
-        CVSE.GTS = new GOPTaskScheduler_mergable();
+        CVSE.GTS = new GOPTaskScheduler_common();
         CVSE.GTS.readlistedOperations();
         CVSE.TE=new TimeEstProfileMode();
         CVSE.VMP= new ResourceProvisioner(CVSE.config.minCR); //says we need at least two machines
@@ -95,19 +96,19 @@ public class SimModeTest {
             System.out.println("All queue are emptied");
         } else if (CVSE.config.openWebRequests) {
             ////create open socket, receive new profile request then do similar to profiledRequests
-            CVSE.WG=new WebserviceRequestGate();
-            CVSE.WG.addr="http://localhost:9902/transcoderequest";
-
-            // example of actual request: http://localhost:9902/transcoderequest/?videoid=1,cmd=resolution,setting=180
-            // (assume 10 is id of bigbugbunny
-            // TODO: figure about timing of the request, both deadline and arrival (in webservicegate class)
-            try {
-                CVSE.WG.startListener();
-            }catch(Exception e){
-                System.out.println("Request listener fail:"+e);
-                return "failed";
-            }
-            System.out.println("webservice enabled");
+//            CVSE.WG=new WebserviceRequestGate();
+//            CVSE.WG.addr="http://localhost:9902/transcoderequest";
+//
+//            // example of actual request: http://localhost:9902/transcoderequest/?videoid=1,cmd=resolution,setting=180
+//            // (assume 10 is id of bigbugbunny
+//            // TODO: figure about timing of the request, both deadline and arrival (in webservicegate class)
+//            try {
+//                CVSE.WG.startListener();
+//            }catch(Exception e){
+//                System.out.println("Request listener fail:"+e);
+//                return "failed";
+//            }
+            System.out.println("WARNING webservice is now disabled (for the moment)");
         } else {
             while (rqn != 0) {
                 System.out.println("enter video request numbers to generate and their interval and how many times");
@@ -185,7 +186,7 @@ public class SimModeTest {
                 System.out.println(Sim(args[2], args[1]));
             }
         } else {
-            System.out.println(genbenchmarkTrace(0));
+            //System.out.println(genbenchmarkTrace(0));
             //String benchmarkname="testconfig";
 
             ///
@@ -198,14 +199,8 @@ public class SimModeTest {
             CVSE.RG.generateProfiledRandomRequests(benchmarkname,1024, 100, 9000, 180000, 10000, 3000);
                 */
             System.out.println(Sim("nuConfig.properties", benchmarkname+".txt"));
-            //
 
-             //*/
         }
-    //System.out.println(genbenchmarkTrace(0));
-            //DirectoryTest();
-
-
     }
 
 }

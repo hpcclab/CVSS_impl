@@ -1,6 +1,7 @@
 package TranscodingVM;
 
-import Streampkg.StreamGOP;
+import ProtoMessage.TaskRequest;
+import SessionPkg.TranscodingRequest;
 
 import java.io.File;
 import java.io.ObjectInputStream;
@@ -8,12 +9,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 //import com.amazonaws.services.ec2.model.Instance;
-
-/**
- * Created by pi on 5/21/17.
- */
-//TODO: best logical upgrade is to use FST instead of just serialization https://github.com/RuedigerMoeller/fast-serialization
-//TODO: evaluate and implement jobqueue? activeMQ? rabbitMQ? Apache Qpid? threadpools?
 
 
 
@@ -84,42 +79,43 @@ public class TranscodingVM extends Thread{
         //TODO: have a way to gracefully terminate without causing error and force quit
         try {
             while(!s.isClosed()){
-                StreamGOP objectX =(StreamGOP) ois.readObject();
+
+                ////
+                //TaskRequest.ServiceRequest.Builder B= TaskRequest.ServiceRequest.newBuilder();
+
+                /////
+                TaskRequest.ServiceRequest alphaX= (TaskRequest.ServiceRequest) ois.readObject();
+                TranscodingRequest objectX =new TranscodingRequest(alphaX);
                 //System.out.println("ObjectX's path"+objectX.getPath());
-                if(objectX.cmdSet.containsKey("shutdown")){
+                if(objectX.listallCMD().contains("shutdown")){
                     //receive shutting down message, close down receiving communication
                     //whatever in the queue will still be processed until queue is empty
                     AddJob(objectX); //still add to the queue
                     System.out.println("Shutting Down");
                     close();
                     break;
-                }else if (objectX.cmdSet.containsKey("query")){
-                    if(!TT.runtime_report.isEmpty()) {
-                        //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
-                    }
+                }else if (objectX.listallCMD().contains("query") ||objectX.listallCMD().contains("fullstat") ){
                     double deadLineMiss=0;
-                    if(objectX.deadLine>TT.synctime){ //syncTime
-                        TT.synctime=objectX.deadLine;
+                    if(objectX.GlobalDeadline>TT.synctime){ //syncTime
+                        TT.synctime=objectX.GlobalDeadline;
                     }
-                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.completedTask,TT.runtime_report));
+                    TaskRequest.WorkerReport.Builder wrb=TaskRequest.WorkerReport.newBuilder();
+                    TaskRequest.WorkerReport aReport=wrb.setQueueSize(TT.jobs.size())
+                            .setQueueExecutionTime(TT.requiredTime)
+                            .setVMelapsedTime(TT.synctime)
+                            .setVMWorkTime(TT.realspentTime)
+                            .setOntimeCompletion(TT.workDone-TT.deadlineMiss)
+                            .setDlMissed(TT.deadlineMiss)
+                            .addAllCompletedTaskID(TT.completedTask)
+                            .build();
+                    oos.writeObject(aReport);
                     TT.completedTask.clear(); //got asked so clear it out
-                }else if (objectX.cmdSet.containsKey("fullstat")){
-                    if(!TT.runtime_report.isEmpty()) {
-                        //System.out.println("reporting: " + TT.runtime_report.get(0).x + " " + TT.runtime_report.get(0).y);
+                    /////////////
+                    if (objectX.listallCMD().contains("fullstat")) { //if it is full sync, remove old stats
+                        TT.completedTask.clear(); //got asked so clear it out
                     }
-                    double deadLineMiss=0;
-                    if(TT.workDone!=0){
-                        deadLineMiss=(1.0*TT.deadlineMiss)/TT.workDone;
-                    }
-                    if(objectX.deadLine>TT.synctime){ //syncTime
-                        TT.synctime=objectX.deadLine;
-                    }
-                    //System.out.println("real spent Time="+TT.realspentTime); //good
-                    oos.writeObject(new runtime_report(TT.jobs.size(),TT.requiredTime,TT.synctime,TT.realspentTime,TT.NworkDone,TT.workDone,TT.deadlineMiss,TT.NdeadlineMiss,deadLineMiss,TT.completedTask,TT.runtime_report));
-                    TT.completedTask.clear(); //got asked so clear it out
-                    //don't remove old stat, maybe reset stat later if keep full stat too!
-                    //TT.deadlineMiss=0;
-                    //TT.workDone=0;
+                    //////////
+
                 }else{
                     //System.out.println("localthread: work adding");
                     AddJob(objectX);
@@ -131,15 +127,15 @@ public class TranscodingVM extends Thread{
         System.out.println("closed");
     }
 
-    protected void AddJob(StreamGOP segment)
+    protected void AddJob(TranscodingRequest segment)
     {
-        TT.requiredTime += segment.estimatedExecutionTime;
+        TT.requiredTime += segment.EstMean;
         //debugging,
         //System.out.println("got segment "+segment.getSegmentNum());
         // System.out.println("it's at: "+segment.getPath());
         // System.out.println("it's at: "+segment.userSetting.outputDir());
-        File file=new File(segment.outputDir());
-        file.mkdirs();
+        //File file=new File(segment.outputDir());
+        //file.mkdirs();
 
         TT.jobs.add(segment);
         //System.out.println("Thread Status="+TT.isAlive() +" "+TT.isInterrupted()+" ");

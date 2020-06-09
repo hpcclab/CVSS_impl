@@ -1,7 +1,7 @@
 package TimeEstimatorpkg;
 
 import ResourceManagement.MachineInterface;
-import Streampkg.StreamGOP;
+import SessionPkg.TranscodingRequest;
 
 import java.util.HashMap;
 
@@ -14,8 +14,8 @@ public class TimeEstNone  extends TimeEstimator{
     public void updateTable(String VMclass, HashMap<String,histStat> runtime_report) {
 
     }
-    public retStat getHistoricProcessTime(MachineInterface VM, StreamGOP segment){
-        return new retStat(1, 0); //set at arbitary value
+    public histStat getHistoricProcessTime(MachineInterface VM, TranscodingRequest segment){
+        return new histStat(1, 0); //set at arbitary value
     }
     public void populate(String VMclass){
 

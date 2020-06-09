@@ -1,7 +1,7 @@
 package Scheduler;
 
-import Streampkg.Stream;
-import Streampkg.StreamGOP;
+import SessionPkg.Session;
+import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
 public class AdmissionControl {
@@ -11,33 +11,33 @@ public class AdmissionControl {
     }
 
 
-    public void AssignSegmentPriority(StreamGOP segment)
+    public void AssignSegmentPriority(TranscodingRequest segment)
     {
-        segment.setPriority(0);
+        segment.Priority=0;
     }
-    public void AssignSegmentPriority(StreamGOP segment,int priority)
+    public void AssignSegmentPriority(TranscodingRequest segment,int priority)
     {
-        segment.setPriority(priority);
+        segment.Priority=priority;
     }
-    public void AssignStreamPriority(Stream stream){
-        for (StreamGOP x :stream.streamGOPs){
-            double newPriority;
-           // System.out.println("adc segment"+x.segment);
-            int segment_number=Integer.parseInt(x.segment);
-
-            //how we actually assign priority?
-            newPriority=utilityBased_Prioritization(CVSE.config.c_const_for_utilitybased,segment_number);
-            //
-            x.setPriority(newPriority);
-        }
-
-    }
-    private static void GetVideoSplitterSegmentInfo(StreamGOP segment)
+//    public void AssignStreamPriority(Session session){
+//        for (StreamGOP x : session.streamGOPs){
+//            double newPriority;
+//           // System.out.println("adc segment"+x.segment);
+//            int segment_number=Integer.parseInt(x.segment);
+//
+//            //how we actually assign priority?
+//            newPriority=utilityBased_Prioritization(CVSE.config.c_const_for_utilitybased,segment_number);
+//            //
+//            x.setPriority(newPriority);
+//        }
+//
+//    }
+    private static void GetVideoSplitterSegmentInfo(TranscodingRequest segment)
     {
 
     }
 
-    private static void GetVideoMergerSegmentInfo(StreamGOP segment)
+    private static void GetVideoMergerSegmentInfo(TranscodingRequest segment)
     {
 
     }

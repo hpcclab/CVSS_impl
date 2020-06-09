@@ -1,7 +1,6 @@
 package miscTools;
 
-import Scheduler.SystemConfig;
-import Streampkg.StreamGOP;
+import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
 import java.util.Collection;
@@ -10,19 +9,19 @@ import java.util.ListIterator;
 
 //this List can be used as priority queue by take removeHighestPrio, instead of removeFirst.
 
-public class TaskQueue extends LinkedList<StreamGOP> {
-    public TaskQueue(Collection<? extends StreamGOP> collection) {
+public class TaskQueue extends LinkedList<TranscodingRequest> {
+    public TaskQueue(Collection<? extends TranscodingRequest> collection) {
         super(collection);
     }
     public TaskQueue() {
         super();
     }
 
-    public Streampkg.StreamGOP pollHighestPrio() {
-        Streampkg.StreamGOP highest = peekFirst();
-        ListIterator<Streampkg.StreamGOP> it = listIterator(1);
+    public TranscodingRequest pollHighestPrio() {
+        TranscodingRequest highest = peekFirst();
+        ListIterator<TranscodingRequest> it = listIterator(1);
         while (it.hasNext()) {
-            Streampkg.StreamGOP t = it.next();
+            TranscodingRequest t = it.next();
             if (t.compareTo(highest)>0) {
                 highest = t;
             }
@@ -30,24 +29,24 @@ public class TaskQueue extends LinkedList<StreamGOP> {
         return highest;
     }
 
-    public Streampkg.StreamGOP pollEDL(){
-        Streampkg.StreamGOP earliest = peekFirst();
-        ListIterator<Streampkg.StreamGOP> it = listIterator(1);
+    public TranscodingRequest pollEDL(){
+        TranscodingRequest earliest = peekFirst();
+        ListIterator<TranscodingRequest> it = listIterator(1);
         while (it.hasNext()) {
-            Streampkg.StreamGOP t = it.next();
-            if (t.deadLine<earliest.deadLine) {
+            TranscodingRequest t = it.next();
+            if (t.GlobalDeadline<earliest.GlobalDeadline) {
                 earliest = t;
             }
         }
         return earliest;
     }
-    public Streampkg.StreamGOP pollMaxUrgency(){ //Homogeneous Only
-        Streampkg.StreamGOP earliest = peekFirst();
-        long earliestvalue=earliest.deadLine-CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), earliest,2);
-        ListIterator<Streampkg.StreamGOP> it = listIterator(1);
+    public TranscodingRequest pollMaxUrgency(){ //Homogeneous Only
+        TranscodingRequest earliest = peekFirst();
+        long earliestvalue=earliest.GlobalDeadline-CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), earliest,2);
+        ListIterator<TranscodingRequest> it = listIterator(1);
         while (it.hasNext()) {
-            Streampkg.StreamGOP t = it.next();
-            long checkvalue=t.deadLine- CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), t,2);
+            TranscodingRequest t = it.next();
+            long checkvalue=t.GlobalDeadline- CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), t,2);
             if ( checkvalue<earliestvalue) {
                 earliest = t;
                 earliestvalue=checkvalue;
@@ -55,22 +54,22 @@ public class TaskQueue extends LinkedList<StreamGOP> {
         }
         return earliest;
     }
-    public Streampkg.StreamGOP removeHighestPrio() {
-        Streampkg.StreamGOP highest = pollHighestPrio();
+    public TranscodingRequest removeHighestPrio() {
+        TranscodingRequest highest = pollHighestPrio();
         removeFirstOccurrence(highest);
         return highest;
     }
-    public Streampkg.StreamGOP removeEDL(){
-        Streampkg.StreamGOP earliest = pollEDL();
+    public TranscodingRequest removeEDL(){
+        TranscodingRequest earliest = pollEDL();
         removeFirstOccurrence(earliest);
         return earliest;
      }
-    public Streampkg.StreamGOP removeMaxUrgency(){ //Homogeneous Only
-        Streampkg.StreamGOP earliest = pollMaxUrgency();
+    public TranscodingRequest removeMaxUrgency(){ //Homogeneous Only
+        TranscodingRequest earliest = pollMaxUrgency();
         removeFirstOccurrence(earliest);
         return earliest;
     }
-    public Streampkg.StreamGOP removeDefault() {
+    public TranscodingRequest removeDefault() {
         if(CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) { //not sorting batch queue
             //X= Batchqueue.poll();
             return remove();

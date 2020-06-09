@@ -112,7 +112,7 @@ xlabel='Oversubscription Level (#Tasks)'
 ylabel='DMSR against non merging'
 n_point = column # number of x ticks to use, must match number of xtick and number of data point
 xtick=('1k','1.5k','2k','2.5k')
-labels=['Conservative','Conservative-Pfind',"Adaptive","Adaptive-Pfind",'Aggressive','Aggressive-Pfind']
+labels=['Conservative','Conservative+Pfind',"Adaptive","Adaptive+Pfind",'Aggressive','Aggressive+Pfind']
 legendcolumn= 2 #number of column in the legend
 data=[Cons,ConsP,Adapt,AdaptP,Agg,AggP]
 yerrdata=[Cons_ci,ConsP_ci,Adapt_ci,AdaptP_ci,Agg_ci,AggP_ci]
@@ -170,6 +170,7 @@ ax.set_xticklabels(xtick)
 ax.legend(loc='upper center', prop={'size': 10},bbox_to_anchor=(0.5, 1.00), shadow= True, ncol=legendcolumn)
 
 plt.tight_layout()
+plt.savefig("PositionFinderAll.pdf",dpi=200)
 plt.show()
 
 

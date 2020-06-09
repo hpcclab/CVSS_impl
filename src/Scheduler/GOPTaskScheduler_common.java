@@ -1,8 +1,8 @@
 package Scheduler;
 
 import ResourceManagement.MachineInterface;
-import Streampkg.StreamGOP;
-import TimeEstimatorpkg.retStat;
+import SessionPkg.TranscodingRequest;
+import TimeEstimatorpkg.histStat;
 import mainPackage.CVSE;
 
 
@@ -25,7 +25,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
     }
 
     //shortest queue first, without time estimator, just use queue length
-    protected MachineInterface ShortestQueueLength(StreamGOP x, int[] pending_queuelength, long[] pending_executiontime, double SDcoefficient, boolean realSchedule) {
+    protected MachineInterface ShortestQueueLength(TranscodingRequest x, int[] pending_queuelength, long[] pending_executiontime, double SDcoefficient, boolean realSchedule) {
         long estimatedT;
         if(machineInterfaces.size()>0) {
             MachineInterface answer = machineInterfaces.get(0);
@@ -56,7 +56,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 }
             }
             if(realSchedule) {
-                System.out.println("decided to place on machine " + answer.VM_class + " id= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + CVSE.config.localqueuelengthperCR);
+                System.out.println("decided to place on machine " + answer.VM_class + " Sessionid= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + CVSE.config.localqueuelengthperCR);
             }
             return answer;
         }
@@ -65,7 +65,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
         }
     //shortest job (queue) first (time based), minimum completion time first, minimum execution time first
     //SJF,MCT,MET
-    protected MachineInterface simplemachineselect(StreamGOP x, int[] pending_queuelength, long[] pending_executiontime, String mode, double SDcoefficient, boolean realSchedule){
+    protected MachineInterface simplemachineselect(TranscodingRequest x, int[] pending_queuelength, long[] pending_executiontime, String mode, double SDcoefficient, boolean realSchedule){
         //currently machine 0 must be autoscheduleable
         long estimatedT;
         if(machineInterfaces.size()>0) {
@@ -75,7 +75,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             double minSD=0;
             //set initial value to machine 1
             if((pending_queuelength[0] < CVSE.config.localqueuelengthperCR) || !realSchedule){ //if not real assignment, we can violate queue length
-                    retStat chk = CVSE.TE.getHistoricProcessTime(answer, x);
+                    histStat chk = CVSE.TE.getHistoricProcessTime(answer, x);
                     //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
                     if(mode.equalsIgnoreCase("MET")){
                         minFT=(long) (chk.mean + chk.SD * SDcoefficient);
@@ -100,7 +100,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                     if (aMachine.autoschedule) {
                         if((pending_queuelength[i] < CVSE.config.localqueuelengthperCR) || !realSchedule) {
                         //calculate new choice
-                            retStat chk = CVSE.TE.getHistoricProcessTime(aMachine, x);
+                            histStat chk = CVSE.TE.getHistoricProcessTime(aMachine, x);
                             long checkTime;
                             //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
                             if(mode.equalsIgnoreCase("MET")){ //for MET, simply compare execution time
@@ -128,9 +128,9 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 }
             }
             if(realSchedule) {
-                x.estimatedExecutionTime = minET;
-                x.estimatedExecutionSD=minSD;
-                System.out.println("decided to place on machine " + answer.VM_class + " id= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + CVSE.config.localqueuelengthperCR);
+                x.EstMean = minET;
+                x.EstSD=minSD;
+                System.out.println("decided to place on machine " + answer.VM_class + " Sessionid= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + CVSE.config.localqueuelengthperCR);
             }
             return answer;
         }
@@ -139,7 +139,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
     }
 
     //will have more ways to assign works later
-    protected MachineInterface selectMachine(StreamGOP x){
+    protected MachineInterface selectMachine(TranscodingRequest x){
         //System.out.println("assigning works");
         int[] queuelength=new int[machineInterfaces.size()];
         long[] executiontime=new long[machineInterfaces.size()];
@@ -165,7 +165,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
 
     }
     //function that do something before task X get sent
-    protected void preschedulefn(StreamGOP X){
+    protected void preschedulefn(TranscodingRequest X){
 
     }
     public void taskScheduling(){ // first function call to submit some works to other machine
@@ -178,7 +178,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
         }
 
         while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
-            StreamGOP X;
+            TranscodingRequest X;
             //select a task by a criteria
             synchronized (Batchqueue) {
                 X = Batchqueue.removeDefault();
@@ -199,22 +199,22 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             }
 
             if (CVSE.config.run_mode.equalsIgnoreCase("sim")) {
-                retStat thestat = CVSE.TE.getHistoricProcessTime(chosenVM, X);
+                histStat thestat = CVSE.TE.getHistoricProcessTime(chosenVM, X);
                 //System.out.println("dry run, mean="+thestat.mean+" sd="+thestat.SD);
-                X.estimatedExecutionTime = thestat.mean;
-                X.estimatedExecutionSD = thestat.SD;
+                X.EstMean = thestat.mean;
+                X.EstSD = thestat.SD;
                 //X.estimatedDelay
             }
             //System.out.println("before dispatch");
 
             //change StreamGOP type to Dispatched
-            X.dispatched = true;
+            X.DataTag="Dispatched";
             //X.parentStream=null;
 
             //then it's ready to send out
             chosenVM.sendJob(X);
             postschedulefn(X);
-            System.out.println("send job " + X.getPath() + " to " + chosenVM.toString());
+            System.out.println("send job " + X.DataSource + " to " + chosenVM.toString());
             //System.out.println("estimated queuelength=" + chosenVM.estimatedQueueLength);
             //System.out.println("estimated ExecutionTime=" + chosenVM.estimatedExecutionTime);
             workpending++;
@@ -228,7 +228,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
     }
 
     //function that do something after task X get sent
-    protected void postschedulefn(StreamGOP X){
+    protected void postschedulefn(TranscodingRequest X){
 
     }
 }

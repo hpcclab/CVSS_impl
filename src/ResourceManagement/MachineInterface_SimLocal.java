@@ -1,6 +1,7 @@
 package ResourceManagement;
 
-import Streampkg.StreamGOP;
+import ProtoMessage.TaskRequest;
+import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
 import java.util.LinkedList;
@@ -16,7 +17,6 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private Random r=new Random();
     private long node_synctime =0; //spentTime+requiredTime is imaginary total time to clear the queue
     private long node_realspentTime =0; //realspentTime is spentTime without Syncing
-    private long node_aftersync_itemdone=0,node_aftersync_itemmiss=0; //these need total sum
     private long node_aftersync_taskdone=0,node_aftersync_taskmiss=0;
 
 
@@ -29,8 +29,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private double node_wundertimeArr[] =new double[50]; //negative num for overtime
     private double node_sum_wundertime;
     private double node_sum_wovertime;
-    public int mergeEffectedMiss=0;
-    public List<StreamGOP> completedTask=new LinkedList<StreamGOP>();
+    public List<Long> completedTask=new LinkedList<>();
     /*
     private int l_workDone; //count each work as one
     private int l_NworkDone; //count each work as suggested in StreamGOP.requestcount
@@ -50,26 +49,25 @@ public class MachineInterface_SimLocal extends MachineInterface {
         return status==1;
     }
     //push in the data
-    public  boolean sendJob(StreamGOP segment){
-        segment.setPath(segment.getPath().replaceAll("\\\\","/"));
+    public  boolean sendJob(TranscodingRequest segment){
+        //segment.setPath(segment.getPath().replaceAll("\\\\","/"));
         estimatedQueueLength++;
-        estimatedExecutionTime += segment.estimatedExecutionTime;
+        estimatedExecutionTime += segment.EstMean;
         //simulate time
         double exetime=0;
         if(CVSE.config.addProfiledDelay) {
             //System.out.println("est="+segment.estimatedExecutionTime+" sd:"+segment.estimatedExecutionSD);
-            exetime=(long) (segment.estimatedExecutionTime+segment.estimatedExecutionSD*r.nextGaussian());
+            exetime=(long) (segment.EstMean+segment.EstSD*r.nextGaussian());
         }
         //System.out.println("delay="+delay);
         node_synctime +=exetime;
         node_realspentTime +=exetime;
         //System.out.println("synctime="+synctime);
         //System.out.println("realspentTime="+realspentTime);
-        boolean missed=false;
-        for (String cmd:segment.cmdSet.keySet()){
-            for(String param:segment.cmdSet.get(cmd).keySet()) {
+        for (String cmd:segment.listallCMD()){
+            for(String param:segment.listparamsofCMD(cmd)) {
             double slackleft = segment.getdeadlineof(cmd,param) - node_synctime;
-            long slacktime = (segment.getdeadlineof(cmd,param) - segment.arrivalTime);
+            long slacktime = (segment.getdeadlineof(cmd,param) - segment.Arrival);
 
             node_miss -= node_missArr[node_statindex]; //desum old miss record, if missed
             node_missArr[node_statindex] = 0; //reset the miss record
@@ -84,14 +82,6 @@ public class MachineInterface_SimLocal extends MachineInterface {
             }
 
             if (slackleft < 0) {
-                if( (segment.flags&1)==1) {
-                    mergeEffectedMiss++;
-                    System.out.println("a task miss because of merging");
-                }
-                if (!missed) { //havent miss before
-                    node_aftersync_itemmiss++;
-                    missed = true;
-                }
                 node_missArr[node_statindex]++; //it miss, so count
                 node_aftersync_taskmiss++;
 
@@ -118,10 +108,9 @@ public class MachineInterface_SimLocal extends MachineInterface {
             node_statindex = (node_statindex + 1) % node_focus_task;
         }
         }
-        node_aftersync_itemdone++;
         //System.out.println("request count="+segment.requestcount);
         node_aftersync_taskdone +=segment.requestcount;
-        completedTask.add(segment);
+        completedTask.add(segment.TaskId);
         //
         return false;
     }
@@ -148,13 +137,11 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //System.out.println("actualSpentTime="+CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        CVSE.GTS.machineInterfaces.get(id).total_taskmiss +=node_aftersync_itemmiss;
-        CVSE.GTS.machineInterfaces.get(id).total_requestmiss += node_aftersync_taskmiss;
-        CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_itemdone;
-        CVSE.GTS.machineInterfaces.get(id).total_requestdone += node_aftersync_taskdone;
+        CVSE.GTS.machineInterfaces.get(id).total_taskmiss +=node_aftersync_taskmiss;
+        CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
         CVSE.GTS.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
         CVSE.GTS.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
-        node_aftersync_itemmiss=node_aftersync_itemdone=node_aftersync_taskdone=node_aftersync_taskmiss=0;
+        node_aftersync_taskdone=node_aftersync_taskmiss=0;
 
 
         CVSE.GTS.machineInterfaces.get(id).tmp_overtime =node_sum_overtime/node_focus_task;
@@ -163,7 +150,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
         CVSE.GTS.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
         CVSE.GTS.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
 
-        CVSE.VMP.ackCompletedVideo(completedTask);
+        //CVSE.VMP.ackCompletedVideo(completedTask);
         completedTask.clear();
         //data are self expired, no need to reset or resum
     }

@@ -1,8 +1,8 @@
 package Scheduler;
 
 import ResourceManagement.MachineInterface;
-import Streampkg.Stream;
-import Streampkg.StreamGOP;
+import SessionPkg.Session;
+import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 import miscTools.TaskQueue;
 
@@ -43,9 +43,9 @@ public abstract class GOPTaskScheduler {
         return true;
     }
 
-    public void addStream(Stream ST) {
-        CVSE.AC.AssignStreamPriority(ST);
-        for (StreamGOP X : ST.streamGOPs) {
+    public void addStream(Session ST) {
+        //CVSE.AC.AssignStreamPriority(ST);
+        for (TranscodingRequest X : ST.AssociatedRequests) {
             if(!CVSE.CACHING.checkExistence(X)) {
                 synchronized (Batchqueue) {
                     Batchqueue.add(X);
@@ -68,14 +68,14 @@ public abstract class GOPTaskScheduler {
         for(int i = 0; i< machineInterfaces.size(); i++){ //get a free machine
             int assignable= machineInterfaces.get(i).estimatedQueueLength - CVSE.config.localqueuelengthperCR; //get number of task can assign to this machine
             while ((!Batchqueue.isEmpty()) && assignable>0) {
-                StreamGOP X;
+                TranscodingRequest X;
                 synchronized (Batchqueue) {
                     X = Batchqueue.removeDefault();
                 }
-                X.dispatched=true;
+                X.DataTag="Dispatched";
                 machineInterfaces.get(i).sendJob(X);
                 dispatched++;
-                System.out.println("FCFS scheduler send job " + X.getPath() + " to " + machineInterfaces.get(i).toString());
+                System.out.println("FCFS scheduler send job " + X.DataSource + " to " + machineInterfaces.get(i).toString());
             }
         }
         return dispatched;
