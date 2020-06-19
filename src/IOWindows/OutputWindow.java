@@ -13,6 +13,9 @@ public class OutputWindow {
 
     }
     private Video video;
+    public void ackCompletedVideo(long Tid){
+
+    }
     public void ackCompletedVideo(List<TranscodingRequest> completedTasks){
 
 //        if(CVSE.GTS instanceof GOPTaskScheduler_mergable) {

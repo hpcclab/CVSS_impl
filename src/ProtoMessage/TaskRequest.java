@@ -3308,6 +3308,10 @@ public final class TaskRequest {
     double getWeightedOvertime();
   }
   /**
+   * <pre>
+   *Stop using it for the new version, now using task report instead
+   * </pre>
+   *
    * Protobuf type {@code SVSE.WorkerReport}
    */
   public  static final class WorkerReport extends
@@ -3811,6 +3815,10 @@ public final class TaskRequest {
       return builder;
     }
     /**
+     * <pre>
+     *Stop using it for the new version, now using task report instead
+     * </pre>
+     *
      * Protobuf type {@code SVSE.WorkerReport}
      */
     public static final class Builder extends
@@ -4389,6 +4397,850 @@ public final class TaskRequest {
 
   }
 
+  public interface TaskReportOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:SVSE.TaskReport)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 completedTaskID = 1;</code>
+     * @return The completedTaskID.
+     */
+    long getCompletedTaskID();
+
+    /**
+     * <code>int32 workerNodeID = 2;</code>
+     * @return The workerNodeID.
+     */
+    int getWorkerNodeID();
+
+    /**
+     * <pre>
+     *the server determine using current time to see if the deadline is missed or not
+     * </pre>
+     *
+     * <code>int64 executionTime = 3;</code>
+     * @return The executionTime.
+     */
+    long getExecutionTime();
+
+    /**
+     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * @return Whether the theRequest field is set.
+     */
+    boolean hasTheRequest();
+    /**
+     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * @return The theRequest.
+     */
+    ProtoMessage.TaskRequest.ServiceRequest getTheRequest();
+    /**
+     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     */
+    ProtoMessage.TaskRequest.ServiceRequestOrBuilder getTheRequestOrBuilder();
+  }
+  /**
+   * Protobuf type {@code SVSE.TaskReport}
+   */
+  public  static final class TaskReport extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:SVSE.TaskReport)
+      TaskReportOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use TaskReport.newBuilder() to construct.
+    private TaskReport(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private TaskReport() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new TaskReport();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private TaskReport(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              completedTaskID_ = input.readInt64();
+              break;
+            }
+            case 16: {
+
+              workerNodeID_ = input.readInt32();
+              break;
+            }
+            case 24: {
+
+              executionTime_ = input.readInt64();
+              break;
+            }
+            case 34: {
+              ProtoMessage.TaskRequest.ServiceRequest.Builder subBuilder = null;
+              if (theRequest_ != null) {
+                subBuilder = theRequest_.toBuilder();
+              }
+              theRequest_ = input.readMessage(ProtoMessage.TaskRequest.ServiceRequest.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(theRequest_);
+                theRequest_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return ProtoMessage.TaskRequest.internal_static_SVSE_TaskReport_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return ProtoMessage.TaskRequest.internal_static_SVSE_TaskReport_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ProtoMessage.TaskRequest.TaskReport.class, ProtoMessage.TaskRequest.TaskReport.Builder.class);
+    }
+
+    public static final int COMPLETEDTASKID_FIELD_NUMBER = 1;
+    private long completedTaskID_;
+    /**
+     * <code>int64 completedTaskID = 1;</code>
+     * @return The completedTaskID.
+     */
+    public long getCompletedTaskID() {
+      return completedTaskID_;
+    }
+
+    public static final int WORKERNODEID_FIELD_NUMBER = 2;
+    private int workerNodeID_;
+    /**
+     * <code>int32 workerNodeID = 2;</code>
+     * @return The workerNodeID.
+     */
+    public int getWorkerNodeID() {
+      return workerNodeID_;
+    }
+
+    public static final int EXECUTIONTIME_FIELD_NUMBER = 3;
+    private long executionTime_;
+    /**
+     * <pre>
+     *the server determine using current time to see if the deadline is missed or not
+     * </pre>
+     *
+     * <code>int64 executionTime = 3;</code>
+     * @return The executionTime.
+     */
+    public long getExecutionTime() {
+      return executionTime_;
+    }
+
+    public static final int THEREQUEST_FIELD_NUMBER = 4;
+    private ProtoMessage.TaskRequest.ServiceRequest theRequest_;
+    /**
+     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * @return Whether the theRequest field is set.
+     */
+    public boolean hasTheRequest() {
+      return theRequest_ != null;
+    }
+    /**
+     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * @return The theRequest.
+     */
+    public ProtoMessage.TaskRequest.ServiceRequest getTheRequest() {
+      return theRequest_ == null ? ProtoMessage.TaskRequest.ServiceRequest.getDefaultInstance() : theRequest_;
+    }
+    /**
+     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     */
+    public ProtoMessage.TaskRequest.ServiceRequestOrBuilder getTheRequestOrBuilder() {
+      return getTheRequest();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (completedTaskID_ != 0L) {
+        output.writeInt64(1, completedTaskID_);
+      }
+      if (workerNodeID_ != 0) {
+        output.writeInt32(2, workerNodeID_);
+      }
+      if (executionTime_ != 0L) {
+        output.writeInt64(3, executionTime_);
+      }
+      if (theRequest_ != null) {
+        output.writeMessage(4, getTheRequest());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (completedTaskID_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, completedTaskID_);
+      }
+      if (workerNodeID_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, workerNodeID_);
+      }
+      if (executionTime_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(3, executionTime_);
+      }
+      if (theRequest_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, getTheRequest());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ProtoMessage.TaskRequest.TaskReport)) {
+        return super.equals(obj);
+      }
+      ProtoMessage.TaskRequest.TaskReport other = (ProtoMessage.TaskRequest.TaskReport) obj;
+
+      if (getCompletedTaskID()
+          != other.getCompletedTaskID()) return false;
+      if (getWorkerNodeID()
+          != other.getWorkerNodeID()) return false;
+      if (getExecutionTime()
+          != other.getExecutionTime()) return false;
+      if (hasTheRequest() != other.hasTheRequest()) return false;
+      if (hasTheRequest()) {
+        if (!getTheRequest()
+            .equals(other.getTheRequest())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + COMPLETEDTASKID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCompletedTaskID());
+      hash = (37 * hash) + WORKERNODEID_FIELD_NUMBER;
+      hash = (53 * hash) + getWorkerNodeID();
+      hash = (37 * hash) + EXECUTIONTIME_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getExecutionTime());
+      if (hasTheRequest()) {
+        hash = (37 * hash) + THEREQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getTheRequest().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ProtoMessage.TaskRequest.TaskReport parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ProtoMessage.TaskRequest.TaskReport prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code SVSE.TaskReport}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:SVSE.TaskReport)
+        ProtoMessage.TaskRequest.TaskReportOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return ProtoMessage.TaskRequest.internal_static_SVSE_TaskReport_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return ProtoMessage.TaskRequest.internal_static_SVSE_TaskReport_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ProtoMessage.TaskRequest.TaskReport.class, ProtoMessage.TaskRequest.TaskReport.Builder.class);
+      }
+
+      // Construct using ProtoMessage.TaskRequest.TaskReport.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        completedTaskID_ = 0L;
+
+        workerNodeID_ = 0;
+
+        executionTime_ = 0L;
+
+        if (theRequestBuilder_ == null) {
+          theRequest_ = null;
+        } else {
+          theRequest_ = null;
+          theRequestBuilder_ = null;
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return ProtoMessage.TaskRequest.internal_static_SVSE_TaskReport_descriptor;
+      }
+
+      @java.lang.Override
+      public ProtoMessage.TaskRequest.TaskReport getDefaultInstanceForType() {
+        return ProtoMessage.TaskRequest.TaskReport.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public ProtoMessage.TaskRequest.TaskReport build() {
+        ProtoMessage.TaskRequest.TaskReport result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public ProtoMessage.TaskRequest.TaskReport buildPartial() {
+        ProtoMessage.TaskRequest.TaskReport result = new ProtoMessage.TaskRequest.TaskReport(this);
+        result.completedTaskID_ = completedTaskID_;
+        result.workerNodeID_ = workerNodeID_;
+        result.executionTime_ = executionTime_;
+        if (theRequestBuilder_ == null) {
+          result.theRequest_ = theRequest_;
+        } else {
+          result.theRequest_ = theRequestBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ProtoMessage.TaskRequest.TaskReport) {
+          return mergeFrom((ProtoMessage.TaskRequest.TaskReport)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ProtoMessage.TaskRequest.TaskReport other) {
+        if (other == ProtoMessage.TaskRequest.TaskReport.getDefaultInstance()) return this;
+        if (other.getCompletedTaskID() != 0L) {
+          setCompletedTaskID(other.getCompletedTaskID());
+        }
+        if (other.getWorkerNodeID() != 0) {
+          setWorkerNodeID(other.getWorkerNodeID());
+        }
+        if (other.getExecutionTime() != 0L) {
+          setExecutionTime(other.getExecutionTime());
+        }
+        if (other.hasTheRequest()) {
+          mergeTheRequest(other.getTheRequest());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ProtoMessage.TaskRequest.TaskReport parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ProtoMessage.TaskRequest.TaskReport) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long completedTaskID_ ;
+      /**
+       * <code>int64 completedTaskID = 1;</code>
+       * @return The completedTaskID.
+       */
+      public long getCompletedTaskID() {
+        return completedTaskID_;
+      }
+      /**
+       * <code>int64 completedTaskID = 1;</code>
+       * @param value The completedTaskID to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCompletedTaskID(long value) {
+        
+        completedTaskID_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 completedTaskID = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCompletedTaskID() {
+        
+        completedTaskID_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private int workerNodeID_ ;
+      /**
+       * <code>int32 workerNodeID = 2;</code>
+       * @return The workerNodeID.
+       */
+      public int getWorkerNodeID() {
+        return workerNodeID_;
+      }
+      /**
+       * <code>int32 workerNodeID = 2;</code>
+       * @param value The workerNodeID to set.
+       * @return This builder for chaining.
+       */
+      public Builder setWorkerNodeID(int value) {
+        
+        workerNodeID_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 workerNodeID = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearWorkerNodeID() {
+        
+        workerNodeID_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private long executionTime_ ;
+      /**
+       * <pre>
+       *the server determine using current time to see if the deadline is missed or not
+       * </pre>
+       *
+       * <code>int64 executionTime = 3;</code>
+       * @return The executionTime.
+       */
+      public long getExecutionTime() {
+        return executionTime_;
+      }
+      /**
+       * <pre>
+       *the server determine using current time to see if the deadline is missed or not
+       * </pre>
+       *
+       * <code>int64 executionTime = 3;</code>
+       * @param value The executionTime to set.
+       * @return This builder for chaining.
+       */
+      public Builder setExecutionTime(long value) {
+        
+        executionTime_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *the server determine using current time to see if the deadline is missed or not
+       * </pre>
+       *
+       * <code>int64 executionTime = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearExecutionTime() {
+        
+        executionTime_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private ProtoMessage.TaskRequest.ServiceRequest theRequest_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ProtoMessage.TaskRequest.ServiceRequest, ProtoMessage.TaskRequest.ServiceRequest.Builder, ProtoMessage.TaskRequest.ServiceRequestOrBuilder> theRequestBuilder_;
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * @return Whether the theRequest field is set.
+       */
+      public boolean hasTheRequest() {
+        return theRequestBuilder_ != null || theRequest_ != null;
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * @return The theRequest.
+       */
+      public ProtoMessage.TaskRequest.ServiceRequest getTheRequest() {
+        if (theRequestBuilder_ == null) {
+          return theRequest_ == null ? ProtoMessage.TaskRequest.ServiceRequest.getDefaultInstance() : theRequest_;
+        } else {
+          return theRequestBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       */
+      public Builder setTheRequest(ProtoMessage.TaskRequest.ServiceRequest value) {
+        if (theRequestBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          theRequest_ = value;
+          onChanged();
+        } else {
+          theRequestBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       */
+      public Builder setTheRequest(
+          ProtoMessage.TaskRequest.ServiceRequest.Builder builderForValue) {
+        if (theRequestBuilder_ == null) {
+          theRequest_ = builderForValue.build();
+          onChanged();
+        } else {
+          theRequestBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       */
+      public Builder mergeTheRequest(ProtoMessage.TaskRequest.ServiceRequest value) {
+        if (theRequestBuilder_ == null) {
+          if (theRequest_ != null) {
+            theRequest_ =
+              ProtoMessage.TaskRequest.ServiceRequest.newBuilder(theRequest_).mergeFrom(value).buildPartial();
+          } else {
+            theRequest_ = value;
+          }
+          onChanged();
+        } else {
+          theRequestBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       */
+      public Builder clearTheRequest() {
+        if (theRequestBuilder_ == null) {
+          theRequest_ = null;
+          onChanged();
+        } else {
+          theRequest_ = null;
+          theRequestBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       */
+      public ProtoMessage.TaskRequest.ServiceRequest.Builder getTheRequestBuilder() {
+        
+        onChanged();
+        return getTheRequestFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       */
+      public ProtoMessage.TaskRequest.ServiceRequestOrBuilder getTheRequestOrBuilder() {
+        if (theRequestBuilder_ != null) {
+          return theRequestBuilder_.getMessageOrBuilder();
+        } else {
+          return theRequest_ == null ?
+              ProtoMessage.TaskRequest.ServiceRequest.getDefaultInstance() : theRequest_;
+        }
+      }
+      /**
+       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          ProtoMessage.TaskRequest.ServiceRequest, ProtoMessage.TaskRequest.ServiceRequest.Builder, ProtoMessage.TaskRequest.ServiceRequestOrBuilder> 
+          getTheRequestFieldBuilder() {
+        if (theRequestBuilder_ == null) {
+          theRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              ProtoMessage.TaskRequest.ServiceRequest, ProtoMessage.TaskRequest.ServiceRequest.Builder, ProtoMessage.TaskRequest.ServiceRequestOrBuilder>(
+                  getTheRequest(),
+                  getParentForChildren(),
+                  isClean());
+          theRequest_ = null;
+        }
+        return theRequestBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:SVSE.TaskReport)
+    }
+
+    // @@protoc_insertion_point(class_scope:SVSE.TaskReport)
+    private static final ProtoMessage.TaskRequest.TaskReport DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ProtoMessage.TaskRequest.TaskReport();
+    }
+
+    public static ProtoMessage.TaskRequest.TaskReport getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<TaskReport>
+        PARSER = new com.google.protobuf.AbstractParser<TaskReport>() {
+      @java.lang.Override
+      public TaskReport parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new TaskReport(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<TaskReport> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<TaskReport> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public ProtoMessage.TaskRequest.TaskReport getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_SVSE_Operation_descriptor;
   private static final 
@@ -4409,6 +5261,11 @@ public final class TaskRequest {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_SVSE_WorkerReport_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_SVSE_TaskReport_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_SVSE_TaskReport_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4432,8 +5289,11 @@ public final class TaskRequest {
       "MelapsedTime\030\003 \001(\003\022\022\n\nVMWorkTime\030\004 \001(\003\022\031" +
       "\n\021ontime_completion\030\005 \001(\003\022\021\n\tdl_missed\030\006" +
       " \001(\003\022\027\n\017completedTaskID\030\007 \003(\003\022\030\n\020weighte" +
-      "dOvertime\030\010 \001(\001B\033\n\014ProtoMessageB\013TaskReq" +
-      "uestb\006proto3"
+      "dOvertime\030\010 \001(\001\"|\n\nTaskReport\022\027\n\017complet" +
+      "edTaskID\030\001 \001(\003\022\024\n\014workerNodeID\030\002 \001(\005\022\025\n\r" +
+      "executionTime\030\003 \001(\003\022(\n\ntheRequest\030\004 \001(\0132" +
+      "\024.SVSE.ServiceRequestB\033\n\014ProtoMessageB\013T" +
+      "askRequestb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4463,6 +5323,12 @@ public final class TaskRequest {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SVSE_WorkerReport_descriptor,
         new java.lang.String[] { "QueueSize", "QueueExecutionTime", "VMelapsedTime", "VMWorkTime", "OntimeCompletion", "DlMissed", "CompletedTaskID", "WeightedOvertime", });
+    internal_static_SVSE_TaskReport_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_SVSE_TaskReport_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_SVSE_TaskReport_descriptor,
+        new java.lang.String[] { "CompletedTaskID", "WorkerNodeID", "ExecutionTime", "TheRequest", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

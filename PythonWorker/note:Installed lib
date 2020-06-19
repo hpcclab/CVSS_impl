@@ -1,0 +1,4 @@
+sudo python -m pip install torch torchvision
+sudo python3 -m pip install torch torchvision
+sudo python -m pip install -U protobuf
+sudo python3 -m pip install -U protobuf

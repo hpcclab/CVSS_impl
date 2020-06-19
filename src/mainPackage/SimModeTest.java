@@ -79,7 +79,10 @@ public class SimModeTest {
 
             while (!CVSE.RG.finished || !CVSE.GTS.emptyQueue()) {
                 trysleep(300);
+                CVSE.RG.contProfileRequestsGen();
+                CVSE.GTS.taskScheduling();
                 System.out.println("wait for sim to finish");
+
                 //CVSE.RG.contProfileRequestsGen(); //probably good idea to call here...
             }
             System.out.println("\nAll request have been released\n");

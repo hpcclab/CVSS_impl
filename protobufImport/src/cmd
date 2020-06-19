@@ -1,1 +1,3 @@
 protoc -I=. --java_out=../../src/ ./TaskRequest.proto 
+protoc -I=. --python_out=../../PythonWorker/ ./TaskRequest.proto 
+

@@ -6,7 +6,7 @@ package mainPackage;
 //import IOWindows.WebserviceRequestGate;
 //import Repository.VideoRepository;
 //import ResourceManagement.MachineInterface;
-//import ResourceManagement.MachineInterface_SocketIO;
+//import ResourceManagement.MachineInterface_JavaSocket;
 //import ResourceManagement.ResourceProvisioner;
 //import Scheduler.AdmissionControl;
 //import Scheduler.GOPTaskScheduler_common;
@@ -189,7 +189,7 @@ public class RealModeTest {
 //                }catch(Exception e){
 //                    System.out.println("sleep bug in AddInstance (localVMThread)");
 //                }
-//                MachineInterface t=new MachineInterface_SocketIO(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
+//                MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
 //                //CVSE.GTS.add_VM(t,CVSE.config.CR_autoschedule.get(VMcount));
 //                VMcount++;
 //            }
@@ -220,7 +220,7 @@ public class RealModeTest {
         //RemoveContainers();
         //WebRequestTest();
         //CreateContainerTest();
-        //MachineInterface t=new MachineInterface_SocketIO(CVSE.config.CR_class.get(0),"localhost", CVSE.config.CR_ports.get(0),0,CVSE.config.CR_autoschedule.get(0)); //no ip needed //this passed
+        //MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(0),"localhost", CVSE.config.CR_ports.get(0),0,CVSE.config.CR_autoschedule.get(0)); //no ip needed //this passed
 
     }
 }

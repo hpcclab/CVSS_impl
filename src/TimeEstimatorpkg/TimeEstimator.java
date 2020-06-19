@@ -63,13 +63,13 @@ public class TimeEstimator {
 
     public histStat searchHistoricProcessTime(HashMap<String,histStat> table,TranscodingRequest segment,String searchMode){
         //SDcoefficient=1 is Worst case, -1 is BestCase,
-        System.out.println("found machine type, now search the record");
+        //System.out.println("found machine type, now search the record");
 
         long ESTTime = 0;
         double SD = 0;
         ArrayList<String> cmdlist=new ArrayList<String>();
         double sumsave=0; //sum saving, then average later
-        System.out.println(segment.listallCMD());
+        //System.out.println(segment.listallCMD());
         for (String cmd : segment.listallCMD()) { //all cmd
             //System.out.println("cmd="+cmd);
             //System.out.println(segment.listparamsofCMD(cmd));

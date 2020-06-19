@@ -176,6 +176,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
         }catch(Exception e){
             System.out.println("Sem of task scheduling error");
         }
+        System.out.println("pass sem acquire, workpending="+workpending+" maxpending="+maxpending);
 
         while ((!Batchqueue.isEmpty()) && workpending < maxpending) {
             TranscodingRequest X;

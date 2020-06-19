@@ -28,7 +28,7 @@ message ServiceRequest {
     int64 TaskID=8;
     repeated Operation OPlist=9;
 }
-
+//Stop using it for the new version, now using task report instead
 message WorkerReport {
     int32 queue_size=1;
     int64 queue_executionTime=2;
@@ -38,6 +38,12 @@ message WorkerReport {
     int64 dl_missed=6;    //miss rate not needed
     repeated int64 completedTaskID=7;
     double weightedOvertime=8; //just in case we calculate weighted overtime
+}
+message TaskReport {
+    int64 completedTaskID=1;
+    int32 workerNodeID=2;
+    int64 executionTime=3; //the server determine using current time to see if the deadline is missed or not
+    ServiceRequest theRequest=4;
 }
 
 

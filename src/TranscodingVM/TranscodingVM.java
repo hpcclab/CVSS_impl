@@ -2,12 +2,14 @@ package TranscodingVM;
 
 import ProtoMessage.TaskRequest;
 import SessionPkg.TranscodingRequest;
+import com.google.protobuf.ByteString;
 
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 //import com.amazonaws.services.ec2.model.Instance;
 
 
@@ -78,15 +80,22 @@ public class TranscodingVM extends Thread{
 
         //TODO: have a way to gracefully terminate without causing error and force quit
         try {
-            while(!s.isClosed()){
+            while(!s.isClosed() ){
 
                 ////
                 //TaskRequest.ServiceRequest.Builder B= TaskRequest.ServiceRequest.newBuilder();
 
                 /////
-                TaskRequest.ServiceRequest alphaX= (TaskRequest.ServiceRequest) ois.readObject();
+                System.out.println("waiting......");
+                //1.)
+                TaskRequest.ServiceRequest alphaX= TaskRequest.ServiceRequest.parseDelimitedFrom(ois);
+
+
+                System.out.println("get msg");
+                //TaskRequest.ServiceRequest alphaX=TaskRequest.ServiceRequest.parseFrom(X);
                 TranscodingRequest objectX =new TranscodingRequest(alphaX);
-                //System.out.println("ObjectX's path"+objectX.getPath());
+                System.out.println("get objectX");
+                System.out.println(objectX.listallCMD());
                 if(objectX.listallCMD().contains("shutdown")){
                     //receive shutting down message, close down receiving communication
                     //whatever in the queue will still be processed until queue is empty
@@ -95,6 +104,7 @@ public class TranscodingVM extends Thread{
                     close();
                     break;
                 }else if (objectX.listallCMD().contains("query") ||objectX.listallCMD().contains("fullstat") ){
+                    //System.out.println("Ack query msg");
                     double deadLineMiss=0;
                     if(objectX.GlobalDeadline>TT.synctime){ //syncTime
                         TT.synctime=objectX.GlobalDeadline;
@@ -108,7 +118,10 @@ public class TranscodingVM extends Thread{
                             .setDlMissed(TT.deadlineMiss)
                             .addAllCompletedTaskID(TT.completedTask)
                             .build();
-                    oos.writeObject(aReport);
+                    //oos.writeObject(aReport);
+                    //System.out.println("sending query msg reply");
+                    aReport.writeDelimitedTo(oos);
+                    oos.flush();
                     TT.completedTask.clear(); //got asked so clear it out
                     /////////////
                     if (objectX.listallCMD().contains("fullstat")) { //if it is full sync, remove old stats
