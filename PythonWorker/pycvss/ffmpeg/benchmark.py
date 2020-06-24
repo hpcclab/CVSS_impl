@@ -85,7 +85,7 @@ class BTest:
         if len(output_str_list) < 2:
             raise Exception('No file format specified')
 
-        if output_str_list[1].upper() not in utils.FILE_FORMATS:
+        if output_str_list[-1].upper() not in utils.FILE_FORMATS:
             raise Exception('Invalid file format.')
 
         self._output_file = output_
@@ -124,6 +124,6 @@ class BTest:
             result = calls.call_log_args(lambda: args)
 
         # Clean up output file
-        handle_file_cleanup(prepend_current_dir(self._output_file))
+        #handle_file_cleanup(prepend_current_dir(self._output_file))
 
         return (self._name, result)

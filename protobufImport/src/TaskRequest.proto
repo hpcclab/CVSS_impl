@@ -42,7 +42,7 @@ message WorkerReport {
 message TaskReport {
     int64 completedTaskID=1;
     int32 workerNodeID=2;
-    int64 executionTime=3; //the server determine using current time to see if the deadline is missed or not
+    double executionTime=3; //the server determine using current time to see if the deadline is missed or not
     ServiceRequest theRequest=4;
 }
 

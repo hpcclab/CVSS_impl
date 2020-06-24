@@ -35,7 +35,7 @@ def grayscale_conversion_args(input_: str, output_name_: str) -> list:
     """
     _validate_input(input_)
 
-    args_base = FFMPEG_INPUT_PROCESS_BASE
+    args_base = FFMPEG_INPUT_PROCESS_BASE.copy()
     args = [input_, '-vf', 'hue=s=0', '-vcodec', 'libx264', '-acodec', 'copy',
             '-copyts', '-muxdelay', '0', os.path.abspath(output_name_)]
 
@@ -62,14 +62,56 @@ def scale_video_args(input_: str, output_name_: str, scale_: str) -> list:
     """
     _validate_input(input_)
 
-    args_base = FFMPEG_INPUT_PROCESS_BASE
+    args_base = FFMPEG_INPUT_PROCESS_BASE.copy()
     args = [input_, '-filter:v', f'scale={scale_}', '-c:a', 'copy',
             os.path.abspath(output_name_)]
 
     args_base.extend(args)
 
     return args_base
+def generic_video_convert_args(
+        input_: str, output_name_: str, cmd_=None,
+        option_=None) -> list:
+    _validate_input(input_)
+    args_base=[]
+    print("args_base="+str(args_base))
+    args_base=FFMPEG_INPUT_PROCESS_BASE.copy()
+    print("#############")
+    print("cmd_="+str(cmd_)+" option="+str(option_))
+    print(str(args_base))
+    print("#############")
+    args = [input_, '-c:a', 'copy']
+    args_base.extend(args)
 
+    args_base.extend([cmd_, option_])
+
+    output = os.path.abspath(output_name_)
+    args_base.extend([output])
+    print("#############")
+    print(args_base)
+    print("#############")
+    return args_base
+
+def basic_video_convert_args(
+        input_: str, output_name_: str, bitrate_=None,
+        fps_=None, resolution_=None,format_=None) -> list:
+    _validate_input(input_)
+
+    args_base = FFMPEG_INPUT_PROCESS_BASE.copy()
+    args = [input_, '-c:a', 'copy']
+    args_base.extend(args)
+
+    if bitrate_ and isinstance(bitrate_, int):
+        args_base.extend(['-b:v', f'{bitrate_}M'])
+    if fps_ and isinstance(fps_, int):
+        args_base.extend(['-r', f'{fps_}'])
+    if resolution_ and isinstance(resolution_, string):
+        args_base.extend(['-vf scale=', f'{resolution_}'])
+
+    output = os.path.abspath(output_name_)
+    args_base.extend([output])
+    #print(args_base)
+    return args_base
 
 def encode_and_adjust_args(
         input_: str, output_name_: str, bitrate_=None,
@@ -108,7 +150,7 @@ def encode_and_adjust_args(
     """
     _validate_input(input_)
 
-    args_base = FFMPEG_INPUT_PROCESS_BASE
+    args_base = FFMPEG_INPUT_PROCESS_BASE.copy()
     args = [input_, '-c:a', 'copy', '-c:v', 'vp9']
     args_base.extend(args)
 
@@ -153,7 +195,7 @@ def modify_stream_args(input_: str, output_name_: str,
     _validate_input(input_)
     av_input = '-c:av' if audio_ else '-c:v'
 
-    args_base = FFMPEG_INPUT_PROCESS_BASE
+    args_base = FFMPEG_INPUT_PROCESS_BASE.copy()
     args = [input_, av_input, 'copy', '-ss', f'{cut_point_}', '-t',
             f'{str(duration_)}']
 

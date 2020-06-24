@@ -1,6 +1,8 @@
 .benchmarks/
 .pytest_cache/
 .vscode/
+sampleOutput/
+sampleRepo/
 __pycache__/
 build/
 dist/

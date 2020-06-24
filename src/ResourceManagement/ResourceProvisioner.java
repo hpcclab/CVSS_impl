@@ -38,10 +38,11 @@ public class ResourceProvisioner {
     //rabbitMQ connection
     private static String RMQlocation="localhost";
     private static String FEEDBACKQUEUE_NAME = "feedback_queue";
+    private static String INITQUEUE_NAME = "init_queue";
     private static ConnectionFactory factory;
     public static Connection connection;
-    private static Channel RMQchannel;
-
+    private static Channel OutRMQchannel; //for outward
+    private static Channel InRMQchannel; //separate channel for inMessage
     public ResourceProvisioner( int minimumVMtomaintain) {
         //RMQ set up
         factory= new ConnectionFactory();
@@ -49,11 +50,14 @@ public class ResourceProvisioner {
         factory.setHost(RMQlocation);
 
         try {
-
             connection = factory.newConnection();
 
-            RMQchannel = connection.createChannel();
-            RMQchannel.queueDeclare(FEEDBACKQUEUE_NAME, false, false, false, null);
+            OutRMQchannel = connection.createChannel();
+            InRMQchannel = connection.createChannel();
+
+            InRMQchannel.queueDeclare(FEEDBACKQUEUE_NAME, false, false, false, null);
+            OutRMQchannel.queueDeclare(INITQUEUE_NAME, false, false, false, null);
+
         }catch (Exception E){
             System.out.println("Rmqbug in initializing "+E);
         }
@@ -81,12 +85,12 @@ public class ResourceProvisioner {
             TaskRequest.TaskReport T= TaskRequest.TaskReport.parseFrom(delivery.getBody());
             //System.out.println("Completed ExeT="+T.getExecutionTime());
             collectData(T);
-            RMQchannel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+            InRMQchannel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
         };
         //////////////////////////
         boolean autoAck = false;
         try {
-            RMQchannel.basicConsume(FEEDBACKQUEUE_NAME, autoAck, deliverCallback, consumerTag -> {
+            InRMQchannel.basicConsume(FEEDBACKQUEUE_NAME, autoAck, deliverCallback, consumerTag -> {
             });
         }catch (Exception E){
             System.out.println("feedback queue error: "+E);
@@ -94,6 +98,7 @@ public class ResourceProvisioner {
         System.out.println("out of loop");
             //
     }
+
     static int timeforced=0;
     static double previous_wovertime,previous_wundertime;
     private void collectData(TaskRequest.TaskReport T){ //ack ONE task completion
@@ -105,7 +110,13 @@ public class ResourceProvisioner {
         MI.estimatedQueueLength=0;
         long completionTime= System.currentTimeMillis();
 
-        //if(completionTime>T.)
+        MI.total_taskdone++;
+        if(completionTime>T.getTheRequest().getGlobalDeadline()){
+            //deadline missed
+            MI.total_taskmiss++;
+        }else{
+            //deadline not missed
+        }
         //MI.elapsedTime+=200;
 
     }
@@ -288,7 +299,8 @@ public class ResourceProvisioner {
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("LocalPython")){ //create local rabbitMQ thread,
                 //////////////// Experimenting here:
                     System.out.println("Create local python");
-                    MachineInterface t=new MachineInterface_RabbitMQ(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount),RMQchannel);
+                    MachineInterface t=new MachineInterface_RabbitMQ(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
+                            CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
 

@@ -4418,10 +4418,10 @@ public final class TaskRequest {
      *the server determine using current time to see if the deadline is missed or not
      * </pre>
      *
-     * <code>int64 executionTime = 3;</code>
+     * <code>double executionTime = 3;</code>
      * @return The executionTime.
      */
-    long getExecutionTime();
+    double getExecutionTime();
 
     /**
      * <code>.SVSE.ServiceRequest theRequest = 4;</code>
@@ -4493,9 +4493,9 @@ public final class TaskRequest {
               workerNodeID_ = input.readInt32();
               break;
             }
-            case 24: {
+            case 25: {
 
-              executionTime_ = input.readInt64();
+              executionTime_ = input.readDouble();
               break;
             }
             case 34: {
@@ -4564,16 +4564,16 @@ public final class TaskRequest {
     }
 
     public static final int EXECUTIONTIME_FIELD_NUMBER = 3;
-    private long executionTime_;
+    private double executionTime_;
     /**
      * <pre>
      *the server determine using current time to see if the deadline is missed or not
      * </pre>
      *
-     * <code>int64 executionTime = 3;</code>
+     * <code>double executionTime = 3;</code>
      * @return The executionTime.
      */
-    public long getExecutionTime() {
+    public double getExecutionTime() {
       return executionTime_;
     }
 
@@ -4620,8 +4620,8 @@ public final class TaskRequest {
       if (workerNodeID_ != 0) {
         output.writeInt32(2, workerNodeID_);
       }
-      if (executionTime_ != 0L) {
-        output.writeInt64(3, executionTime_);
+      if (executionTime_ != 0D) {
+        output.writeDouble(3, executionTime_);
       }
       if (theRequest_ != null) {
         output.writeMessage(4, getTheRequest());
@@ -4643,9 +4643,9 @@ public final class TaskRequest {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, workerNodeID_);
       }
-      if (executionTime_ != 0L) {
+      if (executionTime_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(3, executionTime_);
+          .computeDoubleSize(3, executionTime_);
       }
       if (theRequest_ != null) {
         size += com.google.protobuf.CodedOutputStream
@@ -4670,8 +4670,9 @@ public final class TaskRequest {
           != other.getCompletedTaskID()) return false;
       if (getWorkerNodeID()
           != other.getWorkerNodeID()) return false;
-      if (getExecutionTime()
-          != other.getExecutionTime()) return false;
+      if (java.lang.Double.doubleToLongBits(getExecutionTime())
+          != java.lang.Double.doubleToLongBits(
+              other.getExecutionTime())) return false;
       if (hasTheRequest() != other.hasTheRequest()) return false;
       if (hasTheRequest()) {
         if (!getTheRequest()
@@ -4695,7 +4696,7 @@ public final class TaskRequest {
       hash = (53 * hash) + getWorkerNodeID();
       hash = (37 * hash) + EXECUTIONTIME_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getExecutionTime());
+          java.lang.Double.doubleToLongBits(getExecutionTime()));
       if (hasTheRequest()) {
         hash = (37 * hash) + THEREQUEST_FIELD_NUMBER;
         hash = (53 * hash) + getTheRequest().hashCode();
@@ -4837,7 +4838,7 @@ public final class TaskRequest {
 
         workerNodeID_ = 0;
 
-        executionTime_ = 0L;
+        executionTime_ = 0D;
 
         if (theRequestBuilder_ == null) {
           theRequest_ = null;
@@ -4933,7 +4934,7 @@ public final class TaskRequest {
         if (other.getWorkerNodeID() != 0) {
           setWorkerNodeID(other.getWorkerNodeID());
         }
-        if (other.getExecutionTime() != 0L) {
+        if (other.getExecutionTime() != 0D) {
           setExecutionTime(other.getExecutionTime());
         }
         if (other.hasTheRequest()) {
@@ -5028,16 +5029,16 @@ public final class TaskRequest {
         return this;
       }
 
-      private long executionTime_ ;
+      private double executionTime_ ;
       /**
        * <pre>
        *the server determine using current time to see if the deadline is missed or not
        * </pre>
        *
-       * <code>int64 executionTime = 3;</code>
+       * <code>double executionTime = 3;</code>
        * @return The executionTime.
        */
-      public long getExecutionTime() {
+      public double getExecutionTime() {
         return executionTime_;
       }
       /**
@@ -5045,11 +5046,11 @@ public final class TaskRequest {
        *the server determine using current time to see if the deadline is missed or not
        * </pre>
        *
-       * <code>int64 executionTime = 3;</code>
+       * <code>double executionTime = 3;</code>
        * @param value The executionTime to set.
        * @return This builder for chaining.
        */
-      public Builder setExecutionTime(long value) {
+      public Builder setExecutionTime(double value) {
         
         executionTime_ = value;
         onChanged();
@@ -5060,12 +5061,12 @@ public final class TaskRequest {
        *the server determine using current time to see if the deadline is missed or not
        * </pre>
        *
-       * <code>int64 executionTime = 3;</code>
+       * <code>double executionTime = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearExecutionTime() {
         
-        executionTime_ = 0L;
+        executionTime_ = 0D;
         onChanged();
         return this;
       }
@@ -5291,7 +5292,7 @@ public final class TaskRequest {
       " \001(\003\022\027\n\017completedTaskID\030\007 \003(\003\022\030\n\020weighte" +
       "dOvertime\030\010 \001(\001\"|\n\nTaskReport\022\027\n\017complet" +
       "edTaskID\030\001 \001(\003\022\024\n\014workerNodeID\030\002 \001(\005\022\025\n\r" +
-      "executionTime\030\003 \001(\003\022(\n\ntheRequest\030\004 \001(\0132" +
+      "executionTime\030\003 \001(\001\022(\n\ntheRequest\030\004 \001(\0132" +
       "\024.SVSE.ServiceRequestB\033\n\014ProtoMessageB\013T" +
       "askRequestb\006proto3"
     };

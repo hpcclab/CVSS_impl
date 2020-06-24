@@ -193,7 +193,8 @@ public class SimModeTest {
             //String benchmarkname="testconfig";
 
             ///
-            String benchmarkname="wcodec1000r_600000_10000_3000_s1";
+            String benchmarkname="xshortTest";
+            //String benchmarkname="wcodec1000r_600000_10000_3000_s1";
             //String benchmarkname="nocodec4000r_90000_10000_12000_s1";
 
             /*

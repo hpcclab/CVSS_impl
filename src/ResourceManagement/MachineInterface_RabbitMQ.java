@@ -9,15 +9,20 @@ import mainPackage.CVSE;
 
 public class MachineInterface_RabbitMQ extends MachineInterface {
 
-    private static String QUEUE_NAME = "mq0";
+    private String QUEUE_NAME;
+    private String FEEDBACKQUEUE_NAME;
     private Channel channel; //RMQ communication channel
     //Channel channel;
-    public MachineInterface_RabbitMQ(String vclass, String addr, int port, int inid, boolean iautoschedule,Channel RMQchannel){
+    public MachineInterface_RabbitMQ(String vclass, String addr, int port, int inid, boolean iautoschedule,Channel RMQchannel,String initqueue,String myQueueName,String myResponseQueuename){
         super(vclass,port,inid,iautoschedule);
         channel=RMQchannel;
         System.out.println("sending RMQ start");
-
+        QUEUE_NAME=myQueueName;
+        FEEDBACKQUEUE_NAME=myResponseQueuename;
+        String initmsg=QUEUE_NAME+" "+FEEDBACKQUEUE_NAME;
         try  {
+            //send queuename to init channel
+            channel.basicPublish("", initqueue, null, initmsg.getBytes(StandardCharsets.UTF_8));
             //channel = CVSE.VMP.connection.createChannel();
 
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
@@ -71,9 +76,9 @@ public class MachineInterface_RabbitMQ extends MachineInterface {
 //            }
 //        }
         //fake data update
-        CVSE.GTS.workpending-=1;
-        CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength=0;
-        CVSE.GTS.machineInterfaces.get(id).elapsedTime+=200;
+        //CVSE.GTS.workpending-=1;
+        //CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength=0;
+        //CVSE.GTS.machineInterfaces.get(id).elapsedTime+=200;
     }
     public boolean sendShutdownmessage(){
         return true;

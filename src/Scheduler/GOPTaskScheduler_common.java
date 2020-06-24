@@ -222,7 +222,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
             if (workpending == maxpending) {
                 System.out.println("workpending==maxpending");
-                CVSE.VMP.collectData();
+                //CVSE.VMP.collectData();
             }
         }
         readytoWork.release();
