@@ -14,12 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by pi on 3/15/19.
- */
 public class DockerManager {
 
-    public static String imageName = "testimage";
+    public static String imageName = "testworkerthread";
 
     private static DockerClient docker = null;
 
@@ -52,10 +49,10 @@ public class DockerManager {
         String IP;
 
         try {
-            //say it out the ip needed
-            BufferedWriter writer = new BufferedWriter(new FileWriter("/mnt/container/portid"));
-            writer.write(givenPort);
-            writer.close();
+            //say it out the ip needed (legacy)
+//            BufferedWriter writer = new BufferedWriter(new FileWriter("/mnt/container/portid"));
+//            writer.write(givenPort);
+//            writer.close();
 
             containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 
@@ -72,18 +69,18 @@ public class DockerManager {
             }
 
             final HostConfig hostConfig = HostConfig.builder()
-                    .binds("/mnt/container:/home/shared")
+                    .binds("/runningwork:/runningwork") //temporary
                     .portBindings(portBindings)
                     .build();
 
-            final String[] command = {"/bin/bash"};
+            final String[] command = {"/home/PythonWorker/FrontConnector.py"};
             final ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageName)
                     .attachStderr(Boolean.TRUE)
                     .attachStdin(Boolean.TRUE)
                     .tty(Boolean.TRUE)
                     .hostConfig(hostConfig)
-                    .exposedPorts( givenPort) //container to host + "/tcp"
+                    //.exposedPorts( givenPort) //container to host + "/tcp"
                     .cmd(command)
                     .build();
 

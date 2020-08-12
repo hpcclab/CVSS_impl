@@ -16,9 +16,6 @@ import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
 
-/**
- * Created by pi on 6/29/17.
- */
 public class SimModeTest {
     private static void setUpCVSE_forsim(String configfile,String overwriteOpt){
         //Set things up

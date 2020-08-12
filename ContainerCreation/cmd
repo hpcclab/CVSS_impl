@@ -1,0 +1,40 @@
+#RMQ wait at port 5672
+#RMQ host use jhost alessweakpswd
+#RMQ worker use pworker aweakpswd
+
+
+#working dir 
+cd /home/c00251686/workspace/git-repos/CVSS_impl/ContainerCreation
+
+#rm all stopped from memory
+docker container prune
+
+jrottenberg/ffmpeg:3.4-ubuntu
+
+docker ps -a
+docker network ls
+docker stop...
+
+docker images
+RUN apt install iproute2
+
+docker build . --tag testworkerthread
+
+docker run -dit --name workerthread1 testworkerthread /bin/bash
+docker attach workerthread1
+Detach by ctrl+p ctrl+q
+b6f5043ca690
+
+https://docker-curriculum.com/
+http://dockerlabs.collabnix.com/beginners/dockerfile/lab_dockerfile_python.html
+==== archive cmd
+
+docker create --name WorkerThread jrottenberg/ffmpeg:3.4-ubuntu
+
+
+cd 
+
+docker images
+docker create --name WorkerThread 5072723f60e3
+
+docker run -it jrottenberg/ffmpeg:3.4-ubuntu /bin/bash

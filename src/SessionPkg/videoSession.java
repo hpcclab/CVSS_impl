@@ -25,6 +25,8 @@ public class videoSession extends Session{
     }
     public videoSession(int vid, String command, String settings, long deadline, long arrivalTime){
         this(vid,command,settings,0,CVSE.VR.videos.get(vid).repositoryGOPs.size(),deadline,arrivalTime);
+        System.out.println("resgopsize="+CVSE.VR.videos.get(vid).repositoryGOPs.size());
+
     }
     public videoSession(int vid, String command, String settings, int startSegment, long deadline, long arrivalTime){
         this(vid,command,settings,startSegment,CVSE.VR.videos.get(vid).repositoryGOPs.size(),deadline,arrivalTime);
@@ -42,7 +44,7 @@ public class videoSession extends Session{
 
                 presentationTime = CVSE.GTS.maxElapsedTime + 2000; //add a prelinary value
             } else {
-                presentationTime = System.currentTimeMillis() + 2000; //thisTime+Constant for now, should really be scheduleTime
+                presentationTime = System.currentTimeMillis() + 4000; //thisTime+Constant for now, should really be scheduleTime
             }
         } else {
             presentationTime = deadline;

@@ -89,6 +89,7 @@ public abstract class RequestGenerator {
 //
     public void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) {
     }
+
     int currentIndex=0;
     //Something bug?, with merging sometime doesn't finish...
     public void contProfileRequestsGen(){

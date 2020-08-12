@@ -73,30 +73,35 @@ public class TimeEstimator {
         for (String cmd : segment.listallCMD()) { //all cmd
             //System.out.println("cmd="+cmd);
             //System.out.println(segment.listparamsofCMD(cmd));
-            for (String param : segment.listparamsofCMD(cmd) ) { //all param
-                //actually ignore everything in TranscodingRequest at this moment
-                String pollstr;
-                //System.out.println("tablekeyset="+table.keySet());
+            if(cmd.equalsIgnoreCase("Custom")) { //customized command, no history
+                ESTTime+=2000; //use prelim value
+                SD+=50; //use prelim value
+            }else{
+                for (String param : segment.listparamsofCMD(cmd) ) { //all param
+                    //actually ignore everything in TranscodingRequest at this moment
+                    String pollstr;
+                    //System.out.println("tablekeyset="+table.keySet());
 
-                if (searchMode.equalsIgnoreCase("profiled")) {
-                    //System.out.println("Time Estimator for cmd="+cmd+" param="+param+" segment="+segment.segment+" vname="+segment.videoname);
-                    pollstr = hashkey(cmd, param, segment.DataSource);
-                } else if (searchMode.equalsIgnoreCase("operation")) { //operation based
-                    pollstr = cmd;
-                } else {
-                    pollstr = cmd + param; //operation+param based
-                }
-                //System.out.println("pollstr="+pollstr);
-                histStat polled2 = table.get(pollstr);
-                //System.out.println("keyset=" + polled1.keySet());
+                    if (searchMode.equalsIgnoreCase("profiled")) {
+                        //System.out.println("Time Estimator for cmd="+cmd+" param="+param+" segment="+segment.segment+" vname="+segment.videoname);
+                        pollstr = hashkey(cmd, param, segment.DataSource);
+                    } else if (searchMode.equalsIgnoreCase("operation")) { //operation based
+                        pollstr = cmd;
+                    } else {
+                        pollstr = cmd + param; //operation+param based
+                    }
+                    //System.out.println("pollstr="+pollstr);
+                    histStat polled2 = table.get(pollstr);
+                    //System.out.println("keyset=" + polled1.keySet());
 
-                if (polled2 != null) {
-                    ESTTime += polled2.mean;
-                    SD += polled2.SD;
-                    cmdlist.add(cmd+'+'+param);
-                } else {
-                    System.out.println("No historic data for this cmd!:" + cmd + " param:" + param + " Video Sessionid=" +segment.DataSource + " pollstr=" + pollstr);
-                    ESTTime+=99999;
+                    if (polled2 != null) {
+                        ESTTime += polled2.mean;
+                        SD += polled2.SD;
+                        cmdlist.add(cmd+'+'+param);
+                    } else {
+                        System.out.println("No historic data for this cmd!:" + cmd + " param:" + param + " Video Sessionid=" +segment.DataSource + " pollstr=" + pollstr);
+                        ESTTime+=99999;
+                    }
                 }
             }
         }

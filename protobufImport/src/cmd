@@ -1,3 +1,14 @@
+#protobuf
 protoc -I=. --java_out=../../src/ ./TaskRequest.proto 
-protoc -I=. --python_out=../../PythonWorker/ ./TaskRequest.proto 
+protoc -I=. --python_out=../../ContainerCreation/PythonWorker/ ./TaskRequest.proto 
 
+
+#RMQ
+sudo rabbitmqctl add_user .....
+sudo rabbitmqctl set_permissions -p / jhost ".*" ".*" ".*"
+sudo rabbitmqctl set_permissions -p / pworker ".*" ".*" ".*"
+
+sudo rabbitmqctl list_users
+
+#RMQ clear
+sudo rabbitmqadmin list queues name

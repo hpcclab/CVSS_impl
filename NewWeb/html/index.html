@@ -1,0 +1,111 @@
+<!-- <script src="//cdn.jsdelivr.net/npm/hls.js"></script> -->
+<script src="scripts/hls.js"></script>
+<script src="scripts/jquery-3.5.1.min.js"></script>
+
+
+<video id="video"></video>
+  <script>
+    //const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const proxyurl = "http://localhost:8010/";
+    //http://localhost/HLS_Player/SVSEPlayer/
+
+//https://github.com/video-dev/hls.js/blob/master/docs/API.md#first-step-setup-and-support
+function loadVideo(vsource){
+    if (Hls.isSupported()) {
+      var video = document.getElementById('video');
+      var hls = new Hls();
+      // bind them together
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+        console.log("video and hls.js are now bound together !");
+        hls.loadSource(vsource);
+        //hls.loadSource("../../HLS_Video/testbug/example_test.m3u8");
+          //hls.loadSource("../../HLS_Video/bbb_trailer/out.m3u8");
+        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+          console.log("manifest loaded, found " + data.levels.length + " quality level");
+        });
+      });
+    }
+//error handling
+  hls.on(Hls.Events.ERROR, function (event, data) {
+    if (data.fatal) {
+      switch(data.type) {
+      case Hls.ErrorTypes.NETWORK_ERROR:
+      // try to recover network error
+        console.log("fatal network error encountered, try to recover");
+        hls.startLoad();
+        break;
+      case Hls.ErrorTypes.MEDIA_ERROR:
+        console.log("fatal media error encountered, try to recover");
+        hls.recoverMediaError();
+        break;
+      default:
+      // cannot recover
+        hls.destroy();
+        break;
+      }
+    }
+  });
+}
+  </script>
+<p>
+VideoNumber:
+<select name="Vid" id="vid">
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+Options:
+<select name="Color" id="color">
+  <option value="">Normal Color</option>
+  <option value=",hue=s=0">Black&White</option>
+</select>
+<select name="Resolution" id="resolution">
+  <option value="-vf scale=1920:1080">1920x1080</option>
+  <option value="-vf scale=1280:720">1280x720</option>
+  <option value="-vf scale=640:360">640x360</option>
+</select>
+<select name="Framerate" id="framerate">
+  <option value="-r 30">30 FPS</option>
+  <option value="-r 24">24 FPS</option>
+  <option value="-r 15">15 FPS</option>
+</select>
+<select name="V Codec" id="vcodec">
+  <option value="-c:v h264">H264</option>
+</select>
+<select name="Audio" id="acodec">
+  <option value="-acodec copy">Normal</option>
+  <option value="-an">Mute</option>
+</select>
+<button onclick='
+var options="-profile:v baseline -copyts "+ $("#framerate").val()+" "+$("#resolution").val()+$("#color").val()+" "+$("#vcodec").val()+" "+$("#acodec").val();
+
+console.log(
+  "video choice="+$("#vid").val() +
+  "Options="+ options
+  );
+  //$.post("localhost:9901/transcoderequest",data="vid="+$("#vid").val()+options);
+  //$.get("http://localhost:9901/transcoderequest"); //data="vid="+$("#vid").val()+options
+
+  var url="http://127.0.0.1:9901/transcoderequest";
+  var getreq=url+"?vidnum="+ $("#vid").val()+",param="+ encodeURIComponent(options)
+console.log(getreq);
+$.get( proxyurl + getreq, function( data ) {
+  console.log( data );
+});
+
+//fetch(proxyurl + getreq) // https://cors-anywhere.herokuapp.com/https://example.com
+//.then(response => response.text())
+//.then(contents => console.log(contents))
+//.catch(() => console.log("Can’t access " + getreq + " response. Blocked by browser?"))
+//  const Http = new XMLHttpRequest();
+
+    '> Transcode</button>
+<p>
+
+<button onclick='
+//loadVideo("../../HLS_Video/7alt2/video.m3u8");
+loadVideo("vOutput/"+$("#vid").val()+"/video.m3u8");
+video.play();
+'>Play</button>

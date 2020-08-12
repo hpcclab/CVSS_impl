@@ -8,8 +8,9 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import com.spotify.docker.client.DockerException;
 import mainPackage.CVSE;
-
+import DockerManagement.DockerManager;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,16 +47,17 @@ public class ResourceProvisioner {
     public ResourceProvisioner( int minimumVMtomaintain) {
         //RMQ set up
         factory= new ConnectionFactory();
-
         factory.setHost(RMQlocation);
+        factory.setUsername("jhost");
+        factory.setPassword("alessweakpswd");
 
         try {
             connection = factory.newConnection();
-
             OutRMQchannel = connection.createChannel();
             InRMQchannel = connection.createChannel();
 
             InRMQchannel.queueDeclare(FEEDBACKQUEUE_NAME, false, false, false, null);
+
             OutRMQchannel.queueDeclare(INITQUEUE_NAME, false, false, false, null);
 
         }catch (Exception E){
@@ -296,14 +298,20 @@ public class ResourceProvisioner {
                     MachineInterface t=new MachineInterface_SimNWcache(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
-                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("LocalPython")){ //create local rabbitMQ thread,
-                //////////////// Experimenting here:
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("LocalPython")) { //create local rabbitMQ thread,
+                    //////////////// Experimenting here:
                     System.out.println("Create local python");
-                    MachineInterface t=new MachineInterface_RabbitMQ(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
-                            CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME);
+                    MachineInterface t = new MachineInterface_RabbitMQ(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount), VMcount,
+                            CVSE.config.CR_autoschedule.get(VMcount), OutRMQchannel, INITQUEUE_NAME, "MQ" + VMcount, FEEDBACKQUEUE_NAME);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ local container,
+                        //////////////// Experimenting here:
+                        System.out.println("Create local python container");
+                        MachineInterface t=new MachineInterface_RMQContainer(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
+                                CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME);
+                        CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                        CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local container
                     System.out.println("container thread");
                     String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
@@ -354,6 +362,10 @@ public class ResourceProvisioner {
         ///
         ///
         return VMcount;
+    }
+
+    private static void RemoveContainers() throws DockerException, InterruptedException {
+        DockerManager.RemoveAllContainers();
     }
     //relay function to outputwindoe
     public void ackCompletedVideo(List<TranscodingRequest> completedTasks){

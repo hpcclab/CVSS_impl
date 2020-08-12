@@ -61,9 +61,11 @@ public class Video{
                     }
                 }else if(sp[0].equalsIgnoreCase("l")){ //list mode
                     //System.out.println("l mode");
+                    //int gopcount=0;
                     while(scanner.hasNext()){ // didn't test
                         String aLine[]=scanner.nextLine().split("\\s+");
                         if(aLine.length==2) {
+                           // gopcount++;
                             //System.out.println("correct format");
                             String GOPname =aLine[0];
                             int presentationTime=Integer.parseInt(aLine[1]);
@@ -73,6 +75,7 @@ public class Video{
                             System.out.println("repository list mode incorrect format");
                         }
                     }
+                    //System.out.println("Video#"+path+" has "+gopcount+"segments");
                 }else{
                     System.out.println("uncrecognize a mode in list.txt");
                 }
