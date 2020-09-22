@@ -75,82 +75,46 @@ class handler implements Provider<Source> {
             //String[] arg = qs.split("[=,]+");
 
             String[] arg = qs.split("param=|vidnum=");
-            arg[1]=arg[1].replaceFirst(",",""); //remove , from first param
+            arg[1] = arg[1].replaceFirst(",", ""); //remove , from first param
+            String datatag=arg[2].replaceAll("[-:= ]","");
+
+            if(arg[1].equalsIgnoreCase("-1")) { //if videonumber =-1
+                //special command, not for administration configuration
+                System.out.println("Got special command:");
+                String[] arg2=arg[1].split(",");
+                if(arg2[0].equalsIgnoreCase("newOP")) {
+                    GTS.addOperation(arg2[1], arg2[2]);
+                }
+
+            }else{ //normal video transcoding request
+
                 //create Folder
-                File file=new File("/runningwork/sampleOutput/"+arg[1]);
+                File file = new File(CVSE.config.outputDir+"sampleOutput/" + arg[1]+"_"+datatag);
                 file.mkdirs();
-            //Copy manifest
-                Path original= Paths.get("/runningwork/sampleRepo/"+arg[1]+"/video.m3u8");
-                Path dest=Paths.get("/runningwork/sampleOutput/"+arg[1]+"/video.m3u8");
+                //Copy manifest
+                Path original = Paths.get(CVSE.config.outputDir+"sampleRepo/" + arg[1] + "/video.m3u8");
+                Path dest = Paths.get(CVSE.config.outputDir+"/sampleOutput/" + arg[1]+"_"+datatag + "/video.m3u8");
                 try {
                     Files.copy(original, dest);
-                }catch (Exception e){
-                     System.out.println("copy manifest bug");
+                } catch (Exception e) {
+                    System.out.println("copy manifest bug");
                 }
-            for (int i=0;i<arg.length;i++){
+
+            for (int i=1;i<arg.length;i++){
                 System.out.println("Printing argument["+i+"]: " + arg[i]);
                 //data accepted! arg[1]=vidnum arg[2]=partial params
             }
             long currentTime= System.currentTimeMillis();
             //CVSE.RG.OneSpecificRequest(arqe.videoChoice,arqe.startgopnum,arqe.endgopnum, arqe.command, arqe.setting, arqe.deadline, arqe.appearTime);
             //give 4000ms before video play
-            CVSE.RG.OneSpecificRequest(Integer.parseInt(arg[1])-1,-1,-1, "custom", arg[2], currentTime+4000, currentTime);
-//CVSE video lib index shifted by 1 (start at 0), so -1 or arg[1]
+//          System.out.println("datatag="+datatag);
+            CVSE.RG.OneSpecificRequest(Integer.parseInt(arg[1])-1,-1,-1, "custom", arg[2], currentTime+4000, currentTime,datatag);
+            }
 
-//            if (!arg[0].equalsIgnoreCase("videoid")&&!arg[2].equalsIgnoreCase("cmd")&&!arg[4].equalsIgnoreCase("setting"))
-//                throw new HTTPException(400);
-//            int video = Integer.parseInt(arg[1]);
-//            int arrival=2000;
-//            String cmd=arg[3];
-//            String setting=arg[5];
-
-//            Settings newSettings = new Settings();
-//            newSettings.type = cmd;
-//            newSettings.settingNum = setting;
-//            newSettings.videoname = CVSE.VR.videos.get(video).name;
-//
-//            //newSettings.resolution = true;
-//            if(cmd.equals("resolution")){
-//                if(setting.equals("1080")){
-//                    newSettings.resHeight = "720";
-//                    newSettings.resWidth  = "1080";
-//                }
-//                else if(setting.equals("720")){
-//                    newSettings.resHeight = "640";
-//                    newSettings.resWidth  = "720";
-//                }
-//                else if(setting.equals("640")){
-//                    newSettings.resHeight = "480";
-//                    newSettings.resWidth  = "640";
-//                }
-//                else if(setting.equals("480")){
-//                    newSettings.resHeight = "360";
-//                    newSettings.resWidth  = "480";
-//                }
-//
-//            }else if(cmd.equals("bitrate")){
-//
-//            }
-//            else if(cmd.equals("framerate")){
-//
-//            }
-//            else if(cmd.equals("blackwhite")){
-//                newSettings.settingNum = "";
-//            }
-//
-//
-//            System.out.println("SM: " + SM);
-//            System.out.println("GTS: " + GTS);
-//            System.out.println();
-//
-//            SM.InitializeStream(video, newSettings, CVSE.GTS);
-//
-//            String response = newSettings.videoDir();
-//
 
             StringBuilder xml = new StringBuilder("<?xml version=\"1.0\"?>");
             //xml.append("<response> video request "+ arg[1]+" "+arg[3]+" "+arg[5] +" accepted</response>");
-            xml.append("<response> video request "+ arg[1]+" accepted</response>");
+            xml.append("<response> video request "+ arg[0]+" accepted</response>");
             //xml.append(newSettings.videoDir());
             return new StreamSource(new StringReader(xml.toString()));
         }

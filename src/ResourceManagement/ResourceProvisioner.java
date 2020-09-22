@@ -69,16 +69,20 @@ public class ResourceProvisioner {
         minimumMaintain=minimumVMtomaintain;
         EvaluateClusterSize(-1);
         //set up task for evaluate cluster size every ms
-//        if(CVSE.config.dataUpdateInterval>0){
-            //////// todo, spawn new thread to always listen to feedback_channel instead
-//            ActionListener taskPerformer = new ActionListener() {
-//                public void actionPerformed(ActionEvent evt) {
-//                    Tick();
-//                }
-//            };
-//            datacolEvent=new Timer(CVSE.config.dataUpdateInterval, taskPerformer);
-//            datacolEvent.start();
-//        }
+        if(CVSE.config.run_mode.equalsIgnoreCase("sim")){ //legacy tick support
+            if(CVSE.config.dataUpdateInterval>0){
+                ////// todo, spawn new thread to always listen to feedback_channel instead
+                ActionListener taskPerformer = new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        Tick();
+                        //pollcollectData
+                    }
+                };
+                datacolEvent=new Timer(CVSE.config.dataUpdateInterval, taskPerformer);
+                datacolEvent.start();
+            }
+        }
+
         //////////////////////////////
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             //String message = new String(delivery.getBody(), "UTF-8");
@@ -103,13 +107,14 @@ public class ResourceProvisioner {
 
     static int timeforced=0;
     static double previous_wovertime,previous_wundertime;
+    //Main way of collecting result data (used in real mode, and hopefully soon in real mode too
     private void collectData(TaskRequest.TaskReport T){ //ack ONE task completion
         CVSE.OW.ackCompletedVideo(T.getCompletedTaskID()); //do nothing at the moment
 
         CVSE.GTS.workpending-=1;
         MachineInterface MI=CVSE.GTS.machineInterfaces.get(T.getWorkerNodeID());
 
-        MI.estimatedQueueLength=0;
+        MI.estimatedQueueLength-=1;
         long completionTime= System.currentTimeMillis();
 
         MI.total_taskdone++;
@@ -122,92 +127,98 @@ public class ResourceProvisioner {
         //MI.elapsedTime+=200;
 
     }
+    private void pollcollectData(){ // to make sure all information are updated, call dataUpdate procedure of each MI
+        for (int i=0;i<CVSE.GTS.machineInterfaces.size();i++) {
+            CVSE.GTS.machineInterfaces.get(i).dataUpdate();
+        }
+    }
+    //legacy function, for sim mode
     public void collectData(){ //become daemon
         CVSE.GTS.machineInterfaces.get(0).dataUpdate();
         CVSE.RG.contProfileRequestsGen();
 
-//
-//        System.out.println("start collect data procedure");
-//        int sum_DLmiss=0,sum_taskdone=0;
-//        long current_overtime=0,current_undertime=0;
-//        double current_weighted_undertime=0,current_weighted_overtime=0;
-//        long T_maxElapsedTime=CVSE.GTS.maxElapsedTime;
-//        int clustersize=CVSE.GTS.machineInterfaces.size();
-//        for (int i=0;i<clustersize;i++){
-//            CVSE.GTS.machineInterfaces.get(i).dataUpdate();
-//            System.out.println("tmp taskdone="+CVSE.GTS.machineInterfaces.get(i).tmp_taskdone);
-//            if(CVSE.GTS.machineInterfaces.get(i).tmp_taskdone!=0){
-//                sum_DLmiss+=CVSE.GTS.machineInterfaces.get(i).tmp_taskmiss;
-//                sum_taskdone+=CVSE.GTS.machineInterfaces.get(i).tmp_taskdone;
-//                current_overtime+=CVSE.GTS.machineInterfaces.get(i).tmp_overtime;
-//                current_undertime+=CVSE.GTS.machineInterfaces.get(i).tmp_undertime;
-//                current_weighted_overtime+=CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime;
-//                current_weighted_undertime+=CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime;
-//                System.out.println("in last 20 tasks overtime:"+CVSE.GTS.machineInterfaces.get(i).tmp_overtime+" undertime:"+CVSE.GTS.machineInterfaces.get(i).tmp_undertime
-//                +" weighted_overtime"+CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime);
-//            }
-//            if(CVSE.GTS.machineInterfaces.get(i).elapsedTime>T_maxElapsedTime){
-//                T_maxElapsedTime=CVSE.GTS.machineInterfaces.get(i).elapsedTime;
-//                System.out.println("TelapsedTime update to "+T_maxElapsedTime);
-//            }
-//        }
-//        //now update deadline miss rate, and oversubscription level
-//        if(sum_taskdone!=0) {
-//            deadLineMissRate = sum_DLmiss / sum_taskdone;
-//            current_overtime/= clustersize;
-//            current_undertime/= clustersize;
-//            current_weighted_overtime/= clustersize;
-//            current_weighted_undertime/= clustersize;
-//
-//            System.out.println("tmp DMR="+deadLineMissRate);
-//            System.out.println("current over/undertime="+current_overtime+" "+current_undertime);
-//            System.out.println("current weighted over/undertime="+current_weighted_overtime+" "+current_weighted_undertime);
-//            previous_wovertime=current_weighted_overtime;
-//            previous_wundertime=current_weighted_undertime;
-//        }
-//        if(DU !=null) { //maybe it's terminated at the end
-//            DU.printfrequentstat();
-//        }
-//        //if time doesn't move,Force time move
-//        if(CVSE.config.run_mode.equalsIgnoreCase("sim")) {
-//            if (CVSE.GTS.maxElapsedTime != T_maxElapsedTime) {
-//                System.out.println("CVSE.GTS_mergable.maxElapsedTime="+CVSE.GTS.maxElapsedTime);
-//                System.out.println("reset timeforced count");
-//                CVSE.GTS.maxElapsedTime = T_maxElapsedTime;
-//                timeforced = 0;
-//            } else {
-//                long t=CVSE.RG.nextappearTime()+1;
-//                if(t!=-1){ //force time move, to next arrival time
-//                    CVSE.GTS.maxElapsedTime=t;
-//                    System.out.println("force time move to" + CVSE.GTS.maxElapsedTime);
-//                } else{ //force time to move, by 200 at final bursts
-//                    System.out.println("force time move+200 " + timeforced);
-//                    CVSE.GTS.maxElapsedTime += 200;
-//                }
-//                timeforced++;
-//                if (timeforced >= 3) {
-//                    if(DU !=null) { //maybe it's terminated at the end
-//                        DU.printstat();
-//                    }else{
-//                        System.out.println("Data update module is null");
-//                    }
-//                    //timeforced=0;
-//                }
-//            }
-//        }
 
-//        if(CVSE.config.profiledRequests){
-//            System.out.println("continue profile request gen");
-//            if(!CVSE.RG.finished || !CVSE.GTS.emptyQueue()) { // all request arrives and queue is emtied
-//               CVSE.RG.contProfileRequestsGen();
-//            }  //move this somewhere else
-//            else{
-//                CVSE.VMP.datacolEvent.setRepeats(false);
-//                CVSE.VMP.datacolEvent.stop();
-//            }
-//        }
+        System.out.println("start collect data procedure");
+        int sum_DLmiss=0,sum_taskdone=0;
+        long current_overtime=0,current_undertime=0;
+        double current_weighted_undertime=0,current_weighted_overtime=0;
+        long T_maxElapsedTime=CVSE.GTS.maxElapsedTime;
+        int clustersize=CVSE.GTS.machineInterfaces.size();
+        for (int i=0;i<clustersize;i++){
+            CVSE.GTS.machineInterfaces.get(i).dataUpdate();
+            System.out.println("tmp taskdone="+CVSE.GTS.machineInterfaces.get(i).tmp_taskdone);
+            if(CVSE.GTS.machineInterfaces.get(i).tmp_taskdone!=0){
+                sum_DLmiss+=CVSE.GTS.machineInterfaces.get(i).tmp_taskmiss;
+                sum_taskdone+=CVSE.GTS.machineInterfaces.get(i).tmp_taskdone;
+                current_overtime+=CVSE.GTS.machineInterfaces.get(i).tmp_overtime;
+                current_undertime+=CVSE.GTS.machineInterfaces.get(i).tmp_undertime;
+                current_weighted_overtime+=CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime;
+                current_weighted_undertime+=CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime;
+                System.out.println("in last 20 tasks overtime:"+CVSE.GTS.machineInterfaces.get(i).tmp_overtime+" undertime:"+CVSE.GTS.machineInterfaces.get(i).tmp_undertime
+                +" weighted_overtime"+CVSE.GTS.machineInterfaces.get(i).tmp_weighted_overtime+" weighted_undertime:"+CVSE.GTS.machineInterfaces.get(i).tmp_weighted_undertime);
+            }
+            if(CVSE.GTS.machineInterfaces.get(i).elapsedTime>T_maxElapsedTime){
+                T_maxElapsedTime=CVSE.GTS.machineInterfaces.get(i).elapsedTime;
+                System.out.println("TelapsedTime update to "+T_maxElapsedTime);
+            }
+        }
+        //now update deadline miss rate, and oversubscription level
+        if(sum_taskdone!=0) {
+            deadLineMissRate = sum_DLmiss / sum_taskdone;
+            current_overtime/= clustersize;
+            current_undertime/= clustersize;
+            current_weighted_overtime/= clustersize;
+            current_weighted_undertime/= clustersize;
+
+            System.out.println("tmp DMR="+deadLineMissRate);
+            System.out.println("current over/undertime="+current_overtime+" "+current_undertime);
+            System.out.println("current weighted over/undertime="+current_weighted_overtime+" "+current_weighted_undertime);
+            previous_wovertime=current_weighted_overtime;
+            previous_wundertime=current_weighted_undertime;
+        }
+        if(DU !=null) { //maybe it's terminated at the end
+            DU.printfrequentstat();
+        }
+        //if time doesn't move,Force time move
+        if(CVSE.config.run_mode.equalsIgnoreCase("sim")) {
+            if (CVSE.GTS.maxElapsedTime != T_maxElapsedTime) {
+                System.out.println("CVSE.GTS_mergable.maxElapsedTime="+CVSE.GTS.maxElapsedTime);
+                System.out.println("reset timeforced count");
+                CVSE.GTS.maxElapsedTime = T_maxElapsedTime;
+                timeforced = 0;
+            } else {
+                long t=CVSE.RG.nextappearTime()+1;
+                if(t!=-1){ //force time move, to next arrival time
+                    CVSE.GTS.maxElapsedTime=t;
+                    System.out.println("force time move to" + CVSE.GTS.maxElapsedTime);
+                } else{ //force time to move, by 200 at final bursts
+                    System.out.println("force time move+200 " + timeforced);
+                    CVSE.GTS.maxElapsedTime += 200;
+                }
+                timeforced++;
+                if (timeforced >= 3) {
+                    if(DU !=null) { //maybe it's terminated at the end
+                        DU.printstat();
+                    }else{
+                        System.out.println("Data update module is null");
+                    }
+                    //timeforced=0;
+                }
+            }
+        }
+
+        if(CVSE.config.profiledRequests){
+            System.out.println("continue profile request gen");
+            if(!CVSE.RG.finished || !CVSE.GTS.emptyQueue()) { // all request arrives and queue is emtied
+               CVSE.RG.contProfileRequestsGen();
+            }  //move this somewhere else
+            else{
+                CVSE.VMP.datacolEvent.setRepeats(false);
+                CVSE.VMP.datacolEvent.stop();
+            }
+        }
     }
-
+    //in sim mode, poll data once a while
     private static int tcount=0;
     public void Tick(){
         if(x.tryAcquire()){
@@ -286,18 +297,21 @@ public class ResourceProvisioner {
                     MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.GTS.repopulateOperationtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("simulated");
                     VMCollection.add(new machineinfo("sim",""));
                     MachineInterface t=new MachineInterface_SimLocal(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.GTS.repopulateOperationtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new machineinfo("simNWcache",""));
                     MachineInterface t=new MachineInterface_SimNWcache(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                    CVSE.GTS.repopulateOperationtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("LocalPython")) { //create local rabbitMQ thread,
                     //////////////// Experimenting here:
                     System.out.println("Create local python");
@@ -305,14 +319,16 @@ public class ResourceProvisioner {
                             CVSE.config.CR_autoschedule.get(VMcount), OutRMQchannel, INITQUEUE_NAME, "MQ" + VMcount, FEEDBACKQUEUE_NAME);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.GTS.repopulateOperationtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ local container,
-                        //////////////// Experimenting here:
-                        System.out.println("Create local python container");
-                        MachineInterface t=new MachineInterface_RMQContainer(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
-                                CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME);
-                        CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
-                        CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local container
+                    //////////////// Experimenting here:
+                    System.out.println("Create local python container");
+                    MachineInterface t=new MachineInterface_RMQContainer(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
+                            CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME);
+                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.GTS.repopulateOperationtoMI(t);
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local (old style) container
                     System.out.println("container thread");
                     String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
                     System.out.println("returned IP="+IP);
@@ -327,7 +343,8 @@ public class ResourceProvisioner {
 //                    MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount),IP, 5061,VMcount,CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-                   // CVSE.TE.populate(CVSE.config.CR_class.get(VMcount)); no profile for container machine, yet
+                    // CVSE.TE.populate(CVSE.config.CR_class.get(VMcount)); no profile for container machine, yet
+                    // CVSE.GTS.repopulateOperationtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
                 }else{

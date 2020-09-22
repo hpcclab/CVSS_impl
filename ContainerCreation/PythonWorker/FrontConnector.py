@@ -12,10 +12,10 @@ import pycvss.ffmpeg.benchmark as benchmark
 INITQUEUENAME="init_queue"
 FEEDBACKQUEUENAME="" #feedback_queue, will init after get the message from INITQUEUENAME 
 QUEUENAME="" #mq0 etc. after init
-RMQHOST="172.17.0.1"
+RMQHOST="10.131.80.30"
 MYID=0
-RepDir="/runningwork/sampleRepo/"
-ExpDir="/runningwork/sampleOutput/"
+RepDir="/share_dir/SVSE/sampleRepo/"
+ExpDir="/share_dir/SVSE/sampleOutput/"
 transcodingcount=0
 
 #todo, this must be expandable...
@@ -58,15 +58,21 @@ def transcode(aRequest):
         videochoice=aRequest.DataSource.split("_")[0]
         segmentnum=aRequest.DataSource.split("_")[1]
         segmentName="video"+str(int(segmentnum))+".ts"
+        DataTag=aRequest.DataTag
     else:
         print("Special message received ")
         return;
     inputfile=RepDir+videochoice+"/"+segmentName
     #outputfile=ExpDir+videochoice+"/"+segmentName
-    access_rights = 0o777
-    if not os.path.exists(os.path.join(ExpDir,videochoice)):
-        os.makedirs(os.path.join(ExpDir,videochoice),access_rights)
-        os.popen('cp '+os.path.join(RepDir,videochoice,'video.m3u8') +' '+os.path.join(ExpDir,videochoice,'video.m3u8')) #copy manifest file
+    foldername=videochoice+"_"+DataTag
+    if not os.path.exists(os.path.join(ExpDir,foldername,)):
+        try:
+            access_rights = 0o777
+            os.makedirs(os.path.join(ExpDir,foldername),access_rights)
+            os.popen('cp '+os.path.join(RepDir,videochoice,'video.m3u8') +' '+os.path.join(ExpDir,foldername,'video.m3u8')) #copy manifest file
+        except:
+            print("Error found:", sys.exc_info()[0])
+            pass
     print(inputfile+" Deadline="+str(aRequest.GlobalDeadline)+" ")
     tests = []
     #print("test="+str(tests))
@@ -79,7 +85,7 @@ def transcode(aRequest):
             segmentName+" "+eachop.Cmd+paramTranslate(eachop.Cmd,eachparam.subparameter),
             lambda: args.generic_video_convert_args(
                 os.path.join(RepDir,videochoice,segmentName),
-                os.path.join(ExpDir,videochoice,segmentName),
+                os.path.join(ExpDir,foldername,segmentName),
                 cmd_=cmdTranslate(eachop.Cmd),
                 option_=paramTranslate(eachop.Cmd,eachparam.subparameter)
                 ),

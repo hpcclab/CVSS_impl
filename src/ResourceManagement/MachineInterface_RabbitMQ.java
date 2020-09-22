@@ -65,20 +65,7 @@ public class MachineInterface_RabbitMQ extends MachineInterface {
 
     } //introduce new operation to the system, interface for future feature, do nothing for now
     public void dataUpdate(){
-        System.out.println("Data update called");
-//        if(isWorking()) {
-//            String message = "DataUpdate";
-//            try  {
-//                channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
-//                System.out.println(" [x] Sent '" + message + "'");
-//            }catch (Exception E){
-//                System.out.println("Rmqbug in DataUpdate");
-//            }
-//        }
-        //fake data update
-        //CVSE.GTS.workpending-=1;
-        //CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength=0;
-        //CVSE.GTS.machineInterfaces.get(id).elapsedTime+=200;
+        System.out.println("Data update called, do nothing in this mode");
     }
     public boolean sendShutdownmessage(){
         return true;

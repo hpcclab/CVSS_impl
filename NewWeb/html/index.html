@@ -6,7 +6,7 @@
 <video id="video"></video>
   <script>
     //const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    const proxyurl = "http://localhost:8010/";
+    const proxyurl = "http://10.131.80.30:8010/";
     //http://localhost/HLS_Player/SVSEPlayer/
 
 //https://github.com/video-dev/hls.js/blob/master/docs/API.md#first-step-setup-and-support
@@ -78,9 +78,10 @@ Options:
   <option value="-acodec copy">Normal</option>
   <option value="-an">Mute</option>
 </select>
+
+
 <button onclick='
 var options="-profile:v baseline -copyts "+ $("#framerate").val()+" "+$("#resolution").val()+$("#color").val()+" "+$("#vcodec").val()+" "+$("#acodec").val();
-
 console.log(
   "video choice="+$("#vid").val() +
   "Options="+ options
@@ -88,24 +89,20 @@ console.log(
   //$.post("localhost:9901/transcoderequest",data="vid="+$("#vid").val()+options);
   //$.get("http://localhost:9901/transcoderequest"); //data="vid="+$("#vid").val()+options
 
-  var url="http://127.0.0.1:9901/transcoderequest";
+  var url="127.0.0.1:9901/transcoderequest";
   var getreq=url+"?vidnum="+ $("#vid").val()+",param="+ encodeURIComponent(options)
 console.log(getreq);
 $.get( proxyurl + getreq, function( data ) {
   console.log( data );
-});
 
-//fetch(proxyurl + getreq) // https://cors-anywhere.herokuapp.com/https://example.com
-//.then(response => response.text())
-//.then(contents => console.log(contents))
-//.catch(() => console.log("Can’t access " + getreq + " response. Blocked by browser?"))
-//  const Http = new XMLHttpRequest();
-
-    '> Transcode</button>
-<p>
-
-<button onclick='
+/////////////////////////////////////////////////////////////
 //loadVideo("../../HLS_Video/7alt2/video.m3u8");
-loadVideo("vOutput/"+$("#vid").val()+"/video.m3u8");
+var options="-profile:v baseline -copyts "+ $("#framerate").val()+" "+$("#resolution").val()+$("#color").val()+" "+$("#vcodec").val()+" "+$("#acodec").val();
+var hd= options.replace(/[-:= ]/g,"") 
+console.log("load video from "+"vOutput/"+$("#vid").val()+"_"+hd+"/video.m3u8");
+// delay the load for 4s
+setTimeout(() => {
+loadVideo("vOutput/"+$("#vid").val()+"_"+hd+"/video.m3u8");
 video.play();
-'>Play</button>
+, 4000);
+'>Play the new Config</button>

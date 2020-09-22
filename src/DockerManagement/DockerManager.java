@@ -1,6 +1,7 @@
 package DockerManagement;
 
 import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerCertificates;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.DockerException;
 import com.spotify.docker.client.messages.*;
@@ -8,7 +9,9 @@ import com.spotify.docker.client.messages.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +28,18 @@ public class DockerManager {
     private static int port = 5601;
 
     private static DockerClient CreateDockerClient(){
-        return new DefaultDockerClient("unix:///var/run/docker.sock");
-        //return new DefaultDockerClient("tcp://localhost:2375");
+        //return new DefaultDockerClient("unix:///var/run/docker.sock"); //default local access
+        //return new DefaultDockerClient("tcp://10.131.80.30:2375"); //TEST connection without cert.
+        try{
+        final DockerClient docker = DefaultDockerClient.builder() //remote with cert
+                .uri(URI.create("https://10.131.35.31:2376"))
+                .dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert")))
+                .build();
+        return docker;
+        }catch (Exception e){
+            System.out.println("Failed to create Docker Client: "+e);
+            return null;
+        }
         //return DefaultDockerClient.builder().uri(URI.create("https://localhost:80")).build();
     }
 
@@ -34,7 +47,7 @@ public class DockerManager {
     public static String CreateContainers(int instanceNum)  {
         String createdIP="";
         for(int i=0;i<instanceNum;i++) {
-            createdIP=CreateContainers(9000);
+            createdIP+=CreateContainers(9000) +",";
         }
         return createdIP;
     }
@@ -69,7 +82,7 @@ public class DockerManager {
             }
 
             final HostConfig hostConfig = HostConfig.builder()
-                    .binds("/runningwork:/runningwork") //temporary
+                    .binds("/share_dir/SVSE:/share_dir/SVSE") //temporary
                     .portBindings(portBindings)
                     .build();
 

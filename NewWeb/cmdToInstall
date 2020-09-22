@@ -1,3 +1,9 @@
 npm -i cors-anywhere
 npm install http-server -g
 
+
+#to use Docker on other machines forward unix socket that control docker (unix:///var/run/docker.sock on DockerHost machine)
+https://serverfault.com/questions/127794/forward-local-port-or-socket-file-to-remote-socket-file
+
+#to allow remote access of docker
+sudo dockerd --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem   -H=0.0.0.0:2376 -H unix:///var/run/docker.sock &

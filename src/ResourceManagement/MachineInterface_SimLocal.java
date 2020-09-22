@@ -1,6 +1,5 @@
 package ResourceManagement;
 
-import ProtoMessage.TaskRequest;
 import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
@@ -10,6 +9,7 @@ import java.util.Random;
 
 //does not actually have a socket, this code is the combination of transcodingVM, transcodingthread and interface
 //Warning: this mode is immediate complete but the estimatedQueuelength and estimatedExecutionTime still needs to be there for compatibility
+//warning2: feedback data is not send until dataUpdate is called
 public class MachineInterface_SimLocal extends MachineInterface {
     //interface parameters are in MachineInterface
 
@@ -30,15 +30,6 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private double node_sum_wundertime;
     private double node_sum_wovertime;
     public List<Long> completedTask=new LinkedList<>();
-    /*
-    private int l_workDone; //count each work as one
-    private int l_NworkDone; //count each work as suggested in StreamGOP.requestcount
-    private int l_deadlineMiss,l_NdeadlineMiss;
-    private long l_overtime=0;
-    private double l_overtime_weighted=0;
-    private long l_undertime=0;
-    private double l_undertime_weighted=0;
-    */
 
     public MachineInterface_SimLocal(String vclass, int iport, int inid, boolean iautoschedule) {
         super(vclass,iport,inid,iautoschedule);
@@ -66,47 +57,47 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //System.out.println("realspentTime="+realspentTime);
         for (String cmd:segment.listallCMD()){
             for(String param:segment.listparamsofCMD(cmd)) {
-            double slackleft = segment.getdeadlineof(cmd,param) - node_synctime;
-            long slacktime = (segment.getdeadlineof(cmd,param) - segment.Arrival);
+                double slackleft = segment.getdeadlineof(cmd,param) - node_synctime;
+                long slacktime = (segment.getdeadlineof(cmd,param) - segment.Arrival);
 
-            node_miss -= node_missArr[node_statindex]; //desum old miss record, if missed
-            node_missArr[node_statindex] = 0; //reset the miss record
-            //System.out.println("node_statindex="+node_statindex+" diff="+slackleft+" slacktime="+slacktime);
-            //desum undertime
-            if (node_undertimeArr[node_statindex] < 0) {// miss
-                node_sum_overtime -= node_undertimeArr[node_statindex];
-                node_sum_wovertime -= node_wundertimeArr[node_statindex];
-            } else {
-                node_sum_undertime -= node_undertimeArr[node_statindex]; //desum
-                node_sum_wundertime -= node_wundertimeArr[node_statindex];
-            }
-
-            if (slackleft < 0) {
-                node_missArr[node_statindex]++; //it miss, so count
-                node_aftersync_taskmiss++;
-
-                if (slacktime != 0) {
-                    node_sum_overtime -= (long) slackleft;
-                    node_sum_wovertime -= slackleft / slacktime;
+                node_miss -= node_missArr[node_statindex]; //desum old miss record, if missed
+                node_missArr[node_statindex] = 0; //reset the miss record
+                //System.out.println("node_statindex="+node_statindex+" diff="+slackleft+" slacktime="+slacktime);
+                //desum undertime
+                if (node_undertimeArr[node_statindex] < 0) {// miss
+                    node_sum_overtime -= node_undertimeArr[node_statindex];
+                    node_sum_wovertime -= node_wundertimeArr[node_statindex];
                 } else {
-                    System.out.println("ERROR: Time since dispatch=0");
+                    node_sum_undertime -= node_undertimeArr[node_statindex]; //desum
+                    node_sum_wundertime -= node_wundertimeArr[node_statindex];
                 }
-                node_miss += node_missArr[node_statindex];
-            } else {
-                if (slacktime != 0) {
-                    double usefulslack = slacktime - exetime;
-                    node_sum_undertime += (long) slackleft;
-                    node_sum_wundertime += slackleft / usefulslack;
+
+                if (slackleft < 0) {
+                    node_missArr[node_statindex]++; //it miss, so count
+                    node_aftersync_taskmiss++;
+
+                    if (slacktime != 0) {
+                        node_sum_overtime -= (long) slackleft;
+                        node_sum_wovertime -= slackleft / slacktime;
+                    } else {
+                        System.out.println("ERROR: Time since dispatch=0");
+                    }
+                    node_miss += node_missArr[node_statindex];
                 } else {
-                    System.out.println("ERROR: Time since dispatch=0");
+                    if (slacktime != 0) {
+                        double usefulslack = slacktime - exetime;
+                        node_sum_undertime += (long) slackleft;
+                        node_sum_wundertime += slackleft / usefulslack;
+                    } else {
+                        System.out.println("ERROR: Time since dispatch=0");
+                    }
                 }
+                //System.out.println("node_sum_undertime="+node_sum_undertime+" node_sum_overtime="+node_sum_overtime);
+                //System.out.println("node_sum_wundertime="+node_sum_wundertime+" node_sum_wovertime="+node_sum_wovertime);
+                node_undertimeArr[node_statindex] = (long) slackleft; //set undertime
+                node_wundertimeArr[node_statindex] = slackleft / slacktime;
+                node_statindex = (node_statindex + 1) % node_focus_task;
             }
-            //System.out.println("node_sum_undertime="+node_sum_undertime+" node_sum_overtime="+node_sum_overtime);
-            //System.out.println("node_sum_wundertime="+node_sum_wundertime+" node_sum_wovertime="+node_sum_wovertime);
-            node_undertimeArr[node_statindex] = (long) slackleft; //set undertime
-            node_wundertimeArr[node_statindex] = slackleft / slacktime;
-            node_statindex = (node_statindex + 1) % node_focus_task;
-        }
         }
         //System.out.println("request count="+segment.requestcount);
         node_aftersync_taskdone +=segment.requestcount;
@@ -122,7 +113,10 @@ public class MachineInterface_SimLocal extends MachineInterface {
             //System.out.println("node sync time forward "+synctime +"-> "+CVSE.GTS_mergable.maxElapsedTime);
             node_synctime =CVSE.GTS.maxElapsedTime;
         }
-        // change to using the circular, tmp
+        //////// new update procedure
+
+
+        //////// old update procedure
 
 
 
@@ -153,6 +147,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //CVSE.VMP.ackCompletedVideo(completedTask);
         completedTask.clear();
         //data are self expired, no need to reset or resum
+
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){
@@ -160,4 +155,4 @@ public class MachineInterface_SimLocal extends MachineInterface {
     }
     //shut it down, do nothing
     public void close(){}
-    }
+}

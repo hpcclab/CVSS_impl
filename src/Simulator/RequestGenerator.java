@@ -27,15 +27,18 @@ public abstract class RequestGenerator {
 
     public void OneRandomRequest(){
     }
+    public void OneSpecificRequest( int videoChoice,int gopstartnum,int gopendnum, String command, String setting, long deadline, long arrival){
+        OneSpecificRequest(videoChoice,gopstartnum,gopendnum,command,setting,deadline,arrival,"");
+    }
 
-    public void OneSpecificRequest( int videoChoice,int gopstartnum,int gopendnum, String command, String setting, long deadline, long arrival ){
+    public void OneSpecificRequest( int videoChoice,int gopstartnum,int gopendnum, String command, String setting, long deadline, long arrival,String datatag){
         System.out.print("create one specific request: ");
         System.out.println("videoChoice "+videoChoice);
         Session ST;
         if(gopstartnum==-1) { //whole steam
-            ST = new videoSession(videoChoice, command, setting, deadline, arrival);
+            ST = new videoSession(videoChoice, command, setting, deadline, arrival,datatag);
         }else{
-            ST = new videoSession(videoChoice, command, setting, gopstartnum, gopendnum, deadline, arrival);
+            ST = new videoSession(videoChoice, command, setting, gopstartnum, gopendnum, deadline, arrival,datatag);
         }
         System.out.println("this session has "+ST.AssociatedRequests.size()+" segments");
         CVSE.GTS.addStream(ST);
@@ -95,6 +98,7 @@ public abstract class RequestGenerator {
     public void contProfileRequestsGen(){
         if(canGenTask.tryAcquire()) {
             System.out.println("Check task arrival");
+            System.out.println("currentindex="+currentIndex);
             System.out.println("rqe arr size="+rqe_arr.size());
             if (currentIndex < rqe_arr.size()) {
                 while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {

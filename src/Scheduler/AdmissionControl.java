@@ -3,10 +3,11 @@ package Scheduler;
 import SessionPkg.Session;
 import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
+import miscTools.utils;
 
 public class AdmissionControl {
     private double utilityBased_Prioritization(double c,int segment_number){
-        //page 5 of the paper
+        //xiangbo paper http://hpcclab.org/paperPdf/tpds17/tpds17.pdf
         return Math.pow(1/Math.E,c*segment_number);
     }
 
@@ -14,7 +15,12 @@ public class AdmissionControl {
     public void AssignSegmentPriority(TranscodingRequest segment)
     {
         segment.Priority=0;
+        System.out.println("segmentNumber="+segment.DataSource.split("_")[1]);
+        int segnum=utils.tryParse(segment.DataSource.split("_")[1],0);
+
+        segment.Priority=(int) (utilityBased_Prioritization(0.1,segnum)*5); //only 5 discrete levels of priority
     }
+
     public void AssignSegmentPriority(TranscodingRequest segment,int priority)
     {
         segment.Priority=priority;

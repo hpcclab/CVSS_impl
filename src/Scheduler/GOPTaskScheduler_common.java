@@ -209,7 +209,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             //System.out.println("before dispatch");
 
             //change StreamGOP type to Dispatched
-            X.DataTag="Dispatched";
+            //X.DataTag="Dispatched";
             //X.parentStream=null;
 
             //then it's ready to send out

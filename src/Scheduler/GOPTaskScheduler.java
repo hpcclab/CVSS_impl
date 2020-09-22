@@ -48,6 +48,7 @@ public abstract class GOPTaskScheduler {
         for (TranscodingRequest X : ST.AssociatedRequests) {
             if(!CVSE.CACHING.checkExistence(X)) {
                 synchronized (Batchqueue) {
+                    CVSE.AC.AssignSegmentPriority(X); //ask admission controll to assign priority of the task
                     Batchqueue.add(X);
                 }
             }else{
@@ -72,7 +73,7 @@ public abstract class GOPTaskScheduler {
                 synchronized (Batchqueue) {
                     X = Batchqueue.removeDefault();
                 }
-                X.DataTag="Dispatched";
+                //X.DataTag="Dispatched";
                 machineInterfaces.get(i).sendJob(X);
                 dispatched++;
                 System.out.println("FCFS scheduler send job " + X.DataSource + " to " + machineInterfaces.get(i).toString());
@@ -127,10 +128,17 @@ public abstract class GOPTaskScheduler {
     public void addOperation(Operations.simpleoperation op) {
         System.out.println("operation: "+op.operationname+" is added to the system");
         possible_Operations.add(op);
-
+        BroadcastOperation(op);
+    }
+    public void BroadcastOperation(Operations.simpleoperation op){
         for (int i=0; i<machineInterfaces.size();i++){
             machineInterfaces.get(i).addOperation(op);
         }
-
+    }
+    //add all known operations to a machine interface
+    public void repopulateOperationtoMI(MachineInterface mi){
+        for(Operations.simpleoperation eachop: possible_Operations){
+            mi.addOperation(eachop);
+        }
     }
 }

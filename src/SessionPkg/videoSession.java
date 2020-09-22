@@ -23,16 +23,16 @@ public class videoSession extends Session{
             presentationTime = System.currentTimeMillis() + 1000; //thisTime+Constant for now, should really be scheduleTime
         }
     }
-    public videoSession(int vid, String command, String settings, long deadline, long arrivalTime){
-        this(vid,command,settings,0,CVSE.VR.videos.get(vid).repositoryGOPs.size(),deadline,arrivalTime);
+    public videoSession(int vid, String command, String settings, long deadline, long arrivalTime,String datatag){
+        this(vid,command,settings,0,CVSE.VR.videos.get(vid).repositoryGOPs.size(),deadline,arrivalTime,datatag);
         System.out.println("resgopsize="+CVSE.VR.videos.get(vid).repositoryGOPs.size());
 
     }
-    public videoSession(int vid, String command, String settings, int startSegment, long deadline, long arrivalTime){
-        this(vid,command,settings,startSegment,CVSE.VR.videos.get(vid).repositoryGOPs.size(),deadline,arrivalTime);
+    public videoSession(int vid, String command, String settings, int startSegment, long deadline, long arrivalTime,String datatag){
+        this(vid,command,settings,startSegment,CVSE.VR.videos.get(vid).repositoryGOPs.size(),deadline,arrivalTime,datatag);
     }
 
-    public videoSession(int vid, String command, String settings, int startSegment, int endSegment, long deadline, long arrivalTime) {
+    public videoSession(int vid, String command, String settings, int startSegment, int endSegment, long deadline, long arrivalTime,String datatag) {
         super(0, "", "/", 0);
         video = CVSE.VR.videos.get(vid);
         segmentEnd = endSegment;
@@ -88,7 +88,7 @@ public class videoSession extends Session{
 
         //build the permutable stuff
             JOperation anOPE=new JOperation(command,settings,owner,2*i+presentationTime); //single parameter, single command
-            TranscodingRequest aTR=new TranscodingRequest(""+video.id+"_"+i,"SimReq",reqArrival,0,anOPE);
+            TranscodingRequest aTR=new TranscodingRequest(""+video.id+"_"+i,datatag,reqArrival,0,anOPE);
             aTR.updateGlobalDL();
             //update     EstMean,EstSD ?
             AssociatedRequests.add(aTR);

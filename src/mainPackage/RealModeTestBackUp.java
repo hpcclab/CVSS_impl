@@ -169,7 +169,7 @@ public class RealModeTestBackUp {
 //        */
 //    }
 //    private static void DirectoryTest() {
-//        System.out.println("Directory SimModeTest");
+//        System.out.println("Directory SimMode");
 //
 //        System.out.println(CVSE.config.repository);
 //
