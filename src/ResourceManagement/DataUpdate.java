@@ -117,8 +117,10 @@ public class DataUpdate {
             try {
                 FileWriter F1 = new FileWriter(Statpath+"/full/" +filename);
                 FileWriter F2 = new FileWriter(Statpath+"/numbers/" +filename);
+                FileWriter F3 = new FileWriter(Statpath+"/task/" +filename);
                 PrintWriter Fullwriter = new PrintWriter(F1);
                 PrintWriter numberwriter = new PrintWriter(F2);
+                PrintWriter taskwriter = new PrintWriter(F3);
                 //to screen
                 Fullwriter.println("File" + CVSE.config.profileRequestsBenchmark);
                 if (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) {
@@ -148,11 +150,15 @@ public class DataUpdate {
 
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
                 numberwriter.println(totalWorkDone + ", " + totaldeadlinemiss + ", " + avgActualSpentTime / CVSE.config.maxCR+ ", " + mergemiss);
-
+                for(String aline : CVSE.VMP.TaskCompletionRecord) {
+                    taskwriter.println(aline);
+                }
                 Fullwriter.close();
                 numberwriter.close();
+                taskwriter.close();
                 F1.close();
                 F2.close();
+                F3.close();
                 System.out.println("Benchmark finished");
 //                if (CVSE.GTS instanceof GOPTaskScheduler_mergable){
 //                    GOPTaskScheduler_mergable GTS= (GOPTaskScheduler_mergable) CVSE.GTS;

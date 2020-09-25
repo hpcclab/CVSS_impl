@@ -86,7 +86,7 @@ public class RequestGenerator_GOPlevel extends RequestGenerator_Streamlevel{
                     }
                 }
                 fold++;
-                indexloop+=reqperround;
+                //indexloop+=reqperround; //commented out, so all request start from 0
             }
             int randomDone = rqes.size();
             requestprofile rqe[] = (requestprofile[]) rqes.toArray(new requestprofile[rqes.size()]);

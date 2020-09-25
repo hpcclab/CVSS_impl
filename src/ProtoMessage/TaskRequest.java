@@ -4424,17 +4424,27 @@ public final class TaskRequest {
     double getExecutionTime();
 
     /**
-     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * <pre>
+     * but just in case if it is matter, give time stamp of completion.
+     * </pre>
+     *
+     * <code>double timeStamp = 4;</code>
+     * @return The timeStamp.
+     */
+    double getTimeStamp();
+
+    /**
+     * <code>.SVSE.ServiceRequest theRequest = 5;</code>
      * @return Whether the theRequest field is set.
      */
     boolean hasTheRequest();
     /**
-     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * <code>.SVSE.ServiceRequest theRequest = 5;</code>
      * @return The theRequest.
      */
     ProtoMessage.TaskRequest.ServiceRequest getTheRequest();
     /**
-     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * <code>.SVSE.ServiceRequest theRequest = 5;</code>
      */
     ProtoMessage.TaskRequest.ServiceRequestOrBuilder getTheRequestOrBuilder();
   }
@@ -4498,7 +4508,12 @@ public final class TaskRequest {
               executionTime_ = input.readDouble();
               break;
             }
-            case 34: {
+            case 33: {
+
+              timeStamp_ = input.readDouble();
+              break;
+            }
+            case 42: {
               ProtoMessage.TaskRequest.ServiceRequest.Builder subBuilder = null;
               if (theRequest_ != null) {
                 subBuilder = theRequest_.toBuilder();
@@ -4577,24 +4592,38 @@ public final class TaskRequest {
       return executionTime_;
     }
 
-    public static final int THEREQUEST_FIELD_NUMBER = 4;
+    public static final int TIMESTAMP_FIELD_NUMBER = 4;
+    private double timeStamp_;
+    /**
+     * <pre>
+     * but just in case if it is matter, give time stamp of completion.
+     * </pre>
+     *
+     * <code>double timeStamp = 4;</code>
+     * @return The timeStamp.
+     */
+    public double getTimeStamp() {
+      return timeStamp_;
+    }
+
+    public static final int THEREQUEST_FIELD_NUMBER = 5;
     private ProtoMessage.TaskRequest.ServiceRequest theRequest_;
     /**
-     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * <code>.SVSE.ServiceRequest theRequest = 5;</code>
      * @return Whether the theRequest field is set.
      */
     public boolean hasTheRequest() {
       return theRequest_ != null;
     }
     /**
-     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * <code>.SVSE.ServiceRequest theRequest = 5;</code>
      * @return The theRequest.
      */
     public ProtoMessage.TaskRequest.ServiceRequest getTheRequest() {
       return theRequest_ == null ? ProtoMessage.TaskRequest.ServiceRequest.getDefaultInstance() : theRequest_;
     }
     /**
-     * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+     * <code>.SVSE.ServiceRequest theRequest = 5;</code>
      */
     public ProtoMessage.TaskRequest.ServiceRequestOrBuilder getTheRequestOrBuilder() {
       return getTheRequest();
@@ -4623,8 +4652,11 @@ public final class TaskRequest {
       if (executionTime_ != 0D) {
         output.writeDouble(3, executionTime_);
       }
+      if (timeStamp_ != 0D) {
+        output.writeDouble(4, timeStamp_);
+      }
       if (theRequest_ != null) {
-        output.writeMessage(4, getTheRequest());
+        output.writeMessage(5, getTheRequest());
       }
       unknownFields.writeTo(output);
     }
@@ -4647,9 +4679,13 @@ public final class TaskRequest {
         size += com.google.protobuf.CodedOutputStream
           .computeDoubleSize(3, executionTime_);
       }
+      if (timeStamp_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(4, timeStamp_);
+      }
       if (theRequest_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getTheRequest());
+          .computeMessageSize(5, getTheRequest());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4673,6 +4709,9 @@ public final class TaskRequest {
       if (java.lang.Double.doubleToLongBits(getExecutionTime())
           != java.lang.Double.doubleToLongBits(
               other.getExecutionTime())) return false;
+      if (java.lang.Double.doubleToLongBits(getTimeStamp())
+          != java.lang.Double.doubleToLongBits(
+              other.getTimeStamp())) return false;
       if (hasTheRequest() != other.hasTheRequest()) return false;
       if (hasTheRequest()) {
         if (!getTheRequest()
@@ -4697,6 +4736,9 @@ public final class TaskRequest {
       hash = (37 * hash) + EXECUTIONTIME_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getExecutionTime()));
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getTimeStamp()));
       if (hasTheRequest()) {
         hash = (37 * hash) + THEREQUEST_FIELD_NUMBER;
         hash = (53 * hash) + getTheRequest().hashCode();
@@ -4840,6 +4882,8 @@ public final class TaskRequest {
 
         executionTime_ = 0D;
 
+        timeStamp_ = 0D;
+
         if (theRequestBuilder_ == null) {
           theRequest_ = null;
         } else {
@@ -4875,6 +4919,7 @@ public final class TaskRequest {
         result.completedTaskID_ = completedTaskID_;
         result.workerNodeID_ = workerNodeID_;
         result.executionTime_ = executionTime_;
+        result.timeStamp_ = timeStamp_;
         if (theRequestBuilder_ == null) {
           result.theRequest_ = theRequest_;
         } else {
@@ -4936,6 +4981,9 @@ public final class TaskRequest {
         }
         if (other.getExecutionTime() != 0D) {
           setExecutionTime(other.getExecutionTime());
+        }
+        if (other.getTimeStamp() != 0D) {
+          setTimeStamp(other.getTimeStamp());
         }
         if (other.hasTheRequest()) {
           mergeTheRequest(other.getTheRequest());
@@ -5071,18 +5119,60 @@ public final class TaskRequest {
         return this;
       }
 
+      private double timeStamp_ ;
+      /**
+       * <pre>
+       * but just in case if it is matter, give time stamp of completion.
+       * </pre>
+       *
+       * <code>double timeStamp = 4;</code>
+       * @return The timeStamp.
+       */
+      public double getTimeStamp() {
+        return timeStamp_;
+      }
+      /**
+       * <pre>
+       * but just in case if it is matter, give time stamp of completion.
+       * </pre>
+       *
+       * <code>double timeStamp = 4;</code>
+       * @param value The timeStamp to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimeStamp(double value) {
+        
+        timeStamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * but just in case if it is matter, give time stamp of completion.
+       * </pre>
+       *
+       * <code>double timeStamp = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTimeStamp() {
+        
+        timeStamp_ = 0D;
+        onChanged();
+        return this;
+      }
+
       private ProtoMessage.TaskRequest.ServiceRequest theRequest_;
       private com.google.protobuf.SingleFieldBuilderV3<
           ProtoMessage.TaskRequest.ServiceRequest, ProtoMessage.TaskRequest.ServiceRequest.Builder, ProtoMessage.TaskRequest.ServiceRequestOrBuilder> theRequestBuilder_;
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        * @return Whether the theRequest field is set.
        */
       public boolean hasTheRequest() {
         return theRequestBuilder_ != null || theRequest_ != null;
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        * @return The theRequest.
        */
       public ProtoMessage.TaskRequest.ServiceRequest getTheRequest() {
@@ -5093,7 +5183,7 @@ public final class TaskRequest {
         }
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        */
       public Builder setTheRequest(ProtoMessage.TaskRequest.ServiceRequest value) {
         if (theRequestBuilder_ == null) {
@@ -5109,7 +5199,7 @@ public final class TaskRequest {
         return this;
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        */
       public Builder setTheRequest(
           ProtoMessage.TaskRequest.ServiceRequest.Builder builderForValue) {
@@ -5123,7 +5213,7 @@ public final class TaskRequest {
         return this;
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        */
       public Builder mergeTheRequest(ProtoMessage.TaskRequest.ServiceRequest value) {
         if (theRequestBuilder_ == null) {
@@ -5141,7 +5231,7 @@ public final class TaskRequest {
         return this;
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        */
       public Builder clearTheRequest() {
         if (theRequestBuilder_ == null) {
@@ -5155,7 +5245,7 @@ public final class TaskRequest {
         return this;
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        */
       public ProtoMessage.TaskRequest.ServiceRequest.Builder getTheRequestBuilder() {
         
@@ -5163,7 +5253,7 @@ public final class TaskRequest {
         return getTheRequestFieldBuilder().getBuilder();
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        */
       public ProtoMessage.TaskRequest.ServiceRequestOrBuilder getTheRequestOrBuilder() {
         if (theRequestBuilder_ != null) {
@@ -5174,7 +5264,7 @@ public final class TaskRequest {
         }
       }
       /**
-       * <code>.SVSE.ServiceRequest theRequest = 4;</code>
+       * <code>.SVSE.ServiceRequest theRequest = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           ProtoMessage.TaskRequest.ServiceRequest, ProtoMessage.TaskRequest.ServiceRequest.Builder, ProtoMessage.TaskRequest.ServiceRequestOrBuilder> 
@@ -5290,11 +5380,11 @@ public final class TaskRequest {
       "MelapsedTime\030\003 \001(\003\022\022\n\nVMWorkTime\030\004 \001(\003\022\031" +
       "\n\021ontime_completion\030\005 \001(\003\022\021\n\tdl_missed\030\006" +
       " \001(\003\022\027\n\017completedTaskID\030\007 \003(\003\022\030\n\020weighte" +
-      "dOvertime\030\010 \001(\001\"|\n\nTaskReport\022\027\n\017complet" +
-      "edTaskID\030\001 \001(\003\022\024\n\014workerNodeID\030\002 \001(\005\022\025\n\r" +
-      "executionTime\030\003 \001(\001\022(\n\ntheRequest\030\004 \001(\0132" +
-      "\024.SVSE.ServiceRequestB\033\n\014ProtoMessageB\013T" +
-      "askRequestb\006proto3"
+      "dOvertime\030\010 \001(\001\"\217\001\n\nTaskReport\022\027\n\017comple" +
+      "tedTaskID\030\001 \001(\003\022\024\n\014workerNodeID\030\002 \001(\005\022\025\n" +
+      "\rexecutionTime\030\003 \001(\001\022\021\n\ttimeStamp\030\004 \001(\001\022" +
+      "(\n\ntheRequest\030\005 \001(\0132\024.SVSE.ServiceReques" +
+      "tB\033\n\014ProtoMessageB\013TaskRequestb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5329,7 +5419,7 @@ public final class TaskRequest {
     internal_static_SVSE_TaskReport_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SVSE_TaskReport_descriptor,
-        new java.lang.String[] { "CompletedTaskID", "WorkerNodeID", "ExecutionTime", "TheRequest", });
+        new java.lang.String[] { "CompletedTaskID", "WorkerNodeID", "ExecutionTime", "TimeStamp", "TheRequest", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

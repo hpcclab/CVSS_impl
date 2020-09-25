@@ -1,5 +1,7 @@
 package ResourceManagement;
 
+import ProtoMessage.TaskRequest.*;
+import ProtoMessage.TaskRequest;
 import SessionPkg.TranscodingRequest;
 import mainPackage.CVSE;
 
@@ -29,6 +31,8 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private double node_wundertimeArr[] =new double[50]; //negative num for overtime
     private double node_sum_wundertime;
     private double node_sum_wovertime;
+    public List<ProtoMessage.TaskRequest.TaskReport> RecentFinishedTask=new LinkedList<>(); //save task report
+
     public List<Long> completedTask=new LinkedList<>();
 
     public MachineInterface_SimLocal(String vclass, int iport, int inid, boolean iautoschedule) {
@@ -99,6 +103,18 @@ public class MachineInterface_SimLocal extends MachineInterface {
                 node_statindex = (node_statindex + 1) % node_focus_task;
             }
         }
+        //create task report
+
+        TaskRequest.TaskReport.Builder ReportBuilder=TaskRequest.TaskReport.newBuilder();
+        TaskRequest.TaskReport thereport=ReportBuilder.setCompletedTaskID(segment.TaskId)
+                .setWorkerNodeID(id)
+                .setExecutionTime(exetime)
+                .setTimeStamp(node_synctime)
+                .setTheRequest(segment.buildRequest())
+                .build();
+        RecentFinishedTask.add(thereport);
+
+
         //System.out.println("request count="+segment.requestcount);
         node_aftersync_taskdone +=segment.requestcount;
         completedTask.add(segment.TaskId);
@@ -121,10 +137,10 @@ public class MachineInterface_SimLocal extends MachineInterface {
 
 
         //System.out.println("dataUpdate");
-        CVSE.GTS.workpending-=(estimatedQueueLength);
+       // CVSE.GTS.workpending-=(estimatedQueueLength); //test disable, to be update by TR
 
          //we completed the scheduling and execution
-        CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = 0;
+        //CVSE.GTS.machineInterfaces.get(id).estimatedQueueLength = 0; //test disable, to be update by TR
         CVSE.GTS.machineInterfaces.get(id).estimatedExecutionTime = 0;
         CVSE.GTS.machineInterfaces.get(id).elapsedTime= node_synctime;
         CVSE.GTS.machineInterfaces.get(id).actualSpentTime= node_realspentTime;
@@ -144,10 +160,18 @@ public class MachineInterface_SimLocal extends MachineInterface {
         CVSE.GTS.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
         CVSE.GTS.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
 
+        //// update old way,
         //CVSE.VMP.ackCompletedVideo(completedTask);
         completedTask.clear();
         //data are self expired, no need to reset or resum
 
+        //// update new way,
+        for (TaskReport TR:RecentFinishedTask
+             ) {
+            CVSE.VMP.collectData(TR);
+
+        }
+        RecentFinishedTask.clear();
     }
     //shut it down, do nothing
     public  boolean sendShutdownmessage(){

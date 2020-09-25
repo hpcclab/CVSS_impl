@@ -3,6 +3,7 @@ import sys
 import os
 import pika
 import TaskRequest_pb2
+import time;
 import pycvss.ffmpeg.bindings as args
 import pycvss.ffmpeg.benchmark as benchmark
 
@@ -108,8 +109,9 @@ def report(results,aRequest):
     report= TaskRequest_pb2.TaskReport()
     report.completedTaskID=aRequest.TaskID
     report.workerNodeID=MYID
-    #report.executionTime=results[0][1] ###execution time
-    report.executionTime=20 ###test
+    report.executionTime=results[0][1] ###execution time
+    #report.executionTime=20 ###test
+    report.timeStamp=time.time()
     channel.basic_publish(    
         exchange='',
         routing_key=FEEDBACKQUEUENAME,

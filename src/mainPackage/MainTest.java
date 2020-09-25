@@ -149,9 +149,14 @@ public class MainTest {
             //String Configname="nuConfigWeb.properties"; // realModeTest
 
             //String benchmarkname="";
-            //String benchmarkname="wcodec1000r_600000_10000_3000_s1";
-            String benchmarkname="xshortTest";
+            String benchmarkname="start0_2000r_600000_10000_3000_s1";
+            //String benchmarkname="xshortTest";
             start(Configname, benchmarkname+".txt");
+
+            /// Force gen benchmark
+//            setUpCVSE_common("config/"+Configname, "BenchmarkInput/"+benchmarkname+".txt");
+//            setUpCVSE_forsim();
+//            genbenchmarkTrace(0);
 
         }
 

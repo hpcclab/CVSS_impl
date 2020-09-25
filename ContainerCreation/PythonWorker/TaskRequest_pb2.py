@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='SVSE',
   syntax='proto3',
   serialized_options=b'\n\014ProtoMessageB\013TaskRequest',
-  serialized_pb=b'\n\x11TaskRequest.proto\x12\x04SVSE\"\x91\x01\n\tOperation\x12\x0b\n\x03\x43md\x18\x01 \x01(\t\x12/\n\tParameter\x18\x02 \x03(\x0b\x32\x1c.SVSE.Operation.ParamOptions\x1a\x46\n\x0cParamOptions\x12\x14\n\x0csubparameter\x18\x01 \x01(\t\x12\r\n\x05owner\x18\x02 \x01(\t\x12\x11\n\trequestDL\x18\x03 \x01(\x03\"\xc1\x01\n\x0eServiceRequest\x12\x12\n\nDataSource\x18\x01 \x01(\t\x12\x16\n\x0eGlobalDeadline\x18\x02 \x01(\x03\x12\x0f\n\x07\x44\x61taTag\x18\x03 \x01(\t\x12\x0f\n\x07\x41rrival\x18\x04 \x01(\x03\x12\x0f\n\x07\x45stMean\x18\x05 \x01(\x01\x12\r\n\x05\x45stSD\x18\x06 \x01(\x01\x12\x10\n\x08Priority\x18\x07 \x01(\x05\x12\x0e\n\x06TaskID\x18\x08 \x01(\x03\x12\x1f\n\x06OPlist\x18\t \x03(\x0b\x32\x0f.SVSE.Operation\"\xcb\x01\n\x0cWorkerReport\x12\x12\n\nqueue_size\x18\x01 \x01(\x05\x12\x1b\n\x13queue_executionTime\x18\x02 \x01(\x03\x12\x15\n\rVMelapsedTime\x18\x03 \x01(\x03\x12\x12\n\nVMWorkTime\x18\x04 \x01(\x03\x12\x19\n\x11ontime_completion\x18\x05 \x01(\x03\x12\x11\n\tdl_missed\x18\x06 \x01(\x03\x12\x17\n\x0f\x63ompletedTaskID\x18\x07 \x03(\x03\x12\x18\n\x10weightedOvertime\x18\x08 \x01(\x01\"|\n\nTaskReport\x12\x17\n\x0f\x63ompletedTaskID\x18\x01 \x01(\x03\x12\x14\n\x0cworkerNodeID\x18\x02 \x01(\x05\x12\x15\n\rexecutionTime\x18\x03 \x01(\x01\x12(\n\ntheRequest\x18\x04 \x01(\x0b\x32\x14.SVSE.ServiceRequestB\x1b\n\x0cProtoMessageB\x0bTaskRequestb\x06proto3'
+  serialized_pb=b'\n\x11TaskRequest.proto\x12\x04SVSE\"\x91\x01\n\tOperation\x12\x0b\n\x03\x43md\x18\x01 \x01(\t\x12/\n\tParameter\x18\x02 \x03(\x0b\x32\x1c.SVSE.Operation.ParamOptions\x1a\x46\n\x0cParamOptions\x12\x14\n\x0csubparameter\x18\x01 \x01(\t\x12\r\n\x05owner\x18\x02 \x01(\t\x12\x11\n\trequestDL\x18\x03 \x01(\x03\"\xc1\x01\n\x0eServiceRequest\x12\x12\n\nDataSource\x18\x01 \x01(\t\x12\x16\n\x0eGlobalDeadline\x18\x02 \x01(\x03\x12\x0f\n\x07\x44\x61taTag\x18\x03 \x01(\t\x12\x0f\n\x07\x41rrival\x18\x04 \x01(\x03\x12\x0f\n\x07\x45stMean\x18\x05 \x01(\x01\x12\r\n\x05\x45stSD\x18\x06 \x01(\x01\x12\x10\n\x08Priority\x18\x07 \x01(\x05\x12\x0e\n\x06TaskID\x18\x08 \x01(\x03\x12\x1f\n\x06OPlist\x18\t \x03(\x0b\x32\x0f.SVSE.Operation\"\xcb\x01\n\x0cWorkerReport\x12\x12\n\nqueue_size\x18\x01 \x01(\x05\x12\x1b\n\x13queue_executionTime\x18\x02 \x01(\x03\x12\x15\n\rVMelapsedTime\x18\x03 \x01(\x03\x12\x12\n\nVMWorkTime\x18\x04 \x01(\x03\x12\x19\n\x11ontime_completion\x18\x05 \x01(\x03\x12\x11\n\tdl_missed\x18\x06 \x01(\x03\x12\x17\n\x0f\x63ompletedTaskID\x18\x07 \x03(\x03\x12\x18\n\x10weightedOvertime\x18\x08 \x01(\x01\"\x8f\x01\n\nTaskReport\x12\x17\n\x0f\x63ompletedTaskID\x18\x01 \x01(\x03\x12\x14\n\x0cworkerNodeID\x18\x02 \x01(\x05\x12\x15\n\rexecutionTime\x18\x03 \x01(\x01\x12\x11\n\ttimeStamp\x18\x04 \x01(\x01\x12(\n\ntheRequest\x18\x05 \x01(\x0b\x32\x14.SVSE.ServiceRequestB\x1b\n\x0cProtoMessageB\x0bTaskRequestb\x06proto3'
 )
 
 
@@ -302,8 +302,15 @@ _TASKREPORT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='theRequest', full_name='SVSE.TaskReport.theRequest', index=3,
-      number=4, type=11, cpp_type=10, label=1,
+      name='timeStamp', full_name='SVSE.TaskReport.timeStamp', index=3,
+      number=4, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='theRequest', full_name='SVSE.TaskReport.theRequest', index=4,
+      number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -320,8 +327,8 @@ _TASKREPORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=577,
-  serialized_end=701,
+  serialized_start=578,
+  serialized_end=721,
 )
 
 _OPERATION_PARAMOPTIONS.containing_type = _OPERATION

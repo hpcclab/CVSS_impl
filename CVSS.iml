@@ -28,7 +28,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="org.jfree:jfreechart:1.0.19" level="project" />
     <orderEntry type="library" name="jcommon-1.0.23" level="project" />
-    <orderEntry type="library" name="out" level="project" />
     <orderEntry type="library" name="com.google.protobuf:protobuf-java:2.6.1" level="project" />
     <orderEntry type="library" name="org.slf4j:slf4j-api:1.7.26" level="project" />
     <orderEntry type="library" name="com.rabbitmq:amqp-client:5.7.1" level="project" />
@@ -88,9 +87,9 @@
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcpkix-jdk15on:1.52" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.52" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-simple:1.7.30" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.12.1" level="project" />
-    <orderEntry type="library" name="Maven: com.rabbitmq:amqp-client:5.7.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.26" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-simple:1.7.26" level="project" />
+    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.12.4" level="project" />
+    <orderEntry type="library" name="Maven: com.rabbitmq:amqp-client:5.7.3" level="project" />
   </component>
 </module>

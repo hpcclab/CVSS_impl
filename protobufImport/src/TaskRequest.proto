@@ -39,11 +39,14 @@ message WorkerReport {
     repeated int64 completedTaskID=7;
     double weightedOvertime=8; //just in case we calculate weighted overtime
 }
+
 message TaskReport {
     int64 completedTaskID=1;
     int32 workerNodeID=2;
     double executionTime=3; //the server determine using current time to see if the deadline is missed or not
-    ServiceRequest theRequest=4;
+    double timeStamp=4; // but just in case if it is matter, give time stamp of completion.
+    ServiceRequest theRequest=5;
+    
 }
 
 

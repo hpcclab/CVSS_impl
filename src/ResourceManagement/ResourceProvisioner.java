@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.time.Instant;
@@ -108,7 +109,9 @@ public class ResourceProvisioner {
     static int timeforced=0;
     static double previous_wovertime,previous_wundertime;
     //Main way of collecting result data (used in real mode, and hopefully soon in real mode too
-    private void collectData(TaskRequest.TaskReport T){ //ack ONE task completion
+    LinkedList<String> TaskCompletionRecord=new LinkedList<>();
+    public void collectData(TaskRequest.TaskReport T){ //ack ONE task completion
+        TaskRequest.ServiceRequest sr=T.getTheRequest();
         CVSE.OW.ackCompletedVideo(T.getCompletedTaskID()); //do nothing at the moment
 
         CVSE.GTS.workpending-=1;
@@ -125,7 +128,8 @@ public class ResourceProvisioner {
             //deadline not missed
         }
         //MI.elapsedTime+=200;
-
+        String[] datasource=sr.getDataSource().split("_");
+        TaskCompletionRecord.add(T.getTimeStamp()+","+datasource[0]+","+datasource[1]+","+T.getWorkerNodeID()+","+T.getExecutionTime()+","+sr.getGlobalDeadline()+","+sr.getEstMean()+","+sr.getEstSD()+","+sr.getPriority());
     }
     private void pollcollectData(){ // to make sure all information are updated, call dataUpdate procedure of each MI
         for (int i=0;i<CVSE.GTS.machineInterfaces.size();i++) {

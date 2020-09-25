@@ -10,3 +10,8 @@ todo:
     
     regenerate benchmarkinput
     
+
+TO FIX library errors,
+    -get library from Maven dependency
+    -add it also, to lib folder (copy from ~/.m2/...)
+    -file=> project structure=> artifacts => MAIN RUN=> add extracted library => select the .jar library

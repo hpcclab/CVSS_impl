@@ -107,7 +107,7 @@ public class SimMode {
             for (int i = 1000; i <= 2500; i += 500) {
                 //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);
                 //use default avgslacktime value, 10000 for most operations, 8000 for codec
-                CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_600000_10000_3000_s" + sr[j], sr[j], 100, i, 600000, 0, 3000);
+                CVSE.RG.generateProfiledRandomRequests("start0_" + i + "r_600000_10000_3000_s" + sr[j], sr[j], 100, i, 600000, 0, 3000);
             }
         }
 

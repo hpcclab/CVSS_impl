@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="out">
-    <CLASSES />
-    <JAVADOC />
-    <SOURCES>
-      <root url="file://$PROJECT_DIR$/protobufImport/out" />
-    </SOURCES>
-  </library>
-</component>
