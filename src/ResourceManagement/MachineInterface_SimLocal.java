@@ -33,8 +33,6 @@ public class MachineInterface_SimLocal extends MachineInterface {
     private double node_sum_wovertime;
     public List<ProtoMessage.TaskRequest.TaskReport> RecentFinishedTask=new LinkedList<>(); //save task report
 
-    public List<Long> completedTask=new LinkedList<>();
-
     public MachineInterface_SimLocal(String vclass, int iport, int inid, boolean iautoschedule) {
         super(vclass,iport,inid,iautoschedule);
         status=1;
@@ -107,6 +105,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
 
         TaskRequest.TaskReport.Builder ReportBuilder=TaskRequest.TaskReport.newBuilder();
         TaskRequest.TaskReport thereport=ReportBuilder.setCompletedTaskID(segment.TaskId)
+                .setCompletedTaskID(segment.TaskId)
                 .setWorkerNodeID(id)
                 .setExecutionTime(exetime)
                 .setTimeStamp(node_synctime)
@@ -117,7 +116,6 @@ public class MachineInterface_SimLocal extends MachineInterface {
 
         //System.out.println("request count="+segment.requestcount);
         node_aftersync_taskdone +=segment.requestcount;
-        completedTask.add(segment.TaskId);
         //
         return false;
     }
@@ -147,8 +145,8 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //System.out.println("actualSpentTime="+CVSE.GTS_mergable.machineInterfaces.get(id).actualSpentTime+" realspentTime="+realspentTime);
         //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 
-        CVSE.GTS.machineInterfaces.get(id).total_taskmiss +=node_aftersync_taskmiss;
-        CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone;
+        //CVSE.GTS.machineInterfaces.get(id).total_taskmiss +=node_aftersync_taskmiss; //this updated in new way already
+        //CVSE.GTS.machineInterfaces.get(id).total_taskdone += node_aftersync_taskdone; //this updated in new way already
         CVSE.GTS.machineInterfaces.get(id).tmp_taskdone = node_aftersync_taskdone;
         CVSE.GTS.machineInterfaces.get(id).tmp_taskmiss = node_aftersync_taskmiss;
         node_aftersync_taskdone=node_aftersync_taskmiss=0;
@@ -159,11 +157,6 @@ public class MachineInterface_SimLocal extends MachineInterface {
 
         CVSE.GTS.machineInterfaces.get(id).tmp_weighted_overtime =node_sum_wovertime/node_focus_task;
         CVSE.GTS.machineInterfaces.get(id).tmp_weighted_undertime =node_sum_wundertime/node_focus_task;
-
-        //// update old way,
-        //CVSE.VMP.ackCompletedVideo(completedTask);
-        completedTask.clear();
-        //data are self expired, no need to reset or resum
 
         //// update new way,
         for (TaskReport TR:RecentFinishedTask

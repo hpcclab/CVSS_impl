@@ -77,11 +77,13 @@ public class SimMode {
             }
         }
         CVSE.VMP.DU.printstat();
-        CVSE.VMP.DU.graphplot();
+        //CVSE.VMP.DU.graphplot();
 
-        trysleep(300);
+        trysleep(2000); //if graphplot is not draw, don't turn it down too fast
         CVSE.GTS.close();
         CVSE.VMP.closeAll();
+        System.out.println("Done");
+        System.exit(1); //make sure the program exit
 
         return "success";
 

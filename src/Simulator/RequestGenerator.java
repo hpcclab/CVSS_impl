@@ -103,8 +103,8 @@ public abstract class RequestGenerator {
             if (currentIndex < rqe_arr.size()) {
                 while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {
                     requestprofile arqe = rqe_arr.get(currentIndex);
+                    OneSpecificRequest(arqe.videoChoice,arqe.startgopnum,arqe.endgopnum, arqe.command, arqe.setting, arqe.deadline, arqe.appearTime,currentIndex+"");
                     currentIndex++;
-                    OneSpecificRequest(arqe.videoChoice,arqe.startgopnum,arqe.endgopnum, arqe.command, arqe.setting, arqe.deadline, arqe.appearTime);
                     if (currentIndex >= rqe_arr.size()) {
                         System.out.println("all task arrived");
                         finished = true;

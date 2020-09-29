@@ -129,7 +129,7 @@ public class ResourceProvisioner {
         }
         //MI.elapsedTime+=200;
         String[] datasource=sr.getDataSource().split("_");
-        TaskCompletionRecord.add(T.getTimeStamp()+","+datasource[0]+","+datasource[1]+","+T.getWorkerNodeID()+","+T.getExecutionTime()+","+sr.getGlobalDeadline()+","+sr.getEstMean()+","+sr.getEstSD()+","+sr.getPriority());
+        TaskCompletionRecord.add(T.getTimeStamp()+","+sr.getDataTag()+","+datasource[0]+","+datasource[1]+","+T.getWorkerNodeID()+","+T.getExecutionTime()+","+sr.getGlobalDeadline()+","+sr.getEstMean()+","+sr.getEstSD()+","+sr.getArrival()+","+sr.getPriority());
     }
     private void pollcollectData(){ // to make sure all information are updated, call dataUpdate procedure of each MI
         for (int i=0;i<CVSE.GTS.machineInterfaces.size();i++) {

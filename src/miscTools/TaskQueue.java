@@ -22,7 +22,7 @@ public class TaskQueue extends LinkedList<TranscodingRequest> {
         ListIterator<TranscodingRequest> it = listIterator(1);
         while (it.hasNext()) {
             TranscodingRequest t = it.next();
-            if (t.compareTo(highest)>0) {
+            if (t.Priority> highest.Priority) {
                 highest = t;
             }
         }
@@ -40,7 +40,7 @@ public class TaskQueue extends LinkedList<TranscodingRequest> {
         }
         return earliest;
     }
-    public TranscodingRequest pollMaxUrgency(){ //Homogeneous Only
+    public TranscodingRequest pollMaxUrgency(){ //Homogeneous Only, or else, only use first machine's processing time
         TranscodingRequest earliest = peekFirst();
         long earliestvalue=earliest.GlobalDeadline-CVSE.TE.getHistoricProcessTimeLong(CVSE.GTS.machineInterfaces.get(0), earliest,2);
         ListIterator<TranscodingRequest> it = listIterator(1);

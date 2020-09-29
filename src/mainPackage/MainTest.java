@@ -139,6 +139,8 @@ public class MainTest {
 
                 System.out.println(genbenchmarkTrace(Integer.parseInt(args[1])));
             } else { //run
+                System.out.println("run "+args[2]+" with "+args[1]);
+
                 start(args[2], args[1]);
             }
         }else {
@@ -157,6 +159,9 @@ public class MainTest {
 //            setUpCVSE_common("config/"+Configname, "BenchmarkInput/"+benchmarkname+".txt");
 //            setUpCVSE_forsim();
 //            genbenchmarkTrace(0);
+            System.out.println("exiting");
+            System.exit(1); //make sure the program exit
+            System.out.println("why am I here?");
 
         }
 

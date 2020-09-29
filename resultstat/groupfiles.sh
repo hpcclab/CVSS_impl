@@ -1,5 +1,5 @@
-cd numbers
-for datei in *_wcodec*.txt; 
-do mkdir -p -- "${datei%%_wcodec*}" && 
-    mv -- "$datei" "${datei%%_wcodec*}"
+cd task
+for datei in *_start0*.txt; 
+do mkdir -p -- "${datei%%_start0*}" && 
+    mv -- "$datei" "${datei%%_start0*}"
  done

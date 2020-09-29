@@ -31,9 +31,10 @@ func chkComplete(inp string){
             fmt.Println(err)
         }
         //store data to be summerize
-        category :=strings.Split(name,"_s")[0]
+        splittedstr:=strings.Split(name,"_s")
+        category :=splittedstr[0]+splittedstr[1]
         count[category]+=1
-        catlist[category]=append(catlist[category],strings.Split(strings.Split(name,"_s")[1],".txt")[0] )
+        catlist[category]=append(catlist[category],strings.Split(splittedstr[2],".txt")[0] )
         
 	}
     first:=0
