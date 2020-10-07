@@ -26,14 +26,19 @@ public class DockerManager {
     public static List<Container> containers = null;
 
     private static int port = 5601;
+//// to start docker manually which allow access: dockerd --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem \
+//  -H=0.0.0.0:2376 -H unix:///var/run/docker.sock &
 
     private static DockerClient CreateDockerClient(){
         //return new DefaultDockerClient("unix:///var/run/docker.sock"); //default local access
         //return new DefaultDockerClient("tcp://10.131.80.30:2375"); //TEST connection without cert.
         try{
         final DockerClient docker = DefaultDockerClient.builder() //remote with cert
-                .uri(URI.create("https://10.131.35.31:2376"))
-                .dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert")))
+                //.uri(URI.create("https://10.131.35.31:2376")) //VM1
+                //.dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert/VM1")))
+
+                .uri(URI.create("https://10.131.36.44:2376")) //VM5
+                .dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert/VM5")))
                 .build();
         return docker;
         }catch (Exception e){

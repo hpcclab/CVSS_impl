@@ -2,6 +2,10 @@
 #RMQ host use jhost alessweakpswd
 #RMQ worker use pworker aweakpswd
 
+#VM5
+10.131.36.44
+#run with remote allowed
+sudo dockerd --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem   -H=0.0.0.0:2376 -H unix:///var/run/docker.sock &
 
 #working dir 
 cd /home/c00251686/workspace/git-repos/CVSS_impl/ContainerCreation

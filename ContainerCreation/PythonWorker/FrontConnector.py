@@ -13,6 +13,7 @@ import pycvss.ffmpeg.benchmark as benchmark
 INITQUEUENAME="init_queue"
 FEEDBACKQUEUENAME="" #feedback_queue, will init after get the message from INITQUEUENAME 
 QUEUENAME="" #mq0 etc. after init
+REFERENCETIME=""
 RMQHOST="10.131.80.30"
 MYID=0
 RepDir="/share_dir/SVSE/sampleRepo/"
@@ -45,8 +46,8 @@ def cmdTranslate(operation):
 def paramTranslate(operation,param):
     if operation.lower()=='custom':
         return param
-    elif paramTranslatorTable[operation].get(param)!=None:
-        return paramTranslatorTable[operation][int(param)]
+    elif paramTranslatorTable.get(str(operation))[int(param)]!=None:
+        return paramTranslatorTable.get(str(operation))[int(param)]
     else:
         print("Unknown translateion look up "+operation+" "+param)
         return "UNKNOWNPARAM"
@@ -109,9 +110,11 @@ def report(results,aRequest):
     report= TaskRequest_pb2.TaskReport()
     report.completedTaskID=aRequest.TaskID
     report.workerNodeID=MYID
-    report.executionTime=results[0][1] ###execution time
+    report.executionTime=results[0][1]*1000 ###execution time
     #report.executionTime=20 ###test
-    report.timeStamp=time.time()
+    report.timeStamp=time.time()*1000-REFERENCETIME
+    print("ref time="+str(REFERENCETIME)+" timeStamp="+str(report.timeStamp))
+    report.theRequest.CopyFrom(aRequest)
     channel.basic_publish(    
         exchange='',
         routing_key=FEEDBACKQUEUENAME,
@@ -147,6 +150,9 @@ if __name__ == "__main__":
         print("MQ=",parsedbody[0],"feedbackqueue=",parsedbody[1])
         QUEUENAME=parsedbody[0]
         FEEDBACKQUEUENAME=parsedbody[1]
+        REFERENCETIME=float(parsedbody[2])
+        
+        print("ref time="+str(REFERENCETIME))
         channel.basic_ack(method_frame.delivery_tag)
     else:
         print('No message returned')

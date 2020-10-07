@@ -230,6 +230,6 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
 
     //function that do something after task X get sent
     protected void postschedulefn(TranscodingRequest X){
-
+        worksubmitted++;
     }
 }

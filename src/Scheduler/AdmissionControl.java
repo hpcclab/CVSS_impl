@@ -15,7 +15,7 @@ public class AdmissionControl {
     public void AssignSegmentPriority(TranscodingRequest segment)
     {
         segment.Priority=0;
-        System.out.println("segmentNumber="+segment.DataSource.split("_")[1]);
+        //System.out.println("segmentNumber="+segment.DataSource.split("_")[1]);
         int segnum=utils.tryParse(segment.DataSource.split("_")[1],0);
 
         segment.Priority=(int) (utilityBased_Prioritization(0.1,segnum)*5); //only 5 discrete levels of priority

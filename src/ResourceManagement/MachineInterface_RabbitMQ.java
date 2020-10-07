@@ -19,7 +19,8 @@ public class MachineInterface_RabbitMQ extends MachineInterface {
         System.out.println("sending RMQ start");
         QUEUE_NAME=myQueueName;
         FEEDBACKQUEUE_NAME=myResponseQueuename;
-        String initmsg=QUEUE_NAME+" "+FEEDBACKQUEUE_NAME;
+
+        String initmsg=QUEUE_NAME+" "+FEEDBACKQUEUE_NAME+" "+CVSE.GTS.referenceTime;
         try  {
             //send queuename to init channel
             channel.basicPublish("", initqueue, null, initmsg.getBytes(StandardCharsets.UTF_8));
@@ -48,7 +49,7 @@ public class MachineInterface_RabbitMQ extends MachineInterface {
 
         //
         if(isWorking()) {
-            String message = "SendJob";
+            //modify deadline? Nah...
 
             try  {
                 //channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
@@ -65,6 +66,7 @@ public class MachineInterface_RabbitMQ extends MachineInterface {
 
     } //introduce new operation to the system, interface for future feature, do nothing for now
     public void dataUpdate(){
+        elapsedTime=System.currentTimeMillis()-CVSE.GTS.referenceTime;
         System.out.println("Data update called, do nothing in this mode");
     }
     public boolean sendShutdownmessage(){

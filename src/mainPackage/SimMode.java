@@ -28,6 +28,11 @@ public class SimMode {
                 System.out.println("overwrite profileRequestBenhmark with " + opt);
                 CVSE.config.profileRequestsBenchmark = opt;
             }
+            while(System.currentTimeMillis()<CVSE.GTS.referenceTime){
+                int sleeptime=(int)(CVSE.GTS.referenceTime-System.currentTimeMillis());
+                System.out.println("sleeping for "+sleeptime+" before start");
+                trysleep(sleeptime);
+            }
             CVSE.RG.ReadProfileRequests(CVSE.config.profileRequestsBenchmark);
             //
             //sleep(3000);
@@ -36,17 +41,18 @@ public class SimMode {
             //CVSE.RG.contProfileRequestsGen(); //use Tick to call it
 
             while (!CVSE.RG.finished || !CVSE.GTS.emptyQueue()) {
+
                 trysleep(300);
                 CVSE.RG.contProfileRequestsGen();
                 CVSE.GTS.taskScheduling();
-                System.out.println("wait for sim to finish");
+                System.out.println("wait for sim to finish, RG="+CVSE.RG.finished+" queuelength="+CVSE.GTS.getBatchqueueLength());
 
                 //CVSE.RG.contProfileRequestsGen(); //probably good idea to call here...
             }
             System.out.println("\nAll request have been released\n");
             int count=0;
             while (!CVSE.GTS.emptyQueue()) {
-                System.out.println("wait for pending work to finish");
+                System.out.println("wait for pending work to send");
                 trysleep(300);
                 if(count>3){
                     System.out.println("Freeze, should do something?");
@@ -54,7 +60,12 @@ public class SimMode {
                 }
                 count++;
             }
-            System.out.println("All queue are emptied");
+            System.out.println("Batch queue emptied");
+            //wait until get ack for all tasks
+            while (CVSE.GTS.workcompleted<CVSE.GTS.worksubmitted) {
+                System.out.println("wait for allTask tobe acked");
+                trysleep(300);
+            }
         } else {
             while (rqn != 0) {
                 System.out.println("enter video request numbers to generate and their interval and how many times");
@@ -77,6 +88,11 @@ public class SimMode {
             }
         }
         CVSE.VMP.DU.printstat();
+        try {
+            CVSE.VMP.RemoveContainers();
+        }catch(Exception e){
+            System.out.println("close containers error");
+        }
         //CVSE.VMP.DU.graphplot();
 
         trysleep(2000); //if graphplot is not draw, don't turn it down too fast
@@ -106,10 +122,10 @@ public class SimMode {
         }
 
         for (int j = 0; j < sr.length; j++) {
-            for (int i = 1000; i <= 2500; i += 500) {
+            for (int i = 200; i <= 1000; i += 200) {
                 //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);
                 //use default avgslacktime value, 10000 for most operations, 8000 for codec
-                CVSE.RG.generateProfiledRandomRequests("start0_" + i + "r_600000_10000_3000_s" + sr[j], sr[j], 100, i, 600000, 0, 3000);
+                CVSE.RG.generateProfiledRandomRequests("start0_" + i + "r_300000_10000_3000_s" + sr[j], sr[j], 100, i, 300000, 0, 3000);
             }
         }
 

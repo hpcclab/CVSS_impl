@@ -20,12 +20,17 @@ public abstract class GOPTaskScheduler {
     public  ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
     protected  int maxpending = 0;
     public  int workpending = 0;
+    public int worksubmitted=0;
+    public int workcompleted=0;
     public  long  maxElapsedTime; //use for setting Deadline
+    public long referenceTime; // time that everything start
+
     public  List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
 
     public GOPTaskScheduler(){
         readytoWork=new Semaphore(1);
         Batchqueue= new TaskQueue();
+        referenceTime=System.currentTimeMillis()+10000; // future 10 seconds, hope to finish set-up by then
     }
     public int getBatchqueueLength(){
         return Batchqueue.size();

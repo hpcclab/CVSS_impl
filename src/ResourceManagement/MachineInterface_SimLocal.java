@@ -104,7 +104,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //create task report
 
         TaskRequest.TaskReport.Builder ReportBuilder=TaskRequest.TaskReport.newBuilder();
-        TaskRequest.TaskReport thereport=ReportBuilder.setCompletedTaskID(segment.TaskId)
+        TaskRequest.TaskReport thereport=ReportBuilder
                 .setCompletedTaskID(segment.TaskId)
                 .setWorkerNodeID(id)
                 .setExecutionTime(exetime)
@@ -161,6 +161,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
         //// update new way,
         for (TaskReport TR:RecentFinishedTask
              ) {
+            //System.out.println("simlocal call taskreport"); //no problem here
             CVSE.VMP.collectData(TR);
 
         }

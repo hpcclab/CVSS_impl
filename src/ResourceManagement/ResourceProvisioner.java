@@ -56,10 +56,10 @@ public class ResourceProvisioner {
             connection = factory.newConnection();
             OutRMQchannel = connection.createChannel();
             InRMQchannel = connection.createChannel();
-
             InRMQchannel.queueDeclare(FEEDBACKQUEUE_NAME, false, false, false, null);
-
+            InRMQchannel.queuePurge(FEEDBACKQUEUE_NAME);
             OutRMQchannel.queueDeclare(INITQUEUE_NAME, false, false, false, null);
+            OutRMQchannel.queuePurge(INITQUEUE_NAME);
 
         }catch (Exception E){
             System.out.println("Rmqbug in initializing "+E);
@@ -86,17 +86,21 @@ public class ResourceProvisioner {
 
         //////////////////////////////
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            //String message = new String(delivery.getBody(), "UTF-8");
-            //System.out.println(" [x] Received '" + message + "'");
+            System.out.println("acking the msg");
 
             TaskRequest.TaskReport T= TaskRequest.TaskReport.parseFrom(delivery.getBody());
+
             //System.out.println("Completed ExeT="+T.getExecutionTime());
             collectData(T);
             InRMQchannel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
         };
         //////////////////////////
+
         boolean autoAck = false;
         try {
+
+            //make sure queue is empty before start
+            InRMQchannel.queuePurge(FEEDBACKQUEUE_NAME);
             InRMQchannel.basicConsume(FEEDBACKQUEUE_NAME, autoAck, deliverCallback, consumerTag -> {
             });
         }catch (Exception E){
@@ -111,25 +115,33 @@ public class ResourceProvisioner {
     //Main way of collecting result data (used in real mode, and hopefully soon in real mode too
     LinkedList<String> TaskCompletionRecord=new LinkedList<>();
     public void collectData(TaskRequest.TaskReport T){ //ack ONE task completion
+        System.out.println("ack a task completion  "+T.getTheRequest().getDataSource());
         TaskRequest.ServiceRequest sr=T.getTheRequest();
         CVSE.OW.ackCompletedVideo(T.getCompletedTaskID()); //do nothing at the moment
 
-        CVSE.GTS.workpending-=1;
         MachineInterface MI=CVSE.GTS.machineInterfaces.get(T.getWorkerNodeID());
 
         MI.estimatedQueueLength-=1;
         long completionTime= System.currentTimeMillis();
 
         MI.total_taskdone++;
-        if(completionTime>T.getTheRequest().getGlobalDeadline()){
+        if(completionTime>T.getTheRequest().getGlobalDeadline()+CVSE.GTS.referenceTime){
             //deadline missed
             MI.total_taskmiss++;
         }else{
             //deadline not missed
         }
         //MI.elapsedTime+=200;
+
         String[] datasource=sr.getDataSource().split("_");
+        // for Sim Mode
+        //TaskCompletionRecord.add(T.getTimeStamp()+","+sr.getDataTag()+","+datasource[0]+","+datasource[1]+","+T.getWorkerNodeID()+","+T.getExecutionTime()+","+sr.getGlobalDeadline()+","+sr.getEstMean()+","+sr.getEstSD()+","+sr.getArrival()+","+sr.getPriority());
+        // for Real Mode?, node_id does not record correctly at the moment (always 0 )
         TaskCompletionRecord.add(T.getTimeStamp()+","+sr.getDataTag()+","+datasource[0]+","+datasource[1]+","+T.getWorkerNodeID()+","+T.getExecutionTime()+","+sr.getGlobalDeadline()+","+sr.getEstMean()+","+sr.getEstSD()+","+sr.getArrival()+","+sr.getPriority());
+        //System.out.println("ack a task completed "+T.getTheRequest().getDataTag());
+
+        CVSE.GTS.workpending--;
+        CVSE.GTS.workcompleted++;
     }
     private void pollcollectData(){ // to make sure all information are updated, call dataUpdate procedure of each MI
         for (int i=0;i<CVSE.GTS.machineInterfaces.size();i++) {
@@ -281,7 +293,7 @@ public class ResourceProvisioner {
     public int AddInstances(int diff){
 
         for(int i=0;i<diff;i++){
-            System.out.println("VMcount="+VMcount);
+            System.out.println("start with VMcount="+VMcount);
             if(VMcount < CVSE.config.maxCR) {
                 if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("thread")) { //local transcoding thread mode
                     System.out.println("local virtual server");
@@ -318,7 +330,7 @@ public class ResourceProvisioner {
                     CVSE.GTS.repopulateOperationtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("LocalPython")) { //create local rabbitMQ thread,
                     //////////////// Experimenting here:
-                    System.out.println("Create local python");
+                    System.out.println("Create RMQ connected thread");
                     MachineInterface t = new MachineInterface_RabbitMQ(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount), VMcount,
                             CVSE.config.CR_autoschedule.get(VMcount), OutRMQchannel, INITQUEUE_NAME, "MQ" + VMcount, FEEDBACKQUEUE_NAME);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
@@ -342,7 +354,7 @@ public class ResourceProvisioner {
                     }catch(Exception e){
                         System.out.println("sleep bug in AddInstance (localVMThread)");
                     }
-                    System.out.println("VMcount="+VMcount);
+                    //System.out.println("VMcount="+VMcount);
                     MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
 //                    MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount),IP, 5061,VMcount,CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
@@ -359,7 +371,7 @@ public class ResourceProvisioner {
                 VMcount++;
             }
         }
-        System.out.println("VMCount="+VMcount);
+        System.out.println("end with VMCount="+VMcount);
         return VMcount;
     }
     public int DeleteInstances(int diff){
@@ -385,7 +397,7 @@ public class ResourceProvisioner {
         return VMcount;
     }
 
-    private static void RemoveContainers() throws DockerException, InterruptedException {
+    public static void RemoveContainers() throws DockerException, InterruptedException {
         DockerManager.RemoveAllContainers();
     }
     //relay function to outputwindoe

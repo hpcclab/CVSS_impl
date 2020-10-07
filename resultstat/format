@@ -1,1 +1,5 @@
+#Number
 totalWorkDone ntotalWorkDone totaldeadlinemiss ntotaldeadlinemiss avgActualSpentTime NumMissBecauseOfMerge
+
+#Task
+comp_time,dataTag,video#,segment#, nodeID, ExeT, Deadline, Mean, SD, Priority

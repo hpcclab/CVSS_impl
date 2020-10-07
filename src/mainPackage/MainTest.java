@@ -150,15 +150,16 @@ public class MainTest {
             //for real mode
             //String Configname="nuConfigWeb.properties"; // realModeTest
 
-            //String benchmarkname="";
-            String benchmarkname="start0_2000r_600000_10000_3000_s1";
+            //String benchmarkname=""; //avg 0.3s per task, so
+            String benchmarkname="start0_400r_300000_10000_3000_s1";
             //String benchmarkname="xshortTest";
             start(Configname, benchmarkname+".txt");
 
             /// Force gen benchmark
 //            setUpCVSE_common("config/"+Configname, "BenchmarkInput/"+benchmarkname+".txt");
-//            setUpCVSE_forsim();
-//            genbenchmarkTrace(0);
+//           setUpCVSE_forsim();
+//           genbenchmarkTrace(0);
+
             System.out.println("exiting");
             System.exit(1); //make sure the program exit
             System.out.println("why am I here?");

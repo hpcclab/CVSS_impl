@@ -101,6 +101,7 @@ public abstract class RequestGenerator {
             System.out.println("currentindex="+currentIndex);
             System.out.println("rqe arr size="+rqe_arr.size());
             if (currentIndex < rqe_arr.size()) {
+                System.out.println("Max elapsed time="+CVSE.GTS.maxElapsedTime);
                 while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {
                     requestprofile arqe = rqe_arr.get(currentIndex);
                     OneSpecificRequest(arqe.videoChoice,arqe.startgopnum,arqe.endgopnum, arqe.command, arqe.setting, arqe.deadline, arqe.appearTime,currentIndex+"");
