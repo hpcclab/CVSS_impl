@@ -100,6 +100,7 @@ public abstract class RequestGenerator {
             System.out.println("Check task arrival");
             System.out.println("currentindex="+currentIndex);
             System.out.println("rqe arr size="+rqe_arr.size());
+            //System.out.println("maxseg4finished=");
             if (currentIndex < rqe_arr.size()) {
                 System.out.println("Max elapsed time="+CVSE.GTS.maxElapsedTime);
                 while (rqe_arr.get(currentIndex).appearTime <= CVSE.GTS.maxElapsedTime) {

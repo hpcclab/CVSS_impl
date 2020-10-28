@@ -27,6 +27,8 @@ public class MachineInterface_RabbitMQ extends MachineInterface {
             //channel = CVSE.VMP.connection.createChannel();
 
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            channel.queuePurge(QUEUE_NAME);
+
             //String message = "Connecting message";
             //channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
             //System.out.println(" [x] Sent '" + message + "'");

@@ -112,9 +112,10 @@ public class SimMode {
         int[] sr;
         if (seed == 0) {
             //30
-            sr = new int[] {699,1911,16384,9999,555,687,9199,104857,212223,777,1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
+            //sr = new int[] {699,1911,16384,9999,555,687,9199,104857,212223,777,1920, 1080, 768, 1990, 4192, 262144, 800, 12345, 678, 521, 50, 167, 1, 251, 68, 6, 333, 1048575, 81, 7};
             //5
-            //sr = new int[] {699,1911,16384,9999,555};
+            sr = new int[] {699,1911,16384,9999,555};
+            //1
             //sr = new int[]{699};
         } else {
             sr=new int[1];
@@ -122,10 +123,10 @@ public class SimMode {
         }
 
         for (int j = 0; j < sr.length; j++) {
-            for (int i = 200; i <= 1000; i += 200) {
+            for (int i = 1500; i <= 2700; i += 600) {
                 //_CVSE.RG.generateProfiledRandomRequests("wcodec" + i + "r_180000_10000_3000_s" + sr[j], sr[j], 100, i, 180000, 10000, 3000);
                 //use default avgslacktime value, 10000 for most operations, 8000 for codec
-                CVSE.RG.generateProfiledRandomRequests("start0_" + i + "r_300000_10000_3000_s" + sr[j], sr[j], 100, i, 300000, 0, 3000);
+                CVSE.RG.generateProfiledRandomRequests("start0_" + i + "r_120000_10000_3000_s" + sr[j], sr[j], 100, i, 120000, 0, 3000);
             }
         }
 

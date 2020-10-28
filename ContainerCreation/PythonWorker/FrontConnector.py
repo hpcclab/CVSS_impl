@@ -44,10 +44,13 @@ def cmdTranslate(operation):
         return "UNKNOWNOP"
 
 def paramTranslate(operation,param):
+    print(str(operation.upper())+" "+str(param))
     if operation.lower()=='custom':
         return param
-    elif paramTranslatorTable.get(str(operation))[int(param)]!=None:
-        return paramTranslatorTable.get(str(operation))[int(param)]
+    elif cmdTranslate(operation.upper())=="UNKNOWNOP":
+        return "UNKNOWNPARAM"
+    elif paramTranslatorTable.get(str(operation.upper()))[int(param)]!=None:
+        return paramTranslatorTable.get(str(operation.upper()))[int(param)]
     else:
         print("Unknown translateion look up "+operation+" "+param)
         return "UNKNOWNPARAM"
@@ -134,9 +137,12 @@ def callback(ch, method, properties, body):
 
 #main()
 if __name__ == "__main__":
+    if len(sys.argv)>2:
+        print("Overwrite host addr with "+sys.argv[2])
+        RMQHOST=sys.argv[2]
     if len(sys.argv)>1:
-        print("Overwrite host addr with "+sys.argv[1])
-        RMQHOST=sys.argv[1]
+        print("I am worker number "+sys.argv[1])
+        MYID=int(sys.argv[1])
     thecredential=pika.PlainCredentials('pworker','aweakpswd')
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host=RMQHOST,credentials=thecredential))

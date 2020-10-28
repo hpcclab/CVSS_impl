@@ -145,20 +145,24 @@ public class MainTest {
             }
         }else {
             //for sim mode
-            String Configname="nuConfig.properties"; // simModeTest
+           // String Configname="nuConfig.properties"; // simModeTest
 
             //for real mode
             //String Configname="nuConfigWeb.properties"; // realModeTest
 
-            //String benchmarkname=""; //avg 0.3s per task, so
-            String benchmarkname="start0_400r_300000_10000_3000_s1";
-            //String benchmarkname="xshortTest";
-            start(Configname, benchmarkname+".txt");
+//            String benchmarkname=""; //avg 0.3s per task, so
+//            String benchmarkname="xshortTest";
+//            String Configname="nuConfig.properties"; // simModeTest
+//
+//            String benchmarkname="start0_1200r_180000_10000_3000_s555";
+//            start(Configname, benchmarkname+".txt");
 
             /// Force gen benchmark
-//            setUpCVSE_common("config/"+Configname, "BenchmarkInput/"+benchmarkname+".txt");
-//           setUpCVSE_forsim();
-//           genbenchmarkTrace(0);
+            String benchmarkname="xshortTest";
+            String Configname="nuconfig_simlocal.properties"; // realModeTest
+            setUpCVSE_common("config/"+Configname, "BenchmarkInput/"+benchmarkname+".txt");
+            setUpCVSE_forsim();
+            genbenchmarkTrace(0);
 
             System.out.println("exiting");
             System.exit(1); //make sure the program exit

@@ -345,22 +345,19 @@ public class ResourceProvisioner {
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.GTS.repopulateOperationtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local (old style) container
-                    System.out.println("container thread");
-                    String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
-                    System.out.println("returned IP="+IP);
-                    VMCollection.add(new machineinfo("local container",IP));
-                    try {
-                        sleep(400);
-                    }catch(Exception e){
-                        System.out.println("sleep bug in AddInstance (localVMThread)");
-                    }
-                    //System.out.println("VMcount="+VMcount);
-                    MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
-//                    MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount),IP, 5061,VMcount,CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
-                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
-                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-                    // CVSE.TE.populate(CVSE.config.CR_class.get(VMcount)); no profile for container machine, yet
-                    // CVSE.GTS.repopulateOperationtoMI(t);
+//                    System.out.println("container thread");
+//                    String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
+//                    System.out.println("returned IP="+IP);
+//                    VMCollection.add(new machineinfo("local container",IP));
+//                    try {
+//                        sleep(400);
+//                    }catch(Exception e){
+//                        System.out.println("sleep bug in AddInstance (localVMThread)");
+//                    }
+//                    MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount),IP, CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
+//                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+//                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("EC2")){ //amazon ec2
                     System.out.println("Adding EC2, disabled");
                 }else{

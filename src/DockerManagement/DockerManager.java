@@ -37,8 +37,8 @@ public class DockerManager {
                 //.uri(URI.create("https://10.131.35.31:2376")) //VM1
                 //.dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert/VM1")))
 
-                .uri(URI.create("https://10.131.36.44:2376")) //VM5
-                .dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert/VM5")))
+                .uri(URI.create("https://10.131.36.24:2376")) //VM01
+                .dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert/VM01")))
                 .build();
         return docker;
         }catch (Exception e){
@@ -57,7 +57,7 @@ public class DockerManager {
         return createdIP;
     }
 
-    public static String CreateContainers(String givenPort)  {
+    public static String CreateContainers(String givenPort,int nodeID)  { //
         String createdIP="";
         if(docker == null) {
             docker = CreateDockerClient();
@@ -91,12 +91,13 @@ public class DockerManager {
                     .portBindings(portBindings)
                     .build();
 
-            final String[] command = {"/home/PythonWorker/FrontConnector.py"};
+            final String[] command = {"/home/PythonWorker/FrontConnector.py",nodeID+""};
             final ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageName)
                     .attachStderr(Boolean.TRUE)
                     .attachStdin(Boolean.TRUE)
                     .tty(Boolean.TRUE)
+                    .cpuQuota(1l) // so that performance scaling is consistence
                     .hostConfig(hostConfig)
                     //.exposedPorts( givenPort) //container to host + "/tcp"
                     .cmd(command)
