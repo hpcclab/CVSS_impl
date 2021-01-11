@@ -64,9 +64,6 @@ public class MachineInterface_RabbitMQ extends MachineInterface {
         }
         return false;
     }
-    public void addOperation(Operations.simpleoperation newOP){
-
-    } //introduce new operation to the system, interface for future feature, do nothing for now
     public void dataUpdate(){
         elapsedTime=System.currentTimeMillis()-CVSE.GTS.referenceTime;
         System.out.println("Data update called, do nothing in this mode");

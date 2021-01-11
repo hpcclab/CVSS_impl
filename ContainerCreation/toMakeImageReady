@@ -34,10 +34,12 @@ RUN apt install iproute2
 
 docker build . --tag testworkerthread
 
-docker run -dit --name workerthread1 testworkerthread /bin/bash
-docker attach workerthread1
+######## debug
+#docker run -dit --name workerthread1 testworkerthread /bin/bash
+docker run -dit --entrypoint /bin/bash --name workerthread2 testworkerthread
+docker attach workerthread2
 Detach by ctrl+p ctrl+q
-b6f5043ca690
+
 
 https://docker-curriculum.com/
 http://dockerlabs.collabnix.com/beginners/dockerfile/lab_dockerfile_python.html

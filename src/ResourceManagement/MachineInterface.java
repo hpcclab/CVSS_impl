@@ -1,7 +1,9 @@
 package ResourceManagement;
 
+import Repository.ServiceFunction;
 import SessionPkg.TranscodingRequest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class MachineInterface {
@@ -17,7 +19,7 @@ public abstract class MachineInterface {
     public long actualSpentTime=0;
     public int port;
     public boolean autoschedule=false;
-
+    public ArrayList<Repository.ServiceFunction> availableFn=new ArrayList<>();
     //stats
     public long tmp_taskdone=0, total_taskdone =0; //work done can be multiple task per item
     public long tmp_taskmiss=0, total_taskmiss =0;
@@ -39,7 +41,13 @@ public abstract class MachineInterface {
     }
 
     public abstract boolean sendJob(TranscodingRequest segment);
-    public void addOperation(Operations.simpleoperation newOP){} //introduce new operation to the system, interface for future feature, do nothing for now
+    public void addAvailableService(Repository.ServiceFunction newFn){
+        availableFn.add(newFn);
+    } //introduce new operation to the system, interface for future feature
+    public void removeAvailableService(Repository.ServiceFunction newFn){
+        availableFn.remove(newFn);
+    } //remove an operation from the system, interface for future feature
+
     public abstract void dataUpdate();
     public abstract boolean sendShutdownmessage();
     public void close(){}

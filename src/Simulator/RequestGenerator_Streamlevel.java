@@ -15,11 +15,11 @@ public class RequestGenerator_Streamlevel extends RequestGenerator{
     public void OneRandomRequest(){
 
         int videoChoice=(int)(Math.random()* ( CVSE.VR.videos.size()));
-        int operation=(int)(Math.random()*(CVSE.GTS.possible_Operations.size()));
+        int operation=(int)(Math.random()*(CVSE.SR.ServiceList.size()));
         String setting=""+(Math.random()*2); //random between 0 and 1 as setting identifier
         long deadline=0; //did not specified deadline
         //setting.settingIdentifier=randomRes;
-        OneSpecificRequest(videoChoice,-1,-1,CVSE.GTS.possible_Operations.get(operation).operationname,setting,deadline,0);
+        OneSpecificRequest(videoChoice,-1,-1,CVSE.SR.ServiceList.get(operation).fnName,setting,deadline,0);
     }
 
 
@@ -52,7 +52,7 @@ public class RequestGenerator_Streamlevel extends RequestGenerator{
     protected static void cloneC(requestprofile[] original_rqe, int oriindex, int offset, Random r){
         original_rqe[oriindex].setting = original_rqe[oriindex - offset].setting;
         while(original_rqe[oriindex].command.equalsIgnoreCase(original_rqe[oriindex - offset].command)){ //make sure command are different, rerandom until not match
-            original_rqe[oriindex].command= CVSE.GTS.possible_Operations.get(r.nextInt(4)).operationname;
+            original_rqe[oriindex].command= CVSE.SR.ServiceList.get(r.nextInt(4)).fnName;
         }
         cloneCommmon(original_rqe,oriindex,offset);
         //validation
@@ -69,7 +69,7 @@ public class RequestGenerator_Streamlevel extends RequestGenerator{
     //modify the rqe after sorting by appearance time done
     public requestprofile[] modifyrqeaftersort(requestprofile[] original_rqe,Random r,int videos,int requestcount,long segmentcounts) {
 
-        int cmdspace=CVSE.GTS.possible_Operations.size();
+        int cmdspace=CVSE.SR.ServiceList.size();
         int paramspace=2;
         int cloneindex=original_rqe.length-1;
         int requestspace=(CVSE.VR.videos.size())*cmdspace*paramspace; //100 videos, 3 cmd, 2 params so request space =600 ?
@@ -153,7 +153,7 @@ public class RequestGenerator_Streamlevel extends RequestGenerator{
                 //create the request
                 for (int q = 0; q < totalVideos; q++) {
                     // video choice is in the positionMatchup
-                    String acmd = CVSE.GTS.possible_Operations.get((positionMatchup[q] +2+ fold/parametertypes) % CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
+                    String acmd = CVSE.SR.ServiceList.get((positionMatchup[q] +2+ fold/parametertypes) % CVSE.SR.ServiceList.size()).fnName;// ensure least command overlap as possible
                     //long appear = randTimeLinear(r,timeSpan);
                     long appear =randTimeInterval(r,timeSpan,highPeriod,lowPeriod,highAmp);
                     int thisslacktime;

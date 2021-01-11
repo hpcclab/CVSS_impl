@@ -1,13 +1,13 @@
 #1 check filesharing folder symlink in vOutput is correct (inside html folder). Correct it using...
 ln -s /share_dir/SVSE/sampleOutput vOutput
 
-#2 node the proxy
+#2 node the proxy (in main SMSE)
 node proxy/cors.js
 
 #3 host frontEndHosting
 http-server -p 8020 /home/c00251686/workspace/git-repos/CVSS_impl/NewWeb/html 
 or (remotely)
 http-server -p 8020 /home/hpcclab/chavit/NewWeb/html 
-
+http-server -p 8020 /share_dir/NewWeb/html
 
 

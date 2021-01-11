@@ -10,23 +10,16 @@
     //http://localhost/HLS_Player/SVSEPlayer/
 
 //https://github.com/video-dev/hls.js/blob/master/docs/API.md#first-step-setup-and-support
-function loadVideo(vsource){
-    if (Hls.isSupported()) {
-      var video = document.getElementById('video');
-      var hls = new Hls();
-      // bind them together
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-        console.log("video and hls.js are now bound together !");
-        hls.loadSource(vsource);
-        //hls.loadSource("../../HLS_Video/testbug/example_test.m3u8");
-          //hls.loadSource("../../HLS_Video/bbb_trailer/out.m3u8");
-        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-          console.log("manifest loaded, found " + data.levels.length + " quality level");
-        });
-      });
-    }
-//error handling
+function loadandPlayVideo(vsource){
+  var video = document.getElementById('video');
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource(vsource);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+      video.play();
+    });
+  }
   hls.on(Hls.Events.ERROR, function (event, data) {
     if (data.fatal) {
       switch(data.type) {
@@ -55,6 +48,10 @@ VideoNumber:
   <option value="3">3</option>
   <option value="4">4</option>
   <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7">7</option>
+  <option value="8">8</option>
+  <option value="10">10</option>
 </select>
 Options:
 <select name="Color" id="color">
@@ -73,36 +70,53 @@ Options:
 </select>
 <select name="V Codec" id="vcodec">
   <option value="-c:v h264">H264</option>
+<!-- ignore vcodec ?
+  <option value="">H264</option>
+-->
 </select>
 <select name="Audio" id="acodec">
   <option value="-acodec copy">Normal</option>
   <option value="-an">Mute</option>
 </select>
-
-
+<select name="Rotate" id="rotate">
+  <option value="">NormalOrientation</option>
+  <option value=",transpose=2,transpose=2">UpsideDown</option>
+</select>
+<!-- not usable
+<select name="DrawObjDetection" id="objdetect">
+  <option value="On">Off</option>
+  <option value="Off">On</option>
+</select>
+-->
 <button onclick='
-var options="-profile:v baseline -copyts "+ $("#framerate").val()+" "+$("#resolution").val()+$("#color").val()+" "+$("#vcodec").val()+" "+$("#acodec").val();
+var ffoptions="-profile:v baseline -copyts "+ $("#framerate").val()+" "+$("#resolution").val()+$("#color").val()+$("#rotate").val()+" "+$("#vcodec").val()+" "+$("#acodec").val()
 console.log(
   "video choice="+$("#vid").val() +
-  "Options="+ options
-  );
-  //$.post("localhost:9901/transcoderequest",data="vid="+$("#vid").val()+options);
-  //$.get("http://localhost:9901/transcoderequest"); //data="vid="+$("#vid").val()+options
-
-  var url="127.0.0.1:9901/transcoderequest";
-  var getreq=url+"?vidnum="+ $("#vid").val()+",param="+ encodeURIComponent(options)
+  "FFOptions="+ ffoptions + " " 
+  ); //  "ObjDetect="+ $("#objdetect").val()
+//var alloptions=ffoptions+" -objdetect "+$("#objdetect").val()
+  //$.post("localhost:9901/transcoderequest",data="vid="+$("#vid").val()+ffoptions);
+  //$.get("http://localhost:9901/transcoderequest"); //data="vid="+$("#vid").val()+ffoptions
+  var url="http://127.0.0.1:9901/transcoderequest";
+  var getreq=url+"?vidnum="+ $("#vid").val()+",param="+ encodeURIComponent(ffoptions)
 console.log(getreq);
 $.get( proxyurl + getreq, function( data ) {
   console.log( data );
+});
+//fetch(proxyurl + getreq) // https://cors-anywhere.herokuapp.com/https://example.com
+//.then(response => response.text())
+//.then(contents => console.log(contents))
+//.catch(() => console.log("Can’t access " + getreq + " response. Blocked by browser?"))
+//  const Http = new XMLHttpRequest();
 
-/////////////////////////////////////////////////////////////
+////// wait a bit, then play
+   setTimeout(() => { 
+var foldname= ffoptions.replace(/[-:= ]/g,"") 
 //loadVideo("../../HLS_Video/7alt2/video.m3u8");
-var options="-profile:v baseline -copyts "+ $("#framerate").val()+" "+$("#resolution").val()+$("#color").val()+" "+$("#vcodec").val()+" "+$("#acodec").val();
-var hd= options.replace(/[-:= ]/g,"") 
-console.log("load video from "+"vOutput/"+$("#vid").val()+"_"+hd+"/video.m3u8");
-// delay the load for 4s
-setTimeout(() => {
-loadVideo("vOutput/"+$("#vid").val()+"_"+hd+"/video.m3u8");
-video.play();
-, 4000);
-'>Play the new Config</button>
+//loadVideo("vOutput/"+$("#vid").val()+"/video.m3u8");
+//loadVideo("vOutput/"+$("#vid").val()+"_"+foldname+"/video.m3u8");
+loadandPlayVideo("vOutput/"+$("#vid").val()+"_"+foldname+"/video.m3u8");
+//video.play();
+}, 4000);
+
+'>Play this Configuration</button>

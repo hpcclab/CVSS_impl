@@ -313,21 +313,21 @@ public class ResourceProvisioner {
                     MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-                    CVSE.GTS.repopulateOperationtoMI(t);
+                    CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("sim")){ //simulation mode, without socket
                     System.out.println("simulated");
                     VMCollection.add(new machineinfo("sim",""));
                     MachineInterface t=new MachineInterface_SimLocal(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-                    CVSE.GTS.repopulateOperationtoMI(t);
+                    CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("simNWcache")){ //simulation mode, without socket
                     System.out.println("simulated NWcached thread");
                     VMCollection.add(new machineinfo("simNWcache",""));
                     MachineInterface t=new MachineInterface_SimNWcache(CVSE.config.CR_class.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount, CVSE.config.CR_autoschedule.get(VMcount)); //no ip needed
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
-                    CVSE.GTS.repopulateOperationtoMI(t);
+                    CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("LocalPython")) { //create local rabbitMQ thread,
                     //////////////// Experimenting here:
                     System.out.println("Create RMQ connected thread");
@@ -335,7 +335,7 @@ public class ResourceProvisioner {
                             CVSE.config.CR_autoschedule.get(VMcount), OutRMQchannel, INITQUEUE_NAME, "MQ" + VMcount, FEEDBACKQUEUE_NAME);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-                    CVSE.GTS.repopulateOperationtoMI(t);
+                    CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ local container,
                     //////////////// Experimenting here:
                     System.out.println("Create local python container");
@@ -343,7 +343,7 @@ public class ResourceProvisioner {
                             CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
-                    CVSE.GTS.repopulateOperationtoMI(t);
+                    CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local (old style) container
 //                    System.out.println("container thread");
 //                    String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker

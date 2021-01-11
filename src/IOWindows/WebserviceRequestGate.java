@@ -83,7 +83,7 @@ class handler implements Provider<Source> {
                 System.out.println("Got special command:");
                 String[] arg2=arg[1].split(",");
                 if(arg2[0].equalsIgnoreCase("newOP")) {
-                    GTS.addOperation(arg2[1], arg2[2]);
+                    CVSE.SR.addLegacyOperation(arg2[1], arg2[2]);
                 }
 
             }else{ //normal video transcoding request

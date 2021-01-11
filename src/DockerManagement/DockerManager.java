@@ -97,7 +97,7 @@ public class DockerManager {
                     .attachStderr(Boolean.TRUE)
                     .attachStdin(Boolean.TRUE)
                     .tty(Boolean.TRUE)
-                    .cpuQuota(1l) // so that performance scaling is consistence
+                    .cpuQuota(4l) // so that performance scaling is consistence
                     .hostConfig(hostConfig)
                     //.exposedPorts( givenPort) //container to host + "/tcp"
                     .cmd(command)

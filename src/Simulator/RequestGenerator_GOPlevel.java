@@ -15,12 +15,12 @@ public class RequestGenerator_GOPlevel extends RequestGenerator_Streamlevel{
     public void OneRandomRequest() {
 
         int videoChoice=(int)(Math.random()* ( CVSE.VR.videos.size()));
-        int operation=(int)(Math.random()*(CVSE.GTS.possible_Operations.size()));
+        int operation=(int)(Math.random()*(CVSE.SR.ServiceList.size()));
         String setting=""+(Math.random()*2); //random between 0 and 1 as setting identifier
         long deadline=0; //did not specified deadline
         int gopnum=(int)(Math.random())*CVSE.VR.videos.get(videoChoice).getTotalSegments();
         //setting.settingIdentifier=randomRes;
-        OneSpecificRequest(videoChoice,gopnum,gopnum,CVSE.GTS.possible_Operations.get(operation).operationname,setting,deadline,0);
+        OneSpecificRequest(videoChoice,gopnum,gopnum,CVSE.SR.ServiceList.get(operation).fnName,setting,deadline,0);
     }
 
     //FEW GOP per generation, instead of a lot.
@@ -50,7 +50,7 @@ public class RequestGenerator_GOPlevel extends RequestGenerator_Streamlevel{
                 //create the request
                 for (int q = 0; q < totalVideos; q++) {
                     // video choice is in the positionMatchup
-                    String acmd = CVSE.GTS.possible_Operations.get((positionMatchup[q] +2+ fold/parametertypes) % CVSE.GTS.possible_Operations.size()).operationname;// ensure least command overlap as possible
+                    String acmd = CVSE.SR.ServiceList.get((positionMatchup[q] +2+ fold/parametertypes) % CVSE.SR.ServiceList.size()).fnName;// ensure least command overlap as possible
                     //long appear = randTimeLinear(r,timeSpan);
                     long appear =randTimeInterval(r,timeSpan,highPeriod,lowPeriod,highAmp);
                     int thisslacktime;

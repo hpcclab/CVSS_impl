@@ -3,6 +3,7 @@ package mainPackage;
 import Cache.Caching;
 import IOWindows.OutputWindow;
 import IOWindows.WebserviceRequestGate;
+import Repository.ServiceRepository;
 import Repository.VideoRepository;
 import ResourceManagement.ResourceProvisioner;
 import Scheduler.AdmissionControl;
@@ -21,6 +22,7 @@ public class CVSE {
     public static AdmissionControl AC;
     public static RequestGenerator RG;
     public static OutputWindow OW;
+    public static ServiceRepository SR;
 
     public static WebserviceRequestGate WG;
 }

@@ -24,9 +24,6 @@ public abstract class GOPTaskScheduler {
     public int workcompleted=0;
     public  long  maxElapsedTime; //use for setting Deadline
     public long referenceTime; // time that everything start
-
-    public  List<Operations.simpleoperation> possible_Operations= new ArrayList<>();
-
     public GOPTaskScheduler(){
         readytoWork=new Semaphore(1);
         Batchqueue= new TaskQueue();
@@ -103,47 +100,5 @@ public abstract class GOPTaskScheduler {
             machineInterfaces.get(i).close();
         }
     }
-    public void readlistedOperations() {
-        File listfile = new File("profile/operations.txt");
-        if(!listfile.exists()){
-            System.out.println("\n\nWarning profile/operations.txt does not exist \n\n");
-        }else{
-            try {
-                Scanner scanner=new Scanner(listfile);
-                while(scanner.hasNext()){
-                    String line[]=scanner.nextLine().split(",");
-                    if(line.length==2){
-                        addOperation(line[0],line[1]);
-                    }else{
-                        System.out.println("ill formed line?");
-                    }
-                }
-                scanner.close();
-            } catch (FileNotFoundException e) {
-            System.out.println("videorepository can not find list.txt or read fail");
-            //e.printStackTrace();
-        }
-        }
-        //operations as file
-    }
-    //provide operation name and batchscript, and it'll be added
-    public void addOperation(String name,String batchscript) {
-        addOperation(new Operations.simpleoperation(name,batchscript));
-    }
-    public void addOperation(Operations.simpleoperation op) {
-        System.out.println("operation: "+op.operationname+" is added to the system");
-        possible_Operations.add(op);
-        BroadcastOperation(op);
-    }
-    public void BroadcastOperation(Operations.simpleoperation op){
-        for (int i=0; i<machineInterfaces.size();i++){
-            machineInterfaces.get(i).addOperation(op);
-        }
-    }
-    //add all known operations to a machine interface
-    public void repopulateOperationtoMI(MachineInterface mi){
-        for(Operations.simpleoperation eachop: possible_Operations){
-            mi.addOperation(eachop);
-        }
-    }
+
 }

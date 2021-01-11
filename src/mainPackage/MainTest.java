@@ -3,6 +3,7 @@ package mainPackage;
 import Cache.Caching;
 import IOWindows.OutputWindow;
 import IOWindows.WebserviceRequestGate;
+import Repository.ServiceRepository;
 import Repository.VideoRepository;
 import ResourceManagement.ResourceProvisioner;
 import Scheduler.AdmissionControl;
@@ -30,7 +31,9 @@ public class MainTest {
         CVSE.VR.addAllKnownVideos();
         CVSE.AC = new AdmissionControl();
         CVSE.GTS = new GOPTaskScheduler_common();
-        CVSE.GTS.readlistedOperations();
+        CVSE.SR =new ServiceRepository();
+
+        CVSE.SR.readlistedOperations();
         CVSE.CACHING = new Caching(); //change to other type if need something that work
         CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
 
@@ -65,17 +68,17 @@ public class MainTest {
 
         System.out.println("Starting WebRequest listening");
         //Step 1: Retrieve Real Videos from Video Repository
-        SessionManager SM = new SessionManager();
-        CVSE.WG.SM = SM;
+//        SessionManager SM = new SessionManager();
+//        CVSE.WG.SM = SM;
         ////create open socket, receive new profile request then do similar to profiledRequests
         CVSE.WG=new WebserviceRequestGate();
         CVSE.WG.addr="http://localhost:9901/transcoderequest";
-        if(SM == null){
-            System.out.println("SM is null " + SM);
-        }
-        else{
-            System.out.println("SM is fine " + SM);
-        }
+//        if(SM == null){
+//            System.out.println("SM is null " + SM);
+//        }
+//        else{
+//            System.out.println("SM is fine " + SM);
+//        }
 
 
 
@@ -139,30 +142,30 @@ public class MainTest {
 
                 System.out.println(genbenchmarkTrace(Integer.parseInt(args[1])));
             } else { //run
-                System.out.println("run "+args[2]+" with "+args[1]);
+                System.out.println("ru6n "+args[2]+" with "+args[1]);
 
                 start(args[2], args[1]);
             }
         }else {
             //for sim mode
-           // String Configname="nuConfig.properties"; // simModeTest
+            String Configname="nuConfig.properties"; // simModeTest
 
             //for real mode
             //String Configname="nuConfigWeb.properties"; // realModeTest
 
-//            String benchmarkname=""; //avg 0.3s per task, so
-//            String benchmarkname="xshortTest";
+            //String benchmarkname=""; //avg 0.3s per task, so
+            String benchmarkname="xshortTest";
 //            String Configname="nuConfig.properties"; // simModeTest
 //
 //            String benchmarkname="start0_1200r_180000_10000_3000_s555";
-//            start(Configname, benchmarkname+".txt");
+            start(Configname, benchmarkname+".txt");
 
             /// Force gen benchmark
-            String benchmarkname="xshortTest";
-            String Configname="nuconfig_simlocal.properties"; // realModeTest
-            setUpCVSE_common("config/"+Configname, "BenchmarkInput/"+benchmarkname+".txt");
-            setUpCVSE_forsim();
-            genbenchmarkTrace(0);
+//            String benchmarkname="xshortTest";
+//            String Configname="nuconfig_simlocal.properties"; // realModeTest
+//            setUpCVSE_common("config/"+Configname, "BenchmarkInput/"+benchmarkname+".txt");
+//            setUpCVSE_forsim();
+//            genbenchmarkTrace(0);
 
             System.out.println("exiting");
             System.exit(1); //make sure the program exit

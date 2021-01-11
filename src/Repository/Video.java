@@ -105,8 +105,8 @@ public class Video{
                 }
             }
         }
-
     }
+
     public int getTotalSegments()
     {
         return totalSegments;
