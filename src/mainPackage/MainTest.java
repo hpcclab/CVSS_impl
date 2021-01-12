@@ -10,7 +10,6 @@ import Scheduler.AdmissionControl;
 import Scheduler.GOPTaskScheduler_common;
 //import Scheduler.GOPTaskScheduler_mergable;
 import Scheduler.SystemConfig;
-import SessionPkg.SessionManager;
 import Simulator.RequestGenerator_GOPlevel;
 import TimeEstimatorpkg.TimeEstNone;
 import TimeEstimatorpkg.TimeEstProfileMode;
@@ -35,9 +34,9 @@ public class MainTest {
 
         CVSE.SR.readlistedOperations();
         CVSE.CACHING = new Caching(); //change to other type if need something that work
-        CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
+        CVSE.OW=new OutputWindow(); //todo, actually call its function from RP
 
-        //VMP.setGTS(GTS);
+        //RP.setGTS(GTS);
         //load Videos into Repository
         //CVSE.VR.addAllRealVideos(); //not needed, all profile included in sim
         CVSE.RG= new RequestGenerator_GOPlevel();
@@ -46,12 +45,12 @@ public class MainTest {
     //set something different between real mode and sim mode?
     private static void setUpCVSE_forreal(){
         CVSE.TE=new TimeEstNone(); //using no TimeEstimator
-        CVSE.VMP= new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
+        CVSE.RP = new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
 
     }
     private static void setUpCVSE_forsim(){
         CVSE.TE=new TimeEstProfileMode();
-        CVSE.VMP= new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
+        CVSE.RP = new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
 
     }
 

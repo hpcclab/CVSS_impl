@@ -1,7 +1,7 @@
 package mainPackage;
 //
 //import Cache.Caching;
-//import DockerManagement.DockerManager;
+//import ResourceManagement.RemoteDocker;
 //import IOWindows.OutputWindow;
 //import IOWindows.WebserviceRequestGate;
 //import Repository.VideoRepository;
@@ -33,11 +33,11 @@ public class RealModeTestBackUp {
 //            CVSE.GTS = new GOPTaskScheduler_common();
 //            CVSE.GTS.readlistedOperations();
 //            CVSE.TE=new TimeEstNone(); //using no TimeEstimator
-//            CVSE.VMP= new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
+//            CVSE.RP= new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
 //            CVSE.CACHING = new Caching(); //change to other type if need something that work
-//            CVSE.OW=new OutputWindow(); //todo, actually call its function from VMP
+//            CVSE.OW=new OutputWindow(); //todo, actually call its function from RP
 //
-//            //VMP.setGTS(GTS);
+//            //RP.setGTS(GTS);
 //            //load Videos into Repository
 //            CVSE.VR.addAllRealVideos();
 //            CVSE.RG= new RequestGenerator_Streamlevel();
@@ -91,7 +91,7 @@ public class RealModeTestBackUp {
 //
 //        //wind down process
 //        CVSE.GTS.close();
-//        CVSE.VMP.closeAll();
+//        CVSE.RP.closeAll();
 //
 //        //Step 6: remove all the folders and contents in the streams folder
 //        /*
@@ -163,7 +163,7 @@ public class RealModeTestBackUp {
 //            SM.InitializeStream(num, newSettings, GTS);
 //        }
 //
-//        //VMP.closeAll();
+//        //RP.closeAll();
 //        //GTS.close();
 //
 //        */
@@ -181,9 +181,9 @@ public class RealModeTestBackUp {
 //    private static void CreateContainerTest() throws InterruptedException, DockerException, DockerCertificateException {
 //        int VMcount=0;
 //            for (int i=0;i<1;i++){
-//                //String result = DockerManager.CreateContainers(1);
+//                //String result = RemoteDocker.CreateContainers(1);
 //                System.out.println("container thread "+ CVSE.config.CR_ports.get(VMcount));
-//                String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
+//                String IP=RemoteDocker.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
 //                try {
 //                    sleep(400);
 //                }catch(Exception e){
@@ -193,7 +193,7 @@ public class RealModeTestBackUp {
 //                //CVSE.GTS.add_VM(t,CVSE.config.CR_autoschedule.get(VMcount));
 //                VMcount++;
 //            }
-//        //DockerManager.RemoveAllContainers();
+//        //RemoteDocker.RemoveAllContainers();
 //    }
 //
 //    private static void ReadVideos(){
@@ -209,15 +209,15 @@ public class RealModeTestBackUp {
 //            }
 //    }
 //
-//    private static void RemoveContainers() throws DockerException, InterruptedException {
-//        DockerManager.RemoveAllContainers();
+//    private static void PurgeAllContainers() throws DockerException, InterruptedException {
+//        RemoteDocker.RemoveAllContainers();
 //    }
 
 
     public static void main(String[] args) {
     //public static void main(String[] args) throws IOException, InterruptedException, DockerException, DockerCertificateException {
         //ReadVideos();
-        //RemoveContainers();
+        //PurgeAllContainers();
         //WebRequestTest();
         //CreateContainerTest();
         //MachineInterface t=new MachineInterface_JavaSocket(CVSE.config.CR_class.get(0),"localhost", CVSE.config.CR_ports.get(0),0,CVSE.config.CR_autoschedule.get(0)); //no ip needed //this passed

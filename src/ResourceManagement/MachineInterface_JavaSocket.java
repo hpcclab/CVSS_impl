@@ -108,7 +108,7 @@ public class MachineInterface_JavaSocket extends MachineInterface {
 //                //TimeEstimator.updateTable(this.id, answer.runtime_report); //disable for now, broken
 //                CVSE.GTS.machineInterfaces.get(id).total_taskmiss =answer.getDlMissed();
 //                CVSE.GTS.machineInterfaces.get(id).total_taskdone =answer.getOntimeCompletion();
-//                //CVSE.VMP.ackCompletedVideo(answer.getCompletedTaskIDList());
+//                //CVSE.RP.ackCompletedVideo(answer.getCompletedTaskIDList());
 //                //completedTask.clear();
 //                //
 //                double missrate=0;

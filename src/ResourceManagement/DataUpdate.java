@@ -150,7 +150,7 @@ public class DataUpdate {
 
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
                 numberwriter.println(totalWorkDone + ", " + totaldeadlinemiss + ", " + avgActualSpentTime / CVSE.config.maxCR+ ", " + mergemiss);
-                for(String aline : CVSE.VMP.TaskCompletionRecord) {
+                for(String aline : CVSE.RP.TaskCompletionRecord) {
                     taskwriter.println(aline);
                 }
                 Fullwriter.close();

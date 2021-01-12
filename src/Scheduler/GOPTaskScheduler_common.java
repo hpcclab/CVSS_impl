@@ -193,7 +193,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 //do reprovisioner, we need more VM!
                 //ResourceProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());
                 System.out.println("queue too long, please scale up!");
-                CVSE.VMP.EvaluateClusterSize(-2);
+                CVSE.RP.EvaluateClusterSize(-2);
                 //re-assign works
                 chosenVM = selectMachine(X);
                 System.out.println("ChosenVM=" + chosenVM);
@@ -222,7 +222,7 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             System.out.println("workpending=" + workpending + " maxpending=" + maxpending);
             if (workpending == maxpending) {
                 System.out.println("workpending==maxpending");
-                //CVSE.VMP.collectData();
+                //CVSE.RP.collectData();
             }
         }
         readytoWork.release();

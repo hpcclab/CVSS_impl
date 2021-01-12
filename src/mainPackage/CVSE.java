@@ -17,7 +17,7 @@ public class CVSE {
     public static VideoRepository VR;
     public static Caching CACHING;
     public static GOPTaskScheduler GTS; //merger created inside GTS if use mergeableGTS
-    public static ResourceProvisioner VMP;
+    public static ResourceProvisioner RP;
     public static TimeEstimator TE;
     public static AdmissionControl AC;
     public static RequestGenerator RG;

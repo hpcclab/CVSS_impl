@@ -7,15 +7,6 @@ import java.util.Properties;
 
 
 public class SystemConfig {
-    private ArrayList<String> Stringlist= new ArrayList<>(Arrays.asList("defaultInputPath","defaultOutputPath","defaultBatchScript","path","batchqueuesortpolicy",
-            "profileRequestsBenhmark","overwriteQueuePolicyHeuristic","outputDir","run_mode","timeEstimatorMode",
-            "scheduler_machineselectionpolicy","file_mode","mergeaggressiveness"));
-
-    private ArrayList<String> intList= new ArrayList<>(Arrays.asList("localqueuelengthperCR","dataUpdateInterval","CRscalingIntervalTick","maxCR","minCR","remedialVM_constantfactor"));
-    private ArrayList<String> doubleList= new ArrayList<>(Arrays.asList("lowscalingThreshold","highscalingThreshold","c_const_for_utilitybased","sdmultiplier"));
-    private ArrayList<String> boolList= new ArrayList<>(Arrays.asList("addProfiledDelay","taskmerge","profiledRequests","openRequests","mergeOverwriteQueuePolicy",
-            "enableTimeEstimator","enableCaching","enableCRscaling","enableCRscalingoutofInterval","useEC2"));
-
     private Properties prop = new Properties();
     private void setDefaultValues(){
         prop.setProperty("batchqueuesortpolicy","Deadline");
@@ -97,6 +88,12 @@ public class SystemConfig {
                                 setCR(CR);
                             }
                             break;
+                        case "RP": String[] RPs=prop.getProperty(keystr).split("[|]");
+                            for(String RP : RPs){
+                                // System.out.println("splitted as "+CR);
+                                setRP(RP);
+                            }
+                            break;
                         //
                         default: System.out.println("Unknown config");
                         System.out.println("Key : " + keystr + ", Value : " + prop.getProperty(keystr));
@@ -126,7 +123,20 @@ public class SystemConfig {
             System.out.println("invalid format");
         }
     }
+    public void setRP(String RP_Texts) {
+        String s[] = RP_Texts.split(",");
+        if (s.length == 5) {
+            RP_type.add(s[0]);
+            RP_name.add(s[1]);
+            RP_address.add(s[2]);
+            RP_dirs.add(s[3]);
+            RP_allowQuickStart.add(Boolean.parseBoolean(s[4]));
+            //System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" "+s[4]+" ");
 
+        } else {
+            System.out.println("invalid format");
+        }
+    }
 
     // questionable,debug settings
     public  String defaultInputPath; //
@@ -138,7 +148,11 @@ public class SystemConfig {
     public  ArrayList<Boolean> CR_autoschedule =new ArrayList<>();
     public  ArrayList<String> CR_address =new ArrayList<>();
     public  ArrayList<Integer> CR_ports =new ArrayList<>();
-
+    public  ArrayList<String> RP_type =new ArrayList<>();
+    public  ArrayList<String> RP_name =new ArrayList<>();
+    public  ArrayList<Boolean> RP_allowQuickStart =new ArrayList<>();
+    public  ArrayList<String> RP_address =new ArrayList<>();
+    public  ArrayList<String> RP_dirs =new ArrayList<>();
 
     public  boolean addProfiledDelay=false; //this is profiled delay, from GOPS
     public  String mergeaggressiveness ="Conservative"; ////either Conservative, Adaptive, or Aggressive

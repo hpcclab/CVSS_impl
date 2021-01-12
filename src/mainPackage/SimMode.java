@@ -80,24 +80,24 @@ public class SimMode {
         //System.out.println("enter any key to terminate the system");
         //scanner.next();
         //wind down process
-        if(CVSE.VMP==null){
-            System.out.println("VMP is down");
+        if(CVSE.RP ==null){
+            System.out.println("RP is down");
         }else{
-            if(CVSE.VMP.DU==null){
+            if(CVSE.RP.DU==null){
                 System.out.println("DU is down");
             }
         }
-        CVSE.VMP.DU.printstat();
+        CVSE.RP.DU.printstat();
         try {
-            CVSE.VMP.RemoveContainers();
+            CVSE.RP.PurgeAllContainers();
         }catch(Exception e){
             System.out.println("close containers error");
         }
-        //CVSE.VMP.DU.graphplot();
+        //CVSE.RP.DU.graphplot();
 
         trysleep(2000); //if graphplot is not draw, don't turn it down too fast
         CVSE.GTS.close();
-        CVSE.VMP.closeAll();
+        CVSE.RP.closeAll();
         System.out.println("Done");
         System.exit(1); //make sure the program exit
 
@@ -130,7 +130,7 @@ public class SimMode {
             }
         }
 
-        //CVSE.VMP.DU.graphplot();
+        //CVSE.RP.DU.graphplot();
 
         return "done";
     }

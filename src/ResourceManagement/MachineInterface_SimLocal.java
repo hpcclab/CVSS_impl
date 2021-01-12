@@ -162,7 +162,7 @@ public class MachineInterface_SimLocal extends MachineInterface {
         for (TaskReport TR:RecentFinishedTask
              ) {
             //System.out.println("simlocal call taskreport"); //no problem here
-            CVSE.VMP.collectData(TR);
+            CVSE.RP.collectData(TR);
 
         }
         RecentFinishedTask.clear();

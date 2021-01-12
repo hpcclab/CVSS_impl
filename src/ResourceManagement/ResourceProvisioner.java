@@ -1,6 +1,5 @@
 package ResourceManagement;
 
-import DockerManagement.DockerManager;
 import ProtoMessage.TaskRequest;
 import SessionPkg.TranscodingRequest;
 import TranscodingVM.TranscodingVM;
@@ -10,15 +9,12 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import com.spotify.docker.client.DockerException;
 import mainPackage.CVSE;
-import DockerManagement.DockerManager;
-import javax.swing.*;
+
+import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Semaphore;
-import java.time.Instant;
 
 import static java.lang.Thread.sleep;
 
@@ -35,6 +31,7 @@ public class ResourceProvisioner {
     //private double lowscalingThreshold;
     private Semaphore x;
     private ArrayList<machineinfo> VMCollection =new ArrayList<>();
+    private HashMap<String,RemoteDocker> ResourceCollection=new HashMap<>();
     public DataUpdate DU; //currently is a subcomponent of ResourceProvisioner
     //this need to set
     //rabbitMQ connection
@@ -64,6 +61,12 @@ public class ResourceProvisioner {
         }catch (Exception E){
             System.out.println("Rmqbug in initializing "+E);
         }
+        // ResourcePool Setup
+        for(int i=0;i<CVSE.config.RP_type.size();i++){
+            RemoteDocker tmpRD=new RemoteDocker(CVSE.config.RP_type.get(i),CVSE.config.RP_address.get(i),CVSE.config.RP_allowQuickStart.get(i));
+            ResourceCollection.put(CVSE.config.RP_name.get(i),tmpRD);
+        }
+
 
         x=new Semaphore(1);
         DU=new DataUpdate();
@@ -229,8 +232,8 @@ public class ResourceProvisioner {
                CVSE.RG.contProfileRequestsGen();
             }  //move this somewhere else
             else{
-                CVSE.VMP.datacolEvent.setRepeats(false);
-                CVSE.VMP.datacolEvent.stop();
+                CVSE.RP.datacolEvent.setRepeats(false);
+                CVSE.RP.datacolEvent.stop();
             }
         }
     }
@@ -339,14 +342,15 @@ public class ResourceProvisioner {
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ local container,
                     //////////////// Experimenting here:
                     System.out.println("Create local python container");
+                    RemoteDocker theRP=ResourceCollection.get(CVSE.config.CR_address.get(VMcount));
                     MachineInterface t=new MachineInterface_RMQContainer(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
-                            CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME);
+                            CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME,theRP);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("localContainer")){ //create local (old style) container
 //                    System.out.println("container thread");
-//                    String IP=DockerManager.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
+//                    String IP=RemoteDocker.CreateContainers(CVSE.config.CR_ports.get(VMcount)+"").split(",")[0]; //get IP from docker
 //                    System.out.println("returned IP="+IP);
 //                    VMCollection.add(new machineinfo("local container",IP));
 //                    try {
@@ -394,8 +398,10 @@ public class ResourceProvisioner {
         return VMcount;
     }
 
-    public static void RemoveContainers() throws DockerException, InterruptedException {
-        DockerManager.RemoveAllContainers();
+    public void PurgeAllContainers() throws DockerException, InterruptedException {
+        for(Map.Entry<String, RemoteDocker> entry : ResourceCollection.entrySet()) {
+            entry.getValue().RemoveAllContainers();
+        }
     }
     //relay function to outputwindoe
     public void ackCompletedVideo(List<TranscodingRequest> completedTasks){

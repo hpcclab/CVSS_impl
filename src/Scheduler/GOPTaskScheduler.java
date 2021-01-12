@@ -18,6 +18,7 @@ public abstract class GOPTaskScheduler {
     Semaphore readytoWork;
     protected TaskQueue Batchqueue;
     public  ArrayList<MachineInterface> machineInterfaces = new ArrayList<MachineInterface>();
+
     protected  int maxpending = 0;
     public  int workpending = 0;
     public int worksubmitted=0;
