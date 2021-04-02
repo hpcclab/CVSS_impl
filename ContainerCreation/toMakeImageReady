@@ -54,3 +54,6 @@ docker images
 docker create --name WorkerThread 5072723f60e3
 
 docker run -it jrottenberg/ffmpeg:3.4-ubuntu /bin/bash
+// Test run cold start
+docker run -it -v /share_dir/SVSE:/share_dir/SVSE jrottenberg/ffmpeg:3.4-ubuntu -i /share_dir/SVSE/sampleRepo/1/video1.ts -vf scale=1920:1080 /share_dir/SVSE/sampleOutput/1/video1.ts
+

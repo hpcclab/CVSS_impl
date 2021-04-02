@@ -50,8 +50,8 @@ public class RemoteDocker {
         //return DefaultDockerClient.builder().uri(URI.create("https://localhost:80")).build();
     }
 
-    public String CreateContainers(String[] ports,int nodeID,String imageName)  { //
-        String createdIP="";
+    public String CreateContainers(String[] ports,int nodeID,String imageName,String CMD)  { //
+        String createdID="";
         if(docker == null) {
             System.out.println("docker Client wasn't created");
             return "Error";
@@ -83,7 +83,7 @@ public class RemoteDocker {
                     .portBindings(portBindings)
                     .build();
 
-            final String[] command = {"/home/PythonWorker/FrontConnector.py",nodeID+""};
+            final String[] command = {CMD,nodeID+""};
             final ContainerConfig containerConfig = ContainerConfig.builder()
                     .image(imageName)
                     .attachStderr(Boolean.TRUE)
@@ -97,7 +97,8 @@ public class RemoteDocker {
 
                 final ContainerCreation containerCreation = docker.createContainer(containerConfig);
                 docker.startContainer(containerCreation.id());
-                createdIP+=docker.inspectContainer(containerCreation.id()).networkSettings().ipAddress()+",";
+                //createdIP+=docker.inspectContainer(containerCreation.id()).networkSettings().ipAddress()+",";
+                createdID=containerCreation.id();
                 //createdIP="0.0.0.0"; //TESTTTT, not using the returned IP
                 //byte[] ByteCode=givenPort.getBytes();
                 //Files.write("/mnt/container/portid",ByteCode);
@@ -107,7 +108,7 @@ public class RemoteDocker {
         }catch(Exception e){
             System.out.println("Docker fail: "+e);
         }
-        return createdIP;
+        return createdID;
     }
 
     //stop all containers?
@@ -145,6 +146,8 @@ public class RemoteDocker {
 
         containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
     }
-
+    public void waitContainersStop(String whichone) throws DockerException, InterruptedException {
+        docker.waitContainer(whichone);
+    }
 }
 

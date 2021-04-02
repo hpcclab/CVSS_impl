@@ -7,7 +7,7 @@ public class MachineInterface_RMQContainer extends MachineInterface_RabbitMQ {
         super(vclass, addr, port, inid, iautoschedule, RMQchannel, initqueue, myQueueName, myResponseQueuename);
         System.out.println("Try to create Container");
         String[] ports=new String[port];
-        Dockerpool.CreateContainers(ports,inid,"testworkerthread");
+        Dockerpool.CreateContainers(ports,inid,"testworkerthread","/home/PythonWorker/FrontConnector.py");
         System.out.println("done creating container");
         //now, contact docker to create a container
     }
