@@ -116,7 +116,7 @@ public class ResourceProvisioner {
 
     static int timeforced=0;
     static double previous_wovertime,previous_wundertime;
-    //Main way of collecting result data (used in real mode, and hopefully soon in real mode too
+    //A way of collecting result data (used in sim mode, and hopefully soon in real mode too
     LinkedList<String> TaskCompletionRecord=new LinkedList<>();
     public void collectData(TaskRequest.TaskReport T){ //ack ONE task completion
         System.out.println("ack a task completion  "+T.getTheRequest().getDataSource());
@@ -354,7 +354,7 @@ public class ResourceProvisioner {
                     System.out.println("Create cold container platform");
                     RemoteDocker theRP=ResourceCollection.get(CVSE.config.CR_address.get(VMcount));
                     MachineInterface t=new MachineInterface_ContPlatform(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
-                            CVSE.config.CR_autoschedule.get(VMcount),theRP);
+                            CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,FEEDBACKQUEUE_NAME,theRP);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.SR.populateAllFNtoMI(t);
