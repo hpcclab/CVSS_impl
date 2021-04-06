@@ -46,12 +46,10 @@ public class MainTest {
     private static void setUpCVSE_forreal(){
         CVSE.TE=new TimeEstNone(); //using no TimeEstimator
         CVSE.RP = new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
-
     }
     private static void setUpCVSE_forsim(){
         CVSE.TE=new TimeEstProfileMode();
         CVSE.RP = new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
-
     }
 
     public static String trysleep(int time){
@@ -121,12 +119,12 @@ public class MainTest {
 
         setUpCVSE_common("config/"+confFile,opt);
 
-
+        //if(CVSE.config.Pool)
         if(CVSE.config.openWebRequests==true){ //real mode
             setUpCVSE_forreal(); //for web request real mode
             WebRequestTest();
         }else{ //sim mode
-            System.out.println("setting config openWebRequests==false in real mode?");
+            System.out.println("Sim user Input");
             setUpCVSE_forsim(); //for web request with simulation
             Sim(confFile,opt);
         }

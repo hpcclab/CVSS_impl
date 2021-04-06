@@ -17,9 +17,12 @@ public class MachineInterface_ContPlatform extends MachineInterface{
     }
 
     public boolean sendJob(TranscodingRequest segment) {
+        System.out.println("try sending a segment to cold cont");
         String RepDir="/share_dir/SVSE/sampleRepo/";
         String ExpDir="/share_dir/SVSE/sampleOutput/";
-        String[] ports=new String[port];
+        System.out.println("port="+port);
+        String[] ports=new String[1];
+        ports[0]=port+"";
         /// Step 1, make sure folder exist
 
         /// Step 2, parse cmd first
@@ -28,24 +31,24 @@ public class MachineInterface_ContPlatform extends MachineInterface{
         String segName="video"+sourcesplit[1]+".ts";
 
 
-        String CMD= "-i "+RepDir+vidChoice+segName;
+        String CMD= "-i "+RepDir+vidChoice+segName+" ";
         String OPstring="";
         int cmdcount=0;
         for (String cmd:segment.listallCMD()){
             for(String param:segment.listparamsofCMD(cmd)) {
                 switch(cmd){
-                    case "RESOLUTION": OPstring="-vf";
+                    case "RESOLUTION": OPstring="-vf ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"scale=1920:1080":"scale=640:360";
                         break;
-                    case "FRAMERATE": OPstring="-r";
+                    case "FRAMERATE": OPstring="-r ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"60":"24";
 
                         break;
-                    case "BITRATE": OPstring="-b:v";
+                    case "BITRATE": OPstring="-b:v ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"3.4M":"2.4M";
 
                         break;
-                    case "CODEC": OPstring="-c:v";
+                    case "CODEC": OPstring="-c:v ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"libx264":"libvpx-vp9";
                         break;
                     default:
@@ -62,7 +65,7 @@ public class MachineInterface_ContPlatform extends MachineInterface{
         }
         // Step 3, call ffmpeg container
         System.out.println("cold container will run:"+CMD);
-        String ID=Dockerpool.CreateContainers(ports,id,"jrottenberg/ffmpeg",CMD); //CMD is not "/home/PythonWorker/FrontConnector.py"
+        String ID=Dockerpool.CreateContainers(ports,id,"jrottenberg/ffmpeg:3.4-ubuntu",CMD); //CMD is not "/home/PythonWorker/FrontConnector.py"
         try{
             Dockerpool.waitContainersStop(ID);
         }catch(Exception E){

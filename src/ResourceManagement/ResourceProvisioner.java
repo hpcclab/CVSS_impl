@@ -62,9 +62,10 @@ public class ResourceProvisioner {
             System.out.println("Rmqbug in initializing "+E);
         }
         // ResourcePool Setup
-        for(int i=0;i<CVSE.config.RP_type.size();i++){
-            RemoteDocker tmpRD=new RemoteDocker(CVSE.config.RP_type.get(i),CVSE.config.RP_address.get(i),CVSE.config.RP_allowQuickStart.get(i));
-            ResourceCollection.put(CVSE.config.RP_name.get(i),tmpRD);
+        for(int i=0;i<CVSE.config.RePool_type.size();i++){
+            RemoteDocker tmpRD=new RemoteDocker(CVSE.config.RePool_type.get(i),CVSE.config.RePool_name.get(i),CVSE.config.RePool_address.get(i),CVSE.config.RePool_dirs.get(i),CVSE.config.RePool_allowQuickStart.get(i));
+            ResourceCollection.put(CVSE.config.RePool_name.get(i),tmpRD);
+            System.out.println("Resource Pool initiated");
         }
 
 
@@ -339,12 +340,21 @@ public class ResourceProvisioner {
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.SR.populateAllFNtoMI(t);
-                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ local container,
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ remote container,
                     //////////////// Experimenting here:
                     System.out.println("Create local python container");
                     RemoteDocker theRP=ResourceCollection.get(CVSE.config.CR_address.get(VMcount));
                     MachineInterface t=new MachineInterface_RMQContainer(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
                             CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME,theRP);
+                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.SR.populateAllFNtoMI(t);
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("ContPlatform")){ //create cold container platform
+                    //////////////// Experimenting here:
+                    System.out.println("Create cold container platform");
+                    RemoteDocker theRP=ResourceCollection.get(CVSE.config.CR_address.get(VMcount));
+                    MachineInterface t=new MachineInterface_ContPlatform(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
+                            CVSE.config.CR_autoschedule.get(VMcount),theRP);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.SR.populateAllFNtoMI(t);

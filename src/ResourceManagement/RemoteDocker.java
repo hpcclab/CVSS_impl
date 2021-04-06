@@ -21,10 +21,13 @@ public class RemoteDocker {
 
 
     private DockerClient docker = null;
-
+    private String type,name;
     public List<Container> containers = null;
     boolean allowCold=false;
-    public RemoteDocker(String IP,String certPath,Boolean _allowCold){
+    public RemoteDocker(String ttype,String nname,String IP,String certPath,Boolean _allowCold){
+        //System.out.println("IP="+IP+" certPath="+certPath);
+        type=ttype;
+        name=nname;
         docker=CreateDockerClient(IP,certPath);
         allowCold=_allowCold;
     }
@@ -39,7 +42,7 @@ public class RemoteDocker {
                 //.uri(URI.create("https://10.131.35.31:2376")) //VM1
                 //.dockerCertificates(new DockerCertificates(Paths.get("/share_dir/cert/VM1")))
 
-                .uri(URI.create(IP)) //VM01
+                .uri(URI.create("https://"+IP)) //VM01
                 .dockerCertificates(new DockerCertificates(Paths.get(certPath)))
                 .build();
         return docker;
@@ -54,7 +57,7 @@ public class RemoteDocker {
         String createdID="";
         if(docker == null) {
             System.out.println("docker Client wasn't created");
-            return "Error";
+            return "Error docker==null";
         }
 
         String IP;
@@ -70,7 +73,7 @@ public class RemoteDocker {
             //final List<Image> images = docker.listImages();
 
             //support array, because it may need multiple ports
-            System.out.println("givenport="+ports);
+            System.out.println("givenport="+ports[0]);
             final Map<String, List<PortBinding>> portBindings = new HashMap<String, List<PortBinding>>();
             for ( String port : ports ) {
                 List<PortBinding> hostPorts = new ArrayList<PortBinding>();

@@ -88,10 +88,10 @@ public class SystemConfig {
                                 setCR(CR);
                             }
                             break;
-                        case "RP": String[] RPs=prop.getProperty(keystr).split("[|]");
+                        case "RePool": String[] RPs=prop.getProperty(keystr).split("[|]");
                             for(String RP : RPs){
                                 // System.out.println("splitted as "+CR);
-                                setRP(RP);
+                                setRePool(RP);
                             }
                             break;
                         //
@@ -123,14 +123,14 @@ public class SystemConfig {
             System.out.println("invalid format");
         }
     }
-    public void setRP(String RP_Texts) {
+    public void setRePool(String RP_Texts) {
         String s[] = RP_Texts.split(",");
         if (s.length == 5) {
-            RP_type.add(s[0]);
-            RP_name.add(s[1]);
-            RP_address.add(s[2]);
-            RP_dirs.add(s[3]);
-            RP_allowQuickStart.add(Boolean.parseBoolean(s[4]));
+            RePool_type.add(s[0]);
+            RePool_name.add(s[1]);
+            RePool_address.add(s[2]);
+            RePool_dirs.add(s[3]);
+            RePool_allowQuickStart.add(Boolean.parseBoolean(s[4]));
             //System.out.println(s[0]+" "+s[1]+" "+s[2]+" "+s[3]+" "+s[4]+" ");
 
         } else {
@@ -148,11 +148,11 @@ public class SystemConfig {
     public  ArrayList<Boolean> CR_autoschedule =new ArrayList<>();
     public  ArrayList<String> CR_address =new ArrayList<>();
     public  ArrayList<Integer> CR_ports =new ArrayList<>();
-    public  ArrayList<String> RP_type =new ArrayList<>();
-    public  ArrayList<String> RP_name =new ArrayList<>();
-    public  ArrayList<Boolean> RP_allowQuickStart =new ArrayList<>();
-    public  ArrayList<String> RP_address =new ArrayList<>();
-    public  ArrayList<String> RP_dirs =new ArrayList<>();
+    public  ArrayList<String> RePool_type =new ArrayList<>();
+    public  ArrayList<String> RePool_name =new ArrayList<>();
+    public  ArrayList<Boolean> RePool_allowQuickStart =new ArrayList<>();
+    public  ArrayList<String> RePool_address =new ArrayList<>();
+    public  ArrayList<String> RePool_dirs =new ArrayList<>();
 
     public  boolean addProfiledDelay=false; //this is profiled delay, from GOPS
     public  String mergeaggressiveness ="Conservative"; ////either Conservative, Adaptive, or Aggressive
