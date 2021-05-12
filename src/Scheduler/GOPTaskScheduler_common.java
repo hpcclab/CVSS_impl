@@ -1,6 +1,7 @@
 package Scheduler;
 
 import ResourceManagement.MachineInterface;
+import ResourceManagement.MachineInterface_RMQContainerFnSpecific;
 import SessionPkg.TranscodingRequest;
 import TimeEstimatorpkg.histStat;
 import mainPackage.CVSE;
@@ -39,17 +40,24 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 MachineInterface aMachine = machineInterfaces.get(i);
                 if (aMachine.isWorking()) {
                     if (aMachine.autoschedule) {
-                        if((pending_queuelength[i] < CVSE.config.localqueuelengthperCR) || !realSchedule) {
-                            estimatedT = pending_queuelength[i];
-                            if (estimatedT < minFT) {
-                                answer = aMachine;
-                                minFT = estimatedT;
+                        boolean checkFurther=true;
+                        if(aMachine instanceof MachineInterface_RMQContainerFnSpecific){
+                            checkFurther=x.listallCMD().get(0).equalsIgnoreCase(aMachine.properties.get("myFn"));
+                        }
+                        if(checkFurther) {
+                            if ((pending_queuelength[i] < CVSE.config.localqueuelengthperCR) || !realSchedule) {
+                                estimatedT = pending_queuelength[i];
+                                if (estimatedT < minFT) {
+                                    answer = aMachine;
+                                    minFT = estimatedT;
+                                }
+                            } else {
+                                //System.out.println("queue is full");
                             }
-                        }else {
-                            //System.out.println("queue is full");
+                        }else{
+                            System.out.println("not considering non fitting machine type");
                         }
                     }else{
-                        System.out.println("not considering non-auto assign machine");
                     }
                 }else{
                     System.out.println("warning, a machine is not ready");
@@ -98,27 +106,35 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 MachineInterface aMachine = machineInterfaces.get(i);
                 if (aMachine.isWorking()) {
                     if (aMachine.autoschedule) {
-                        if((pending_queuelength[i] < CVSE.config.localqueuelengthperCR) || !realSchedule) {
-                        //calculate new choice
-                            histStat chk = CVSE.TE.getHistoricProcessTime(aMachine, x);
-                            long checkTime;
-                            //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
-                            if(mode.equalsIgnoreCase("MET")){ //for MET, simply compare execution time
-                                checkTime= (long) (chk.mean + chk.SD * SDcoefficient);
-                            }else {
-                                checkTime = pending_executiontime[i]; //for SJF,MCT
-                                if (mode.equalsIgnoreCase("MCT")) { //MCT add ET of this task too
-                                    checkTime += (long) (chk.mean + chk.SD * SDcoefficient);
+                        boolean checkFurther=true;
+                        if(aMachine instanceof MachineInterface_RMQContainerFnSpecific){
+                            checkFurther=x.listallCMD().get(0).equalsIgnoreCase(aMachine.properties.get("myFn"));
+                        }
+                        if(checkFurther) {
+                            if ((pending_queuelength[i] < CVSE.config.localqueuelengthperCR) || !realSchedule) {
+                                //calculate new choice
+                                histStat chk = CVSE.TE.getHistoricProcessTime(aMachine, x);
+                                long checkTime;
+                                //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
+                                if (mode.equalsIgnoreCase("MET")) { //for MET, simply compare execution time
+                                    checkTime = (long) (chk.mean + chk.SD * SDcoefficient);
+                                } else {
+                                    checkTime = pending_executiontime[i]; //for SJF,MCT
+                                    if (mode.equalsIgnoreCase("MCT")) { //MCT add ET of this task too
+                                        checkTime += (long) (chk.mean + chk.SD * SDcoefficient);
+                                    }
                                 }
+                                if (checkTime < minFT) {
+                                    answer = aMachine;
+                                    minFT = checkTime;
+                                    minET = chk.mean;
+                                    minSD = chk.SD;
+                                }
+                            } else {
+                                //System.out.println("queue is full");
                             }
-                            if (checkTime < minFT) {
-                                answer = aMachine;
-                                minFT = checkTime;
-                                minET = chk.mean;
-                                minSD = chk.SD;
-                            }
-                        }else {
-                            //System.out.println("queue is full");
+                        }else{
+                            System.out.println("not considering non fitting machine type");
                         }
                     }else{
                         System.out.println("not considering non-auto assign machine");

@@ -37,6 +37,7 @@ public class MachineInterface_ContPlatform extends MachineInterface{
         channel=RMQchannel;
         FEEDBACKQUEUE_NAME=myResponseQueuename;
         workerThread= new Thread(runnable);
+        status=1;
     }
 
     public boolean sendJob(TranscodingRequest segment) {
@@ -64,7 +65,9 @@ public class MachineInterface_ContPlatform extends MachineInterface{
         System.out.println("port="+port);
         String[] ports=new String[1];
         ports[0]=port+"";
-        /// Step 1, make sure folder exist
+
+        long savedTime=System.nanoTime()/1000000;
+        /// Step 1, make sure folder exist??
 
         /// Step 2, parse cmd first
         String[] sourcesplit=segment.DataSource.split("_");
@@ -109,12 +112,13 @@ public class MachineInterface_ContPlatform extends MachineInterface{
         String ID=Dockerpool.CreateContainers(ports,id,"jrottenberg/ffmpeg:3.4-ubuntu",CMD);
         try{
             Dockerpool.waitContainersStop(ID);
+            Dockerpool.removeCont(ID);
         }catch(Exception E){
             System.out.println("bug in container waiting");
         }
         //Step 4, Report stats to FeedbackQueue
-        double timeStamp=100;
-        double ExeTime=100;
+        double timeStamp=System.nanoTime()/1000000;
+        double ExeTime=System.nanoTime()/1000000-savedTime;
         try  {
             TaskRequest.TaskReport.Builder Reportbuilder=TaskRequest.TaskReport.newBuilder();
             TaskRequest.TaskReport report=Reportbuilder.setCompletedTaskID(segment.TaskId)

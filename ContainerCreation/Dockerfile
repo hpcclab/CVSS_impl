@@ -2,14 +2,15 @@ FROM jrottenberg/ffmpeg:3.4-ubuntu
 
 
 RUN apt update && \
-apt install -y python3 python3-pip curl gnupg
+apt install -y python3 python3-pip curl gnupg --no-install-recommends
 
 RUN python3 -m pip install torch torchvision &&  \
 python3 -m pip install -U protobuf
 
 #RabbitMQ, repo
 RUN curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | apt-key add - &&  \
-apt-get install apt-transport-https 
+apt-get install apt-transport-https --no-install-recommends
+
 
 COPY de.sh /home/de.sh
 RUN /home/de.sh
@@ -23,8 +24,11 @@ RUN /home/de.sh
 
 #actual RMQ installation for python3
 RUN apt-get update -y &&  \
-apt-get install rabbitmq-server -y --fix-missing &&  \
+apt-get install rabbitmq-server -y --fix-missing --no-install-recommends &&  \
 python3 -m pip install pika --upgrade
+
+#make image small
+RUN rm -rf /var/lib/apt/lists/*
 
 #start RMQ, is not needed, will connect to host
 #RUN service rabbitmq-server start

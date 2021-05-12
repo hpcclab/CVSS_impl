@@ -145,13 +145,13 @@ public class MainTest {
             }
         }else {
             //for sim mode
-            String Configname="nuConfig.properties"; // simModeTest
+            String Configname="testConfig8Cold.properties"; // simModeTest
 
             //for real mode
             //String Configname="nuConfigWeb.properties"; // realModeTest
 
             //String benchmarkname=""; //avg 0.3s per task, so
-            String benchmarkname="xshortTest";
+            String benchmarkname="start0_400r_100000_20000_3000_s555";
 //            String Configname="nuConfig.properties"; // simModeTest
 //
 //            String benchmarkname="start0_1200r_180000_10000_3000_s555";

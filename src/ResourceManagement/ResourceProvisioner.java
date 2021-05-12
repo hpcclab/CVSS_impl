@@ -144,6 +144,13 @@ public class ResourceProvisioner {
         TaskCompletionRecord.add(T.getTimeStamp()+","+sr.getDataTag()+","+datasource[0]+","+datasource[1]+","+T.getWorkerNodeID()+","+T.getExecutionTime()+","+sr.getGlobalDeadline()+","+sr.getEstMean()+","+sr.getEstSD()+","+sr.getArrival()+","+sr.getPriority());
         //System.out.println("ack a task completed "+T.getTheRequest().getDataTag());
 
+        //sim time
+//        if(CVSE.GTS.maxElapsedTime<T.getTimeStamp()){
+//            CVSE.GTS.maxElapsedTime=(long)T.getTimeStamp();
+//        }
+        //real time
+        CVSE.GTS.maxElapsedTime=System.currentTimeMillis()-CVSE.GTS.referenceTime;
+
         CVSE.GTS.workpending--;
         CVSE.GTS.workcompleted++;
     }
@@ -342,11 +349,20 @@ public class ResourceProvisioner {
                     CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ remote container,
                     //////////////// Experimenting here:
-                    System.out.println("Create local python container");
+                    System.out.println("Create python container");
                     RemoteDocker theRP=ResourceCollection.get(CVSE.config.CR_address.get(VMcount));
                     MachineInterface t=new MachineInterface_RMQContainer(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
                             CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME,theRP);
                     CVSE.TE.populate(CVSE.config.CR_class.get(VMcount));
+                    CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
+                    CVSE.SR.populateAllFNtoMI(t);
+                }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainerFnSpecific")){ //create local rabbitMQ remote container,
+                    //////////////// Experimenting here:
+                    System.out.println("Create python container-Fn specific");
+                    RemoteDocker theRP=ResourceCollection.get(CVSE.config.CR_address.get(VMcount));
+                    MachineInterface t=new MachineInterface_RMQContainerFnSpecific(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
+                            CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME,theRP);
+                    CVSE.TE.populate(CVSE.config.CR_class.get(VMcount).split("-")[0]);
                     CVSE.GTS.add_VM(t, CVSE.config.CR_autoschedule.get(VMcount));
                     CVSE.SR.populateAllFNtoMI(t);
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("ContPlatform")){ //create cold container platform

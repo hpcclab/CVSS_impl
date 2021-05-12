@@ -152,5 +152,8 @@ public class RemoteDocker {
     public void waitContainersStop(String whichone) throws DockerException, InterruptedException {
         docker.waitContainer(whichone);
     }
+    public void removeCont(String whichone) throws DockerException, InterruptedException {
+        docker.removeContainer(whichone);
+    }
 }
 

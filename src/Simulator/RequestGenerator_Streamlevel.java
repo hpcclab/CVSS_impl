@@ -193,7 +193,7 @@ public class RequestGenerator_Streamlevel extends RequestGenerator{
             Arrays.sort(rqe);
             System.out.println("rqe length=" + rqe.length);
             //modify again?
-            modifyrqeaftersort(rqe, r, randomDone, rqe.length, totalSegmentcount); //enforce some duplication
+            //modifyrqeaftersort(rqe, r, randomDone, rqe.length, totalSegmentcount); //enforce some duplication
             // write to file
             System.out.println("randomized " + totalSegmentcount + " segments");
             for (i = 0; i < randomDone; i++) {

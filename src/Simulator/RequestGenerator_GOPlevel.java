@@ -25,7 +25,7 @@ public class RequestGenerator_GOPlevel extends RequestGenerator_Streamlevel{
 
     //FEW GOP per generation, instead of a lot.
     public void generateProfiledRandomRequests(String filename,long seed,int totalVideos,int totalRequest,long timeSpan,int avgslack,double sdslack) {
-        int highPeriod=10000,lowPeriod=30000;
+        int highPeriod=5000,lowPeriod=15000;
         double highAmp=2.0;
         //random into array, modify, sort array, write to file
         Random r =new Random(seed);
@@ -101,7 +101,7 @@ public class RequestGenerator_GOPlevel extends RequestGenerator_Streamlevel{
             Arrays.sort(rqe);
             System.out.println("rqe length=" + rqe.length);
             //modify again?
-            modifyrqeaftersort(rqe, r, randomDone, rqe.length, totalSegmentcount); //enforce some duplication
+           // modifyrqeaftersort(rqe, r, randomDone, rqe.length, totalSegmentcount); //enforce some duplication
             // write to file
             System.out.println("randomized " + totalSegmentcount + " segments");
             for (i = 0; i < randomDone; i++) {
