@@ -149,6 +149,10 @@ public class DataUpdate {
 //                }
 
                 Fullwriter.println("avgspentTime " + avgActualSpentTime / CVSE.config.maxCR);
+                Fullwriter.println("clockTime started"+CVSE.GTS.referenceTime);
+                Fullwriter.println("clockTime stopped"+System.currentTimeMillis());
+                Fullwriter.println("clockTime total"+(System.currentTimeMillis()-CVSE.GTS.referenceTime ));
+
                 numberwriter.println(totalWorkDone + ", " + totaldeadlinemiss + ", " + avgActualSpentTime / CVSE.config.maxCR+ ", " + mergemiss);
                 for(String aline : CVSE.RP.TaskCompletionRecord) {
                     taskwriter.println(aline);

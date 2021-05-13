@@ -145,7 +145,7 @@ public class MainTest {
             }
         }else {
             //for sim mode
-            String Configname="testConfig8Cold.properties"; // simModeTest
+            String Configname="testConfig8DynamicSimple.properties"; // simModeTest
 
             //for real mode
             //String Configname="nuConfigWeb.properties"; // realModeTest

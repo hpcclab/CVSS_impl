@@ -126,10 +126,13 @@ public class ResourceProvisioner {
         MachineInterface MI=CVSE.GTS.machineInterfaces.get(T.getWorkerNodeID());
 
         MI.estimatedQueueLength-=1;
-        long completionTime= System.currentTimeMillis();
+        //long completionTime= System.currentTimeMillis();
 
+
+        //push Data into Node
+        MI.actualSpentTime+=T.getExecutionTime();
         MI.total_taskdone++;
-        if(completionTime>T.getTheRequest().getGlobalDeadline()+CVSE.GTS.referenceTime){
+        if(T.getTimeStamp()>T.getTheRequest().getGlobalDeadline()+CVSE.GTS.referenceTime){
             //deadline missed
             MI.total_taskmiss++;
         }else{
@@ -143,6 +146,8 @@ public class ResourceProvisioner {
         // for Real Mode?, node_id does not record correctly at the moment (always 0 )
         TaskCompletionRecord.add(T.getTimeStamp()+","+sr.getDataTag()+","+datasource[0]+","+datasource[1]+","+T.getWorkerNodeID()+","+T.getExecutionTime()+","+sr.getGlobalDeadline()+","+sr.getEstMean()+","+sr.getEstSD()+","+sr.getArrival()+","+sr.getPriority());
         //System.out.println("ack a task completed "+T.getTheRequest().getDataTag());
+
+
 
         //sim time
 //        if(CVSE.GTS.maxElapsedTime<T.getTimeStamp()){
@@ -350,6 +355,9 @@ public class ResourceProvisioner {
                 }else if(CVSE.config.CR_type.get(VMcount).equalsIgnoreCase("PyContainer")){ //create local rabbitMQ remote container,
                     //////////////// Experimenting here:
                     System.out.println("Create python container");
+                    //System.out.println("crport="+CVSE.config.CR_ports);
+                    //System.out.println("VMcount="+VMcount);
+                    //System.out.println("port="+CVSE.config.CR_ports.get(VMcount));
                     RemoteDocker theRP=ResourceCollection.get(CVSE.config.CR_address.get(VMcount));
                     MachineInterface t=new MachineInterface_RMQContainer(CVSE.config.CR_class.get(VMcount),CVSE.config.CR_address.get(VMcount), CVSE.config.CR_ports.get(VMcount),VMcount,
                             CVSE.config.CR_autoschedule.get(VMcount),OutRMQchannel,INITQUEUE_NAME,"MQ"+VMcount,FEEDBACKQUEUE_NAME,theRP);

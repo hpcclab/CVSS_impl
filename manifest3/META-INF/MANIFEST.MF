@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Class-Path: jaxb-core-2.3.0.jar docker-client-3.5.12.jar javax.annotat
+ ion-api-1.2.jar jnr-ffi-2.0.3.jar jackson-core-2.6.0.jar jersey-media
+ -json-jackson-2.19.jar httpcore-4.4.1.jar asm-commons-5.0.3.jar jaxb-
+ api-2.3.0.jar guava-18.0.jar slf4j-api-1.7.25.jar jersey-common-2.19.
+ jar jackson-jaxrs-base-2.6.0.jar jcommon-1.0.23.jar hk2-locator-2.4.0
+ -b25.jar bcpkix-jdk15on-1.52.jar jersey-apache-connector-2.19.jar jnr
+ -unixsocket-0.8.jar jnr-enxio-0.9.jar javax.xml.soap-api-1.4.0.jar jf
+ fi-1.2.9.jar el-api-2.2.jar jstl-1.2.jar jaxb-impl-2.3.0.jar commons-
+ compress-1.9.jar jfreechart-1.0.19.jar javax.ws.rs-api-2.0.1.jar comm
+ ons-logging-1.2.jar hk2-api-2.4.0-b25.jar jackson-datatype-guava-2.6.
+ 0.jar jackson-annotations-2.6.0.jar asm-tree-5.0.3.jar jackson-jaxrs-
+ json-provider-2.6.0.jar javax.servlet-api-3.1.0.jar httpclient-4.5.ja
+ r bcprov-jdk15on-1.52.jar javax.inject-2.4.0-b25.jar jaxws-api-2.3.0.
+ jar amqp-client-5.7.1.jar jersey-entity-filtering-2.19.jar hk2-utils-
+ 2.4.0-b25.jar jnr-x86asm-1.0.2.jar jnr-constants-0.8.7.jar asm-5.0.3.
+ jar jffi-1.2.9-native.jar jersey-guava-2.19.jar asm-analysis-5.0.3.ja
+ r jackson-databind-2.6.0.jar osgi-resource-locator-1.0.1.jar jackson-
+ module-jaxb-annotations-2.6.0.jar commons-codec-1.9.jar jnr-posix-3.0
+ .12.jar jersey-client-2.19.jar javassist-3.18.1-GA.jar protobuf-java-
+ 3.12.4.jar activation-1.1.1.jar asm-util-5.0.3.jar aopalliance-repack
+ aged-2.4.0-b25.jar commons-lang-2.6.jar
+Main-Class: mainPackage.MainTest
+
