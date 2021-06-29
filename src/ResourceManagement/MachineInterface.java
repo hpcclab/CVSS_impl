@@ -35,6 +35,7 @@ public abstract class MachineInterface {
             id=inid;
             port=iport;
             autoschedule=iautoschedule;
+            properties=new HashMap<>();
     }
     public boolean isWorking(){
         return status==1;

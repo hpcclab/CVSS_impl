@@ -78,38 +78,52 @@ public class MachineInterface_ContPlatform extends MachineInterface{
         String CMD= "-i "+RepDir+vidChoice+segName+" ";
         String OPstring="";
         int cmdcount=0;
+        String entry="ffmpeg";
+        String img="";
         for (String cmd:segment.listallCMD()){
             for(String param:segment.listparamsofCMD(cmd)) {
                 switch(cmd){
                     case "RESOLUTION": OPstring="-vf ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"scale=1920:1080":"scale=640:360";
+                        img+="resolution_img";
                         break;
                     case "FRAMERATE": OPstring="-r ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"60":"24";
-
+                        img+="framerate_img";
                         break;
                     case "BITRATE": OPstring="-b:v ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"3.4M":"2.4M";
-
+                        img+="bitrate_img";
                         break;
                     case "CODEC": OPstring="-c:v ";
                         OPstring+= (param.equalsIgnoreCase("0"))?"libx264":"libvpx-vp9";
+                        img+="codec_img";
                         break;
                     default:
                         //no specific operation string in default
                         OPstring=param;
+                        img+="testworkerthread";
                 }
                 cmdcount++;
             }
         }
+        //modify img name again
+        img+=""+(id/2+1);
         CMD+=OPstring +" "+ExpDir+vidChoice+segName; //no -o needed
         if(cmdcount!=1){
             System.out.println("currently, multiple cmd is not supported");
             return false;
         }
         // Step 3, call ffmpeg container
+        System.out.println("cold container will use image:"+img);
+        System.out.println("cold container will use entry:"+entry);
         System.out.println("cold container will run:"+CMD);
-        String ID=Dockerpool.CreateContainers(ports,id,"jrottenberg/ffmpeg:3.4-ubuntu",CMD);
+        ///// normal ffmpeg container
+        //String ID=Dockerpool.CreateContainers(ports,id,"jrottenberg/ffmpeg:3.4-ubuntu",CMD);
+        /////
+
+        //String ID=Dockerpool.CreateContainers(ports,id,"jrottenberg/ffmpeg:3.4-ubuntu",entry,CMD);
+        String ID=Dockerpool.CreateContainers(ports,id,img,entry,CMD);
         try{
             Dockerpool.waitContainersStop(ID);
             Dockerpool.removeCont(ID);

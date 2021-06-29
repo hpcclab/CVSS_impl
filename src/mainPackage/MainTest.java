@@ -43,13 +43,13 @@ public class MainTest {
 
     }
     //set something different between real mode and sim mode?
-    private static void setUpCVSE_forreal(){
+    private static void setUpCVSE_forreal(String configfile){
         CVSE.TE=new TimeEstNone(); //using no TimeEstimator
-        CVSE.RP = new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
+        CVSE.RP = new ResourceProvisioner( CVSE.config.minCR,configfile); //says we need at least two machines
     }
-    private static void setUpCVSE_forsim(){
+    private static void setUpCVSE_forsim(String configfile){
         CVSE.TE=new TimeEstProfileMode();
-        CVSE.RP = new ResourceProvisioner( CVSE.config.minCR); //says we need at least two machines
+        CVSE.RP = new ResourceProvisioner( CVSE.config.minCR,configfile); //says we need at least two machines
     }
 
     public static String trysleep(int time){
@@ -116,16 +116,15 @@ public class MainTest {
         if(confFile.contains("config/")){ // will auto insert anyway
             opt=opt.replaceFirst("config/","");
         }
-
         setUpCVSE_common("config/"+confFile,opt);
 
         //if(CVSE.config.Pool)
         if(CVSE.config.openWebRequests==true){ //real mode
-            setUpCVSE_forreal(); //for web request real mode
+            setUpCVSE_forreal(confFile); //for web request real mode
             WebRequestTest();
         }else{ //sim mode
             System.out.println("Sim user Input");
-            setUpCVSE_forsim(); //for web request with simulation
+            setUpCVSE_forsim(confFile); //for web request with simulation
             Sim(confFile,opt);
         }
     }
@@ -135,23 +134,27 @@ public class MainTest {
             if (args[0].equalsIgnoreCase("makeconfig")) { //special mode to generate bechmark input
                 System.out.println("run special mode to generate benchmark request");
                 setUpCVSE_common(args[2], args[1]);
-                setUpCVSE_forsim();
-
+                setUpCVSE_forsim(args[2]);
                 System.out.println(genbenchmarkTrace(Integer.parseInt(args[1])));
             } else { //run
-                System.out.println("ru6n "+args[2]+" with "+args[1]);
-
+                System.out.println("run "+args[2]+" with "+args[1]);
                 start(args[2], args[1]);
             }
         }else {
             //for sim mode
-            String Configname="testConfig8DynamicSimple.properties"; // simModeTest
+            //String Configname="testConfig8Each.properties"; // simModeTest
+            String Configname="testConfig8Cold.properties"; // simModeTest
+
+            //String Configname="simConfig.properties"; // simModeTest
 
             //for real mode
             //String Configname="nuConfigWeb.properties"; // realModeTest
 
             //String benchmarkname=""; //avg 0.3s per task, so
+            //String benchmarkname="weirdtest";
             String benchmarkname="start0_400r_100000_20000_3000_s555";
+
+            //String benchmarkname="start0_400r_100000_20000_3000_s555";
 //            String Configname="nuConfig.properties"; // simModeTest
 //
 //            String benchmarkname="start0_1200r_180000_10000_3000_s555";

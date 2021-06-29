@@ -2,30 +2,18 @@ FROM jrottenberg/ffmpeg:3.4-ubuntu
 
 
 RUN apt update && \
-apt install -y python3 python3-pip curl gnupg --no-install-recommends
+apt install -y python3 python3-pip curl gnupg apt-transport-https --no-install-recommends
 
-RUN python3 -m pip install torch torchvision &&  \
-python3 -m pip install -U protobuf
+#RUN python3 -m pip install torch torchvision &&  \
+RUN python3 -m pip install -U protobuf
 
-#RabbitMQ, repo
-RUN curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc | apt-key add - &&  \
-apt-get install apt-transport-https --no-install-recommends
-
-
-COPY de.sh /home/de.sh
-RUN /home/de.sh
-
-#RUN tee /etc/apt/sources.list.d/bintray.rabbitmq.list <<EOF \
-#deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang \
-#deb https://dl.bintray.com/rabbitmq/debian bionic main \
-#EOF
+#RabbitMQ
+RUN curl -1sLf \
+  'https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/setup.deb.sh' \
+  | bash
 
 
-
-#actual RMQ installation for python3
-RUN apt-get update -y &&  \
-apt-get install rabbitmq-server -y --fix-missing --no-install-recommends &&  \
-python3 -m pip install pika --upgrade
+RUN python3 -m pip install pika --upgrade
 
 #make image small
 RUN rm -rf /var/lib/apt/lists/*
@@ -37,3 +25,4 @@ COPY PythonWorker /home/PythonWorker
 
 ENTRYPOINT ["python3"]
 #CMD "/home/PythonWorker/FrontConnector.py"
+

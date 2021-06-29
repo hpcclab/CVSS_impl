@@ -77,32 +77,18 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
         //currently machine 0 must be autoscheduleable
         long estimatedT;
         if(machineInterfaces.size()>0) {
-            MachineInterface answer= machineInterfaces.get(0);
+            MachineInterface answer=null; //machineInterfaces.get(0);
             long minFT;
             long minET=0;
             double minSD=0;
-            //set initial value to machine 1
-            if((pending_queuelength[0] < CVSE.config.localqueuelengthperCR) || !realSchedule){ //if not real assignment, we can violate queue length
-                    histStat chk = CVSE.TE.getHistoricProcessTime(answer, x);
-                    //System.out.println("chk.mean="+chk.mean+" chk.SD"+chk.SD+" SDco="+SDcoefficient);
-                    if(mode.equalsIgnoreCase("MET")){
-                        minFT=(long) (chk.mean + chk.SD * SDcoefficient);
-                    }else {
-                        minFT = pending_executiontime[0]; //for SJF,MCT
-                        if (mode.equalsIgnoreCase("MCT")) { // MCT add ET of this task too
-                            minFT += (long) (chk.mean + chk.SD * SDcoefficient);
-                        }
-                    }
-                    minET=chk.mean;
-                    minSD=chk.SD;
-            }else{
+            //set initial value to riddiculous number, we can't assume machine 0 is the default choice.
                 minFT=Integer.MAX_VALUE;   //don't select me, i'm full
-            }
-
+                minET=Integer.MAX_VALUE;
+                minSD=0;
 
             //System.out.println("first est time="+minFT);
             //System.out.println("VMINTERFACE SIZE="+machineInterfaces.size());
-            for (int i = 1; i < machineInterfaces.size(); i++) {
+            for (int i = 0; i < machineInterfaces.size(); i++) {
                 MachineInterface aMachine = machineInterfaces.get(i);
                 if (aMachine.isWorking()) {
                     if (aMachine.autoschedule) {
@@ -144,9 +130,13 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
                 }
             }
             if(realSchedule) {
-                x.EstMean = minET;
-                x.EstSD=minSD;
-                System.out.println("decided to place on machine " + answer.VM_class + " Sessionid= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + CVSE.config.localqueuelengthperCR);
+                if (answer != null) {
+                    x.EstMean = minET;
+                    x.EstSD = minSD;
+                    System.out.println("decided to place on machine " + answer.VM_class + " Sessionid= " + answer.id + " new minFT=" + minFT + " queuelength=" + answer.estimatedQueueLength + "/" + CVSE.config.localqueuelengthperCR);
+                }else{
+                    System.out.println("Don't have a suitable machine!");
+                }
             }
             return answer;
         }
@@ -203,8 +193,14 @@ public class GOPTaskScheduler_common extends GOPTaskScheduler {
             preschedulefn(X);
 
             MachineInterface chosenVM = selectMachine(X);
-            System.out.println("ChosenVM=" + chosenVM);
 
+            System.out.println("ChosenVM=" + chosenVM);
+            if(chosenVM==null){
+                System.out.println("Pulled a task, but don't have a machine to select, so I add that task back to the queue");
+                Batchqueue.add(X);
+                readytoWork.release();
+                return ;
+            }
             if (CVSE.config.enableCRscalingoutofInterval && (chosenVM.estimatedQueueLength > CVSE.config.localqueuelengthperCR)) {
                 //do reprovisioner, we need more VM!
                 //ResourceProvisioner.EvaluateClusterSize(0.8,Batchqueue.size());

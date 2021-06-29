@@ -42,7 +42,7 @@ public class ResourceProvisioner {
     public static Connection connection;
     private static Channel OutRMQchannel; //for outward
     private static Channel InRMQchannel; //separate channel for inMessage
-    public ResourceProvisioner( int minimumVMtomaintain) {
+    public ResourceProvisioner( int minimumVMtomaintain,String DUfile) {
         //RMQ set up
         factory= new ConnectionFactory();
         factory.setHost(RMQlocation);
@@ -70,7 +70,7 @@ public class ResourceProvisioner {
 
 
         x=new Semaphore(1);
-        DU=new DataUpdate();
+        DU=new DataUpdate(DUfile);
         minimumMaintain=minimumVMtomaintain;
         EvaluateClusterSize(-1);
         //set up task for evaluate cluster size every ms

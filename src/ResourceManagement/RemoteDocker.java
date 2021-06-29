@@ -53,7 +53,7 @@ public class RemoteDocker {
         //return DefaultDockerClient.builder().uri(URI.create("https://localhost:80")).build();
     }
 
-    public String CreateContainers(String[] ports,int nodeID,String imageName,String CMD)  { //
+    public String CreateContainers(String[] ports,int nodeID,String imageName,String entry,String CMD)  { //
         String createdID="";
         if(docker == null) {
             System.out.println("docker Client wasn't created");
@@ -92,10 +92,11 @@ public class RemoteDocker {
                     .attachStderr(Boolean.TRUE)
                     .attachStdin(Boolean.TRUE)
                     .tty(Boolean.TRUE)
-                    .cpuQuota(1l) // so that performance scaling is consistence
+                    .cpuQuota(4l) // 2 cores so that performance scaling is consistence
                     .hostConfig(hostConfig)
                     //.exposedPorts( givenPort) //container to host + "/tcp"
                     .cmd(command)
+                    .entrypoint(entry)
                     .build();
 
                 final ContainerCreation containerCreation = docker.createContainer(containerConfig);

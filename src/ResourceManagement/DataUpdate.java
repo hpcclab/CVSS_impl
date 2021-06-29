@@ -45,14 +45,17 @@ public class DataUpdate {
     PrintWriter Freqwriter;
     XYSeries hitcount = new XYSeries("On-time");
     XYSeries misscount = new XYSeries("Miss");
-
-    public DataUpdate(){
-        FilenamePrefix = (CVSE.config.taskmerge) ? "merge" : "unmerge";
-        FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
-        FilenamePrefix += "_"+CVSE.config.mergeaggressiveness+"merge";
-        FilenamePrefix += (CVSE.config.mergeOverwriteQueuePolicy) ? "_"+CVSE.config.overwriteQueuePolicyHeuristic+"PositionFind" : "_inplace";
-        FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "_nobatchqueuesort";
-        FilenamePrefix +=(CVSE.config.sdmultiplier==1.0) ? "" : "SDmultiplyby"+CVSE.config.sdmultiplier;
+    public DataUpdate(String fileprefixOverwrite){
+        if(fileprefixOverwrite=="") {
+            FilenamePrefix = (CVSE.config.taskmerge) ? "merge" : "unmerge";
+            FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? "_Sort" : "_Unsort";
+            FilenamePrefix += "_" + CVSE.config.mergeaggressiveness + "merge";
+            FilenamePrefix += (CVSE.config.mergeOverwriteQueuePolicy) ? "_" + CVSE.config.overwriteQueuePolicyHeuristic + "PositionFind" : "_inplace";
+            FilenamePrefix += (!CVSE.config.batchqueuesortpolicy.equalsIgnoreCase("None")) ? CVSE.config.batchqueuesortpolicy : "_nobatchqueuesort";
+            FilenamePrefix += (CVSE.config.sdmultiplier == 1.0) ? "" : "SDmultiplyby" + CVSE.config.sdmultiplier;
+        }else{
+            FilenamePrefix =fileprefixOverwrite.replaceFirst(".properties","");
+        }
         filename=FilenamePrefix+"_"+CVSE.config.profileRequestsBenchmark;
         try {
             Freq = new FileWriter(Statpath+"/freq/" +filename);
@@ -62,6 +65,11 @@ public class DataUpdate {
             e.printStackTrace();
         }
     }
+
+
+    public DataUpdate(){
+        this("");
+    }
     public void graphplot(){
         System.out.println("Call graphplot");
         /////////// Java plot
@@ -69,7 +77,7 @@ public class DataUpdate {
         finalgraph.pack();
         RefineryUtilities.centerFrameOnScreen(finalgraph);
         finalgraph.setVisible(true);
-        /*
+
         //brief graph
         String command[] = new String[]{"bash", "bash/plot.sh", Statpath+"/numbers/"+filename};
         //full graph
@@ -86,8 +94,6 @@ public class DataUpdate {
             System.out.println("Did not execute bashfile :(");
             e.printStackTrace();
         }
-
-         */
     }
     //refuent stat printing, for plotting graph with more detail
     public void printfrequentstat(){
@@ -172,6 +178,7 @@ public class DataUpdate {
                 Freq.close();
                 //sleep(200);
                 //System.exit(0);
+                //graphplot();
             }catch(Exception e){
                 System.out.println("printstat bug:"+e);
             }
